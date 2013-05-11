@@ -530,7 +530,7 @@ public class Main {
 		glMatrixMode(GL_MODELVIEW);
 		glEnable(GL_TEXTURE_2D);
 		glEnable(GL_DEPTH_TEST);
-		glClearColor(0.4f, 0.4f, 1f, 1f);
+		glClearColor(0.7f, 0.4f, 1f, 1f);
 		glClearDepth(1); 
 		
 		glEnable(GL_CULL_FACE);
@@ -552,7 +552,7 @@ public class Main {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		glEnable(GL_FOG);
-		glFog(GL_FOG_COLOR, BufferTools.asFlippedFloatBuffer(new float[]{0.4f,0.4f,1f,1f}));
+		glFog(GL_FOG_COLOR, BufferTools.asFlippedFloatBuffer(new float[]{0f,0f,0f,1f}));
 		glFogi(GL_FOG_MODE, GL_LINEAR);
 		glHint(GL_FOG_HINT, GL_NICEST);
 		glFogf(GL_FOG_START, 4000);
@@ -585,9 +585,10 @@ public class Main {
 		{
 			glDisable(GL_FOG);
 			glClearColor(1f, 1f, 1f, 1f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			picking();//Picking
 			picking3d();
-			glClearColor(0.4f, 0.4f, 1f, 1f);
+			glClearColor(0f,0f, 0f, 1f);
 			glEnable(GL_FOG);
 		}else hoveredEntity = -1;
 		

@@ -49,7 +49,7 @@ public class ResourceManager {
 	
 	public final static Texture TEXTURE_HOUSE = addTexture("/res/haustextur.png");
 	public final static Texture TEXTURE_MONKEY = addTexture("/res/monkeytexture.png");
-	public final static Texture TEXTURE_TERRAIN = addTexture("/res/texturefile4.png");
+	public final static Texture TEXTURE_TERRAIN = addTexture("/res/mars.png");
 	public final static Texture TEXTURE_GUISELECT = addTexture("/res/guiselect.png");
 	public final static Texture TEXTURE_GUIADD = addTexture("/res/guiadd.png");
 	public final static Texture TEXTURE_GUIDELETE = addTexture("/res/guidelete.png");
