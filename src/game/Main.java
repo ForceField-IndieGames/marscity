@@ -63,7 +63,7 @@ class splashScreen extends JFrame implements Runnable{
 		label.setForeground(Color.white);
 		add(label);
 		label.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width/2-100, Toolkit.getDefaultToolkit().getScreenSize().height/2, 500, 50);
-		label2 = new JLabel("lwjgl Test");
+		label2 = new JLabel("Mars City");
 		label2.setForeground(Color.white);
 		add(label2);
 		label2.setFont(new Font("Arial", Font.BOLD, 30));
