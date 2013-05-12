@@ -19,11 +19,15 @@ public class GUI {
 	public GuiLabel tooltext = new GuiLabel(Display.getWidth()/2-200,55,400,18,(Color)null);
 	public GuiPanel blur = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),(Color)null);
 	public GuiPanel pausemenu = new GuiPanel(Display.getWidth()/2-128,Display.getHeight()/2-128,256,256,ResourceManager.TEXTURE_GUIMENU);
-	public GuiButton pauseload = new GuiButton(28, 140, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton pauseload = new GuiButton(28, 170, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton pausesave = new GuiButton(28, 140, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton pausesettings = new GuiButton(28, 110, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
 	public GuiButton pauseexit = new GuiButton(28, 80, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
-	public GuiButton pausesave = new GuiButton(28, 110, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
 	public GuiButton pauseresume = new GuiButton(28, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
 	public GuiLabel debugInfo = new GuiLabel(0,Display.getHeight()-20,200,20,Color.white);
+	public GuiPanel settingsmenu = new GuiPanel(Display.getWidth()/2-128,Display.getHeight()/2-128,256,256,ResourceManager.TEXTURE_GUIMENU);
+	public GuiButton settingsresume = new GuiButton(28, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiLabel settingstitle = new GuiLabel(30, 220, 100, 20, (Color)null);
 	
 	List<guiElement> elements = new ArrayList<guiElement>();
 	
@@ -45,12 +49,20 @@ public class GUI {
 			pausemenu.setOpacity(0.8f);
 			pausemenu.add(pauseload);
 						  pauseload.setText(ResourceManager.getString("PAUSEMENU_BUTTON_LOAD"));
-			pausemenu.add(pauseexit);
-						  pauseexit.setText(ResourceManager.getString("PAUSEMENU_BUTTON_EXIT"));
 			pausemenu.add(pausesave);
 						  pausesave.setText(ResourceManager.getString("PAUSEMENU_BUTTON_SAVE"));
+			pausemenu.add(pausesettings);
+						  pausesettings.setText(ResourceManager.getString("PAUSEMENU_BUTTON_SETTINGS"));
+			pausemenu.add(pauseexit);
+						  pauseexit.setText(ResourceManager.getString("PAUSEMENU_BUTTON_EXIT"));			  
 			pausemenu.add(pauseresume);
 						  pauseresume.setText(ResourceManager.getString("PAUSEMENU_BUTTON_RESUME"));
+		add(settingsmenu);
+			settingsmenu.setVisible(false);
+			settingsmenu.add(settingstitle);
+							 settingstitle.setText(ResourceManager.getString("SETTINGSMENU_LABEL_TITLE"));
+			settingsmenu.add(settingsresume);
+							 settingsresume.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_RESUME"));
 		add(debugInfo);	
 						  
 	}
