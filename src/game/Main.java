@@ -301,7 +301,7 @@ public class Main {
 			gui.toolselect.setColor(Color.gray);
 			gui.tooladd.setColor(Color.white);
 			gui.tooldelete.setColor(Color.gray);
-		}if(guihit==gui.tooldelete){
+		}else if(guihit==gui.tooldelete){
 			selectedTool = TOOL_DELETE;
 			gui.toolselect.setColor(Color.gray);
 			gui.tooladd.setColor(Color.gray);
@@ -312,6 +312,14 @@ public class Main {
 			AnimationManager.animateValue(gui.pausemenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
 		}else if(guihit==gui.pauseexit){
 			Game.exit();
+		}else if(guihit==gui.settingsresume){
+			Game.Resume();
+			AnimationManager.animateValue(gui.settingsmenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
+		}else if(guihit==gui.pausesettings){
+			gui.pausemenu.setVisible(false);
+			gui.settingsmenu.setVisible(true);
+			gui.blur.setVisible(false);
+			AnimationManager.animateValue(gui.settingsmenu, AnimationValue.opacity, 1, 0.005f);
 		}
 	}
 	
