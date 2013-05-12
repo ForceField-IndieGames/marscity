@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -16,6 +17,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.*;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import objects.Drawable;
 import objects.ObjectLoader;
@@ -42,6 +50,7 @@ public class ResourceManager {
 	public static int shaderProgram, vertexShader, fragmentShader;
 	
 	static Document langFile = null;
+	static Document settingsFile = null;
 	static DocumentBuilder builder = null;
 	
 	public final static int OBJECT_HOUSE = addObject("/res/haus.obj");
@@ -128,7 +137,6 @@ public class ResourceManager {
 			System.exit(1);
 			return null;
 		}
-		
 	}
 	
 	public ResourceManager()
@@ -136,6 +144,9 @@ public class ResourceManager {
 			
 	}
 	
+	/**
+	 * Initializes the Resources that need to be initialized
+	 */
 	@SuppressWarnings("unchecked")
 	public static void init()
 	{
@@ -148,7 +159,7 @@ public class ResourceManager {
 			e.printStackTrace();
 		}
 		
-		//Set up the shaders
+		//Set up the shader
 		setupShader("/res/shader.v","/res/shader.f");
 		
 		//Load and parse the Language file
@@ -159,33 +170,94 @@ public class ResourceManager {
 			e.printStackTrace();
 		}
 		
-		langFile = addXML("/res/lang/DE.xml");
+		settingsFile = addXML("/res/settings/settings.xml");
+		langFile = addXML("/res/lang/"+getSetting("lang")+".xml");
 	}
 	
 	/**
 	 * Returns a the localized String from the language file
 	 * @param input
-	 * @return
+	 * @return The localized strong or "String not found: #"
 	 */
 	public static String getString(String input)
 	{
 		String output =  null;
+		if(langFile==null)return "Unable to load language file for "+getSetting("lang");
 		try {
 			output =  langFile.getElementsByTagName(input).item(0).getTextContent();
 		} catch (Exception e) {
 		}
 		
-		if(output==null)return "";
+		if(output==null){
+			System.err.println("String not found: "+input);
+			return "String not found: "+input;
+		}
 		return output;
 	}
 	
+	/**
+	 * Returns a the setting from the settings file
+	 * @param input
+	 * @return The value of the setting or "Setting not found: #"
+	 */
+	public static String getSetting(String setting)
+	{
+		String output =  null;
+		if(settingsFile==null){
+			System.err.println("Unable to load the settings file!");
+			Game.exit();
+		}
+		try {
+			output =  settingsFile.getElementsByTagName(setting).item(0).getTextContent();
+		} catch (Exception e) {
+		}
+		
+		if(output==null){
+			System.err.println("Setting not found: "+setting);
+			return "Setting not found: "+setting;
+		}
+		return output;
+	}
+	
+	/**
+	 * Writes a setting into the settings file
+	 * @param setting
+	 * @param value
+	 */
+	public static void setSetting(String setting, String value)
+	{
+		try {
+			settingsFile.getElementsByTagName(setting).item(0).setTextContent(value);
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.err.println("Can't write setting "+setting);
+		}
+		System.out.println(getSetting("test"));
+		 Transformer transformer;
+		try {
+			transformer = TransformerFactory.newInstance().newTransformer();
+			 DOMSource        source = new DOMSource(settingsFile);
+	         FileOutputStream os     = new FileOutputStream(new File(ResourceManager.class.getResource("/res/settings/settings.xml").toURI()));
+	         StreamResult     result = new StreamResult(os);
+	         transformer.transform(source, result);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        
+	}
+	
+	/**
+	 * Loads an XML file
+	 * @param path
+	 * @return
+	 */
 	public static Document addXML(String path)
 	{
 		try {
 			Document file = builder.parse(new File(ResourceManager.class
 					.getResource(path).toURI()));
 			return file;
-		} catch (SAXException | IOException | URISyntaxException e) {
+		} catch ( Exception e) {
 			e.printStackTrace();
 		}
 		return null;
