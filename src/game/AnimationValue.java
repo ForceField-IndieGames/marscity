@@ -1,5 +1,0 @@
-package game;
-
-public enum AnimationValue {
-	X,Y,Z,rotX,rotY,rotZ,opacity
-}

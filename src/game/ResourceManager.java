@@ -17,6 +17,9 @@ import java.util.List;
 
 import javax.xml.parsers.*;
 
+import objects.Drawable;
+import objects.ObjectLoader;
+
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
@@ -28,6 +31,8 @@ import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
 import org.w3c.dom.*;
 import org.xml.sax.SAXException;
+
+import animation.Animatable;
 
 
 public class ResourceManager {

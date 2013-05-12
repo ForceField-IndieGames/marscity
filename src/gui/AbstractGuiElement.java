@@ -4,7 +4,8 @@ import java.awt.Color;
 
 import org.newdawn.slick.opengl.Texture;
 
-import game.Animatable;
+import animation.Animatable;
+
 
 public abstract class AbstractGuiElement implements guiElement, Animatable {
 

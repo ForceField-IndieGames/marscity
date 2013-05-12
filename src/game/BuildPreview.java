@@ -2,6 +2,8 @@ package game;
 
 import static org.lwjgl.opengl.GL11.*;
 
+import objects.Entity;
+
 import org.newdawn.slick.opengl.Texture;
 
 public class BuildPreview extends Entity {

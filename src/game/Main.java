@@ -19,6 +19,11 @@ import java.nio.IntBuffer;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import objects.Drawable;
+import objects.Entity;
+import objects.House;
+import objects.Terrain;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
@@ -29,6 +34,9 @@ import org.lwjgl.opengl.Display;
 import org.newdawn.slick.openal.Audio;
 import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.util.ResourceLoader;
+
+import animation.AnimationManager;
+import animation.AnimationValue;
 
 
 /**

@@ -1,5 +1,6 @@
 package game;
 import static org.lwjgl.util.glu.GLU.gluLookAt;
+import animation.Animatable;
 
 
 public class Camera implements Animatable {
