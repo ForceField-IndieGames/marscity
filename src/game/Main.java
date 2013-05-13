@@ -45,6 +45,7 @@ import animation.AnimationValue;
  **/
 
 class splashScreen extends JFrame implements Runnable{
+
 	
 	private static final long serialVersionUID = 1L;
 	JLabel label;
@@ -100,6 +101,9 @@ public class Main {
 	final static int TOOL_ADD = 1;
 	final static int TOOL_DELETE = 2;
 	
+	final static int STATE_INTRO = 0;
+	final static int STATE_MENU = 1;
+	final static int STATE_GAME = 2;
 
 //	
 	long lastFrame;
@@ -111,7 +115,8 @@ public class Main {
 	int hoveredEntity = -1;
 	int selectedTool = 0;
 	Audio sound;
-	float[] mousepos3d=new float[3];	
+	float[] mousepos3d=new float[3];
+	int gameState = STATE_GAME;
 	
 	Camera camera = new Camera();
 	Terrain terrain;
@@ -187,8 +192,14 @@ public class Main {
 			
 			System.out.println("Objects: "+ResourceManager.objects.size()+" FPS: "+fps);
 			
-			update(delta); //Gamelogic
-			renderGL();    //Rendering
+			switch(gameState){
+			case(STATE_GAME):
+				update(delta); //Gamelogic
+				renderGL();    //Rendering
+				break;
+			default: break;
+			}
+			
 			
 			
 			Display.update();
