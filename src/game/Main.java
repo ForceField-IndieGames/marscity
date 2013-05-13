@@ -1,5 +1,4 @@
 package game;
-import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.*;
 
@@ -661,8 +660,14 @@ public class Main {
 		gui.drawMenu();
 	}
 	
+	float i=0;
 	public void updateMenu(int delta)
 	{
+		gui.MenuBG.setX((float) (30*Math.sin(i)-30));
+		gui.MenuBG.setWidth((float) (Display.getWidth()-60*Math.sin(i)+60));
+		gui.MenuBG.setY((float) (30*Math.sin(i))-30);
+		gui.MenuBG.setHeight((float) (Display.getHeight()-60*Math.sin(i)+60));
+		i+=0.005;
 		while(Mouse.next())
 		{
 			if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
@@ -670,6 +675,9 @@ public class Main {
 				if(guihit==null)return;
 				if(guihit==gui.MenuPlay){
 					gameState = STATE_GAME;
+					gui = null;
+					gui = new GUI();
+					Game.Resume();
 				}else if(guihit==gui.MenuExit){
 					Game.exit();
 				}

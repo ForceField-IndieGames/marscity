@@ -13,12 +13,11 @@ import org.lwjgl.opengl.Display;
 public class GUI {
 	
 	public GuiPanel MenuBG = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_MAINMENUBG);
-	public GuiPanel MenuPanel = new GuiPanel(Display.getWidth()/2-540,Display.getHeight()-150,1080,50,(Color)null);
-	public GuiButton MenuPlay = new GuiButton(0, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON);
-	public GuiButton MenuLoad = new GuiButton(220, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON);
-	public GuiButton MenuSave = new GuiButton(440, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON);
-	public GuiButton MenuSettings = new GuiButton(660, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON);
-	public GuiButton MenuExit = new GuiButton(880, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiPanel MenuPanel = new GuiPanel(Display.getWidth()/2-430,Display.getHeight()-150,1080,50,(Color)null);
+	public GuiButton MenuPlay = new GuiButton(0, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiButton MenuLoad = new GuiButton(220, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiButton MenuSettings = new GuiButton(440, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiButton MenuExit = new GuiButton(660, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2);
 	
 	
 	public GuiPanel toolbar = new GuiPanel(0,0,Display.getWidth(),84, ResourceManager.TEXTURE_GUITOOLBAR);
@@ -49,13 +48,11 @@ public class GUI {
 	{
 		//Main menu
 		menuElements.add(MenuBG);
-		MenuBG.add(MenuPanel);
+		menuElements.add(MenuPanel);
 		MenuPanel.add(MenuPlay);
 		     		    MenuPlay.setText(ResourceManager.getString("MAINMENU_BUTTON_PLAY"));
 	 		   MenuPanel.add(MenuLoad);
 		     		    MenuLoad.setText(ResourceManager.getString("MAINMENU_BUTTON_LOAD"));
-	 		   MenuPanel.add(MenuSave);
-		     		    MenuSave.setText(ResourceManager.getString("MAINMENU_BUTTON_SAVE"));
 	 		   MenuPanel.add(MenuSettings);
 		     		    MenuSettings.setText(ResourceManager.getString("MAINMENU_BUTTON_SETTINGS"));
 	 		   MenuPanel.add(MenuExit);
@@ -74,7 +71,6 @@ public class GUI {
 			blur.setVisible(false);
 		add(pausemenu);
 			pausemenu.setVisible(false);
-			pausemenu.setOpacity(0.8f);
 			pausemenu.add(pausemainmenu);
 						  pausemainmenu.setText(ResourceManager.getString("PAUSEMENU_BUTTON_MAINMENU"));
 			pausemenu.add(pauseload);

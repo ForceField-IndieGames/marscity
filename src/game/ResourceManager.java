@@ -68,6 +68,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_EMPTY = addTexture("/res/empty.png");
 	public final static Texture TEXTURE_GUIBUTTON = addTexture("/res/guibutton.png");
 	public final static Texture TEXTURE_MAINMENUBG = addTexture("/res/mainmenubg.png");
+	public final static Texture TEXTURE_GUIBUTTON2 = addTexture("/res/guibutton2.png");
 	
 	public static List<Drawable> objects = new ArrayList<Drawable>();
 	
