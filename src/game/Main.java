@@ -116,7 +116,7 @@ public class Main {
 	int selectedTool = 0;
 	Audio sound;
 	float[] mousepos3d=new float[3];
-	int gameState = STATE_GAME;
+	int gameState = STATE_MENU;
 	
 	Camera camera = new Camera();
 	Terrain terrain;
@@ -193,6 +193,12 @@ public class Main {
 			System.out.println("Objects: "+ResourceManager.objects.size()+" FPS: "+fps);
 			
 			switch(gameState){
+			case(STATE_INTRO): 
+				break;
+			case(STATE_MENU):
+				updateMenu(delta);
+				renderMenu();
+				break;
 			case(STATE_GAME):
 				update(delta); //Gamelogic
 				renderGL();    //Rendering
@@ -331,6 +337,8 @@ public class Main {
 			gui.settingsmenu.setVisible(true);
 			gui.blur.setVisible(false);
 			AnimationManager.animateValue(gui.settingsmenu, AnimationValue.opacity, 1, 0.005f);
+		}else if(guihit==gui.pausemainmenu){
+			gameState = STATE_MENU;
 		}
 	}
 	
@@ -637,15 +645,36 @@ public class Main {
 			ResourceManager.objects.get(i).draw();
 			glEnable(GL_LIGHTING);
 		}
-         buildpreview.draw();
+        buildpreview.draw();
 
-		glUseProgram(0);
+//		glUseProgram(0);
 		
 		glPopMatrix();
 		
 		//GUI rendern
 		gui.draw();
 		
+	}
+	
+	public void renderMenu()
+	{
+		gui.drawMenu();
+	}
+	
+	public void updateMenu(int delta)
+	{
+		while(Mouse.next())
+		{
+			if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
+				guiElement guihit = gui.mouseoverMenu();
+				if(guihit==null)return;
+				if(guihit==gui.MenuPlay){
+					gameState = STATE_GAME;
+				}else if(guihit==gui.MenuExit){
+					Game.exit();
+				}
+			}
+		}
 	}
 	
 	public static void main(String[] argv) throws FileNotFoundException {
