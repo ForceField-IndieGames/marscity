@@ -13,6 +13,7 @@ import org.lwjgl.opengl.Display;
 public class GUI {
 	
 	public GuiPanel MenuBG = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_MAINMENUBG);
+	public GuiPanel MenuFF = new GuiPanel(Display.getWidth()-512,0,512,128,ResourceManager.TEXTURE_MAINMENUFF);
 	public GuiPanel MenuPanel = new GuiPanel(Display.getWidth()/2-430,Display.getHeight()-150,1080,50,(Color)null);
 	public GuiButton MenuPlay = new GuiButton(0, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2);
 	public GuiButton MenuLoad = new GuiButton(220, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2);
@@ -24,7 +25,14 @@ public class GUI {
 	public GuiPanel toolselect = new GuiPanel(10, 10, 64, 64, ResourceManager.TEXTURE_GUISELECT);
 	public GuiPanel tooladd = new GuiPanel(84, 10, 64, 64, ResourceManager.TEXTURE_GUIADD, Color.gray);
 	public GuiPanel tooldelete = new GuiPanel(158, 10, 64, 64, ResourceManager.TEXTURE_GUIDELETE, Color.gray);
-	public GuiLabel tooltext = new GuiLabel(Display.getWidth()/2-200,55,400,18,(Color)null);
+	
+	public GuiPanel infobar = new GuiPanel(300,55,700,20,(Color)null);
+	public GuiLabel infomoney = new GuiLabel(0,0,100,20,(Color)null);
+	public GuiLabel infocitizens = new GuiLabel(100,0,100,20,(Color)null);
+	
+	public GuiPanel buildingchooser = new GuiPanel(300,0,700,50, (Color)null);
+	public GuiButton buildinghouse = new GuiButton(0,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2, Color.gray);
+	public GuiButton buildingmonkey = new GuiButton(100,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2);
 	
 	public GuiPanel blur = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),(Color)null);
 	public GuiPanel pausemenu = new GuiPanel(Display.getWidth()/2-128,Display.getHeight()/2-128,256,256,ResourceManager.TEXTURE_GUIMENU);
@@ -48,6 +56,7 @@ public class GUI {
 	{
 		//Main menu
 		menuElements.add(MenuBG);
+		menuElements.add(MenuFF);
 		menuElements.add(MenuPanel);
 		MenuPanel.add(MenuPlay);
 		     		    MenuPlay.setText(ResourceManager.getString("MAINMENU_BUTTON_PLAY"));
@@ -60,12 +69,22 @@ public class GUI {
 		
 		//GUI
 		add(toolbar);
-			toolbar.setBlurBehind(true);
-			toolbar.add(toolselect);
-			toolbar.add(tooladd);
-			toolbar.add(tooldelete);
-			toolbar.add(tooltext);
-						tooltext.setText(ResourceManager.getString("TOOLBAR_LABEL_DESCRIPTION"));
+			toolbar.setY(-40);
+			toolbar.add(buildingchooser);
+						buildingchooser.add(buildinghouse);
+											buildinghouse.setText(ResourceManager.getString(ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_HOUSE).getName()));
+						buildingchooser.add(buildingmonkey);
+											buildingmonkey.setText(ResourceManager.getString(ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_MONKEY).getName()));
+			toolbar.add(infobar);
+						infobar.add(infomoney);
+									infomoney.setText("Geld: 0$");
+						infobar.add(infocitizens);
+									infocitizens.setText("Einwohner: 0");
+			
+		add(toolselect);
+		add(tooladd);
+		add(tooldelete);
+		
 		add(blur);
 			blur.setBlurBehind(true);
 			blur.setVisible(false);
@@ -83,7 +102,8 @@ public class GUI {
 						  pauseexit.setText(ResourceManager.getString("PAUSEMENU_BUTTON_EXIT"));			  
 			pausemenu.add(pauseresume);
 						  pauseresume.setText(ResourceManager.getString("PAUSEMENU_BUTTON_RESUME"));
-		add(settingsmenu);
+		
+	    add(settingsmenu);
 			settingsmenu.setVisible(false);
 			settingsmenu.add(settingstitle);
 							 settingstitle.setText(ResourceManager.getString("SETTINGSMENU_LABEL_TITLE"));
@@ -111,9 +131,9 @@ public class GUI {
 		glDisable(GL_LIGHTING);
 		for(guiElement element: elements) {
 			glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		glOrtho(0, Display.getWidth(), 0, Display.getHeight(), 1, -1);
-		glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			glOrtho(0, Display.getWidth(), 0, Display.getHeight(), 1, -1);
+			glMatrixMode(GL_MODELVIEW);
 			element.draw();
 		}
 		glPopMatrix();

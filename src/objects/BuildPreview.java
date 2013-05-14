@@ -1,21 +1,42 @@
-package game;
+package objects;
 
 import static org.lwjgl.opengl.GL11.*;
+import game.ResourceManager;
 
-import objects.Entity;
 
 import org.newdawn.slick.opengl.Texture;
 
 public class BuildPreview extends Entity {
+	
+	private boolean show = false;
 
 	
 	public BuildPreview(int displaylist, Texture texture) {
 		super(displaylist, texture);
 	}
 	
+	public BuildPreview(int bt) {
+		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture());
+	}
+	
+	public BuildPreview() {
+		super(ResourceManager.getBuildingType(0).getDisplaylist(), ResourceManager.getBuildingType(0).getTexture());
+	}
+	
+	public void setBuilding(int bt)
+	{
+		if(bt==-1){
+			show = false;
+			return;
+		}
+		setDisplayList(ResourceManager.getBuildingType(bt).getDisplaylist());
+		setTexture(ResourceManager.getBuildingType(bt).getTexture());
+		show = true;
+	}
+	
 	@Override
 	public void draw() {
-		if(!isVisible())return;
+		if(!isVisible()||!show)return;
 		glPushMatrix();
 			glTranslatef(getX(), getY(), getZ());
 			glScalef(getScaleX(), getScaleY(), getScaleZ());

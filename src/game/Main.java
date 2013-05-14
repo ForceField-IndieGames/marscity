@@ -6,7 +6,6 @@ import gui.GUI;
 import gui.guiElement;
 
 import java.awt.Color;
-import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.io.FileNotFoundException;
@@ -20,9 +19,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+import objects.BuildPreview;
 import objects.Drawable;
 import objects.Entity;
-import objects.House;
+import objects.Building;
 import objects.Terrain;
 
 import org.lwjgl.BufferUtils;
@@ -49,9 +49,11 @@ class splashScreen extends JFrame implements Runnable{
 
 	
 	private static final long serialVersionUID = 1L;
+	
 	JLabel label;
 	JLabel background;
 	public Thread thread;
+	
 	public splashScreen()
 	{
 		this.setUndecorated(true);
@@ -115,6 +117,7 @@ public class Main {
 	int soundsource;
 	int hoveredEntity = -1;
 	int selectedTool = 0;
+	int currentBuildingType = -1;
 	Audio sound;
 	float[] mousepos3d=new float[3];
 	int gameState = STATE_MENU;
@@ -141,7 +144,7 @@ public class Main {
 		try {
 			Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
 			Display.setVSyncEnabled(true);
-			Display.setTitle("lwjgl Test");
+			Display.setTitle("Mars City");
 			Display.create();
 			Display.setLocation(0, 0);
 		} catch (LWJGLException e) {
@@ -158,13 +161,13 @@ public class Main {
 		
 		gui = new GUI(); //Create the GUI
 		
-		buildpreview = new BuildPreview(ResourceManager.OBJECT_HOUSE, ResourceManager.TEXTURE_HOUSE);
+		buildpreview = new BuildPreview();
 		
 		//Create some Objects
 				terrain = new Terrain(0,0,-150);
 				ResourceManager.objects.add(new Entity(ResourceManager.OBJECT_MONKEY, ResourceManager.TEXTURE_MONKEY,-50,10,-100));
 				ResourceManager.objects.add(new Entity(ResourceManager.OBJECT_BUNNY,2,0,-100));
-				ResourceManager.objects.add(new House(70,0,-150));
+				ResourceManager.objects.add(new Building(ResourceManager.BUILDINGTYPE_HOUSE,70,0,-150));
 		
 		
 		//Set up the sound
@@ -314,33 +317,55 @@ public class Main {
 			gui.toolselect.setColor(Color.white);
 			gui.tooladd.setColor(Color.gray);
 			gui.tooldelete.setColor(Color.gray);
-		}else if(guihit==gui.tooladd){
+			AnimationManager.animateValue(gui.toolbar, AnimationValue.Y, -40, 0.5f);
+			buildpreview.setBuilding(-1);
+		}
+		if(guihit==gui.tooladd){
 			selectedTool = TOOL_ADD;
 			gui.toolselect.setColor(Color.gray);
 			gui.tooladd.setColor(Color.white);
 			gui.tooldelete.setColor(Color.gray);
-		}else if(guihit==gui.tooldelete){
+			AnimationManager.animateValue(gui.toolbar, AnimationValue.Y, 0, 0.5f);
+		}
+ 		if(guihit==gui.tooldelete){
 			selectedTool = TOOL_DELETE;
 			gui.toolselect.setColor(Color.gray);
 			gui.tooladd.setColor(Color.gray);
 			gui.tooldelete.setColor(Color.white);
-		}else if(guihit==gui.pauseresume){
+			AnimationManager.animateValue(gui.toolbar, AnimationValue.Y, -40, 0.5f);
+			buildpreview.setBuilding(-1);
+		}
+ 		if(guihit==gui.pauseresume){
 			gui.blur.setVisible(false);
 			Game.Resume();
 			AnimationManager.animateValue(gui.pausemenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
-		}else if(guihit==gui.pauseexit){
+		}
+ 		if(guihit==gui.pauseexit){
 			Game.exit();
-		}else if(guihit==gui.settingsresume){
+		}
+ 		if(guihit==gui.settingsresume){
 			Game.Resume();
 			AnimationManager.animateValue(gui.settingsmenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
-		}else if(guihit==gui.pausesettings){
+		}
+ 			if(guihit==gui.pausesettings){
 			gui.pausemenu.setVisible(false);
 			gui.settingsmenu.setVisible(true);
 			gui.blur.setVisible(false);
 			AnimationManager.animateValue(gui.settingsmenu, AnimationValue.opacity, 1, 0.005f);
-		}else if(guihit==gui.pausemainmenu){
+		}
+ 		if(guihit==gui.pausemainmenu){
 			gameState = STATE_MENU;
 		}
+ 		if(guihit==gui.buildinghouse){
+ 			currentBuildingType = ResourceManager.BUILDINGTYPE_HOUSE;
+ 			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_HOUSE);
+ 			gui.buildinghouse.setColor(Color.gray);
+ 		}else gui.buildinghouse.setColor(Color.white);
+ 		if(guihit==gui.buildingmonkey){
+ 			currentBuildingType = ResourceManager.BUILDINGTYPE_MONKEY;
+ 			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_MONKEY);
+ 			gui.buildingmonkey.setColor(Color.gray);
+ 		}else gui.buildingmonkey.setColor(Color.white);
 	}
 	
 	
@@ -480,9 +505,9 @@ public class Main {
 							break;
 						
 						case(TOOL_ADD): // Create a new House
-							if(hoveredEntity!=-1)break;
-						ResourceManager.playSound(ResourceManager.SOUND_DROP);
-								ResourceManager.objects.add(new House((int)mousepos3d[0], (int)mousepos3d[1], (int)mousepos3d[2]));
+							if(hoveredEntity!=-1||currentBuildingType==-1)break;
+								ResourceManager.playSound(ResourceManager.SOUND_DROP);
+								ResourceManager.objects.add(new Building(currentBuildingType,(int)mousepos3d[0], (int)mousepos3d[1], (int)mousepos3d[2]));
 							break;
 							
 						case(TOOL_DELETE): // Delete the Object
@@ -669,7 +694,7 @@ public class Main {
 		gui.MenuBG.setWidth((float) (Display.getWidth()-60*Math.sin(i)+60));
 		gui.MenuBG.setY((float) (30*Math.sin(i))-30);
 		gui.MenuBG.setHeight((float) (Display.getHeight()-60*Math.sin(i)+60));
-		i+=0.005;
+		i=(i<2*Math.PI)?i+0.005f:0;
 		while(Mouse.next())
 		{
 			if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){

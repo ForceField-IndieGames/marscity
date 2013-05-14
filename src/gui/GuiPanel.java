@@ -186,6 +186,7 @@ public class GuiPanel extends AbstractGuiElement {
 						glBindTexture(GL_TEXTURE_2D, ResourceManager.TEXTURE_EMPTY.getTextureID());
 						glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (int)-j*((j%2)*2-1),(int)-i*((i%2)*2-1), (int)width, (int)height,0);
 						glPushMatrix();
+						glTranslated(getScreenX(), getScreenY(), 0);
 						glBegin(GL_QUADS);
 						glColor4f(1f, 1f, 1f, 0.3f);
 							glTexCoord2d(0, 0f);

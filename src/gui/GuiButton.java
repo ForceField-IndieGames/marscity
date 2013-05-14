@@ -13,7 +13,7 @@ import org.newdawn.slick.opengl.TextureImpl;
 
 public class GuiButton extends AbstractGuiElement {
 	
-	private String text;
+	private String text = "";
 	
 	private float x,y,width,height;
 	private boolean visible = true;

@@ -167,7 +167,6 @@ public class GuiLabel extends AbstractGuiElement {
 	@Override
 	public void draw() {
 		if(isScreenVisible()){
-			
 			if (color != null || texture != null){
 				if(texture!=null){
 					glEnable(GL_TEXTURE_2D);

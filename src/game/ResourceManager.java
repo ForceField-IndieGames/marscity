@@ -22,6 +22,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import objects.BuildingType;
 import objects.Drawable;
 import objects.ObjectLoader;
 
@@ -49,6 +50,9 @@ public class ResourceManager {
 	static Document settingsFile = null;
 	static DocumentBuilder builder = null;
 	
+	public final static int BUILDINGTYPE_HOUSE = 0;
+	public final static int BUILDINGTYPE_MONKEY = 1;
+	
 	public final static int OBJECT_HOUSE = addObject("/res/haus.obj");
 	public final static int OBJECT_MONKEY = addObject("/res/monkey.obj");
 	public final static int OBJECT_BUNNY = addObject("/res/bunny.obj");
@@ -69,9 +73,47 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUIBUTTON = addTexture("/res/guibutton.png");
 	public final static Texture TEXTURE_MAINMENUBG = addTexture("/res/mainmenubg.png");
 	public final static Texture TEXTURE_GUIBUTTON2 = addTexture("/res/guibutton2.png");
+	public final static Texture TEXTURE_MAINMENUFF = addTexture("/res/ForceField.png");
+	
+	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	
 	public static List<Drawable> objects = new ArrayList<Drawable>();
 	
+	/**
+	 * Initializes the Resources that need to be initialized
+	 */
+	@SuppressWarnings("unchecked")
+	public static void init()
+	{
+		//Set up the font
+		font.getEffects().add(new ColorEffect(Color.black));
+		font.addAsciiGlyphs();
+		try {
+			font.loadGlyphs();
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+		
+		//Set up the shader
+		setupShader("/res/shader.v","/res/shader.f");
+		
+		//Load and parse the Language file
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		try {
+			builder = factory.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}
+		
+		//Building Types
+		buildingTypes.add(BUILDINGTYPE_HOUSE,new BuildingType("BUILDINGTYPE_HOUSE",OBJECT_HOUSE,TEXTURE_HOUSE,0,1,1,15));
+		buildingTypes.add(BUILDINGTYPE_MONKEY,new BuildingType("BUILDINGTYPE_MONKEY",OBJECT_MONKEY,TEXTURE_MONKEY,0,1,1,0));
+		
+		//XML files
+		settingsFile = addXML("/res/settings/settings.xml");
+		langFile = addXML("/res/lang/"+getSetting("lang")+".xml");
+	}
+
 	private static Texture LoadTexture(String path)
 	{
 		try {
@@ -140,36 +182,6 @@ public class ResourceManager {
 	public ResourceManager()
 	{
 			
-	}
-	
-	/**
-	 * Initializes the Resources that need to be initialized
-	 */
-	@SuppressWarnings("unchecked")
-	public static void init()
-	{
-		//Set up the font
-		font.getEffects().add(new ColorEffect(Color.black));
-		font.addAsciiGlyphs();
-		try {
-			font.loadGlyphs();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
-		
-		//Set up the shader
-		setupShader("/res/shader.v","/res/shader.f");
-		
-		//Load and parse the Language file
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		try {
-			builder = factory.newDocumentBuilder();
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-		}
-		
-		settingsFile = addXML("/res/settings/settings.xml");
-		langFile = addXML("/res/lang/"+getSetting("lang")+".xml");
 	}
 	
 	/**
@@ -303,6 +315,16 @@ public class ResourceManager {
 		glAttachShader(shaderProgram, fragmentShader);
 		glLinkProgram(shaderProgram);
 		glValidateProgram(shaderProgram);
+	}
+	
+	/**
+	 * Gets a BuildingType from its Index
+	 * @param index The index defined in the resourcemanager
+	 * @return The corresponding BuildingType
+	 */
+	public static BuildingType getBuildingType(int index)
+	{
+		return buildingTypes.get(index);
 	}
 	
 	/**

@@ -4,19 +4,23 @@ import game.ResourceManager;
 import animation.AnimationManager;
 import animation.AnimationValue;
 
-public class House extends Entity {
+public class Building extends Entity {
+	private int preferredY = 0;
+	
 	@Override
 	public float getPreferredY()
-	{return 15;}
+	{return preferredY;}
 	
-	public House()
+	public Building(int bt)
 	{
-		super(ResourceManager.OBJECT_HOUSE, ResourceManager.TEXTURE_HOUSE);
+		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture());
+		preferredY = ResourceManager.getBuildingType(bt).getPreferredY();
 	}
 	
-	public House(int x, int y, int z)
+	public Building(int bt, int x, int y, int z)
 	{
-		super(ResourceManager.OBJECT_HOUSE, ResourceManager.TEXTURE_HOUSE,x,y+50,z);
+		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture(),x,y+50,z);
+		preferredY = ResourceManager.getBuildingType(bt).getPreferredY();
 		AnimationManager.animateValue(this, AnimationValue.Y, y, 0.5f);
 	}
 	
