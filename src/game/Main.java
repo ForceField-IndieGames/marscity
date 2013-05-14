@@ -6,6 +6,7 @@ import gui.GUI;
 import gui.guiElement;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.io.FileNotFoundException;
@@ -15,6 +16,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
@@ -48,7 +50,7 @@ class splashScreen extends JFrame implements Runnable{
 	
 	private static final long serialVersionUID = 1L;
 	JLabel label;
-	JLabel label2;
+	JLabel background;
 	public Thread thread;
 	public splashScreen()
 	{
@@ -59,31 +61,31 @@ class splashScreen extends JFrame implements Runnable{
 		setBounds(0, 0, Toolkit.getDefaultToolkit().getScreenSize().width , Toolkit.getDefaultToolkit().getScreenSize().height);
 		setAlwaysOnTop(true);
 		setLayout(null);
-		label = new JLabel("Daten werden geladen, bitte warten");
+		label = new JLabel("");
 		label.setForeground(Color.white);
+		label.setFont(new Font("comicsans",Font.BOLD,40));
 		add(label);
-		label.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width/2-100, Toolkit.getDefaultToolkit().getScreenSize().height/2, 500, 50);
-		label2 = new JLabel("Mars City");
-		label2.setForeground(Color.white);
-		add(label2);
-		label2.setFont(new Font("Arial", Font.BOLD, 30));
-		label2.setBounds(Toolkit.getDefaultToolkit().getScreenSize().width/2-70, Toolkit.getDefaultToolkit().getScreenSize().height/2-30, 500, 50);
+		label.setBounds(20, getHeight()-50, 500, 50);
+		background = new JLabel(new ImageIcon(Main.class.getResource("/res/forcefieldbackground.png")));
+		add(background);
+		background.setBounds(0, 0, getWidth(), getHeight());
+		background.setDoubleBuffered(true);
 		Thread thread = new Thread(this);
 		thread.start();
 	}
 
 	@Override
 	public void run() {
-		while(true)
+		while(isVisible())
 		{
-			if(label.getText()=="Daten werden geladen, bitte warten"){
-				label.setText("Daten werden geladen, bitte warten.");
-			}else if(label.getText()=="Daten werden geladen, bitte warten."){
-				label.setText("Daten werden geladen, bitte warten..");
-			}else if(label.getText()=="Daten werden geladen, bitte warten.."){
-				label.setText("Daten werden geladen, bitte warten...");
-			}else if(label.getText()=="Daten werden geladen, bitte warten..."){
-				label.setText("Daten werden geladen, bitte warten");
+			if(label.getText()==""){
+				label.setText(".");
+			}else if(label.getText()=="."){
+				label.setText("..");
+			}else if(label.getText()==".."){
+				label.setText("...");
+			}else if(label.getText()=="..."){
+				label.setText("");
 			}
 			try {
 				Thread.sleep(500);
