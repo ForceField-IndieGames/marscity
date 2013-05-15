@@ -53,7 +53,7 @@ public class ResourceManager {
 	public final static int BUILDINGTYPE_HOUSE = 0;
 	public final static int BUILDINGTYPE_MONKEY = 1;
 	
-	public final static int OBJECT_HOUSE = addObject("/res/haus.obj");
+	public final static int OBJECT_HOUSE = addObject("/res/house.obj");
 	public final static int OBJECT_MONKEY = addObject("/res/monkey.obj");
 	public final static int OBJECT_BUNNY = addObject("/res/bunny.obj");
 	public final static int OBJECT_TERRAIN = addObject("/res/terrain.obj");
@@ -61,7 +61,7 @@ public class ResourceManager {
 	public final static Audio SOUND_DROP = addSound("WAV", "/res/drop.wav");
 	public final static Audio SOUND_DESTROY = addSound("WAV", "/res/destroy.wav");
 	
-	public final static Texture TEXTURE_HOUSE = addTexture("/res/haustextur.png");
+	public final static Texture TEXTURE_HOUSE = addTexture("/res/housetexture.png");
 	public final static Texture TEXTURE_MONKEY = addTexture("/res/monkeytexture.png");
 	public final static Texture TEXTURE_TERRAIN = addTexture("/res/mars.png");
 	public final static Texture TEXTURE_GUISELECT = addTexture("/res/guiselect.png");
@@ -107,7 +107,7 @@ public class ResourceManager {
 		}
 		
 		//Building Types
-		buildingTypes.add(BUILDINGTYPE_HOUSE,new BuildingType("BUILDINGTYPE_HOUSE",OBJECT_HOUSE,TEXTURE_HOUSE,0,1,1,15));
+		buildingTypes.add(BUILDINGTYPE_HOUSE,new BuildingType("BUILDINGTYPE_HOUSE",OBJECT_HOUSE,TEXTURE_HOUSE,0,1,1,1));
 		buildingTypes.add(BUILDINGTYPE_MONKEY,new BuildingType("BUILDINGTYPE_MONKEY",OBJECT_MONKEY,TEXTURE_MONKEY,0,1,1,0));
 		
 		//XML files

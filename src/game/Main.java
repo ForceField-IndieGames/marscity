@@ -163,12 +163,7 @@ public class Main {
 		
 		buildpreview = new BuildPreview();
 		
-		//Create some Objects
-				terrain = new Terrain(0,0,-150);
-				ResourceManager.objects.add(new Entity(ResourceManager.OBJECT_MONKEY, ResourceManager.TEXTURE_MONKEY,-50,10,-100));
-				ResourceManager.objects.add(new Entity(ResourceManager.OBJECT_BUNNY,2,0,-100));
-				ResourceManager.objects.add(new Building(ResourceManager.BUILDINGTYPE_HOUSE,70,0,-150));
-		
+		terrain = new Terrain(0,0,-150);
 		
 		//Set up the sound
 		try {
@@ -504,10 +499,10 @@ public class Main {
 							} catch (Exception e) {}
 							break;
 						
-						case(TOOL_ADD): // Create a new House
+						case(TOOL_ADD): // Create a new Building
 							if(hoveredEntity!=-1||currentBuildingType==-1)break;
 								ResourceManager.playSound(ResourceManager.SOUND_DROP);
-								ResourceManager.objects.add(new Building(currentBuildingType,(int)mousepos3d[0], (int)mousepos3d[1], (int)mousepos3d[2]));
+								ResourceManager.objects.add(new Building(currentBuildingType,(int)Grid.cellSize*Math.round(mousepos3d[0]/Grid.cellSize), (int)Grid.cellSize*Math.round(mousepos3d[1]/Grid.cellSize), (int)Grid.cellSize*Math.round(mousepos3d[2]/Grid.cellSize)));
 							break;
 							
 						case(TOOL_DELETE): // Delete the Object
@@ -557,9 +552,9 @@ public class Main {
 		
 		//Move the BuildPreview
 		if(selectedTool==TOOL_ADD&&gui.mouseover()==null&&!Mouse.isGrabbed()){
-			buildpreview.setX(mousepos3d[0]);
-			buildpreview.setY(mousepos3d[1]);
-			buildpreview.setZ(mousepos3d[2]);
+			buildpreview.setX(Grid.cellSize*Math.round(mousepos3d[0]/Grid.cellSize));
+			buildpreview.setY(Grid.cellSize*Math.round(mousepos3d[1]/Grid.cellSize));
+			buildpreview.setZ(Grid.cellSize*Math.round(mousepos3d[2]/Grid.cellSize));
 			buildpreview.setVisible(true);
 		}else{
 			buildpreview.setVisible(false);
