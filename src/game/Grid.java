@@ -2,6 +2,6 @@ package game;
 
 public class Grid {
 
-	public static int cellSize = 20;
+	public final static int cellSize = 2;
 	
 }

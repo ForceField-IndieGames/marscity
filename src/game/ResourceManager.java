@@ -107,7 +107,7 @@ public class ResourceManager {
 		}
 		
 		//Building Types
-		buildingTypes.add(BUILDINGTYPE_HOUSE,new BuildingType("BUILDINGTYPE_HOUSE",OBJECT_HOUSE,TEXTURE_HOUSE,0,1,1,1));
+		buildingTypes.add(BUILDINGTYPE_HOUSE,new BuildingType("BUILDINGTYPE_HOUSE",OBJECT_HOUSE,TEXTURE_HOUSE,0,2,2,0.25f));
 		buildingTypes.add(BUILDINGTYPE_MONKEY,new BuildingType("BUILDINGTYPE_MONKEY",OBJECT_MONKEY,TEXTURE_MONKEY,0,1,1,0));
 		
 		//XML files

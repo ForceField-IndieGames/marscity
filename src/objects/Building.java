@@ -5,7 +5,7 @@ import animation.AnimationManager;
 import animation.AnimationValue;
 
 public class Building extends Entity {
-	private int preferredY = 0;
+	private float preferredY = 0;
 	
 	@Override
 	public float getPreferredY()
@@ -19,9 +19,9 @@ public class Building extends Entity {
 	
 	public Building(int bt, int x, int y, int z)
 	{
-		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture(),x,y+50,z);
+		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture(),x,y+5,z);
 		preferredY = ResourceManager.getBuildingType(bt).getPreferredY();
-		AnimationManager.animateValue(this, AnimationValue.Y, y, 0.5f);
+		AnimationManager.animateValue(this, AnimationValue.Y, y, 0.05f);
 	}
 	
 	@Override
@@ -33,7 +33,7 @@ public class Building extends Entity {
 	@Override
 	public void delete()
 	{
-		AnimationManager.animateValue(this, AnimationValue.Y, getY()-20, 0.02f, AnimationManager.ACTION_DELETE);
+		AnimationManager.animateValue(this, AnimationValue.Y, getY()-getPreferredY()*5, 0.002f, AnimationManager.ACTION_DELETE);
 		AnimationManager.animateValue(this, AnimationValue.rotX, (float) (getRotX()-50+Math.random()*100), 0.02f);
 		AnimationManager.animateValue(this, AnimationValue.rotY, (float) (getRotY()-50+Math.random()*100), 0.02f);
 		AnimationManager.animateValue(this, AnimationValue.rotZ, (float) (getRotZ()-50+Math.random()*100), 0.02f);

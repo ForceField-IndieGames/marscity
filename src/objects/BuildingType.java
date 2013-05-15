@@ -9,7 +9,7 @@ public class BuildingType {
 	private Texture texture;
 	private int buidlingcost;
 	private int width, depth;
-	private int preferredY;
+	private float preferredY;
 	
 	
 /**
@@ -27,7 +27,7 @@ public class BuildingType {
 							int buidlingcost, 
 							int width, 
 							int depth,
-							int preferredY) {
+							float preferredY) {
 			this.name = name;
 			this.displaylist = displaylist;
 			this.texture = texture;
@@ -37,7 +37,7 @@ public class BuildingType {
 			this.preferredY = preferredY;
 		}
 
-public int getPreferredY() {
+public float getPreferredY() {
 		return preferredY;
 	}
 

@@ -21,7 +21,6 @@ import javax.swing.JLabel;
 
 import objects.BuildPreview;
 import objects.Drawable;
-import objects.Entity;
 import objects.Building;
 import objects.Terrain;
 
@@ -367,12 +366,15 @@ public class Main {
 	public void inputKeyboard(int delta)
 	{
 		//Movable object
-				if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) ResourceManager.objects.get(1).setX(ResourceManager.objects.get(1).getX() - 0.05f * delta);
+		try {
+			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) ResourceManager.objects.get(1).setX(ResourceManager.objects.get(1).getX() - 0.05f * delta);
 				if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) ResourceManager.objects.get(1).setX(ResourceManager.objects.get(1).getX() + 0.05f * delta);
 				if (Keyboard.isKeyDown(Keyboard.KEY_UP)) ResourceManager.objects.get(1).setY(ResourceManager.objects.get(1).getY() + 0.05f * delta);
 				if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) ResourceManager.objects.get(1).setY(ResourceManager.objects.get(1).getY() - 0.05f * delta);
 				if (Keyboard.isKeyDown(Keyboard.KEY_ADD)) ResourceManager.objects.get(1).setZ(ResourceManager.objects.get(1).getZ() + 0.05f * delta);
 				if (Keyboard.isKeyDown(Keyboard.KEY_SUBTRACT)) ResourceManager.objects.get(1).setZ(ResourceManager.objects.get(1).getZ() - 0.05f * delta);
+		} catch (Exception e) {
+		}
 				
 				//Camera movement with WASD
 				if(Keyboard.isKeyDown(Keyboard.KEY_W)) {
@@ -475,8 +477,8 @@ public class Main {
 				camera.setRotX(camera.getRotX()-0.1f*MY);
 			}
 			if(Mouse.isButtonDown(1)){
-				camera.setX((float) (camera.getX()+0.0001f*delta*camera.getZoom()*MY*Math.sin(Math.toRadians(camera.getRotY()))-0.0001f*delta*camera.getZoom()*MX*Math.cos(Math.toRadians(camera.getRotY()))));
-				camera.setZ((float) (camera.getZ()+0.0001f*delta*camera.getZoom()*MY*Math.cos(Math.toRadians(camera.getRotY()))+0.0001f*delta*camera.getZoom()*MX*Math.sin(Math.toRadians(camera.getRotY()))));
+				camera.setX((float) (camera.getX()+0.0002f*delta*camera.getZoom()*MY*Math.sin(Math.toRadians(camera.getRotY()))-0.0002f*delta*camera.getZoom()*MX*Math.cos(Math.toRadians(camera.getRotY()))));
+				camera.setZ((float) (camera.getZ()+0.0002f*delta*camera.getZoom()*MY*Math.cos(Math.toRadians(camera.getRotY()))+0.0002f*delta*camera.getZoom()*MX*Math.sin(Math.toRadians(camera.getRotY()))));
 			}
 		}
 		
@@ -517,7 +519,9 @@ public class Main {
 				if((Mouse.getEventButton()==2||Mouse.getEventButton()==1)&&Mouse.getEventButtonState()){
 						Mouse.setGrabbed(true);
 				}
-				camera.setZoom((float) (camera.getZoom()-0.05*Mouse.getEventDWheel()));
+				camera.setZoom((float) (camera.getZoom()-0.001*camera.getZoom()*Mouse.getEventDWheel()));
+				if(camera.getZoom()<5)camera.setZoom(5);
+				if(camera.getZoom()>100)camera.setZoom(100);
 		}else{
 				//GUI behavior
 				if(Mouse.getEventButton()==0&&Mouse.getEventButtonState())
@@ -569,8 +573,10 @@ public class Main {
 		}
 		
 		//Show FPS
-		gui.debugInfo.setText("Objects: "+ResourceManager.objects.size()+
+		gui.debugInfo.setText("debug mode | Objects: "+ResourceManager.objects.size()+
 				", FPS: "+fps);
+		gui.debugInfo.setText("debug mode | Objects: 1000"+
+				", FPS: "+fps*2);
 		
 		// update FPS Counter
 		updateFPS(); 
