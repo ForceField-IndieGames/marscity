@@ -312,60 +312,60 @@ public class Main {
 	
 	public void inputGui(guiElement guihit)
 	{
-		if(guihit==gui.toolselect){
+		if(guihit==gui.toolSelect){
 			selectedTool = TOOL_SELECT;
-			gui.toolselect.setColor(Color.white);
-			gui.tooladd.setColor(Color.gray);
-			gui.tooldelete.setColor(Color.gray);
-			AnimationManager.animateValue(gui.toolbar, AnimationValue.Y, -40, 0.5f);
+			gui.toolSelect.setColor(Color.white);
+			gui.toolAdd.setColor(Color.gray);
+			gui.toolDelete.setColor(Color.gray);
+			AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, -40, 0.5f);
 			buildpreview.setBuilding(-1);
 		}
-		if(guihit==gui.tooladd){
+		if(guihit==gui.toolAdd){
 			selectedTool = TOOL_ADD;
-			gui.toolselect.setColor(Color.gray);
-			gui.tooladd.setColor(Color.white);
-			gui.tooldelete.setColor(Color.gray);
-			AnimationManager.animateValue(gui.toolbar, AnimationValue.Y, 0, 0.5f);
+			gui.toolSelect.setColor(Color.gray);
+			gui.toolAdd.setColor(Color.white);
+			gui.toolDelete.setColor(Color.gray);
+			AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, 0, 0.5f);
 		}
- 		if(guihit==gui.tooldelete){
+ 		if(guihit==gui.toolDelete){
 			selectedTool = TOOL_DELETE;
-			gui.toolselect.setColor(Color.gray);
-			gui.tooladd.setColor(Color.gray);
-			gui.tooldelete.setColor(Color.white);
-			AnimationManager.animateValue(gui.toolbar, AnimationValue.Y, -40, 0.5f);
+			gui.toolSelect.setColor(Color.gray);
+			gui.toolAdd.setColor(Color.gray);
+			gui.toolDelete.setColor(Color.white);
+			AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, -40, 0.5f);
 			buildpreview.setBuilding(-1);
 		}
- 		if(guihit==gui.pauseresume){
+ 		if(guihit==gui.pauseResume){
 			gui.blur.setVisible(false);
 			Game.Resume();
-			AnimationManager.animateValue(gui.pausemenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
+			AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
 		}
- 		if(guihit==gui.pauseexit){
+ 		if(guihit==gui.pauseExit){
 			Game.exit();
 		}
- 		if(guihit==gui.settingsresume){
+ 		if(guihit==gui.settingsResume){
 			Game.Resume();
-			AnimationManager.animateValue(gui.settingsmenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
+			AnimationManager.animateValue(gui.settingsMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
 		}
- 			if(guihit==gui.pausesettings){
-			gui.pausemenu.setVisible(false);
-			gui.settingsmenu.setVisible(true);
+ 			if(guihit==gui.pauseSettings){
+			gui.pauseMenu.setVisible(false);
+			gui.settingsMenu.setVisible(true);
 			gui.blur.setVisible(false);
-			AnimationManager.animateValue(gui.settingsmenu, AnimationValue.opacity, 1, 0.005f);
+			AnimationManager.animateValue(gui.settingsMenu, AnimationValue.opacity, 1, 0.005f);
 		}
- 		if(guihit==gui.pausemainmenu){
+ 		if(guihit==gui.pauseMainmenu){
 			gameState = STATE_MENU;
 		}
- 		if(guihit==gui.buildinghouse){
+ 		if(guihit==gui.buildingHouse){
  			currentBuildingType = ResourceManager.BUILDINGTYPE_HOUSE;
  			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_HOUSE);
- 			gui.buildinghouse.setColor(Color.gray);
- 		}else gui.buildinghouse.setColor(Color.white);
- 		if(guihit==gui.buildingmonkey){
+ 			gui.buildingHouse.setColor(Color.gray);
+ 		}else gui.buildingHouse.setColor(Color.white);
+ 		if(guihit==gui.buildingMonkey){
  			currentBuildingType = ResourceManager.BUILDINGTYPE_MONKEY;
  			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_MONKEY);
- 			gui.buildingmonkey.setColor(Color.gray);
- 		}else gui.buildingmonkey.setColor(Color.white);
+ 			gui.buildingMonkey.setColor(Color.gray);
+ 		}else gui.buildingMonkey.setColor(Color.white);
 	}
 	
 	
@@ -405,12 +405,12 @@ public class Main {
 						{
 							Game.Resume();
 							gui.blur.setVisible(false);
-							AnimationManager.animateValue(gui.pausemenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
+							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
 						}else {
 							Game.Pause();
 							gui.blur.setVisible(true);
-							gui.pausemenu.setVisible(true);
-							AnimationManager.animateValue(gui.pausemenu, AnimationValue.opacity, 1, 0.005f);
+							gui.pauseMenu.setVisible(true);
+							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f);
 						}
 					}
 					if(Keyboard.getEventKey()==Keyboard.KEY_RETURN && Keyboard.getEventKeyState()){
@@ -433,31 +433,31 @@ public class Main {
 						{
 							Game.Resume();
 							gui.blur.setVisible(false);
-							AnimationManager.animateValue(gui.pausemenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
+							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
 						}else {
 							Game.Pause();
 							gui.blur.setVisible(true);
-							gui.pausemenu.setVisible(true);
-							AnimationManager.animateValue(gui.pausemenu, AnimationValue.opacity, 1, 0.005f);
+							gui.pauseMenu.setVisible(true);
+							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f);
 						}
 					}
 					if(Keyboard.getEventKey()==Keyboard.KEY_1&&Keyboard.getEventKeyState()){
 						selectedTool = TOOL_SELECT;
-						gui.toolselect.setColor(Color.white);
-						gui.tooladd.setColor(Color.gray);
-						gui.tooldelete.setColor(Color.gray);
+						gui.toolSelect.setColor(Color.white);
+						gui.toolAdd.setColor(Color.gray);
+						gui.toolDelete.setColor(Color.gray);
 					}
 					if(Keyboard.getEventKey()==Keyboard.KEY_2&&Keyboard.getEventKeyState()){
 						selectedTool = TOOL_ADD;
-						gui.toolselect.setColor(Color.gray);
-						gui.tooladd.setColor(Color.white);
-						gui.tooldelete.setColor(Color.gray);
+						gui.toolSelect.setColor(Color.gray);
+						gui.toolAdd.setColor(Color.white);
+						gui.toolDelete.setColor(Color.gray);
 					}
 					if(Keyboard.getEventKey()==Keyboard.KEY_3&&Keyboard.getEventKeyState()){
 						selectedTool = TOOL_DELETE;
-						gui.toolselect.setColor(Color.gray);
-						gui.tooladd.setColor(Color.gray);
-						gui.tooldelete.setColor(Color.white);
+						gui.toolSelect.setColor(Color.gray);
+						gui.toolAdd.setColor(Color.gray);
+						gui.toolDelete.setColor(Color.white);
 					}
 				}
 	}

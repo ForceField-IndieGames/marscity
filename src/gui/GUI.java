@@ -19,35 +19,36 @@ public class GUI {
 	public GuiButton MenuLoad = new GuiButton(220, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2);
 	public GuiButton MenuSettings = new GuiButton(440, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2);
 	public GuiButton MenuExit = new GuiButton(660, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiLabel MenuVersion = new GuiLabel(0,0,180,20,(Color)null);
 	
+	public GuiPanel toolBar = new GuiPanel(0,0,Display.getWidth(),84, ResourceManager.TEXTURE_GUITOOLBAR);
+	public GuiPanel toolSelect = new GuiPanel(10, 10, 64, 64, ResourceManager.TEXTURE_GUISELECT);
+	public GuiPanel toolAdd = new GuiPanel(84, 10, 64, 64, ResourceManager.TEXTURE_GUIADD, Color.gray);
+	public GuiPanel toolDelete = new GuiPanel(158, 10, 64, 64, ResourceManager.TEXTURE_GUIDELETE, Color.gray);
 	
-	public GuiPanel toolbar = new GuiPanel(0,0,Display.getWidth(),84, ResourceManager.TEXTURE_GUITOOLBAR);
-	public GuiPanel toolselect = new GuiPanel(10, 10, 64, 64, ResourceManager.TEXTURE_GUISELECT);
-	public GuiPanel tooladd = new GuiPanel(84, 10, 64, 64, ResourceManager.TEXTURE_GUIADD, Color.gray);
-	public GuiPanel tooldelete = new GuiPanel(158, 10, 64, 64, ResourceManager.TEXTURE_GUIDELETE, Color.gray);
+	public GuiPanel infoBar = new GuiPanel(300,55,700,20,(Color)null);
+	public GuiLabel infoMoney = new GuiLabel(0,0,100,20,(Color)null);
+	public GuiLabel infoCitizens = new GuiLabel(100,0,100,20,(Color)null);
 	
-	public GuiPanel infobar = new GuiPanel(300,55,700,20,(Color)null);
-	public GuiLabel infomoney = new GuiLabel(0,0,100,20,(Color)null);
-	public GuiLabel infocitizens = new GuiLabel(100,0,100,20,(Color)null);
-	
-	public GuiPanel buildingchooser = new GuiPanel(300,0,700,50, (Color)null);
-	public GuiButton buildinghouse = new GuiButton(0,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2, Color.gray);
-	public GuiButton buildingmonkey = new GuiButton(100,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiPanel buildingChooser = new GuiPanel(300,0,700,50, (Color)null);
+	public GuiButton buildingHouse = new GuiButton(0,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2, Color.gray);
+	public GuiButton buildingMonkey = new GuiButton(100,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2);
 	
 	public GuiPanel blur = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),(Color)null);
-	public GuiPanel pausemenu = new GuiPanel(Display.getWidth()/2-128,Display.getHeight()/2-128,256,256,ResourceManager.TEXTURE_GUIMENU);
-	public GuiButton pausemainmenu = new GuiButton(28, 200, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
-	public GuiButton pauseload = new GuiButton(28, 170, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
-	public GuiButton pausesave = new GuiButton(28, 140, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
-	public GuiButton pausesettings = new GuiButton(28, 110, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
-	public GuiButton pauseexit = new GuiButton(28, 80, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
-	public GuiButton pauseresume = new GuiButton(28, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiPanel pauseMenu = new GuiPanel(Display.getWidth()/2-128,Display.getHeight()/2-128,256,256,ResourceManager.TEXTURE_GUIMENU);
+	public GuiButton pauseMainmenu = new GuiButton(28, 200, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton pauseLoad = new GuiButton(28, 170, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton pauseSave = new GuiButton(28, 140, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton pauseSettings = new GuiButton(28, 110, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton pauseExit = new GuiButton(28, 80, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton pauseResume = new GuiButton(28, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiPanel pauseLogo = new GuiPanel(-128,256,512,128,ResourceManager.TEXTURE_MARSCITYLOGO);
 	
 	public GuiLabel debugInfo = new GuiLabel(0,Display.getHeight()-20,200,20,Color.white);
 	
-	public GuiPanel settingsmenu = new GuiPanel(Display.getWidth()/2-128,Display.getHeight()/2-128,256,256,ResourceManager.TEXTURE_GUIMENU);
-	public GuiButton settingsresume = new GuiButton(28, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
-	public GuiLabel settingstitle = new GuiLabel(30, 220, 100, 20, (Color)null);
+	public GuiPanel settingsMenu = new GuiPanel(Display.getWidth()/2-128,Display.getHeight()/2-128,256,256,ResourceManager.TEXTURE_GUIMENU);
+	public GuiButton settingsResume = new GuiButton(28, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiLabel settingsTitle = new GuiLabel(30, 220, 100, 20, (Color)null);
 	
 	List<guiElement> elements = new ArrayList<guiElement>();
 	List<guiElement> menuElements = new ArrayList<guiElement>();
@@ -57,58 +58,61 @@ public class GUI {
 		//Main menu
 		menuElements.add(MenuBG);
 		menuElements.add(MenuFF);
+		menuElements.add(MenuVersion);
+						 MenuVersion.setText("Mars City [Alpha 0.0.1]");
 		menuElements.add(MenuPanel);
-		MenuPanel.add(MenuPlay);
-		     		    MenuPlay.setText(ResourceManager.getString("MAINMENU_BUTTON_PLAY"));
-	 		   MenuPanel.add(MenuLoad);
-		     		    MenuLoad.setText(ResourceManager.getString("MAINMENU_BUTTON_LOAD"));
-	 		   MenuPanel.add(MenuSettings);
-		     		    MenuSettings.setText(ResourceManager.getString("MAINMENU_BUTTON_SETTINGS"));
-	 		   MenuPanel.add(MenuExit);
-		     		    MenuExit.setText(ResourceManager.getString("MAINMENU_BUTTON_EXIT"));
+						 MenuPanel.add(MenuPlay);
+		     		    			   MenuPlay.setText(ResourceManager.getString("MAINMENU_BUTTON_PLAY"));
+		     		     MenuPanel.add(MenuLoad);
+		     		     			   MenuLoad.setText(ResourceManager.getString("MAINMENU_BUTTON_LOAD"));
+		     		     MenuPanel.add(MenuSettings);
+		     		     			   MenuSettings.setText(ResourceManager.getString("MAINMENU_BUTTON_SETTINGS"));
+		     		     MenuPanel.add(MenuExit);
+		     		     			   MenuExit.setText(ResourceManager.getString("MAINMENU_BUTTON_EXIT"));
 		
 		//GUI
-		add(toolbar);
-			toolbar.setY(-40);
-			toolbar.add(buildingchooser);
-						buildingchooser.add(buildinghouse);
-											buildinghouse.setText(ResourceManager.getString(ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_HOUSE).getName()));
-						buildingchooser.add(buildingmonkey);
-											buildingmonkey.setText(ResourceManager.getString(ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_MONKEY).getName()));
-			toolbar.add(infobar);
-						infobar.add(infomoney);
-									infomoney.setText("Geld: 0$");
-						infobar.add(infocitizens);
-									infocitizens.setText("Einwohner: 0");
+		add(toolBar);
+			toolBar.setY(-40);
+			toolBar.add(buildingChooser);
+						buildingChooser.add(buildingHouse);
+											buildingHouse.setText(ResourceManager.getString(ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_HOUSE).getName()));
+						buildingChooser.add(buildingMonkey);
+											buildingMonkey.setText(ResourceManager.getString(ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_MONKEY).getName()));
+			toolBar.add(infoBar);
+						infoBar.add(infoMoney);
+									infoMoney.setText("Geld: 0$");
+						infoBar.add(infoCitizens);
+									infoCitizens.setText("Einwohner: 0");
 			
-		add(toolselect);
-		add(tooladd);
-		add(tooldelete);
+		add(toolSelect);
+		add(toolAdd);
+		add(toolDelete);
 		
 		add(blur);
 			blur.setBlurBehind(true);
 			blur.setVisible(false);
-		add(pausemenu);
-			pausemenu.setVisible(false);
-			pausemenu.add(pausemainmenu);
-						  pausemainmenu.setText(ResourceManager.getString("PAUSEMENU_BUTTON_MAINMENU"));
-			pausemenu.add(pauseload);
-						  pauseload.setText(ResourceManager.getString("PAUSEMENU_BUTTON_LOAD"));
-			pausemenu.add(pausesave);
-						  pausesave.setText(ResourceManager.getString("PAUSEMENU_BUTTON_SAVE"));
-			pausemenu.add(pausesettings);
-						  pausesettings.setText(ResourceManager.getString("PAUSEMENU_BUTTON_SETTINGS"));
-			pausemenu.add(pauseexit);
-						  pauseexit.setText(ResourceManager.getString("PAUSEMENU_BUTTON_EXIT"));			  
-			pausemenu.add(pauseresume);
-						  pauseresume.setText(ResourceManager.getString("PAUSEMENU_BUTTON_RESUME"));
+		add(pauseMenu);
+			pauseMenu.setVisible(false);
+			pauseMenu.add(pauseLogo);
+			pauseMenu.add(pauseMainmenu);
+						  pauseMainmenu.setText(ResourceManager.getString("PAUSEMENU_BUTTON_MAINMENU"));
+			pauseMenu.add(pauseLoad);
+						  pauseLoad.setText(ResourceManager.getString("PAUSEMENU_BUTTON_LOAD"));
+			pauseMenu.add(pauseSave);
+						  pauseSave.setText(ResourceManager.getString("PAUSEMENU_BUTTON_SAVE"));
+			pauseMenu.add(pauseSettings);
+						  pauseSettings.setText(ResourceManager.getString("PAUSEMENU_BUTTON_SETTINGS"));
+			pauseMenu.add(pauseExit);
+						  pauseExit.setText(ResourceManager.getString("PAUSEMENU_BUTTON_EXIT"));			  
+			pauseMenu.add(pauseResume);
+						  pauseResume.setText(ResourceManager.getString("PAUSEMENU_BUTTON_RESUME"));
 		
-	    add(settingsmenu);
-			settingsmenu.setVisible(false);
-			settingsmenu.add(settingstitle);
-							 settingstitle.setText(ResourceManager.getString("SETTINGSMENU_LABEL_TITLE"));
-			settingsmenu.add(settingsresume);
-							 settingsresume.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_RESUME"));
+	    add(settingsMenu);
+			settingsMenu.setVisible(false);
+			settingsMenu.add(settingsTitle);
+							 settingsTitle.setText(ResourceManager.getString("SETTINGSMENU_LABEL_TITLE"));
+			settingsMenu.add(settingsResume);
+							 settingsResume.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_RESUME"));
 		add(debugInfo);	
 						  
 	}
