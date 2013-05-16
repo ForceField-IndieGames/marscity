@@ -112,6 +112,8 @@ public class Main {
 	int fpsnow, fps;
 	long lastTime;
 	
+	boolean debugMode = false;
+	
 	int soundbuffer;
 	int soundsource;
 	int hoveredEntity = -1;
@@ -355,11 +357,11 @@ public class Main {
  			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_HOUSE);
  			gui.buildingHouse.setColor(Color.gray);
  		}else gui.buildingHouse.setColor(Color.white);
- 		if(guihit==gui.buildingMonkey){
- 			currentBuildingType = ResourceManager.BUILDINGTYPE_MONKEY;
- 			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_MONKEY);
- 			gui.buildingMonkey.setColor(Color.gray);
- 		}else gui.buildingMonkey.setColor(Color.white);
+ 		if(guihit==gui.buildingBighouse){
+ 			currentBuildingType = ResourceManager.BUILDINGTYPE_BIGHOUSE;
+ 			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_BIGHOUSE);
+ 			gui.buildingBighouse.setColor(Color.gray);
+ 		}else gui.buildingBighouse.setColor(Color.white);
 	}
 	
 	
@@ -409,6 +411,7 @@ public class Main {
 							gui.pauseMenu.setVisible(true);
 							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f);
 						}
+						if(debugMode)Game.exit();
 					}
 					if(Keyboard.getEventKey()==Keyboard.KEY_RETURN && Keyboard.getEventKeyState()){
 						if(sound.isPlaying()){
@@ -455,6 +458,15 @@ public class Main {
 						gui.toolSelect.setColor(Color.gray);
 						gui.toolAdd.setColor(Color.gray);
 						gui.toolDelete.setColor(Color.white);
+					}
+					if(Keyboard.getEventKey()==Keyboard.KEY_TAB&&Keyboard.getEventKeyState()){
+						if(debugMode){
+							debugMode = false;
+							gui.debugInfo.setVisible(false);
+						}else{
+							debugMode = true;
+							gui.debugInfo.setVisible(true);
+						}
 					}
 				}
 	}
@@ -575,8 +587,6 @@ public class Main {
 		//Show FPS
 		gui.debugInfo.setText("debug mode | Objects: "+ResourceManager.objects.size()+
 				", FPS: "+fps);
-		gui.debugInfo.setText("debug mode | Objects: 1000"+
-				", FPS: "+fps*2);
 		
 		// update FPS Counter
 		updateFPS(); 
@@ -658,6 +668,7 @@ public class Main {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glEnable(GL_LIGHTING);
         glEnable(GL_TEXTURE_2D);
+        
         terrain.draw();
        
         for(int i=0;i<ResourceManager.objects.size();i++){

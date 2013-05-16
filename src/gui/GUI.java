@@ -32,7 +32,7 @@ public class GUI {
 	
 	public GuiPanel buildingChooser = new GuiPanel(300,0,700,50, (Color)null);
 	public GuiButton buildingHouse = new GuiButton(0,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2, Color.gray);
-	public GuiButton buildingMonkey = new GuiButton(100,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiButton buildingBighouse = new GuiButton(100,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2);
 	
 	public GuiPanel blur = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),(Color)null);
 	public GuiPanel pauseMenu = new GuiPanel(Display.getWidth()/2-128,Display.getHeight()/2-128,256,256,ResourceManager.TEXTURE_GUIMENU);
@@ -44,7 +44,7 @@ public class GUI {
 	public GuiButton pauseResume = new GuiButton(28, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
 	public GuiPanel pauseLogo = new GuiPanel(-128,256,512,128,ResourceManager.TEXTURE_MARSCITYLOGO);
 	
-	public GuiLabel debugInfo = new GuiLabel(0,Display.getHeight()-20,200,20,Color.white);
+	public GuiLabel debugInfo = new GuiLabel(0,Display.getHeight()-20,Display.getWidth(),20,Color.white);
 	
 	public GuiPanel settingsMenu = new GuiPanel(Display.getWidth()/2-128,Display.getHeight()/2-128,256,256,ResourceManager.TEXTURE_GUIMENU);
 	public GuiButton settingsResume = new GuiButton(28, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
@@ -76,8 +76,8 @@ public class GUI {
 			toolBar.add(buildingChooser);
 						buildingChooser.add(buildingHouse);
 											buildingHouse.setText(ResourceManager.getString(ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_HOUSE).getName()));
-						buildingChooser.add(buildingMonkey);
-											buildingMonkey.setText(ResourceManager.getString(ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_MONKEY).getName()));
+						buildingChooser.add(buildingBighouse);
+											buildingBighouse.setText(ResourceManager.getString(ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_BIGHOUSE).getName()));
 			toolBar.add(infoBar);
 						infoBar.add(infoMoney);
 									infoMoney.setText("Geld: 0$");
@@ -114,6 +114,7 @@ public class GUI {
 			settingsMenu.add(settingsResume);
 							 settingsResume.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_RESUME"));
 		add(debugInfo);	
+			debugInfo.setVisible(false);
 						  
 	}
 	
@@ -148,7 +149,7 @@ public class GUI {
 	{
 		glDisable(GL_DEPTH_TEST);
 		glPushMatrix();
-		
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glDisable(GL_LIGHTING);
 		for(guiElement element: menuElements) {
 			glMatrixMode(GL_PROJECTION);
