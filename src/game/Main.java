@@ -185,6 +185,7 @@ public class Main {
 		lastTime = getTime(); // call before loop to initialise fps timer
 		
 		splashscreen.setVisible(false);
+		
 
 		//Main Gameloop
 		while (!Display.isCloseRequested()) {
@@ -201,6 +202,7 @@ public class Main {
 				break;
 			case(STATE_GAME):
 				update(delta); //Gamelogic
+				
 				renderGL();    //Rendering
 				break;
 			default: break;
@@ -463,9 +465,11 @@ public class Main {
 						if(debugMode){
 							debugMode = false;
 							gui.debugInfo.setVisible(false);
+							try {Display.setFullscreen(true);} catch (LWJGLException e) {e.printStackTrace();}
 						}else{
 							debugMode = true;
 							gui.debugInfo.setVisible(true);
+							try {Display.setFullscreen(false);} catch (LWJGLException e) {e.printStackTrace();}
 						}
 					}
 				}

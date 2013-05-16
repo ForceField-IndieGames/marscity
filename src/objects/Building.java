@@ -34,8 +34,8 @@ public class Building extends Entity {
 	public void delete()
 	{
 		AnimationManager.animateValue(this, AnimationValue.Y, getY()-getPreferredY()*5, 0.002f, AnimationManager.ACTION_DELETE);
-		AnimationManager.animateValue(this, AnimationValue.rotX, (float) (getRotX()-50+Math.random()*100), 0.02f);
-		AnimationManager.animateValue(this, AnimationValue.rotY, (float) (getRotY()-50+Math.random()*100), 0.02f);
-		AnimationManager.animateValue(this, AnimationValue.rotZ, (float) (getRotZ()-50+Math.random()*100), 0.02f);
+		AnimationManager.animateValue(this, AnimationValue.rotX, (float) (getRotX()-10+Math.random()*20), 0.02f);
+		AnimationManager.animateValue(this, AnimationValue.rotY, (float) (getRotY()-10+Math.random()*20), 0.02f);
+		AnimationManager.animateValue(this, AnimationValue.rotZ, (float) (getRotZ()-10+Math.random()*20), 0.02f);
 	}
 }
