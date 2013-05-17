@@ -19,7 +19,7 @@ public class Camera implements Animatable {
 
 	public void applyTransform()
 	{
-		gluLookAt((float)(getX()+2*getZoom()*Math.sin(Math.toRadians(getRotY()))), y+zoom*zoom*0.05f, (float)(getZ()+2*getZoom()*Math.cos(Math.toRadians(getRotY()))),
+		gluLookAt((float)(getX()+2*getZoom()*Math.sin(Math.toRadians(getRotY()))), y+zoom*zoom*0.1f, (float)(getZ()+2*getZoom()*Math.cos(Math.toRadians(getRotY()))),
 				getX(), getY(), getZ(), 
 				0, 1, 0);
 	}

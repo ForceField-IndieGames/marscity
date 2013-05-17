@@ -316,6 +316,7 @@ public class Main {
 			gui.toolDelete.setColor(Color.gray);
 			AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, -40, 0.5f);
 			buildpreview.setBuilding(-1);
+			currentBuildingType = -1;
 		}
 		if(guihit==gui.toolAdd){
 			selectedTool = TOOL_ADD;
@@ -331,6 +332,7 @@ public class Main {
 			gui.toolDelete.setColor(Color.white);
 			AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, -40, 0.5f);
 			buildpreview.setBuilding(-1);
+			currentBuildingType = -1;
 		}
  		if(guihit==gui.pauseResume){
 			gui.blur.setVisible(false);
@@ -519,20 +521,21 @@ public class Main {
 							break;
 						
 						case(TOOL_ADD): // Create a new Building
-							if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), (int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]))||currentBuildingType==-1)break;
+							if(currentBuildingType==-1)break;
+							if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), ResourceManager.getBuildingType(currentBuildingType).getWidth(), ResourceManager.getBuildingType(currentBuildingType).getDepth()))break;
 								ResourceManager.playSound(ResourceManager.SOUND_DROP);
 								Building building = new Building(currentBuildingType,(int)Grid.cellSize*Math.round(mousepos3d[0]/Grid.cellSize), (int)Grid.cellSize*Math.round(mousepos3d[1]/Grid.cellSize), (int)Grid.cellSize*Math.round(mousepos3d[2]/Grid.cellSize));
 								ResourceManager.objects.add(building);
-								Grid.getCell((int)building.getX(), (int)building.getZ()).setBuilding(building);
+								Grid.setBuilding((int)building.getX(), (int)building.getZ(), building);
 							break;
 							
 						case(TOOL_DELETE): // Delete the Object
 							if(hoveredEntity==-1)break;
 							try {
 								ResourceManager.playSound(ResourceManager.SOUND_DESTROY);
-								Grid.getCell((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ()).setBuilding(null);
+								Grid.clearsCells((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuidlingType()).getWidth(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuidlingType()).getDepth());
 								ResourceManager.getObject(hoveredEntity).delete();
-							} catch (Exception e) {}
+							} catch (Exception e) {e.printStackTrace();}
 							break;
 					}
 				}
@@ -683,10 +686,9 @@ public class Main {
         terrain.draw();
        
         for(int i=0;i<ResourceManager.objects.size();i++){
-        	if(i==hoveredEntity&&!Mouse.isGrabbed()){
+        	if(i==hoveredEntity&&!Mouse.isGrabbed()&&selectedTool!=TOOL_ADD){
         		if(selectedTool==TOOL_DELETE)glColor3f(1f, 0f, 0f);
         		if(selectedTool==TOOL_SELECT)glColor3f(1f, 1f, 1f);
-        		if(selectedTool==TOOL_ADD)glColor3f(1f, 1f, 1f);
         		glDisable(GL_LIGHTING);
         	}else {
         		glColor3f(1f, 1f, 1f);
@@ -694,6 +696,7 @@ public class Main {
 			ResourceManager.objects.get(i).draw();
 			glEnable(GL_LIGHTING);
 		}
+        
         buildpreview.draw();
 
 //		glUseProgram(0);

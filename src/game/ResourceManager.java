@@ -22,6 +22,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import objects.Building;
 import objects.BuildingType;
 import objects.Drawable;
 import objects.ObjectLoader;
@@ -80,7 +81,7 @@ public class ResourceManager {
 	
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	
-	public static List<Drawable> objects = new ArrayList<Drawable>();
+	public static List<Building> objects = new ArrayList<Building>();
 	
 	/**
 	 * Initializes the Resources that need to be initialized
@@ -288,10 +289,11 @@ public class ResourceManager {
 		} catch (Exception e) {e.printStackTrace();}
 	}
 	
-	public static Drawable getObject(int index)
+	public static Building getObject(int index)
 	{
 		return objects.get(index);
 	}
+	
 	
 	public static void setupShader(String vert, String frag)
 	{
