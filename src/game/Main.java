@@ -118,6 +118,7 @@ public class Main {
 	int soundsource;
 	int hoveredEntity = -1;
 	int selectedTool = 0;
+	int money = 10000;
 	int currentBuildingType = -1;
 	Audio sound;
 	float[] mousepos3d=new float[3];
@@ -475,6 +476,9 @@ public class Main {
 						if(Display.isFullscreen())try {Display.setFullscreen(false);} catch (LWJGLException e) {e.printStackTrace();}
 						else try {Display.setFullscreen(true);} catch (LWJGLException e) {e.printStackTrace();}
 					}
+					if(Keyboard.getEventKey()==Keyboard.KEY_F1&&Keyboard.getEventKeyState()&&debugMode){
+						money += 10000;
+					}
 				}
 	}
 	
@@ -522,11 +526,12 @@ public class Main {
 						
 						case(TOOL_ADD): // Create a new Building
 							if(currentBuildingType==-1)break;
-							if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), ResourceManager.getBuildingType(currentBuildingType).getWidth(), ResourceManager.getBuildingType(currentBuildingType).getDepth()))break;
+							if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), ResourceManager.getBuildingType(currentBuildingType).getWidth(), ResourceManager.getBuildingType(currentBuildingType).getDepth())||money<ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost())break;
 								ResourceManager.playSound(ResourceManager.SOUND_DROP);
 								Building building = new Building(currentBuildingType,(int)Grid.cellSize*Math.round(mousepos3d[0]/Grid.cellSize), (int)Grid.cellSize*Math.round(mousepos3d[1]/Grid.cellSize), (int)Grid.cellSize*Math.round(mousepos3d[2]/Grid.cellSize));
 								ResourceManager.objects.add(building);
 								Grid.setBuilding((int)building.getX(), (int)building.getZ(), building);
+								money -= ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost();
 							break;
 							
 						case(TOOL_DELETE): // Delete the Object
@@ -600,6 +605,7 @@ public class Main {
 				", FPS: "+fps+", Mouse:("+Math.round(mousepos3d[0])+","+Math.round(mousepos3d[1])+","+Math.round(mousepos3d[2])+")"+
 				", GridIndex: "+Grid.posToIndex(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])));
 
+		gui.infoMoney.setText(ResourceManager.getString("INFOBAR_LABEL_MONEY")+": "+money+"$");
 		
 		
 		// update FPS Counter

@@ -8,8 +8,8 @@ import objects.Building;
 public class Grid {
 
 	public final static int cellSize = 1;
-	public final static int cellsX = 1500;
-	public final static int cellsY = 1500;
+	public final static int cellsX = 1000;
+	public final static int cellsY = 1000;
 	
 	private final static List<GridCell> cells = initCells();
 	
@@ -81,7 +81,12 @@ public class Grid {
 		System.out.println("x1:"+x1+" x2:"+x2+" y1:"+y1+" y2:"+y2);
 		for(int i=y1+cellsY/2;i<=y2+cellsY/2;i++){
 			for(int j=x1+cellsX/2;j<=x2+cellsX/2;j++){
-				if(cells.get(XYtoIndex(j, i)).getBuilding()!=null)return false;
+				try {
+					if(cells.get(XYtoIndex(j, i)).getBuilding()!=null)return false;
+				} catch (Exception e) {
+					return false;
+				}
+				
 			}
 		}
 		return true;
