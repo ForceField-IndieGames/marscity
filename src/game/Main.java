@@ -191,7 +191,6 @@ public class Main {
 		while (!Display.isCloseRequested()) {
 			int delta = getDelta(); //Calculate the time between two Frames, for correct timing
 			
-			System.out.println("Objects: "+ResourceManager.objects.size()+" FPS: "+fps);
 			
 			switch(gameState){
 			case(STATE_INTRO): 
@@ -465,12 +464,14 @@ public class Main {
 						if(debugMode){
 							debugMode = false;
 							gui.debugInfo.setVisible(false);
-							try {Display.setFullscreen(true);} catch (LWJGLException e) {e.printStackTrace();}
 						}else{
 							debugMode = true;
 							gui.debugInfo.setVisible(true);
-							try {Display.setFullscreen(false);} catch (LWJGLException e) {e.printStackTrace();}
 						}
+					}
+					if(Keyboard.getEventKey()==Keyboard.KEY_F4&&Keyboard.getEventKeyState()&&debugMode){
+						if(Display.isFullscreen())try {Display.setFullscreen(false);} catch (LWJGLException e) {e.printStackTrace();}
+						else try {Display.setFullscreen(true);} catch (LWJGLException e) {e.printStackTrace();}
 					}
 				}
 	}
@@ -518,15 +519,18 @@ public class Main {
 							break;
 						
 						case(TOOL_ADD): // Create a new Building
-							if(hoveredEntity!=-1||currentBuildingType==-1)break;
+							if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), (int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]))||currentBuildingType==-1)break;
 								ResourceManager.playSound(ResourceManager.SOUND_DROP);
-								ResourceManager.objects.add(new Building(currentBuildingType,(int)Grid.cellSize*Math.round(mousepos3d[0]/Grid.cellSize), (int)Grid.cellSize*Math.round(mousepos3d[1]/Grid.cellSize), (int)Grid.cellSize*Math.round(mousepos3d[2]/Grid.cellSize)));
+								Building building = new Building(currentBuildingType,(int)Grid.cellSize*Math.round(mousepos3d[0]/Grid.cellSize), (int)Grid.cellSize*Math.round(mousepos3d[1]/Grid.cellSize), (int)Grid.cellSize*Math.round(mousepos3d[2]/Grid.cellSize));
+								ResourceManager.objects.add(building);
+								Grid.getCell((int)building.getX(), (int)building.getZ()).setBuilding(building);
 							break;
 							
 						case(TOOL_DELETE): // Delete the Object
 							if(hoveredEntity==-1)break;
 							try {
 								ResourceManager.playSound(ResourceManager.SOUND_DESTROY);
+								Grid.getCell((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ()).setBuilding(null);
 								ResourceManager.getObject(hoveredEntity).delete();
 							} catch (Exception e) {}
 							break;
@@ -588,9 +592,12 @@ public class Main {
 			if(!ResourceManager.objects.contains(object))break;
 		}
 		
-		//Show FPS
+		//Show debug info
 		gui.debugInfo.setText("debug mode | Objects: "+ResourceManager.objects.size()+
-				", FPS: "+fps);
+				", FPS: "+fps+", Mouse:("+Math.round(mousepos3d[0])+","+Math.round(mousepos3d[1])+","+Math.round(mousepos3d[2])+")"+
+				", GridIndex: "+Grid.posToIndex(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])));
+
+		
 		
 		// update FPS Counter
 		updateFPS(); 

@@ -6,7 +6,12 @@ import animation.AnimationValue;
 
 public class Building extends Entity {
 	private float preferredY = 0;
+	private int buidlingType;
 	
+	public int getBuidlingType() {
+		return buidlingType;
+	}
+
 	@Override
 	public float getPreferredY()
 	{return preferredY;}
@@ -15,6 +20,7 @@ public class Building extends Entity {
 	{
 		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture());
 		preferredY = ResourceManager.getBuildingType(bt).getPreferredY();
+		this.buidlingType = bt;
 	}
 	
 	public Building(int bt, int x, int y, int z)
@@ -22,6 +28,7 @@ public class Building extends Entity {
 		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture(),x,y+5,z);
 		preferredY = ResourceManager.getBuildingType(bt).getPreferredY();
 		AnimationManager.animateValue(this, AnimationValue.Y, y, 0.05f);
+		this.buidlingType = bt;
 	}
 	
 	@Override

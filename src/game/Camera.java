@@ -5,7 +5,7 @@ import animation.Animatable;
 
 public class Camera implements Animatable {
 	
-	private float x=0,y=0,z=-100;
+	private float x=0,y=0,z=0;
 	private float rotX=0,rotY=0,rotZ=0;
 	private float zoom = 25;
 	private boolean animate = false;

@@ -6,14 +6,14 @@ import java.util.List;
 public class Grid {
 
 	public final static int cellSize = 1;
-	public final static int cellsX = 100;
-	public final static int cellsY = 100;
+	public final static int cellsX = 1500;
+	public final static int cellsY = 1500;
 	
 	private final static List<GridCell> cells = initCells();
 	
 	public static GridCell getCell(int x, int y)
 	{
-		return cells.get(XYtoIndex(x, y));
+		return cells.get(XYtoIndex(x+cellsX/2, y+cellsY/2));
 	}
 	
 	private static List<GridCell> initCells()
@@ -27,20 +27,25 @@ public class Grid {
 		return cells;
 	}
 	
-	public static int[] indexToXY(int index)
+	private static int[] indexToXY(int index)
 	{
 		return new int[]{index%cellsX,(index-(index%cellsX)/cellsX)};
 	}
 	
-	public static int XYtoIndex(int x, int y)
+	private static int XYtoIndex(int x, int y)
 	{
 		return x+cellsX*y;
 	}
 	
+	public static int posToIndex(int x, int y)
+	{
+		return (x+cellsX/2)+cellsX*(y+cellsY/2);
+	}
+	
 	public static boolean isAreaFree(int x1, int y1, int x2, int y2)
 	{
-		for(int i=y1;i<y2;i++){
-			for(int j=x1;j<x2;j++){
+		for(int i=y1+cellsY/2;i<=y2+cellsY/2;i++){
+			for(int j=x1+cellsX/2;j<=x2+cellsX/2;j++){
 				if(cells.get(XYtoIndex(j, i)).getBuilding()!=null)return false;
 			}
 		}
