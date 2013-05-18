@@ -5,14 +5,14 @@ import static org.lwjgl.opengl.GL20.*;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +35,6 @@ import org.newdawn.slick.openal.Audio;
 import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
-import org.newdawn.slick.util.ResourceLoader;
 import org.w3c.dom.*;
 
 import animation.Animatable;
@@ -114,16 +113,16 @@ public class ResourceManager {
 		buildingTypes.add(BUILDINGTYPE_BIGHOUSE,new BuildingType("BUILDINGTYPE_BIGHOUSE",OBJECT_BIGHOUSE,TEXTURE_BIGHOUSE,1500,4,4,4));
 		
 		//XML files
-		settingsFile = addXML("/res/settings/settings.xml");
-		langFile = addXML("/res/lang/"+getSetting("lang")+".xml");
+		settingsFile = addXML("res/settings/settings.xml");
+		langFile = addXML("res/lang/"+getSetting("lang")+".xml");
 	}
 
-	private static Texture LoadTexture(String path)
+	private static Texture LoadTexture(InputStream stream)
 	{
 		try {
-			return TextureLoader.getTexture("PNG", new FileInputStream(new File(path)));
+			return TextureLoader.getTexture("PNG", new BufferedInputStream(stream));
 		} catch (FileNotFoundException e) {
-			System.err.println("Texture file not found: "+path);
+			System.err.println("Texture file not found.");
 			e.printStackTrace();
 			Display.destroy();
 			System.exit(1);
@@ -156,11 +155,11 @@ public class ResourceManager {
 		try {
 			Main.log("Loading object: "+path);
 			Main.splashscreen.label2.setText("Loading object: "+path);
-			return ObjectLoader.createDisplayList(ObjectLoader.loadModel(new File(ResourceManager.class.getResource(path).toURI())));
+			return ObjectLoader.createDisplayList(ObjectLoader.loadModel(path));
 		} catch (Exception e) {
 			e.printStackTrace();
 			Main.splashscreen.label2.setText("Error! Failed to load object: "+path);
-			Main.log("Failed to load object: "+ResourceManager.class.getResource(path));
+			Main.log("Failed to load object: "+path);
 		}
 		return -1;
 	}
@@ -170,11 +169,11 @@ public class ResourceManager {
 		Main.log("Loading sound: "+path);
 		Main.splashscreen.label2.setText("Loading sound: "+path);
 		try {
-			return AudioLoader.getAudio(format, ResourceLoader.getResourceAsStream(ResourceManager.class.getResource(path).getPath()));
+			return AudioLoader.getAudio(format, new BufferedInputStream(ResourceManager.class.getResourceAsStream(path)));
 		} catch (Exception e) {
 			e.printStackTrace();
 			Main.splashscreen.label2.setText("Error! Failed to load sound: "+path);
-			Main.log("Failed to load sound: "+ResourceManager.class.getResource(path));
+			Main.log("Failed to load sound: "+path);
 		}
 		return null;
 	}
@@ -184,11 +183,11 @@ public class ResourceManager {
 		Main.log("Loading texture: "+path);
 		Main.splashscreen.label2.setText("Loading texture: "+path);
 		try {
-			return LoadTexture(ResourceManager.class.getResource(path).getPath());
+			return LoadTexture(ResourceManager.class.getResourceAsStream(path));
 		} catch (Exception e) {
 			e.printStackTrace();
 			Main.splashscreen.label2.setText("Error! Failed to load texture: "+path);
-			Main.log("Failed to load texture: "+ResourceManager.class.getResource(path));
+			Main.log("Failed to load texture: "+path);
 		}
 		return null;
 	}
@@ -277,12 +276,13 @@ public class ResourceManager {
 	 */
 	public static Document addXML(String path)
 	{
+		Main.log("Loading XML: "+path);
 		try {
-			Document file = builder.parse(new File(ResourceManager.class
-					.getResource(path).toURI()));
+			Document file = builder.parse(new File(path));
 			return file;
 		} catch ( Exception e) {
 			e.printStackTrace();
+			Main.log("Error! Unable to load the XML file: "+path);
 		}
 		return null;
 	}
@@ -349,9 +349,10 @@ public class ResourceManager {
 	 */
 	private static StringBuilder readFile(String path)
 	{
+		Main.log("Reading file: "+path);
 		StringBuilder string = new StringBuilder();
 		try {
-			BufferedReader reader = new BufferedReader(new FileReader(new File(ResourceManager.class.getResource(path).toURI())));
+			BufferedReader reader = new BufferedReader(new InputStreamReader(ResourceManager.class.getResourceAsStream(path)));
 			
 			String line;
 			while((line=reader.readLine())!=null)
@@ -361,9 +362,9 @@ public class ResourceManager {
 			}
 			reader.close();
 			return string;
-		} catch (IOException | URISyntaxException e) {
-			System.err.println("File not found: "+ResourceManager.class.getResource(path).toExternalForm());
-			
+		} catch (Exception e) {
+			System.err.println("File not found: "+path);
+			Main.log("Error! Unable to read file: "+path);
 			e.printStackTrace();
 		}
 		return null;

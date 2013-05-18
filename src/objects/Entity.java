@@ -3,7 +3,6 @@ import static org.lwjgl.opengl.GL11.*;
 
 import game.ResourceManager;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.newdawn.slick.opengl.Texture;
@@ -131,7 +130,7 @@ public class Entity implements Drawable, Animatable {
 	public Entity(String modelpath, Texture texture)
 	{
 		try {
-			model = ObjectLoader.loadModel(new File(modelpath));
+			model = ObjectLoader.loadModel(modelpath);
 			this.displayList = ObjectLoader.createDisplayList(model);
 			this.texture = texture;
 		} catch (IOException e) {
@@ -142,7 +141,7 @@ public class Entity implements Drawable, Animatable {
 	public Entity(String modelpath, Texture texture, int x, int y, int z)
 	{
 		try {
-			model = ObjectLoader.loadModel(new File(modelpath));
+			model = ObjectLoader.loadModel(modelpath);
 			this.displayList = ObjectLoader.createDisplayList(model);
 			this.texture = texture;
 			this.x=x;
@@ -179,7 +178,7 @@ public class Entity implements Drawable, Animatable {
 	public Entity(String modelpath)
 	{
 		try {
-			model = ObjectLoader.loadModel(new File(modelpath));
+			model = ObjectLoader.loadModel(modelpath);
 			this.displayList = ObjectLoader.createDisplayList(model);
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -189,7 +188,7 @@ public class Entity implements Drawable, Animatable {
 	public Entity(String modelpath, int x, int y, int z)
 	{
 		try {
-			model = ObjectLoader.loadModel(new File(modelpath));
+			model = ObjectLoader.loadModel(modelpath);
 			this.displayList = ObjectLoader.createDisplayList(model);
 			this.x=x;
 			this.y=y;

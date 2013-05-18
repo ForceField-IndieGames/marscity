@@ -63,8 +63,8 @@ public class ObjectLoader {
         return displayList;
     }
 
-    public static Model loadModel(File f) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(f));
+    public static Model loadModel(String path) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(ObjectLoader.class.getResourceAsStream(path)));
         Model model = new Model();
         Model.Material currentMaterial = new Model.Material();
         String line;
@@ -74,8 +74,7 @@ public class ObjectLoader {
             }
             if (line.startsWith("mtllib ")) {
                 String materialFileName = line.split(" ")[1];
-                File materialFile = new File(f.getParentFile().getAbsolutePath() + "/" + materialFileName);
-                BufferedReader materialFileReader = new BufferedReader(new FileReader(materialFile));
+                BufferedReader materialFileReader = new BufferedReader(new InputStreamReader(ObjectLoader.class.getResourceAsStream("/res/" + materialFileName)));
                 String materialLine;
                 Model.Material parseMaterial = new Model.Material();
                 String parseMaterialName = "";
