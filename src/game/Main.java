@@ -140,7 +140,7 @@ public class Main {
 	{
 		try {
 			FileWriter log = new FileWriter("mars city.log",true);
-			log.append(text+"\r\n");
+			log.append(text+System.lineSeparator());
 			log.close();
 			
 		} catch (IOException e1) {e1.printStackTrace();}
@@ -168,12 +168,11 @@ public class Main {
 		}
 		
 		System.out.println("Mars City started...");
-
-		log("Yay! Das Programm startet...");
+		log("Mars City started...");
 		
 		ResourceManager.init();
 		
-		log("Die Resourcen wurden geladen");
+		log("Finished loading resources.");
 		
 		gui = new GUI(); //Create the GUI
 		

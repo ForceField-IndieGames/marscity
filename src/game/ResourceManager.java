@@ -7,12 +7,14 @@ import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +38,6 @@ import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.w3c.dom.*;
-import org.xml.sax.SAXException;
 
 import animation.Animatable;
 
@@ -112,6 +113,44 @@ public class ResourceManager {
 		//Building Types
 		buildingTypes.add(BUILDINGTYPE_HOUSE,new BuildingType("BUILDINGTYPE_HOUSE",OBJECT_HOUSE,TEXTURE_HOUSE,500,2,2,0.25f));
 		buildingTypes.add(BUILDINGTYPE_BIGHOUSE,new BuildingType("BUILDINGTYPE_BIGHOUSE",OBJECT_BIGHOUSE,TEXTURE_BIGHOUSE,1500,4,4,4));
+		
+		//create necessary folders and extract files
+		if(!(new File("res")).exists()){
+			(new File("res")).mkdir();
+			(new File("res/lang")).mkdir();
+			(new File("res/settings")).mkdir();
+			(new File("res/saves")).mkdir();
+			Main.log("Created necessary folders.");
+			try {
+				(new File("res/lang/DE.xml")).createNewFile();
+				(new File("res/settings/settings.xml")).createNewFile();
+				
+				//settings.xml
+				BufferedReader input = new BufferedReader(new InputStreamReader(ResourceManager.class.getResourceAsStream("/res/settings/settings.xml")));
+				BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("res/settings/settings.xml"))));
+			
+				String line;
+				while((line=input.readLine())!=null){
+					output.write(line+System.lineSeparator());
+				}
+				input.close();
+				output.close();
+				
+				//DE.xml
+				input = new BufferedReader(new InputStreamReader(ResourceManager.class.getResourceAsStream("/res/lang/DE.xml")));
+				output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("res/lang/DE.xml"))));
+			
+				while((line=input.readLine())!=null){
+					output.write(line+System.lineSeparator());
+				}
+				input.close();
+				output.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+			
+		
 		
 		//XML files
 		settingsFile = addXML("res/settings/settings.xml");
