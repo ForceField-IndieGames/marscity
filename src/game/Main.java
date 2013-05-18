@@ -8,6 +8,7 @@ import gui.guiElement;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Toolkit;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -50,6 +51,7 @@ class splashScreen extends JFrame implements Runnable{
 	private static final long serialVersionUID = 1L;
 	
 	JLabel label;
+	JLabel label2;
 	JLabel background;
 	public Thread thread;
 	
@@ -66,7 +68,11 @@ class splashScreen extends JFrame implements Runnable{
 		label.setForeground(Color.white);
 		label.setFont(new Font("comicsans",Font.BOLD,40));
 		add(label);
-		label.setBounds(20, getHeight()-50, 500, 50);
+		label.setBounds(10, getHeight()-50, 50, 50);
+		label2 = new JLabel("");
+		add(label2);
+		label2.setForeground(Color.white);
+		label2.setBounds(0, 0, 500, 20);
 		background = new JLabel(new ImageIcon(Main.class.getResource("/res/forcefieldbackground.png")));
 		add(background);
 		background.setBounds(0, 0, getWidth(), getHeight());
@@ -126,15 +132,15 @@ public class Main {
 	
 	Camera camera = new Camera();
 	Terrain terrain;
-	GUI gui;
+	public static GUI gui;
 	BuildPreview buildpreview;
 	static splashScreen splashscreen;
 	
 	public static void log(String text)
 	{
 		try {
-			FileWriter log = new FileWriter("lwjgl.log");
-			log.append(text);
+			FileWriter log = new FileWriter("mars city.log",true);
+			log.append(text+"\r\n");
 			log.close();
 			
 		} catch (IOException e1) {e1.printStackTrace();}
@@ -154,8 +160,16 @@ public class Main {
 			System.out.println("Display konnte nicht erstellt werden");
 			System.exit(0);
 		}
+		
+		try {
+			File file = new File("mars city.log");
+			file.delete();
+		} catch (Exception e) {
+		}
+		
+		System.out.println("Mars City started...");
 
-		log("Yay! Das Programm startet... ");
+		log("Yay! Das Programm startet...");
 		
 		ResourceManager.init();
 		

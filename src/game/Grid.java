@@ -57,10 +57,10 @@ public class Grid {
 		return cells;
 	}
 	
-	private static int[] indexToXY(int index)
-	{
-		return new int[]{index%cellsX,(index-(index%cellsX)/cellsX)};
-	}
+//	private static int[] indexToXY(int index)
+//	{
+//		return new int[]{index%cellsX,(index-(index%cellsX)/cellsX)};
+//	}
 	
 	private static int XYtoIndex(int x, int y)
 	{

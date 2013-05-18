@@ -154,33 +154,43 @@ public class ResourceManager {
 	public static int addObject(String path)
 	{
 		try {
+			Main.log("Loading object: "+path);
+			Main.splashscreen.label2.setText("Loading object: "+path);
 			return ObjectLoader.createDisplayList(ObjectLoader.loadModel(new File(ResourceManager.class.getResource(path).toURI())));
-		} catch (IOException | URISyntaxException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-			Main.log("Object kann nicht geladen werden: "+ResourceManager.class.getResource(path));
+			Main.splashscreen.label2.setText("Error! Failed to load object: "+path);
+			Main.log("Failed to load object: "+ResourceManager.class.getResource(path));
 		}
 		return -1;
 	}
 	
 	public static Audio addSound(String format,String path)
 	{
+		Main.log("Loading sound: "+path);
+		Main.splashscreen.label2.setText("Loading sound: "+path);
 		try {
 			return AudioLoader.getAudio(format, ResourceLoader.getResourceAsStream(ResourceManager.class.getResource(path).getPath()));
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
+			Main.splashscreen.label2.setText("Error! Failed to load sound: "+path);
+			Main.log("Failed to load sound: "+ResourceManager.class.getResource(path));
 		}
 		return null;
 	}
 	
 	public static Texture addTexture(String path)
 	{
+		Main.log("Loading texture: "+path);
+		Main.splashscreen.label2.setText("Loading texture: "+path);
 		try {
 			return LoadTexture(ResourceManager.class.getResource(path).getPath());
 		} catch (Exception e) {
-			Display.destroy();
-			System.exit(1);
-			return null;
+			e.printStackTrace();
+			Main.splashscreen.label2.setText("Error! Failed to load texture: "+path);
+			Main.log("Failed to load texture: "+ResourceManager.class.getResource(path));
 		}
+		return null;
 	}
 	
 	public ResourceManager()
