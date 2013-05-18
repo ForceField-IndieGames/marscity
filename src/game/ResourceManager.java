@@ -36,6 +36,7 @@ import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.w3c.dom.*;
+import org.xml.sax.SAXException;
 
 import animation.Animatable;
 
@@ -255,12 +256,11 @@ public class ResourceManager {
 			e.printStackTrace();
 			System.err.println("Can't write setting "+setting);
 		}
-		System.out.println(getSetting("test"));
-		 Transformer transformer;
+		Transformer transformer;
 		try {
 			transformer = TransformerFactory.newInstance().newTransformer();
 			 DOMSource        source = new DOMSource(settingsFile);
-	         FileOutputStream os     = new FileOutputStream(new File(ResourceManager.class.getResource("/res/settings/settings.xml").toURI()));
+	         FileOutputStream os     = new FileOutputStream(new File("/res/settings/settings.xml"));
 	         StreamResult     result = new StreamResult(os);
 	         transformer.transform(source, result);
 		} catch (Exception e) {
@@ -276,6 +276,9 @@ public class ResourceManager {
 	 */
 	public static Document addXML(String path)
 	{
+		if(path==null){
+			return builder.newDocument();
+		}
 		Main.log("Loading XML: "+path);
 		try {
 			Document file = builder.parse(new File(path));

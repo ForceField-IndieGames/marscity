@@ -11,7 +11,12 @@ public class Grid {
 	public final static int cellsX = 1000;
 	public final static int cellsY = 1000;
 	
-	private final static List<GridCell> cells = initCells();
+	private static List<GridCell> cells = initCells();
+	
+	public static void init()
+	{
+		cells = initCells();
+	}
 	
 	public static GridCell getCell(int x, int y)
 	{

@@ -124,11 +124,11 @@ public class Main {
 	int soundsource;
 	int hoveredEntity = -1;
 	int selectedTool = 0;
-	int money = 10000;
+	static int money = 10000;
 	int currentBuildingType = -1;
 	Audio sound;
 	float[] mousepos3d=new float[3];
-	int gameState = STATE_MENU;
+	static int gameState = STATE_MENU;
 	
 	Camera camera = new Camera();
 	Terrain terrain;
@@ -380,6 +380,18 @@ public class Main {
  			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_BIGHOUSE);
  			gui.buildingBighouse.setColor(Color.gray);
  		}else gui.buildingBighouse.setColor(Color.white);
+ 		if(guihit==gui.pauseSave){
+ 			Game.Save("res/saves/savegame.xml");
+ 			Game.Resume();
+ 			gui.blur.setVisible(false);
+			AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f, AnimationManager.ACTION_HIDE);
+ 		}
+ 		if(guihit==gui.pauseLoad){
+ 			Game.Load("res/saves/savegame.xml");
+			gui = null;
+			gui = new GUI();
+			Game.Resume();
+ 		}
 	}
 	
 	
@@ -747,12 +759,15 @@ public class Main {
 				guiElement guihit = gui.mouseoverMenu();
 				if(guihit==null)return;
 				if(guihit==gui.MenuPlay){
-					gameState = STATE_GAME;
+					Game.newGame();
+				}else if(guihit==gui.MenuExit){
+					Game.exit();
+				}else if(guihit==gui.MenuLoad){
+					Game.Load("res/saves/savegame.xml");
 					gui = null;
 					gui = new GUI();
 					Game.Resume();
-				}else if(guihit==gui.MenuExit){
-					Game.exit();
+					gameState = STATE_GAME;
 				}
 			}
 		}
