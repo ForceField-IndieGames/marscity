@@ -380,13 +380,13 @@ public class Main {
  			gui.buildingBighouse.setColor(Color.gray);
  		}else gui.buildingBighouse.setColor(Color.white);
  		if(guihit==gui.pauseSave){
- 			Game.Save("res/saves/savegame.xml");
+ 			Game.Save("res/saves/savegame.save");
  			Game.Resume();
  			gui.blur.setVisible(false);
 			AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f, AnimationManager.ACTION_HIDE);
  		}
  		if(guihit==gui.pauseLoad){
- 			Game.Load("res/saves/savegame.xml");
+ 			Game.Load("res/saves/savegame.save");
 			gui = null;
 			gui = new GUI();
 			Game.Resume();
@@ -631,7 +631,7 @@ public class Main {
 				", GridIndex: "+Grid.posToIndex(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])));
 
 		gui.infoMoney.setText(ResourceManager.getString("INFOBAR_LABEL_MONEY")+": "+money+"$");
-		
+		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+0);
 		
 		// update FPS Counter
 		updateFPS(); 
@@ -762,7 +762,7 @@ public class Main {
 				}else if(guihit==gui.MenuExit){
 					Game.exit();
 				}else if(guihit==gui.MenuLoad){
-					Game.Load("res/saves/savegame.xml");
+					Game.Load("res/saves/savegame.save");
 					gui = null;
 					gui = new GUI();
 					Game.Resume();

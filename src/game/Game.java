@@ -5,21 +5,18 @@ import static org.lwjgl.opengl.GL20.glDeleteShader;
 
 import gui.GUI;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.ArrayList;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 import objects.Building;
 
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 public class Game {
 	private static boolean pause = false;
@@ -37,20 +34,20 @@ public class Game {
 	public static void Save(String path)
 	{
 		//TODO Save the game
-		Document xml = ResourceManager.addXML(null);
-		Element element = xml.createElement("money");
-		element.setTextContent(""+Main.money);
-		xml.appendChild(element);
-		Transformer transformer;
 		try {
-			transformer = TransformerFactory.newInstance().newTransformer();
-			 DOMSource        source = new DOMSource(xml);
-			 File file = new File(path);
-			 file.delete();
-			 file.createNewFile();
-	         FileOutputStream os     = new FileOutputStream(file);
-	         StreamResult     result = new StreamResult(os);
-	         transformer.transform(source, result);
+			if(!(new File(path)).exists())(new File(path)).createNewFile();
+			BufferedWriter file = new BufferedWriter(new FileWriter(path));
+			
+			//Money
+			file.write("m "+Main.money+System.lineSeparator());
+			
+			//grid
+			for(Building b:ResourceManager.objects){
+				file.write("b "+b.getBuidlingType()+" "+b.getX()+" "+b.getY()+" "+b.getZ()+System.lineSeparator());
+			}
+			
+			file.close();
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -59,9 +56,35 @@ public class Game {
 	public static void Load(String path)
 	{
 		//TODO Load the game
-		if(!(new File(path)).exists())return;
-		Document xml = ResourceManager.addXML(path);
-		Main.money = Integer.parseInt(xml.getElementsByTagName("money").item(0).getTextContent());
+		try {
+			if(!(new File(path)).exists())return;
+			BufferedReader file = new BufferedReader(new FileReader(path));
+			
+			String line;
+			while((line=file.readLine())!=null)
+			{
+				//Money
+				if(line.startsWith("m")){
+					Main.money = Integer.parseInt(line.split(" ")[1]);
+				}
+				if(line.startsWith("b")){
+					int bt = Integer.parseInt(line.split(" ")[1]);
+					float x = Float.parseFloat(line.split(" ")[2]);
+					float y = Float.parseFloat(line.split(" ")[3]);
+					float z = Float.parseFloat(line.split(" ")[4]);
+					
+					Grid.setBuilding((int)x, (int)z, new Building(bt));
+					
+					ResourceManager.objects.add(new Building(bt,x,y,z));
+				}
+			}
+			
+			
+			file.close();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void newGame()

@@ -152,7 +152,7 @@ public class Entity implements Drawable, Animatable {
 		}
 	}
 	
-	public Entity(int displaylist, Texture texture, int x, int y, int z)
+	public Entity(int displaylist, Texture texture, float x, float y, float z)
 	{
 			this.displayList = displaylist;
 			this.texture = texture;
@@ -167,7 +167,7 @@ public class Entity implements Drawable, Animatable {
 			this.texture = texture;
 	}
 	
-	public Entity(int displaylist, int x, int y, int z)
+	public Entity(int displaylist, float x, float y, float z)
 	{
 			this.displayList = displaylist;
 			this.x=x;

@@ -1,4 +1,4 @@
-Yay! Das Programm startet...
+Mars City started...
 Loading object: /res/house.obj
 Loading object: /res/monkey.obj
 Loading object: /res/bunny.obj
@@ -25,6 +25,4 @@ Reading file: /res/shader.v
 Reading file: /res/shader.f
 Loading XML: res/settings/settings.xml
 Loading XML: res/lang/DE.xml
-Die Resourcen wurden geladen
-Loading XML: res/saves/savegame.xml
-Loading XML: res/saves/savegame.xml
+Finished loading resources.

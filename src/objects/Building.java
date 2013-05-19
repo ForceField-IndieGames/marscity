@@ -23,7 +23,7 @@ public class Building extends Entity {
 		this.buidlingType = bt;
 	}
 	
-	public Building(int bt, int x, int y, int z)
+	public Building(int bt, float x, float y, float z)
 	{
 		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture(),x,y+5,z);
 		preferredY = ResourceManager.getBuildingType(bt).getPreferredY();
