@@ -2,6 +2,7 @@ package game;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.util.glu.GLU.*;
 
+import effects.ParticleEffects;
 import gui.GUI;
 import gui.guiElement;
 
@@ -170,15 +171,15 @@ public class Main {
 		System.out.println("Mars City started...");
 		log("Mars City started...");
 		
-		ResourceManager.init();
+		ResourceManager.init();//Initialize the resources
 		
 		log("Finished loading resources.");
 		
 		gui = new GUI(); //Create the GUI
 		
-		buildpreview = new BuildPreview();
+		buildpreview = new BuildPreview(); //Create the Building Preview
 		
-		terrain = new Terrain(0,0,-150);
+		terrain = new Terrain(0,0,-150);//create the terrain
 		
 		//Set up the sound
 		try {
@@ -502,7 +503,10 @@ public class Main {
 						else try {Display.setFullscreen(true);} catch (LWJGLException e) {e.printStackTrace();}
 					}
 					if(Keyboard.getEventKey()==Keyboard.KEY_F1&&Keyboard.getEventKeyState()&&debugMode){
-						money += 10000;
+						money += 50000;
+					}
+					if(Keyboard.getEventKey()==Keyboard.KEY_O&&Keyboard.getEventKeyState()&&debugMode){
+						ParticleEffects.addEffect(100, mousepos3d[0], mousepos3d[1], mousepos3d[2], 1, 0.001f, 1000f, ResourceManager.TEXTURE_PARTICLEFOG);
 					}
 				}
 	}
@@ -557,6 +561,7 @@ public class Main {
 								ResourceManager.objects.add(building);
 								Grid.setBuilding((int)building.getX(), (int)building.getZ(), building);
 								money -= ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost();
+								ParticleEffects.dustEffect(Grid.cellSize*Math.round(mousepos3d[0]/Grid.cellSize), Grid.cellSize*Math.round(mousepos3d[1]/Grid.cellSize), Grid.cellSize*Math.round(mousepos3d[2]/Grid.cellSize));
 							break;
 							
 						case(TOOL_DELETE): // Delete the Object
@@ -564,6 +569,7 @@ public class Main {
 							try {
 								ResourceManager.playSound(ResourceManager.SOUND_DESTROY);
 								Grid.clearsCells((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuidlingType()).getWidth(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuidlingType()).getDepth());
+								ParticleEffects.dustEffect(ResourceManager.getObject(hoveredEntity).getX(),ResourceManager.getObject(hoveredEntity).getY(),ResourceManager.getObject(hoveredEntity).getZ());
 								ResourceManager.getObject(hoveredEntity).delete();
 							} catch (Exception e) {e.printStackTrace();}
 							break;
@@ -632,6 +638,8 @@ public class Main {
 
 		gui.infoMoney.setText(ResourceManager.getString("INFOBAR_LABEL_MONEY")+": "+money+"$");
 		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+0);
+		
+		ParticleEffects.update(delta);
 		
 		// update FPS Counter
 		updateFPS(); 
@@ -729,6 +737,8 @@ public class Main {
 		}
         
         buildpreview.draw();
+        
+        ParticleEffects.draw();
 
 //		glUseProgram(0);
 		
@@ -770,6 +780,7 @@ public class Main {
 				}
 			}
 		}
+		while(Keyboard.next()){} //So key events dont get saved
 	}
 	
 	public static void main(String[] argv) throws FileNotFoundException {

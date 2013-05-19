@@ -79,6 +79,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_MAINMENUFF = addTexture("/res/ForceField.png");
 	public final static Texture TEXTURE_MARSCITYLOGO = addTexture("/res/marscitylogo.png");
 	public final static Texture TEXTURE_BIGHOUSE = addTexture("/res/bighousetexture.png");
+	public final static Texture TEXTURE_PARTICLEFOG = addTexture("/res/fogparticle.png");
 	
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	

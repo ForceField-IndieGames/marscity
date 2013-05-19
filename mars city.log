@@ -21,6 +21,7 @@ Loading texture: /res/guibutton2.png
 Loading texture: /res/ForceField.png
 Loading texture: /res/marscitylogo.png
 Loading texture: /res/bighousetexture.png
+Loading texture: /res/fogparticle.png
 Reading file: /res/shader.v
 Reading file: /res/shader.f
 Loading XML: res/settings/settings.xml

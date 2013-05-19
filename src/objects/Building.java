@@ -1,5 +1,6 @@
 package objects;
 
+import effects.ParticleEffects;
 import game.ResourceManager;
 import animation.AnimationManager;
 import animation.AnimationValue;
