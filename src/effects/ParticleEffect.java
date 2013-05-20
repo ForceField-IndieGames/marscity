@@ -1,11 +1,13 @@
 package effects;
 
-import game.ResourceManager;
+import game.Camera;
+import game.Main;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.util.glu.GLU.*;
 
 import org.newdawn.slick.opengl.Texture;
 
@@ -14,11 +16,13 @@ public class ParticleEffect {
 	private float x = 0, y = 0, z = 0;
 	private float velocity = 0;
 	private Texture texture;
+	private int particlecount;
 
 	private List<Particle> particles = new ArrayList<Particle>();
 
 	public ParticleEffect(int particlecount, float x, float y, float z,
 			float size, float distribution, float velocity, float lifetime, Texture texture) {
+		this.particlecount = particlecount;
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -68,7 +72,7 @@ public class ParticleEffect {
 	
 	public int getParticleCount()
 	{
-		return particles.size();
+		return particlecount;
 	}
 
 	public void update(int delta) {
@@ -79,6 +83,7 @@ public class ParticleEffect {
 			p.setLifetime(p.getLifetime()-delta);
 			if(p.getLifetime()<=0){
 				p.setVisible(false);
+				particlecount --;
 			}
 		}
 	}
@@ -92,8 +97,11 @@ public class ParticleEffect {
 			glDisable(GL_LIGHTING);
 			glDisable(GL_CULL_FACE);
 			glPushMatrix();
+			glTranslatef(p.getX(), p.getY(), p.getZ());
+			glRotatef(Main.camera.getRotY(), 0, 1, 0);
+			glTranslatef(-p.getX(), -p.getY(), -p.getZ());
 			
-				glBegin(GL_QUADS);
+			glBegin(GL_QUADS);
 					glTexCoord2d(0, 1f);
 					glVertex3f(-p.getSize()/2+p.getX(), -p.getSize()/2+p.getY(),p.getZ());
 					
@@ -106,7 +114,8 @@ public class ParticleEffect {
 					glTexCoord2d(0, 0);
 					glVertex3f(-p.getSize()/2+p.getX(), p.getSize()/2+p.getY(),p.getZ());
 				
-				glEnd();
+			glEnd();
+				
 			glPopMatrix();
 			glEnable(GL_DEPTH_TEST);
 			glEnable(GL_LIGHTING);

@@ -125,13 +125,13 @@ public class Main {
 	int soundsource;
 	int hoveredEntity = -1;
 	int selectedTool = 0;
-	static int money = 10000;
+	static int money = 100000;
 	int currentBuildingType = -1;
 	Audio sound;
 	float[] mousepos3d=new float[3];
 	static int gameState = STATE_MENU;
 	
-	Camera camera = new Camera();
+	public static Camera camera = new Camera();
 	Terrain terrain;
 	public static GUI gui;
 	BuildPreview buildpreview;
@@ -428,6 +428,10 @@ public class Main {
 				if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) camera.setY(camera.getY()+0.1f*delta);
 				if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) camera.setY(camera.getY()-0.1f*delta);
 				
+				if(Keyboard.isKeyDown(Keyboard.KEY_O)&&debugMode){
+					ParticleEffects.dustEffect(mousepos3d[0], mousepos3d[1], mousepos3d[2]);
+				}
+				
 				while(Keyboard.next()){
 					if(Keyboard.getEventKey()==Keyboard.KEY_ESCAPE && Keyboard.getEventKeyState()){
 						if(Game.isPaused())
@@ -504,9 +508,6 @@ public class Main {
 					}
 					if(Keyboard.getEventKey()==Keyboard.KEY_F1&&Keyboard.getEventKeyState()&&debugMode){
 						money += 50000;
-					}
-					if(Keyboard.getEventKey()==Keyboard.KEY_O&&Keyboard.getEventKeyState()&&debugMode){
-						ParticleEffects.dustEffect(mousepos3d[0], mousepos3d[1], mousepos3d[2]);
 					}
 				}
 	}
