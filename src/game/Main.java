@@ -506,7 +506,7 @@ public class Main {
 						money += 50000;
 					}
 					if(Keyboard.getEventKey()==Keyboard.KEY_O&&Keyboard.getEventKeyState()&&debugMode){
-						ParticleEffects.addEffect(100, mousepos3d[0], mousepos3d[1], mousepos3d[2], 1, 0.001f, 1000f, ResourceManager.TEXTURE_PARTICLEFOG);
+						ParticleEffects.dustEffect(mousepos3d[0], mousepos3d[1], mousepos3d[2]);
 					}
 				}
 	}

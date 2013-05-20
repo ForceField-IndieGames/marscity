@@ -18,14 +18,19 @@ public class ParticleEffect {
 	private List<Particle> particles = new ArrayList<Particle>();
 
 	public ParticleEffect(int particlecount, float x, float y, float z,
-			float size, float velocity, float lifetime, Texture texture) {
+			float size, float distribution, float velocity, float lifetime, Texture texture) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
 		this.velocity = velocity;
 		this.texture = texture;
 		for (int i = 0; i < particlecount; i++) {
-			particles.add(new Particle(x, y, z, -velocity+(float)Math.random()*2*velocity, -velocity+(float)Math.random()*2*velocity, -velocity+(float)Math.random()*2*velocity, size, lifetime));
+			particles.add(new Particle(x-distribution + (float) Math.random() * 2 * distribution,
+					y-distribution + (float) Math.random() * 2 * distribution,
+					z-distribution + (float) Math.random() * 2 * distribution,
+					-velocity + (float) Math.random() * 2 * velocity,
+					-velocity + (float) Math.random() * 2 * velocity,
+					-velocity + (float) Math.random() * 2 * velocity, size, lifetime));
 		}
 	}
 
