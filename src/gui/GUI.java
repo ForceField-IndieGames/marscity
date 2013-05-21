@@ -118,10 +118,10 @@ public class GUI {
 							 settingsTitle.setText(ResourceManager.getString("SETTINGSMENU_LABEL_TITLE"));
 		    settingsMenu.add(settingsVsyncon);
 		    				 settingsVsyncon.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCON"));
-		    				 if(!ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncon.setColor(Color.gray);
+		    				 if(ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
 		    settingsMenu.add(settingsVsyncoff);
 		    				 settingsVsyncoff.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCOFF"));
-		    				 if(ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncoff.setColor(Color.gray);
+		    				 if(!ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
 		    settingsMenu.add(settingsVsync);
 		    				 settingsVsync.setText(ResourceManager.getString("SETTINGSMENU_LABEL_VSYNC"));
 			settingsMenu.add(settingsResume);

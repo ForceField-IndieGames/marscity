@@ -33,10 +33,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
-import org.newdawn.slick.openal.Audio;
-import org.newdawn.slick.openal.AudioLoader;
-import org.newdawn.slick.util.ResourceLoader;
-
 import animation.AnimationManager;
 import animation.AnimationValue;
 
@@ -121,13 +117,10 @@ public class Main {
 	
 	public static boolean debugMode = true;
 	
-	int soundbuffer;
-	int soundsource;
 	int hoveredEntity = -1;
 	int selectedTool = 0;
 	static int money = 100000;
 	int currentBuildingType = -1;
-	Audio sound;
 	float[] mousepos3d=new float[3];
 	static int gameState = STATE_MENU;
 	
@@ -181,19 +174,6 @@ public class Main {
 		terrain = new Terrain(0,0,-150);//create the terrain
 		
 		if(ResourceManager.getSetting("vsync").equals("enabled"))Display.setVSyncEnabled(true);
-		
-		//Set up the sound
-		try {
-			sound = AudioLoader.getAudio("WAV", ResourceLoader.getResourceAsStream("res/sound.wav"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-//		WaveData data = WaveData.create("res/sound.wav");
-//		soundbuffer = alGenBuffers();
-//		alBufferData(soundbuffer.get(0), data.format, data.data, data.samplerate);
-//		data.dispose();
-//		soundsource = alGenSources();
-//		alSourcei(soundsource, AL_BUFFER, soundbuffer.get(0));
 		
 
 		initGL(); // init OpenGL
@@ -359,18 +339,21 @@ public class Main {
 		}
  		if(guihit==gui.settingsVsyncon){
  			try {
-				gui.settingsVsyncon.setColor(Color.white);
- 			gui.settingsVsyncoff.setColor(Color.gray);
- 			ResourceManager.setSetting("vsync", "enabled");
+				gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+				gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+				ResourceManager.setSetting("vsync", "enabled");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
- 			
  		}
  		if(guihit==gui.settingsVsyncoff){
- 			gui.settingsVsyncon.setColor(Color.gray);
- 			gui.settingsVsyncoff.setColor(Color.white);
+ 			try {
+ 			gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+			gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
  			ResourceManager.setSetting("vsync", "disabled");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
  		}
  		if(guihit==gui.settingsResume){
 			Game.Resume();
@@ -461,13 +444,6 @@ public class Main {
 							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f);
 						}
 						if(debugMode)Game.exit();
-					}
-					if(Keyboard.getEventKey()==Keyboard.KEY_RETURN && Keyboard.getEventKeyState()){
-						if(sound.isPlaying()){
-							sound.stop();
-						}else{
-							sound.playAsMusic(1, 1, false);
-						}
 					}
 					if(Keyboard.getEventKey()==Keyboard.KEY_T && Keyboard.getEventKeyState()){
 						if(glIsEnabled(GL_TEXTURE_2D)){

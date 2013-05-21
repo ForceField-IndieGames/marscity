@@ -58,8 +58,6 @@ public class ResourceManager {
 	public final static int BUILDINGTYPE_BIGHOUSE = 1;
 	
 	public final static int OBJECT_HOUSE = addObject("/res/house.obj");
-	public final static int OBJECT_MONKEY = addObject("/res/monkey.obj");
-	public final static int OBJECT_BUNNY = addObject("/res/bunny.obj");
 	public final static int OBJECT_TERRAIN = addObject("/res/terrain.obj");
 	public final static int OBJECT_BIGHOUSE = addObject("/res/bighouse.obj");
 	
@@ -67,7 +65,6 @@ public class ResourceManager {
 	public final static Audio SOUND_DESTROY = addSound("WAV", "/res/destroy.wav");
 	
 	public final static Texture TEXTURE_HOUSE = addTexture("/res/housetexture.png");
-	public final static Texture TEXTURE_MONKEY = addTexture("/res/monkeytexture.png");
 	public final static Texture TEXTURE_TERRAIN = addTexture("/res/mars.png");
 	public final static Texture TEXTURE_GUISELECT = addTexture("/res/guiselect.png");
 	public final static Texture TEXTURE_GUIADD = addTexture("/res/guiadd.png");
@@ -78,6 +75,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUIBUTTON = addTexture("/res/guibutton.png");
 	public final static Texture TEXTURE_MAINMENUBG = addTexture("/res/mainmenubg.png");
 	public final static Texture TEXTURE_GUIBUTTON2 = addTexture("/res/guibutton2.png");
+	public final static Texture TEXTURE_GUIBUTTON2DOWN = addTexture("/res/guibutton2down.png");
 	public final static Texture TEXTURE_MAINMENUFF = addTexture("/res/ForceField.png");
 	public final static Texture TEXTURE_MARSCITYLOGO = addTexture("/res/marscitylogo.png");
 	public final static Texture TEXTURE_BIGHOUSE = addTexture("/res/bighousetexture.png");
