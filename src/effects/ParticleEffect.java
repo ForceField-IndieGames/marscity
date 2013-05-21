@@ -1,13 +1,11 @@
 package effects;
 
-import game.Camera;
 import game.Main;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.util.glu.GLU.*;
 
 import org.newdawn.slick.opengl.Texture;
 

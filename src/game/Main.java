@@ -152,7 +152,7 @@ public class Main {
 		
 		try {
 			Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
-			Display.setVSyncEnabled(true);
+			Display.setVSyncEnabled(false);
 			Display.setTitle("Mars City");
 			Display.create();
 			Display.setLocation(0, 0);
@@ -216,7 +216,6 @@ public class Main {
 				break;
 			case(STATE_GAME):
 				update(delta); //Gamelogic
-				
 				renderGL();    //Rendering
 				break;
 			default: break;
@@ -634,9 +633,10 @@ public class Main {
 		
 		//Show debug info
 		gui.debugInfo.setText("debug mode | Objects: "+ResourceManager.objects.size()+
-				", FPS: "+fps+", Mouse:("+Math.round(mousepos3d[0])+","+Math.round(mousepos3d[1])+","+Math.round(mousepos3d[2])+")"+
+				", FPS: "+fps+", ParticleEffects: "+ParticleEffects.getEffectCount()+", Mouse:("+Math.round(mousepos3d[0])+","+Math.round(mousepos3d[1])+","+Math.round(mousepos3d[2])+")"+
 				", GridIndex: "+Grid.posToIndex(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])));
 
+		//Update gui info labels
 		gui.infoMoney.setText(ResourceManager.getString("INFOBAR_LABEL_MONEY")+": "+money+"$");
 		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+0);
 		

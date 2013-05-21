@@ -24,17 +24,19 @@ public class ParticleEffects {
 	{
 		addEffect(400, x, y, z, 2f, 2f, 0.002f, 800, ResourceManager.TEXTURE_PARTICLEFOG);
 	}
+	
+	public static int getEffectCount()
+	{
+		return fx.size();
+	}
 
 	public static void update(int delta) {
-		for (ParticleEffect effect : fx) {
-			if(effect==null)continue;
-			effect.update(delta);
-			if(effect.getParticleCount()<=0){
-				effect = null; //Can't be removed from the list here
+		for (int i=0;i<fx.size();i++) {
+			if(fx.get(i)==null)continue;
+			fx.get(i).update(delta);
+			if(fx.get(i).getParticleCount()<=0){
+				fx.remove(i);
 			}
-		}
-		for(int i=0;i<fx.size();i++){
-			if(fx.get(i)==null)fx.remove(i); //It can only be removed here
 		}
 	}
 
