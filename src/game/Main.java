@@ -119,7 +119,7 @@ public class Main {
 	int fpsnow, fps;
 	long lastTime;
 	
-	boolean debugMode = false;
+	public static boolean debugMode = true;
 	
 	int soundbuffer;
 	int soundsource;
@@ -152,7 +152,6 @@ public class Main {
 		
 		try {
 			Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
-			Display.setVSyncEnabled(false);
 			Display.setTitle("Mars City");
 			Display.create();
 			Display.setLocation(0, 0);
@@ -180,6 +179,8 @@ public class Main {
 		buildpreview = new BuildPreview(); //Create the Building Preview
 		
 		terrain = new Terrain(0,0,-150);//create the terrain
+		
+		if(ResourceManager.getSetting("vsync").equals("enabled"))Display.setVSyncEnabled(true);
 		
 		//Set up the sound
 		try {
@@ -356,14 +357,29 @@ public class Main {
  		if(guihit==gui.pauseExit){
 			Game.exit();
 		}
+ 		if(guihit==gui.settingsVsyncon){
+ 			try {
+				gui.settingsVsyncon.setColor(Color.white);
+ 			gui.settingsVsyncoff.setColor(Color.gray);
+ 			ResourceManager.setSetting("vsync", "enabled");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+ 			
+ 		}
+ 		if(guihit==gui.settingsVsyncoff){
+ 			gui.settingsVsyncon.setColor(Color.gray);
+ 			gui.settingsVsyncoff.setColor(Color.white);
+ 			ResourceManager.setSetting("vsync", "disabled");
+ 		}
  		if(guihit==gui.settingsResume){
 			Game.Resume();
+			gui.blur.setVisible(false);
 			AnimationManager.animateValue(gui.settingsMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
 		}
  			if(guihit==gui.pauseSettings){
 			gui.pauseMenu.setVisible(false);
 			gui.settingsMenu.setVisible(true);
-			gui.blur.setVisible(false);
 			AnimationManager.animateValue(gui.settingsMenu, AnimationValue.opacity, 1, 0.005f);
 		}
  		if(guihit==gui.pauseMainmenu){

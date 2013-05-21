@@ -173,7 +173,12 @@ public class GuiLabel extends AbstractGuiElement {
 					glBindTexture(GL_TEXTURE_2D, texture.getTextureID());
 				}else glDisable(GL_TEXTURE_2D);
 				glPushMatrix();
-					glTranslated(getScreenX(), getScreenY(), 0);
+				glMatrixMode(GL_PROJECTION);
+				glPushMatrix();
+				glLoadIdentity();
+				glOrtho(0, Display.getWidth(), 0, Display.getHeight(), 1, -1);
+				glMatrixMode(GL_MODELVIEW);
+				glTranslated(getScreenX(), getScreenY(), 0);
 					glBegin(GL_QUADS);
 						if(color!=null)glColor4ub((byte) color.getRed(), 
 									(byte) color.getGreen(),
@@ -201,7 +206,7 @@ public class GuiLabel extends AbstractGuiElement {
 				TextureImpl.bindNone();
 				glEnable(GL_SCISSOR_TEST);
 				glScissor((int)getScreenX(), (int)getScreenY(), (int)width, (int)height);
-				float xpos = getScreenX()+width/2-ResourceManager.font.getWidth(text)/2;
+				float xpos = getScreenX();
 				float ypos = Display.getHeight()-getScreenY()-height/2-ResourceManager.font.getHeight(text)/2;
 				ResourceManager.font.drawString(xpos, ypos, text);
 				glDisable(GL_SCISSOR_TEST);

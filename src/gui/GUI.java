@@ -1,6 +1,7 @@
 package gui;
 import static org.lwjgl.opengl.GL11.*;
 
+import game.Main;
 import game.ResourceManager;
 
 import java.awt.Color;
@@ -49,6 +50,9 @@ public class GUI {
 	public GuiPanel settingsMenu = new GuiPanel(Display.getWidth()/2-128,Display.getHeight()/2-128,256,256,ResourceManager.TEXTURE_GUIMENU);
 	public GuiButton settingsResume = new GuiButton(28, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
 	public GuiLabel settingsTitle = new GuiLabel(30, 220, 100, 20, (Color)null);
+	public GuiLabel settingsVsync = new GuiLabel(30,190,190,20,(Color)null);
+	public GuiButton settingsVsyncon = new GuiButton(30,160,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiButton settingsVsyncoff = new GuiButton(130,160,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
 	
 	List<guiElement> elements = new ArrayList<guiElement>();
 	List<guiElement> menuElements = new ArrayList<guiElement>();
@@ -91,6 +95,7 @@ public class GUI {
 		add(blur);
 			blur.setBlurBehind(true);
 			blur.setVisible(false);
+			
 		add(pauseMenu);
 			pauseMenu.setVisible(false);
 			pauseMenu.add(pauseLogo);
@@ -111,10 +116,19 @@ public class GUI {
 			settingsMenu.setVisible(false);
 			settingsMenu.add(settingsTitle);
 							 settingsTitle.setText(ResourceManager.getString("SETTINGSMENU_LABEL_TITLE"));
+		    settingsMenu.add(settingsVsyncon);
+		    				 settingsVsyncon.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCON"));
+		    				 if(!ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncon.setColor(Color.gray);
+		    settingsMenu.add(settingsVsyncoff);
+		    				 settingsVsyncoff.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCOFF"));
+		    				 if(ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncoff.setColor(Color.gray);
+		    settingsMenu.add(settingsVsync);
+		    				 settingsVsync.setText(ResourceManager.getString("SETTINGSMENU_LABEL_VSYNC"));
 			settingsMenu.add(settingsResume);
 							 settingsResume.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_RESUME"));
+		
 		add(debugInfo);	
-			debugInfo.setVisible(false);
+			debugInfo.setVisible(Main.debugMode);
 						  
 	}
 	

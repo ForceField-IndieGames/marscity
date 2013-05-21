@@ -52,6 +52,8 @@ public class ResourceManager {
 	static Document settingsFile = null;
 	static DocumentBuilder builder = null;
 	
+	static final String FILE_SETTINGS = "res/settings/settings.xml";
+	
 	public final static int BUILDINGTYPE_HOUSE = 0;
 	public final static int BUILDINGTYPE_BIGHOUSE = 1;
 	
@@ -124,7 +126,7 @@ public class ResourceManager {
 			Main.log("Created necessary folders.");
 			try {
 				(new File("res/lang/DE.xml")).createNewFile();
-				(new File("res/settings/settings.xml")).createNewFile();
+				(new File(FILE_SETTINGS)).createNewFile();
 				
 				//settings.xml
 				BufferedReader input = new BufferedReader(new InputStreamReader(ResourceManager.class.getResourceAsStream("/res/settings/settings.xml")));
@@ -300,7 +302,7 @@ public class ResourceManager {
 		try {
 			transformer = TransformerFactory.newInstance().newTransformer();
 			 DOMSource        source = new DOMSource(settingsFile);
-	         FileOutputStream os     = new FileOutputStream(new File("/res/settings/settings.xml"));
+	         FileOutputStream os     = new FileOutputStream(new File(FILE_SETTINGS));
 	         StreamResult     result = new StreamResult(os);
 	         transformer.transform(source, result);
 		} catch (Exception e) {
