@@ -154,11 +154,7 @@ public class Main {
 			System.exit(0);
 		}
 		
-		try {
-			File file = new File("mars city.log");
-			file.delete();
-		} catch (Exception e) {
-		}
+		try {(new File("mars city.log")).delete();} catch (Exception e) {}
 		
 		System.out.println("Mars City started...");
 		log("Mars City started...");
@@ -174,7 +170,6 @@ public class Main {
 		terrain = new Terrain(0,0,-150);//create the terrain
 		
 		if(ResourceManager.getSetting("vsync").equals("enabled"))Display.setVSyncEnabled(true);
-		
 
 		initGL(); // init OpenGL
 		getDelta(); // call once before loop to initialise lastFrame
@@ -348,9 +343,57 @@ public class Main {
  		}
  		if(guihit==gui.settingsVsyncoff){
  			try {
- 			gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-			gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
- 			ResourceManager.setSetting("vsync", "disabled");
+	 			gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+				gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+	 			ResourceManager.setSetting("vsync", "disabled");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+ 		}
+ 		if(guihit==gui.settingsParticlesoff){
+ 			try {
+				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+	 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESOFF;
+	 			ResourceManager.setSetting("particlequality", "off");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+ 		}
+ 		if(guihit==gui.settingsParticleslow){
+ 			try {
+				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+	 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESLOW;
+	 			ResourceManager.setSetting("particlequality", "low");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+ 		}
+ 		if(guihit==gui.settingsParticlesmiddle){
+ 			try {
+				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+	 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESMIDDLE;
+	 			ResourceManager.setSetting("particlequality", "middle");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+ 		}
+ 		if(guihit==gui.settingsParticleshigh){
+ 			try {
+				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+	 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESHIGH;
+	 			ResourceManager.setSetting("particlequality", "high");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

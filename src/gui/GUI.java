@@ -1,6 +1,7 @@
 package gui;
 import static org.lwjgl.opengl.GL11.*;
 
+import effects.ParticleEffects;
 import game.Main;
 import game.ResourceManager;
 
@@ -47,18 +48,38 @@ public class GUI {
 	
 	public GuiLabel debugInfo = new GuiLabel(0,Display.getHeight()-20,Display.getWidth(),20,Color.white);
 	
-	public GuiPanel settingsMenu = new GuiPanel(Display.getWidth()/2-128,Display.getHeight()/2-128,256,256,ResourceManager.TEXTURE_GUIMENU);
-	public GuiButton settingsResume = new GuiButton(28, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
-	public GuiLabel settingsTitle = new GuiLabel(30, 220, 100, 20, (Color)null);
-	public GuiLabel settingsVsync = new GuiLabel(30,190,190,20,(Color)null);
-	public GuiButton settingsVsyncon = new GuiButton(30,160,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
-	public GuiButton settingsVsyncoff = new GuiButton(130,160,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiPanel settingsMenu = new GuiPanel(Display.getWidth()/2-256,Display.getHeight()/2-256,512,512,ResourceManager.TEXTURE_GUIMENU);
+	public GuiButton settingsResume = new GuiButton(156, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiLabel settingsTitle = new GuiLabel(30, 470, 100, 20, (Color)null);
+	public GuiLabel settingsVsync = new GuiLabel(30,440,190,20,(Color)null);
+	public GuiButton settingsVsyncon = new GuiButton(30,410,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiButton settingsVsyncoff = new GuiButton(130,410,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiLabel settingsParticles = new GuiLabel(30,380,190,20,(Color)null);
+	public GuiButton settingsParticlesoff = new GuiButton(30,350,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiButton settingsParticleslow = new GuiButton(130,350,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiButton settingsParticlesmiddle = new GuiButton(230,350,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiButton settingsParticleshigh = new GuiButton(330,350,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
 	
 	List<guiElement> elements = new ArrayList<guiElement>();
 	List<guiElement> menuElements = new ArrayList<guiElement>();
 	
 	public GUI()
 	{
+		
+		if(ResourceManager.getSetting("particlequality").equals("off")){
+			settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			ParticleEffects.particleQuality = ParticleEffects.PARTICLESOFF;
+		}else if(ResourceManager.getSetting("particlequality").equals("low")){
+			settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			ParticleEffects.particleQuality = ParticleEffects.PARTICLESLOW;
+		}else if(ResourceManager.getSetting("particlequality").equals("middle")){
+			settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			ParticleEffects.particleQuality = ParticleEffects.PARTICLESMIDDLE;
+		}else if(ResourceManager.getSetting("particlequality").equals("high")){
+			settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			ParticleEffects.particleQuality = ParticleEffects.PARTICLESHIGH;
+		}
+		
 		//Main menu
 		menuElements.add(MenuBG);
 		menuElements.add(MenuFF);
@@ -111,22 +132,35 @@ public class GUI {
 						  pauseExit.setText(ResourceManager.getString("PAUSEMENU_BUTTON_EXIT"));			  
 			pauseMenu.add(pauseResume);
 						  pauseResume.setText(ResourceManager.getString("PAUSEMENU_BUTTON_RESUME"));
-		
-	    add(settingsMenu);
+
+  ///////////		
+		add(settingsMenu);
 			settingsMenu.setVisible(false);
 			settingsMenu.add(settingsTitle);
-							 settingsTitle.setText(ResourceManager.getString("SETTINGSMENU_LABEL_TITLE"));
-		    settingsMenu.add(settingsVsyncon);
-		    				 settingsVsyncon.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCON"));
-		    				 if(ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
-		    settingsMenu.add(settingsVsyncoff);
-		    				 settingsVsyncoff.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCOFF"));
-		    				 if(!ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
-		    settingsMenu.add(settingsVsync);
-		    				 settingsVsync.setText(ResourceManager.getString("SETTINGSMENU_LABEL_VSYNC"));
+			settingsMenu.add(settingsVsyncon);
+			settingsMenu.add(settingsVsyncoff);
+			settingsMenu.add(settingsVsync);
+			settingsMenu.add(settingsParticles);
+			settingsMenu.add(settingsParticlesoff);
+			settingsMenu.add(settingsParticleslow);
+			settingsMenu.add(settingsParticlesmiddle);
+			settingsMenu.add(settingsParticleshigh);
 			settingsMenu.add(settingsResume);
-							 settingsResume.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_RESUME"));
-		
+			
+			settingsTitle.setText(ResourceManager.getString("SETTINGSMENU_LABEL_TITLE"));
+			settingsVsyncon.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCON"));
+			if (ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			settingsVsyncoff.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCOFF"));
+			if (!ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			settingsVsync.setText(ResourceManager.getString("SETTINGSMENU_LABEL_VSYNC"));
+			settingsParticles.setText(ResourceManager.getString("SETTINGSMENU_LABEL_PARTICLES"));
+			settingsParticlesoff.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESOFF"));
+			settingsParticleslow.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESLOW"));
+			settingsParticlesmiddle.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESMIDDLE"));
+			settingsParticleshigh.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESHIGH"));
+			settingsResume.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_RESUME"));
+///////////
+			
 		add(debugInfo);	
 			debugInfo.setVisible(Main.debugMode);
 						  

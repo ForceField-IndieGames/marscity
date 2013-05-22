@@ -8,6 +8,12 @@ import java.util.List;
 import org.newdawn.slick.opengl.Texture;
 
 public class ParticleEffects {
+	
+	public static final int PARTICLESOFF = 0;
+	public static final int PARTICLESLOW = 1;
+	public static final int PARTICLESMIDDLE = 3;
+	public static final int PARTICLESHIGH = 8;
+	public static int particleQuality = PARTICLESHIGH;
 
 	private static List<ParticleEffect> fx = new ArrayList<ParticleEffect>();
 
@@ -22,7 +28,7 @@ public class ParticleEffects {
 	
 	public static void dustEffect(float x, float y, float z)
 	{
-		addEffect(400, x, y, z, 2f, 2f, 0.002f, 800, ResourceManager.TEXTURE_PARTICLEFOG);
+		addEffect(50*particleQuality, x, y, z, 2f, 2f, 0.002f, 800, ResourceManager.TEXTURE_PARTICLEFOG);
 	}
 	
 	public static int getEffectCount()

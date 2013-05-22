@@ -1,4 +1,5 @@
 <settings>
 	<lang>DE</lang>
 	<vsync>disabled</vsync>
+	<particlequality>high</particlequality>
 </settings>
