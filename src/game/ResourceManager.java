@@ -66,7 +66,9 @@ public class ResourceManager {
 	
 	public final static Texture TEXTURE_HOUSE = addTexture("/res/housetexture.png");
 	public final static Texture TEXTURE_TERRAIN = addTexture("/res/mars.png");
+	public final static Texture TEXTURE_GUITOOLSBG = addTexture("/res/guitoolsBG.png");
 	public final static Texture TEXTURE_GUISELECT = addTexture("/res/guiselect.png");
+	public final static Texture TEXTURE_GUIMENUBUTTON = addTexture("/res/guimenubutton.png");
 	public final static Texture TEXTURE_GUIADD = addTexture("/res/guiadd.png");
 	public final static Texture TEXTURE_GUIDELETE = addTexture("/res/guidelete.png");
 	public final static Texture TEXTURE_GUITOOLBAR = addTexture("/res/guitoolbar.png");

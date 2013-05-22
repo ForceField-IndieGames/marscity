@@ -299,27 +299,22 @@ public class Main {
 	
 	public void inputGui(guiElement guihit)
 	{
-		if(guihit==gui.toolSelect){
-			selectedTool = TOOL_SELECT;
-			gui.toolSelect.setColor(Color.white);
-			gui.toolAdd.setColor(Color.gray);
-			gui.toolDelete.setColor(Color.gray);
-			AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, -40, 0.5f);
-			buildpreview.setBuilding(-1);
-			currentBuildingType = -1;
+		if(guihit==gui.menuButton){
+			Game.Pause();
+			gui.blur.setVisible(true);
+			gui.pauseMenu.setVisible(true);
+			AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f);
 		}
 		if(guihit==gui.toolAdd){
 			selectedTool = TOOL_ADD;
-			gui.toolSelect.setColor(Color.gray);
-			gui.toolAdd.setColor(Color.white);
-			gui.toolDelete.setColor(Color.gray);
+			gui.toolAdd.setColor(Color.gray);
+			gui.toolDelete.setColor(Color.white);
 			AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, 0, 0.5f);
 		}
  		if(guihit==gui.toolDelete){
 			selectedTool = TOOL_DELETE;
-			gui.toolSelect.setColor(Color.gray);
-			gui.toolAdd.setColor(Color.gray);
-			gui.toolDelete.setColor(Color.white);
+			gui.toolAdd.setColor(Color.white);
+			gui.toolDelete.setColor(Color.gray);
 			AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, -40, 0.5f);
 			buildpreview.setBuilding(-1);
 			currentBuildingType = -1;
@@ -488,13 +483,6 @@ public class Main {
 						}
 						if(debugMode)Game.exit();
 					}
-					if(Keyboard.getEventKey()==Keyboard.KEY_T && Keyboard.getEventKeyState()){
-						if(glIsEnabled(GL_TEXTURE_2D)){
-							glDisable(GL_TEXTURE_2D);
-						}else{
-							glEnable(GL_TEXTURE_2D);
-						}
-					}
 					if(Keyboard.getEventKey()==Keyboard.KEY_P && Keyboard.getEventKeyState())
 					{
 						if(Game.isPaused())
@@ -508,24 +496,6 @@ public class Main {
 							gui.pauseMenu.setVisible(true);
 							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f);
 						}
-					}
-					if(Keyboard.getEventKey()==Keyboard.KEY_1&&Keyboard.getEventKeyState()){
-						selectedTool = TOOL_SELECT;
-						gui.toolSelect.setColor(Color.white);
-						gui.toolAdd.setColor(Color.gray);
-						gui.toolDelete.setColor(Color.gray);
-					}
-					if(Keyboard.getEventKey()==Keyboard.KEY_2&&Keyboard.getEventKeyState()){
-						selectedTool = TOOL_ADD;
-						gui.toolSelect.setColor(Color.gray);
-						gui.toolAdd.setColor(Color.white);
-						gui.toolDelete.setColor(Color.gray);
-					}
-					if(Keyboard.getEventKey()==Keyboard.KEY_3&&Keyboard.getEventKeyState()){
-						selectedTool = TOOL_DELETE;
-						gui.toolSelect.setColor(Color.gray);
-						gui.toolAdd.setColor(Color.gray);
-						gui.toolDelete.setColor(Color.white);
 					}
 					if(Keyboard.getEventKey()==Keyboard.KEY_TAB&&Keyboard.getEventKeyState()){
 						if(debugMode){
@@ -559,11 +529,11 @@ public class Main {
 			int MY = Mouse.getDY();
 	
 			
-			if(Mouse.isButtonDown(2)){
+			if(Mouse.isButtonDown(1)){
 				camera.setRotY(camera.getRotY()-0.1f*MX);
 				camera.setRotX(camera.getRotX()-0.1f*MY);
 			}
-			if(Mouse.isButtonDown(1)){
+			if(Mouse.isButtonDown(2)){
 				camera.setX((float) (camera.getX()+0.0002f*delta*camera.getZoom()*MY*Math.sin(Math.toRadians(camera.getRotY()))-0.0002f*delta*camera.getZoom()*MX*Math.cos(Math.toRadians(camera.getRotY()))));
 				camera.setZ((float) (camera.getZ()+0.0002f*delta*camera.getZoom()*MY*Math.cos(Math.toRadians(camera.getRotY()))+0.0002f*delta*camera.getZoom()*MX*Math.sin(Math.toRadians(camera.getRotY()))));
 			}
@@ -582,9 +552,9 @@ public class Main {
 					{
 						case(TOOL_SELECT): //Zoom to a house
 							try {
-								AnimationManager.animateValue(camera, AnimationValue.X, ResourceManager.getObject(hoveredEntity).getX(), 1f);
-								AnimationManager.animateValue(camera, AnimationValue.Y, ResourceManager.getObject(hoveredEntity).getY()+ResourceManager.getObject(hoveredEntity).getPreferredY(), 1f);
-								AnimationManager.animateValue(camera, AnimationValue.Z, ResourceManager.getObject(hoveredEntity).getZ(), 1f);
+								AnimationManager.animateValue(camera, AnimationValue.X, ResourceManager.getObject(hoveredEntity).getX(), 0.2f);
+								AnimationManager.animateValue(camera, AnimationValue.Y, ResourceManager.getObject(hoveredEntity).getY()+ResourceManager.getObject(hoveredEntity).getPreferredY(), 0.2f);
+								AnimationManager.animateValue(camera, AnimationValue.Z, ResourceManager.getObject(hoveredEntity).getZ(), 0.2f);
 							} catch (Exception e) {}
 							break;
 						
@@ -609,6 +579,14 @@ public class Main {
 							} catch (Exception e) {e.printStackTrace();}
 							break;
 					}
+				}
+				if(Mouse.getEventButton()==1&&Mouse.getEventButtonState()){
+					selectedTool = TOOL_SELECT;
+					gui.toolAdd.setColor(Color.white);
+					gui.toolDelete.setColor(Color.white);
+					AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, -40, 0.5f);
+					buildpreview.setBuilding(-1);
+					currentBuildingType = -1;
 				}
 				if((Mouse.getEventButton()==2||Mouse.getEventButton()==1)&&Mouse.getEventButtonState()){
 						Mouse.setGrabbed(true);

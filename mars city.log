@@ -6,7 +6,9 @@ Loading sound: /res/drop.wav
 Loading sound: /res/destroy.wav
 Loading texture: /res/housetexture.png
 Loading texture: /res/mars.png
+Loading texture: /res/guitoolsBG.png
 Loading texture: /res/guiselect.png
+Loading texture: /res/guimenubutton.png
 Loading texture: /res/guiadd.png
 Loading texture: /res/guidelete.png
 Loading texture: /res/guitoolbar.png

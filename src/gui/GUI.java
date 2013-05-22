@@ -24,13 +24,14 @@ public class GUI {
 	public GuiLabel MenuVersion = new GuiLabel(0,0,180,20,(Color)null);
 	
 	public GuiPanel toolBar = new GuiPanel(0,0,Display.getWidth(),84, ResourceManager.TEXTURE_GUITOOLBAR);
-	public GuiPanel toolSelect = new GuiPanel(10, 10, 64, 64, ResourceManager.TEXTURE_GUISELECT);
-	public GuiPanel toolAdd = new GuiPanel(84, 10, 64, 64, ResourceManager.TEXTURE_GUIADD, Color.gray);
-	public GuiPanel toolDelete = new GuiPanel(158, 10, 64, 64, ResourceManager.TEXTURE_GUIDELETE, Color.gray);
+	public GuiPanel toolAdd = new GuiPanel(20, 10, 64, 64, ResourceManager.TEXTURE_GUIADD);
+	public GuiPanel toolDelete = new GuiPanel(80, 5, 32, 32, ResourceManager.TEXTURE_GUIDELETE);
+	public GuiPanel guiTools = new GuiPanel(0,0,128,128,ResourceManager.TEXTURE_GUITOOLSBG);
+	public GuiPanel menuButton = new GuiPanel(10, 65, 32, 32, ResourceManager.TEXTURE_GUIMENUBUTTON);
 	
 	public GuiPanel infoBar = new GuiPanel(300,55,700,20,(Color)null);
-	public GuiLabel infoMoney = new GuiLabel(0,0,100,20,(Color)null);
-	public GuiLabel infoCitizens = new GuiLabel(100,0,100,20,(Color)null);
+	public GuiLabel infoMoney = new GuiLabel(0,0,150,20,(Color)null);
+	public GuiLabel infoCitizens = new GuiLabel(150,0,150,20,(Color)null);
 	
 	public GuiPanel buildingChooser = new GuiPanel(300,0,700,50, (Color)null);
 	public GuiButton buildingHouse = new GuiButton(0,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2, Color.gray);
@@ -108,10 +109,10 @@ public class GUI {
 									infoMoney.setText("Geld: 0$");
 						infoBar.add(infoCitizens);
 									infoCitizens.setText("Einwohner: 0");
-			
-		add(toolSelect);
-		add(toolAdd);
-		add(toolDelete);
+		add(guiTools);
+		guiTools.add(menuButton);
+		guiTools.add(toolAdd);
+		guiTools.add(toolDelete);
 		
 		add(blur);
 			blur.setBlurBehind(true);
