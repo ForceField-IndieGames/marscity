@@ -75,9 +75,13 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUIMENU = addTexture("/res/guimenu.png");
 	public final static Texture TEXTURE_EMPTY = addTexture("/res/empty.png");
 	public final static Texture TEXTURE_GUIBUTTON = addTexture("/res/guibutton.png");
+	public final static Texture TEXTURE_GUIBUTTONDOWN = addTexture("/res/guibuttondown.png");
 	public final static Texture TEXTURE_MAINMENUBG = addTexture("/res/mainmenubg.png");
 	public final static Texture TEXTURE_GUIBUTTON2 = addTexture("/res/guibutton2.png");
 	public final static Texture TEXTURE_GUIBUTTON2DOWN = addTexture("/res/guibutton2down.png");
+	public final static Texture TEXTURE_GUILABELBG = addTexture("/res/guilabelbg.png");
+	public final static Texture TEXTURE_GUILABELBGL = addTexture("/res/guilabelbgl.png");
+	public final static Texture TEXTURE_GUILABELBGR = addTexture("/res/guilabelbgr.png");
 	public final static Texture TEXTURE_MAINMENUFF = addTexture("/res/ForceField.png");
 	public final static Texture TEXTURE_MARSCITYLOGO = addTexture("/res/marscitylogo.png");
 	public final static Texture TEXTURE_BIGHOUSE = addTexture("/res/bighousetexture.png");

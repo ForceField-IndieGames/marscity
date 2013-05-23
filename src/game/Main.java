@@ -329,8 +329,8 @@ public class Main {
 		}
  		if(guihit==gui.settingsVsyncon){
  			try {
-				gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
-				gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+				gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+				gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
 				ResourceManager.setSetting("vsync", "enabled");
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -338,8 +338,8 @@ public class Main {
  		}
  		if(guihit==gui.settingsVsyncoff){
  			try {
-	 			gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-				gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+	 			gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+				gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 	 			ResourceManager.setSetting("vsync", "disabled");
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -347,10 +347,10 @@ public class Main {
  		}
  		if(guihit==gui.settingsParticlesoff){
  			try {
-				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
-	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
 	 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESOFF;
 	 			ResourceManager.setSetting("particlequality", "off");
 			} catch (Exception e) {
@@ -359,10 +359,10 @@ public class Main {
  		}
  		if(guihit==gui.settingsParticleslow){
  			try {
-				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
-	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
 	 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESLOW;
 	 			ResourceManager.setSetting("particlequality", "low");
 			} catch (Exception e) {
@@ -371,10 +371,10 @@ public class Main {
  		}
  		if(guihit==gui.settingsParticlesmiddle){
  			try {
-				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
-	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
+				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
 	 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESMIDDLE;
 	 			ResourceManager.setSetting("particlequality", "middle");
 			} catch (Exception e) {
@@ -383,10 +383,10 @@ public class Main {
  		}
  		if(guihit==gui.settingsParticleshigh){
  			try {
-				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 	 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESHIGH;
 	 			ResourceManager.setSetting("particlequality", "high");
 			} catch (Exception e) {

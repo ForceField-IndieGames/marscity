@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.newdawn.slick.opengl.Texture;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -211,6 +212,11 @@ public class GuiPanel extends AbstractGuiElement {
 							glBindTexture(GL_TEXTURE_2D, texture.getTextureID());
 						}else glDisable(GL_TEXTURE_2D);
 				glPushMatrix();
+				glMatrixMode(GL_PROJECTION);
+				glPushMatrix();
+				glLoadIdentity();
+				glOrtho(0, Display.getWidth(), 0, Display.getHeight(), 1, -1);
+				glMatrixMode(GL_MODELVIEW);
 					glTranslated(getScreenX(), getScreenY(), 0);
 					glBegin(GL_QUADS);
 						if(color!=null)glColor4ub((byte) color.getRed(), 

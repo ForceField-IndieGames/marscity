@@ -29,9 +29,15 @@ public class GUI {
 	public GuiPanel guiTools = new GuiPanel(0,0,128,128,ResourceManager.TEXTURE_GUITOOLSBG);
 	public GuiPanel menuButton = new GuiPanel(10, 65, 32, 32, ResourceManager.TEXTURE_GUIMENUBUTTON);
 	
-	public GuiPanel infoBar = new GuiPanel(300,55,700,20,(Color)null);
-	public GuiLabel infoMoney = new GuiLabel(0,0,150,20,(Color)null);
-	public GuiLabel infoCitizens = new GuiLabel(150,0,150,20,(Color)null);
+	public GuiPanel infoBar = new GuiPanel(300,45,700,30,(Color)null);
+	public GuiPanel infoMoneybg = new GuiPanel(0,0,200,30,ResourceManager.TEXTURE_GUILABELBG);
+	public GuiPanel infoMoneybgl = new GuiPanel(-15,0,15,30,ResourceManager.TEXTURE_GUILABELBGL);
+	public GuiPanel infoMoneybgr = new GuiPanel(200,0,15,30,ResourceManager.TEXTURE_GUILABELBGR);
+	public GuiLabel infoMoney = new GuiLabel(0,0,200,30,(Color)null);
+	public GuiPanel infoCitizensbg = new GuiPanel(250,0,200,30,ResourceManager.TEXTURE_GUILABELBG);
+	public GuiPanel infoCitizensbgl = new GuiPanel(-15,0,15,30,ResourceManager.TEXTURE_GUILABELBGL);
+	public GuiPanel infoCitizensbgr = new GuiPanel(200,0,15,30,ResourceManager.TEXTURE_GUILABELBGR);
+	public GuiLabel infoCitizens = new GuiLabel(0,0,200,30,(Color)null);
 	
 	public GuiPanel buildingChooser = new GuiPanel(300,0,700,50, (Color)null);
 	public GuiButton buildingHouse = new GuiButton(0,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2, Color.gray);
@@ -53,13 +59,13 @@ public class GUI {
 	public GuiButton settingsResume = new GuiButton(156, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
 	public GuiLabel settingsTitle = new GuiLabel(30, 470, 100, 20, (Color)null);
 	public GuiLabel settingsVsync = new GuiLabel(30,440,190,20,(Color)null);
-	public GuiButton settingsVsyncon = new GuiButton(30,410,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
-	public GuiButton settingsVsyncoff = new GuiButton(130,410,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiButton settingsVsyncon = new GuiButton(30,410,100,30,ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton settingsVsyncoff = new GuiButton(130,410,100,30,ResourceManager.TEXTURE_GUIBUTTON);
 	public GuiLabel settingsParticles = new GuiLabel(30,380,190,20,(Color)null);
-	public GuiButton settingsParticlesoff = new GuiButton(30,350,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
-	public GuiButton settingsParticleslow = new GuiButton(130,350,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
-	public GuiButton settingsParticlesmiddle = new GuiButton(230,350,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
-	public GuiButton settingsParticleshigh = new GuiButton(330,350,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiButton settingsParticlesoff = new GuiButton(30,350,100,30,ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton settingsParticleslow = new GuiButton(130,350,100,30,ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton settingsParticlesmiddle = new GuiButton(230,350,100,30,ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton settingsParticleshigh = new GuiButton(330,350,100,30,ResourceManager.TEXTURE_GUIBUTTON);
 	
 	List<guiElement> elements = new ArrayList<guiElement>();
 	List<guiElement> menuElements = new ArrayList<guiElement>();
@@ -68,16 +74,16 @@ public class GUI {
 	{
 		
 		if(ResourceManager.getSetting("particlequality").equals("off")){
-			settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESOFF;
 		}else if(ResourceManager.getSetting("particlequality").equals("low")){
-			settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESLOW;
 		}else if(ResourceManager.getSetting("particlequality").equals("middle")){
-			settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESMIDDLE;
 		}else if(ResourceManager.getSetting("particlequality").equals("high")){
-			settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESHIGH;
 		}
 		
@@ -105,9 +111,15 @@ public class GUI {
 						buildingChooser.add(buildingBighouse);
 											buildingBighouse.setText(ResourceManager.getString(ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_BIGHOUSE).getName()));
 			toolBar.add(infoBar);
-						infoBar.add(infoMoney);
+						infoBar.add(infoMoneybg);
+						infoMoneybg.add(infoMoneybgl);
+						infoMoneybg.add(infoMoneybgr);
+						infoMoneybg.add(infoMoney);
 									infoMoney.setText("Geld: 0$");
-						infoBar.add(infoCitizens);
+						infoBar.add(infoCitizensbg);
+						infoCitizensbg.add(infoCitizensbgl);
+						infoCitizensbg.add(infoCitizensbgr);
+						infoCitizensbg.add(infoCitizens);
 									infoCitizens.setText("Einwohner: 0");
 		add(guiTools);
 		guiTools.add(menuButton);
@@ -150,9 +162,9 @@ public class GUI {
 			
 			settingsTitle.setText(ResourceManager.getString("SETTINGSMENU_LABEL_TITLE"));
 			settingsVsyncon.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCON"));
-			if (ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			if (ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 			settingsVsyncoff.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCOFF"));
-			if (!ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			if (!ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 			settingsVsync.setText(ResourceManager.getString("SETTINGSMENU_LABEL_VSYNC"));
 			settingsParticles.setText(ResourceManager.getString("SETTINGSMENU_LABEL_PARTICLES"));
 			settingsParticlesoff.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESOFF"));

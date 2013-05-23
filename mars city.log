@@ -15,9 +15,13 @@ Loading texture: /res/guitoolbar.png
 Loading texture: /res/guimenu.png
 Loading texture: /res/empty.png
 Loading texture: /res/guibutton.png
+Loading texture: /res/guibuttondown.png
 Loading texture: /res/mainmenubg.png
 Loading texture: /res/guibutton2.png
 Loading texture: /res/guibutton2down.png
+Loading texture: /res/guilabelbg.png
+Loading texture: /res/guilabelbgl.png
+Loading texture: /res/guilabelbgr.png
 Loading texture: /res/ForceField.png
 Loading texture: /res/marscitylogo.png
 Loading texture: /res/bighousetexture.png
