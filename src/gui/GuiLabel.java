@@ -224,5 +224,17 @@ public class GuiLabel extends AbstractGuiElement {
 	public guiElement mouseover() {
 		return this;
 	}
+
+	@Override
+	public boolean isClickThrough() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void setClickThrough(boolean clockthrough) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }
