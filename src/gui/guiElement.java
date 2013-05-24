@@ -26,6 +26,7 @@ public interface guiElement {
 	public guiElement getParent();
 	public Texture getTexture();
 	public Color getColor();
+	public boolean isClickThrough();
 	
 	public void setX(float x);
 	public void setY(float y);
@@ -35,4 +36,5 @@ public interface guiElement {
 	public void setParent(guiElement guielement);
 	public void setTexture(Texture texure);
 	public void setColor(Color color);
+	public void setClickThrough(boolean clickthrough);
 }

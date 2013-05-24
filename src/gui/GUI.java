@@ -29,6 +29,8 @@ public class GUI {
 	public GuiPanel guiTools = new GuiPanel(0,0,128,128,ResourceManager.TEXTURE_GUITOOLSBG);
 	public GuiPanel menuButton = new GuiPanel(10, 65, 32, 32, ResourceManager.TEXTURE_GUIMENUBUTTON);
 	
+	public GuiPanel deleteBorder = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_GUIDELETEBORDER);
+	
 	public GuiPanel infoBar = new GuiPanel(300,45,700,30,(Color)null);
 	public GuiPanel infoMoneybg = new GuiPanel(0,0,200,30,ResourceManager.TEXTURE_GUILABELBG);
 	public GuiPanel infoMoneybgl = new GuiPanel(-15,0,15,30,ResourceManager.TEXTURE_GUILABELBGL);
@@ -103,6 +105,10 @@ public class GUI {
 		     		     			   MenuExit.setText(ResourceManager.getString("MAINMENU_BUTTON_EXIT"));
 		
 		//GUI
+		add(deleteBorder);
+		deleteBorder.setClickThrough(true);
+		deleteBorder.setVisible(false);
+		     		     			   
 		add(toolBar);
 			toolBar.setY(-40);
 			toolBar.add(buildingChooser);
@@ -244,7 +250,8 @@ public class GUI {
 					&&elements.get(i).getX()<Mouse.getX()
 					&&elements.get(i).getY()<Mouse.getY()
 					&&elements.get(i).getWidth()+elements.get(i).getX()>Mouse.getX()
-					&&elements.get(i).getHeight()+elements.get(i).getY()>Mouse.getY()) return elements.get(i).mouseover();
+					&&elements.get(i).getHeight()+elements.get(i).getY()>Mouse.getY()
+					&&!elements.get(i).isClickThrough()) return elements.get(i).mouseover();
 		}
 		return null;
 	}

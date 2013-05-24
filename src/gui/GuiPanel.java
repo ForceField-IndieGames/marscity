@@ -23,9 +23,60 @@ public class GuiPanel extends AbstractGuiElement {
 	private Texture texture;
 	private boolean blurBehind = false;
 	private float opacity = 1f;
+	private boolean clickThrough = false;
 	
 	List<guiElement> elements = new ArrayList<guiElement>();
+
+	public GuiPanel()
+	{
 	
+	}
+
+	public GuiPanel(int x, int y, int width, int height)
+	{
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+	}
+
+	public GuiPanel(int x, int y, int width, int height, Color color)
+	{
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.color = color;
+	}
+
+	public GuiPanel(int x, int y, int width, int height, Texture texture)
+	{
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.texture = texture;
+		this.color = Color.white;
+	}
+
+	public GuiPanel(int x, int y, int width, int height, Texture texture, Color color)
+	{
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.texture = texture;
+		this.color = color;
+	}
+
+	public boolean isClickThrough() {
+		return clickThrough;
+	}
+
+	public void setClickThrough(boolean clickThrough) {
+		this.clickThrough = clickThrough;
+	}
+
 	public void setWidth(float width) {
 		this.width = width;
 	}
@@ -50,48 +101,6 @@ public class GuiPanel extends AbstractGuiElement {
 		this.blurBehind = blurBehind;
 	}
 
-	public GuiPanel()
-	{
-
-	}
-
-	public GuiPanel(int x, int y, int width, int height)
-	{
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-	}
-	
-	public GuiPanel(int x, int y, int width, int height, Color color)
-	{
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.color = color;
-	}
-	
-	public GuiPanel(int x, int y, int width, int height, Texture texture)
-	{
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.texture = texture;
-		this.color = Color.white;
-	}
-	
-	public GuiPanel(int x, int y, int width, int height, Texture texture, Color color)
-	{
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.texture = texture;
-		this.color = color;
-	}
-	
 	public void add(guiElement guielement)
 	{
 		guielement.setParent(this);
@@ -250,7 +259,8 @@ public class GuiPanel extends AbstractGuiElement {
 					&&elements.get(i).getScreenX()<Mouse.getX()
 					&&elements.get(i).getScreenY()<Mouse.getY()
 					&&elements.get(i).getWidth()+elements.get(i).getScreenX()>Mouse.getX()
-					&&elements.get(i).getHeight()+elements.get(i).getScreenY()>Mouse.getY()) return elements.get(i).mouseover();
+					&&elements.get(i).getHeight()+elements.get(i).getScreenY()>Mouse.getY()
+					&&!elements.get(i).isClickThrough()) return elements.get(i).mouseover();
 		}
 		return this;
 	}
