@@ -37,14 +37,8 @@ public class GUI {
 	public GuiPanel deleteBorder = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_GUIDELETEBORDER);
 	
 	public GuiPanel infoBar = new GuiPanel(300,45,700,30,(Color)null);
-	public GuiPanel infoMoneybg = new GuiPanel(0,0,200,30,ResourceManager.TEXTURE_GUILABELBG);
-	public GuiPanel infoMoneybgl = new GuiPanel(-15,0,15,30,ResourceManager.TEXTURE_GUILABELBGL);
-	public GuiPanel infoMoneybgr = new GuiPanel(200,0,15,30,ResourceManager.TEXTURE_GUILABELBGR);
-	public GuiLabel infoMoney = new GuiLabel(0,0,200,30,(Color)null);
-	public GuiPanel infoCitizensbg = new GuiPanel(250,0,200,30,ResourceManager.TEXTURE_GUILABELBG);
-	public GuiPanel infoCitizensbgl = new GuiPanel(-15,0,15,30,ResourceManager.TEXTURE_GUILABELBGL);
-	public GuiPanel infoCitizensbgr = new GuiPanel(200,0,15,30,ResourceManager.TEXTURE_GUILABELBGR);
-	public GuiLabel infoCitizens = new GuiLabel(0,0,200,30,(Color)null);
+	public GuiLabel infoMoney = new GuiLabel(0,0,200,50,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
+	public GuiLabel infoCitizens = new GuiLabel(250,0,200,50,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
 	
 	public GuiPanel buildingChooser = new GuiPanel(300,0,700,50, (Color)null);
 	public GuiButton buildingStreet = new GuiButton(0,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2, Color.gray);
@@ -119,21 +113,15 @@ public class GUI {
 			toolBar.setY(-40);
 			toolBar.add(buildingChooser);
 						buildingChooser.add(buildingStreet);
-						buildingStreet.setText(ResourceManager.getString(ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getName()));
+						buildingStreet.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_STREET));
 						buildingChooser.add(buildingHouse);
-											buildingHouse.setText(ResourceManager.getString(ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_HOUSE).getName()));
+											buildingHouse.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_HOUSE));
 						buildingChooser.add(buildingBighouse);
-											buildingBighouse.setText(ResourceManager.getString(ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_BIGHOUSE).getName()));
+											buildingBighouse.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_BIGHOUSE));
 			toolBar.add(infoBar);
-						infoBar.add(infoMoneybg);
-						infoMoneybg.add(infoMoneybgl);
-						infoMoneybg.add(infoMoneybgr);
-						infoMoneybg.add(infoMoney);
+						infoBar.add(infoMoney);
 									infoMoney.setText("Geld: 0$");
-						infoBar.add(infoCitizensbg);
-						infoCitizensbg.add(infoCitizensbgl);
-						infoCitizensbg.add(infoCitizensbgr);
-						infoCitizensbg.add(infoCitizens);
+						infoBar.add(infoCitizens);
 									infoCitizens.setText("Einwohner: 0");
 		add(guiTools);
 		guiTools.add(menuButton);
