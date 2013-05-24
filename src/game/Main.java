@@ -310,6 +310,7 @@ public class Main {
 			gui.toolAdd.setColor(Color.gray);
 			gui.toolDelete.setColor(Color.white);
 			AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, 0, 0.5f);
+			gui.deleteBorder.setVisible(false);
 		}
  		if(guihit==gui.toolDelete){
 			selectedTool = TOOL_DELETE;
@@ -318,6 +319,7 @@ public class Main {
 			AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, -40, 0.5f);
 			buildpreview.setBuilding(-1);
 			currentBuildingType = -1;
+			gui.deleteBorder.setVisible(true);
 		}
  		if(guihit==gui.pauseResume){
 			gui.blur.setVisible(false);
@@ -587,6 +589,7 @@ public class Main {
 					AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, -40, 0.5f);
 					buildpreview.setBuilding(-1);
 					currentBuildingType = -1;
+					gui.deleteBorder.setVisible(false);
 				}
 				if((Mouse.getEventButton()==2||Mouse.getEventButton()==1)&&Mouse.getEventButtonState()){
 						Mouse.setGrabbed(true);
@@ -654,6 +657,8 @@ public class Main {
 		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+0);
 		
 		ParticleEffects.update(delta);
+		
+		if(Game.isPaused())camera.setRotY(camera.getRotY()+0.05f);
 		
 		// update FPS Counter
 		updateFPS(); 
