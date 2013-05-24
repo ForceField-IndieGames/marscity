@@ -453,6 +453,16 @@ public class ResourceManager {
 	}
 	
 	/**
+	 * Gets the localized name of the building type
+	 * @param buildingtype
+	 * @return
+	 */
+	public static String getBuildingTypeName(int buildingtype)
+	{
+		return ResourceManager.getString(ResourceManager.getBuildingType(buildingtype).getName());
+	}
+	
+	/**
 	 * Loads a file into a StringBuilder
 	 * @param path The Path to the File
 	 * @return a StringBuilder conatining hte Filecontents

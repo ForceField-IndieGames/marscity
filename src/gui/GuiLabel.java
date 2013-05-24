@@ -12,6 +12,8 @@ import org.newdawn.slick.opengl.TextureImpl;
 
 /**
  * A simple label with background image.
+ * Can also use 3 textures (one on the left and one on the right side of the text)
+ * Height of the left/right textures must be 2 times their width
  * @author Benedikt Ringlein
  */
 
@@ -24,6 +26,8 @@ public class GuiLabel extends AbstractGuiElement {
 	private guiElement parent;
 	private Color color = new Color(0.5f,0.5f,0.5f);
 	private Texture texture;
+	private Texture texturel;
+	private Texture texturer;
 	private float opacity = 1f;
 
 	
@@ -65,6 +69,18 @@ public class GuiLabel extends AbstractGuiElement {
 		this.width = width;
 		this.height = height;
 		this.texture = texture;
+		this.color = Color.white;
+	}
+	
+	public GuiLabel(int x, int y, int width, int height, Texture texture, Texture texturel, Texture texturer)
+	{
+		this.x = x;
+		this.y = y;
+		this.width = width;
+		this.height = height;
+		this.texture = texture;
+		this.texturel = texturel;
+		this.texturer = texturer;
 		this.color = Color.white;
 	}
 	
@@ -197,11 +213,39 @@ public class GuiLabel extends AbstractGuiElement {
 						glVertex2f(width, height);
 						glTexCoord2d(0, 0);
 						glVertex2f(0, height);
-						
 					glEnd();
+					//Draw the left texture
+					if(texturel!=null){
+						glBindTexture(GL_TEXTURE_2D, texturel.getTextureID());
+						glBegin(GL_QUADS);
+							glTexCoord2d(0, 1f);
+							glVertex2f(-0.5f*height, 0);
+							glTexCoord2d(1f, 1f);
+							glVertex2f(0, 0);
+							glTexCoord2d(1f, 0);
+							glVertex2f(0, height);
+							glTexCoord2d(0, 0);
+							glVertex2f(-0.5f*height, height);
+						glEnd();
+					}
+					//Draw the right texture
+					if(texturer!=null){
+						glBindTexture(GL_TEXTURE_2D, texturer.getTextureID());
+						glBegin(GL_QUADS);
+							glTexCoord2d(0, 1f);
+							glVertex2f(width, 0);
+							glTexCoord2d(1f, 1f);
+							glVertex2f(width+0.5f*height, 0);
+							glTexCoord2d(1f, 0);
+							glVertex2f(width+0.5f*height, height);
+							glTexCoord2d(0, 0);
+							glVertex2f(width, height);
+						glEnd();
+					}
 				glPopMatrix();
 			}		
 				
+			//Draw the text
 				glMatrixMode(GL_PROJECTION);
 				glPushMatrix();
 				glLoadIdentity();
@@ -236,7 +280,7 @@ public class GuiLabel extends AbstractGuiElement {
 	}
 
 	@Override
-	public void setClickThrough(boolean clockthrough) {
+	public void setClickThrough(boolean clickthrough) {
 		// TODO Auto-generated method stub
 		
 	}

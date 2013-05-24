@@ -1,15 +1,15 @@
 package animation;
 
+import game.ResourceManager;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Benedikt Ringlein
  * This is the animation manager that provides methods for animating values
  * over time. Object that implement Animatable can be animated. 
  */
-
-import game.ResourceManager;
-
-import java.util.ArrayList;
-import java.util.List;
 
 class Animation{
 	Animatable object;
