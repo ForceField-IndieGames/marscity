@@ -12,6 +12,11 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
+/**
+ * This class generates and displays the gui.
+ * @author Benedikt Ringlein
+ */
+
 public class GUI {
 	
 	public GuiPanel MenuBG = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_MAINMENUBG);
@@ -42,8 +47,9 @@ public class GUI {
 	public GuiLabel infoCitizens = new GuiLabel(0,0,200,30,(Color)null);
 	
 	public GuiPanel buildingChooser = new GuiPanel(300,0,700,50, (Color)null);
-	public GuiButton buildingHouse = new GuiButton(0,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2, Color.gray);
-	public GuiButton buildingBighouse = new GuiButton(100,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiButton buildingStreet = new GuiButton(0,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2, Color.gray);
+	public GuiButton buildingHouse = new GuiButton(100,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2, Color.gray);
+	public GuiButton buildingBighouse = new GuiButton(200,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2, Color.gray);
 	
 	public GuiPanel blur = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),(Color)null);
 	public GuiPanel pauseMenu = new GuiPanel(Display.getWidth()/2-128,Display.getHeight()/2-128,256,256,ResourceManager.TEXTURE_GUIMENU);
@@ -112,6 +118,8 @@ public class GUI {
 		add(toolBar);
 			toolBar.setY(-40);
 			toolBar.add(buildingChooser);
+						buildingChooser.add(buildingStreet);
+						buildingStreet.setText(ResourceManager.getString(ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getName()));
 						buildingChooser.add(buildingHouse);
 											buildingHouse.setText(ResourceManager.getString(ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_HOUSE).getName()));
 						buildingChooser.add(buildingBighouse);

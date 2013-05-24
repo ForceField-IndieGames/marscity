@@ -6,6 +6,12 @@ import org.newdawn.slick.opengl.Texture;
 
 import animation.Animatable;
 
+/**
+ * This abstract class implements the guiElement interface and can be used
+ * to easily create new gui elements without having to implement all
+ * of the methods.
+ * @author Benedikt Ringlein
+ */
 
 public abstract class AbstractGuiElement implements guiElement, Animatable {
 

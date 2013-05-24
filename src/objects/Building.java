@@ -4,6 +4,13 @@ import game.ResourceManager;
 import animation.AnimationManager;
 import animation.AnimationValue;
 
+/**
+ * This is a building. It is defined by a buildingtype and a position.
+ * It renders and updates itself. Buildings have to be added using the ResourceManager in
+ * order to be displayed.
+ * @author Benedikt Ringlein
+ */
+
 public class Building extends Entity {
 	private float preferredY = 0;
 	private int buidlingType;

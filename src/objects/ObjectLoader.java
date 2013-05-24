@@ -9,6 +9,11 @@ import java.io.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * This object loader loads an parses a .obj file
+ * @author Benedikt Ringlein
+ */
+
 public class ObjectLoader {
 
     public static int createDisplayList(Model m) {

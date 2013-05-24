@@ -41,31 +41,49 @@ import org.w3c.dom.*;
 
 import animation.Animatable;
 
+/**
+ * The resourcemanager provides static methods for accessing resources.
+ * It also loads them when the game starts and maintains the list of objects.
+ * @author Benedikt Ringlein
+ */
 
 public class ResourceManager {
 	
+	/**
+	 * This font is used by buttons and labels in the gui
+	 */
 	public final static UnicodeFont font = new UnicodeFont(new Font("Arial",Font.BOLD,15));
 	
+	//The shaders, currently not used
 	public static int shaderProgram, vertexShader, fragmentShader;
 	
+	//Some xml stuff that is only used internally
 	static Document langFile = null;
 	static Document settingsFile = null;
 	static DocumentBuilder builder = null;
 	
+	//The path of the settings file
 	static final String FILE_SETTINGS = "res/settings/settings.xml";
 	
+	//The building types (used when placing buildings, also saving and loading)
 	public final static int BUILDINGTYPE_HOUSE = 0;
 	public final static int BUILDINGTYPE_BIGHOUSE = 1;
+	public final static int BUILDINGTYPE_STREET = 2;
 	
+	//The objects (Actually loads and pares a file and generates a displaylist)
 	public final static int OBJECT_HOUSE = addObject("/res/house.obj");
 	public final static int OBJECT_TERRAIN = addObject("/res/terrain.obj");
 	public final static int OBJECT_BIGHOUSE = addObject("/res/bighouse.obj");
+	public final static int OBJECT_STREET = addObject("/res/streetsegment.obj");
 	
+	//The audio files
 	public final static Audio SOUND_DROP = addSound("WAV", "/res/drop.wav");
 	public final static Audio SOUND_DESTROY = addSound("WAV", "/res/destroy.wav");
 	
+	//Loads the textures
 	public final static Texture TEXTURE_HOUSE = addTexture("/res/housetexture.png");
 	public final static Texture TEXTURE_TERRAIN = addTexture("/res/mars.png");
+	public final static Texture TEXTURE_STREET = addTexture("/res/street.png");
 	public final static Texture TEXTURE_GUITOOLSBG = addTexture("/res/guitoolsBG.png");
 	public final static Texture TEXTURE_GUISELECT = addTexture("/res/guiselect.png");
 	public final static Texture TEXTURE_GUIMENUBUTTON = addTexture("/res/guimenubutton.png");
@@ -120,7 +138,8 @@ public class ResourceManager {
 		
 		//Building Types
 		buildingTypes.add(BUILDINGTYPE_HOUSE,new BuildingType("BUILDINGTYPE_HOUSE",OBJECT_HOUSE,TEXTURE_HOUSE,500,2,2,0.25f));
-		buildingTypes.add(BUILDINGTYPE_BIGHOUSE,new BuildingType("BUILDINGTYPE_BIGHOUSE",OBJECT_BIGHOUSE,TEXTURE_BIGHOUSE,1500,4,4,4));
+		buildingTypes.add(BUILDINGTYPE_BIGHOUSE,new BuildingType("BUILDINGTYPE_BIGHOUSE",OBJECT_BIGHOUSE,TEXTURE_BIGHOUSE,1500,4,4,4f));
+		buildingTypes.add(BUILDINGTYPE_STREET,new BuildingType("BUILDINGTYPE_STREET",OBJECT_STREET,TEXTURE_STREET,5,1,1,0f));
 		
 		//create necessary folders and extract files
 		if(!(new File("res")).exists()){
@@ -160,11 +179,16 @@ public class ResourceManager {
 			
 		
 		
-		//XML files
+		//make XML files available for the static methods
 		settingsFile = addXML("res/settings/settings.xml");
 		langFile = addXML("res/lang/"+getSetting("lang")+".xml");
 	}
 
+	/**
+	 * Loads a texture from the specified input stream
+	 * @param stream The imput stream
+	 * @return The loaded texture
+	 */
 	private static Texture LoadTexture(InputStream stream)
 	{
 		try {
@@ -182,22 +206,38 @@ public class ResourceManager {
 		return null;
 	}
 	
+	/**
+	 * Deletes an object from the render list
+	 * @param obj The object to delete
+	 */
 	public static void deleteObject(Drawable obj)
 	{
 		objects.remove(obj);
 	}
 	
+	/**
+	 * Deletes an animatable from the render list ()for compatibility
+	 * @param obj
+	 */
 	public static void deleteObject(Animatable obj)
 	{
 		objects.remove(obj);
 	}
 	
+	/**
+	 * Deletes an object from the render list
+	 * @param obj The objects index
+	 */
 	public static void deleteObject(int obj)
 	{
 		objects.remove(obj);
 	}
 	
-	
+	/**
+	 * Adds an object to the render list
+	 * @param path Path to the .obj file
+	 * @return An integer representing the displaylist
+	 */
 	public static int addObject(String path)
 	{
 		try {
@@ -212,6 +252,12 @@ public class ResourceManager {
 		return -1;
 	}
 	
+	/**
+	 * Adds a sound file
+	 * @param format The files format, e.g. "WAV"
+	 * @param path The path of the sound file
+	 * @return The loaded Audio
+	 */
 	public static Audio addSound(String format,String path)
 	{
 		Main.log("Loading sound: "+path);
@@ -226,6 +272,11 @@ public class ResourceManager {
 		return null;
 	}
 	
+	/**
+	 * Loads a texture
+	 * @param path The path of the texture file (has to be .png!)
+	 * @return The loaded texture
+	 */
 	public static Texture addTexture(String path)
 	{
 		Main.log("Loading texture: "+path);
@@ -268,7 +319,7 @@ public class ResourceManager {
 	
 	/**
 	 * Returns a the setting from the settings file
-	 * @param input
+	 * @param setting The setting that should be loaded
 	 * @return The value of the setting or "Setting not found: #"
 	 */
 	public static String getSetting(String setting)
@@ -292,8 +343,8 @@ public class ResourceManager {
 	
 	/**
 	 * Writes a setting into the settings file
-	 * @param setting
-	 * @param value
+	 * @param setting The setting that should be written
+	 * @param value The new value of the setting
 	 */
 	public static void setSetting(String setting, String value)
 	{
@@ -318,8 +369,8 @@ public class ResourceManager {
 	
 	/**
 	 * Loads an XML file
-	 * @param path
-	 * @return
+	 * @param path Path of the file
+	 * @return A Document representing the file
 	 */
 	public static Document addXML(String path)
 	{
@@ -340,7 +391,7 @@ public class ResourceManager {
 	
 	/**
 	 * Plays a sound from the soundPool
-	 * @param sound
+	 * @param sound The sound that should be played
 	 */
 	public static void playSound(Audio sound)
 	{
@@ -349,12 +400,21 @@ public class ResourceManager {
 		} catch (Exception e) {e.printStackTrace();}
 	}
 	
+	/**
+	 * Return the object at the given index in the render list
+	 * @param index
+	 * @return
+	 */
 	public static Building getObject(int index)
 	{
 		return objects.get(index);
 	}
 	
-	
+	/**
+	 * Sets up a shader
+	 * @param vert The vertex shader (path)
+	 * @param frag The fragment shader (path)
+	 */
 	public static void setupShader(String vert, String frag)
 	{
 		shaderProgram = glCreateProgram();
