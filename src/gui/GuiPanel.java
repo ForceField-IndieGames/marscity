@@ -12,6 +12,12 @@ import org.newdawn.slick.opengl.Texture;
 
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * A panel that can conatin other guiElements or even other panels.
+ * Visibility and position are copied to the child elements.
+ * Also click events are given to child elements when they are within the boundarys
+ * @author Benedikt Ringlein
+ */
 
 public class GuiPanel extends AbstractGuiElement {
 	

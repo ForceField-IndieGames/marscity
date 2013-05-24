@@ -9,6 +9,10 @@ import org.newdawn.slick.opengl.Texture;
 
 import animation.Animatable;
 
+/**
+ * This is a basic entity with texture, model and transforms.
+ * @author Benedikt Ringlein
+ */
 
 public class Entity implements Drawable, Animatable {
 

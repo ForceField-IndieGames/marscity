@@ -3,6 +3,12 @@ import game.ResourceManager;
 
 import org.newdawn.slick.opengl.Texture;
 
+/**
+ * This is basicly a normal entity. But it is the only object that is used
+ * for picking, when it comes to creating a new building and it is also ignored
+ * when selecting objects.
+ * @author Benedikt Ringlein
+ */
 
 public class Terrain extends Entity {
 	private float x = 0, y = 0, z=-100;

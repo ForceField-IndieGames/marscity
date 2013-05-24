@@ -3,6 +3,11 @@ import java.awt.Color;
 
 import org.newdawn.slick.opengl.Texture;
 
+/**
+ * This interface has to be implemented by every Object that is renered
+ * by the gui.
+ * @author Benedikt Ringlein
+ */
 
 public interface guiElement {
 	

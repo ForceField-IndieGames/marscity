@@ -39,7 +39,8 @@ import animation.AnimationValue;
 
 /**
  * @author: Benedikt Ringlein
- * Just testing the Light Weight Java Game Library! :D
+ * This is the main class with all the rendering and updating code.
+ * Input is handled here as well.
  **/
 
 class splashScreen extends JFrame implements Runnable{
@@ -52,6 +53,9 @@ class splashScreen extends JFrame implements Runnable{
 	JLabel background;
 	public Thread thread;
 	
+	/**
+	 * The splash screen that is displayed while the resources are sill loaded
+	 */
 	public splashScreen()
 	{
 		this.setUndecorated(true);
@@ -80,6 +84,7 @@ class splashScreen extends JFrame implements Runnable{
 
 	@Override
 	public void run() {
+		//Animate the dots
 		while(isVisible())
 		{
 			if(label.getText()==""){
@@ -102,34 +107,42 @@ class splashScreen extends JFrame implements Runnable{
 
 public class Main {
 	
+	//The tools
 	final static int TOOL_SELECT = 0;
 	final static int TOOL_ADD = 1;
 	final static int TOOL_DELETE = 2;
 	
+	//The game states (intro is currently not used)
 	final static int STATE_INTRO = 0;
 	final static int STATE_MENU = 1;
 	final static int STATE_GAME = 2;
 
-//	
+	//Variables that are used for calculating the delta and fps
 	long lastFrame;
 	int fpsnow, fps;
 	long lastTime;
 	
+	//The debugmode enables cheats and displays additional debug information
 	public static boolean debugMode = true;
 	
-	int hoveredEntity = -1;
-	int selectedTool = 0;
-	static int money = 100000;
-	int currentBuildingType = -1;
-	float[] mousepos3d=new float[3];
-	static int gameState = STATE_MENU;
+	int hoveredEntity = -1; //The index of the object that is hovered with the mouse
+	int selectedTool = 0; //The selected tool, SELECT,ADD or DELETE
+	static int money = 100000; //The players money
+	int currentBuildingType = -1; //The currently selected building type
+	float[] mousepos3d=new float[3]; //The mouse position in 3d space
+	static int gameState = STATE_MENU; //The current game state
 	
+	//Some more objects
 	public static Camera camera = new Camera();
-	Terrain terrain;
+	Terrain terrain; 
 	public static GUI gui;
 	BuildPreview buildpreview;
 	static splashScreen splashscreen;
 	
+	/**
+	 * Writes a string into the log file
+	 * @param text The string to be written
+	 */
 	public static void log(String text)
 	{
 		try {
@@ -140,20 +153,26 @@ public class Main {
 		} catch (IOException e1) {e1.printStackTrace();}
 	}
 
+	/**
+	 * Starts the main game loop
+	 * @throws FileNotFoundException Why? idk.
+	 */
 	public void start() throws FileNotFoundException {
 		
 		
 		try {
+			//Setup the display
 			Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
 			Display.setTitle("Mars City");
-			Display.create();
 			Display.setLocation(0, 0);
+			Display.create();
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 			System.out.println("Display konnte nicht erstellt werden");
-			System.exit(0);
+			Game.exit();
 		}
 		
+		//Delete the log file
 		try {(new File("mars city.log")).delete();} catch (Exception e) {}
 		
 		System.out.println("Mars City started...");
@@ -169,13 +188,14 @@ public class Main {
 		
 		terrain = new Terrain(0,0,-150);//create the terrain
 		
+		//Enable vsync according to the settings
 		if(ResourceManager.getSetting("vsync").equals("enabled"))Display.setVSyncEnabled(true);
 
 		initGL(); // init OpenGL
 		getDelta(); // call once before loop to initialise lastFrame
 		lastTime = getTime(); // call before loop to initialise fps timer
 		
-		splashscreen.setVisible(false);
+		splashscreen.setVisible(false); //Hide the splashscreen
 		
 
 		//Main Gameloop
@@ -197,10 +217,8 @@ public class Main {
 			default: break;
 			}
 			
-			
-			
-			Display.update();
-			Display.sync(60);
+			Display.update(); //Refresh the display
+			Display.sync(60); //Limit framerate to 60
 		}
 
 		Game.exit();
@@ -272,6 +290,10 @@ public class Main {
         glColor3f(1f, 1f, 1f);
 	}
 	
+	/**
+	 * Calculates the position of the mousecursor in 3d space.
+	 * Only points on the terrain can be mouse positions.
+	 */
 	private void picking3d()
 	{
 		final IntBuffer vp = BufferUtils.createIntBuffer(16);
@@ -297,14 +319,20 @@ public class Main {
         mousepos3d[2] = result.get(2);
 	}
 	
+	/**
+	 * Manages the gui input
+	 * @param guihit The element that was hit
+	 */
 	public void inputGui(guiElement guihit)
 	{
+		//The menu button (...)
 		if(guihit==gui.menuButton){
 			Game.Pause();
 			gui.blur.setVisible(true);
 			gui.pauseMenu.setVisible(true);
 			AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f);
 		}
+		//The add tool button (+)
 		if(guihit==gui.toolAdd){
 			selectedTool = TOOL_ADD;
 			gui.toolAdd.setColor(Color.gray);
@@ -312,6 +340,7 @@ public class Main {
 			AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, 0, 0.5f);
 			gui.deleteBorder.setVisible(false);
 		}
+		//The delete tool button (X)
  		if(guihit==gui.toolDelete){
 			selectedTool = TOOL_DELETE;
 			gui.toolAdd.setColor(Color.white);
@@ -321,14 +350,17 @@ public class Main {
 			currentBuildingType = -1;
 			gui.deleteBorder.setVisible(true);
 		}
+ 		//The resume button in the pause menu
  		if(guihit==gui.pauseResume){
 			gui.blur.setVisible(false);
 			Game.Resume();
 			AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
 		}
+ 		//The exit button in the pause menu
  		if(guihit==gui.pauseExit){
 			Game.exit();
 		}
+ 		//The button for switching on vsync in the settings
  		if(guihit==gui.settingsVsyncon){
  			try {
 				gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
@@ -338,6 +370,7 @@ public class Main {
 				e.printStackTrace();
 			}
  		}
+ 		//The button for switching off vsync in the settings
  		if(guihit==gui.settingsVsyncoff){
  			try {
 	 			gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
@@ -347,6 +380,7 @@ public class Main {
 				e.printStackTrace();
 			}
  		}
+ 		//The button for switching off particles in the settings
  		if(guihit==gui.settingsParticlesoff){
  			try {
 				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
@@ -359,6 +393,7 @@ public class Main {
 				e.printStackTrace();
 			}
  		}
+ 		//The button for low quality particles in the settings
  		if(guihit==gui.settingsParticleslow){
  			try {
 				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
@@ -371,6 +406,7 @@ public class Main {
 				e.printStackTrace();
 			}
  		}
+ 		//The button for middle quality particles in the settings
  		if(guihit==gui.settingsParticlesmiddle){
  			try {
 				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
@@ -383,6 +419,7 @@ public class Main {
 				e.printStackTrace();
 			}
  		}
+ 		//The button for high quality particles in the settings
  		if(guihit==gui.settingsParticleshigh){
  			try {
 				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
@@ -395,35 +432,48 @@ public class Main {
 				e.printStackTrace();
 			}
  		}
+ 		//The resume button in the settings panel
  		if(guihit==gui.settingsResume){
 			Game.Resume();
 			gui.blur.setVisible(false);
 			AnimationManager.animateValue(gui.settingsMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
 		}
- 			if(guihit==gui.pauseSettings){
-			gui.pauseMenu.setVisible(false);
-			gui.settingsMenu.setVisible(true);
-			AnimationManager.animateValue(gui.settingsMenu, AnimationValue.opacity, 1, 0.005f);
+ 		//The settings button in the pause menu
+		if(guihit==gui.pauseSettings){
+		gui.pauseMenu.setVisible(false);
+		gui.settingsMenu.setVisible(true);
+		AnimationManager.animateValue(gui.settingsMenu, AnimationValue.opacity, 1, 0.005f);
 		}
+		//The main menu button in the pause menu
  		if(guihit==gui.pauseMainmenu){
 			gameState = STATE_MENU;
 		}
+ 		//The street button in the building menu
+ 		if(guihit==gui.buildingStreet){
+ 			currentBuildingType = ResourceManager.BUILDINGTYPE_STREET;
+ 			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_STREET);
+ 			gui.buildingStreet.setColor(Color.gray);
+ 		}else gui.buildingStreet.setColor(Color.white);
+ 		//The house button in the building menu
  		if(guihit==gui.buildingHouse){
  			currentBuildingType = ResourceManager.BUILDINGTYPE_HOUSE;
  			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_HOUSE);
  			gui.buildingHouse.setColor(Color.gray);
  		}else gui.buildingHouse.setColor(Color.white);
+ 		//The big house button in the building menu
  		if(guihit==gui.buildingBighouse){
  			currentBuildingType = ResourceManager.BUILDINGTYPE_BIGHOUSE;
  			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_BIGHOUSE);
  			gui.buildingBighouse.setColor(Color.gray);
  		}else gui.buildingBighouse.setColor(Color.white);
+ 		//The save button in the pause menu
  		if(guihit==gui.pauseSave){
  			Game.Save("res/saves/savegame.save");
  			Game.Resume();
  			gui.blur.setVisible(false);
 			AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f, AnimationManager.ACTION_HIDE);
  		}
+ 		//The load button in the pause menu
  		if(guihit==gui.pauseLoad){
  			Game.Load("res/saves/savegame.save");
 			gui = null;
@@ -432,7 +482,10 @@ public class Main {
  		}
 	}
 	
-	
+	/**
+	 * Processes Keyboard inputs
+	 * @param delta The calculated delta for timing
+	 */
 	public void inputKeyboard(int delta)
 	{
 		//Movable object
@@ -446,7 +499,7 @@ public class Main {
 		} catch (Exception e) {
 		}
 				
-				//Camera movement with WASD
+				//Camera movement with WASD and space, leftshift
 				if(Keyboard.isKeyDown(Keyboard.KEY_W)) {
 					camera.setX((float) (camera.getX()-0.002f*delta*camera.getZoom()*Math.sin(Math.toRadians(camera.getRotY()))));
 					camera.setZ((float) (camera.getZ()-0.002f*delta*camera.getZoom()*Math.cos(Math.toRadians(camera.getRotY()))));
@@ -466,11 +519,14 @@ public class Main {
 				if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) camera.setY(camera.getY()+0.1f*delta);
 				if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) camera.setY(camera.getY()-0.1f*delta);
 				
+				//The o key aktivates a particle effect in debug mode
 				if(Keyboard.isKeyDown(Keyboard.KEY_O)&&debugMode){
 					ParticleEffects.dustEffect(mousepos3d[0], mousepos3d[1], mousepos3d[2]);
 				}
 				
+				//Process the key press and release events
 				while(Keyboard.next()){
+					//Pause and resume game with ESC
 					if(Keyboard.getEventKey()==Keyboard.KEY_ESCAPE && Keyboard.getEventKeyState()){
 						if(Game.isPaused())
 						{
@@ -485,6 +541,7 @@ public class Main {
 						}
 						if(debugMode)Game.exit();
 					}
+					//Pause and resume game with p
 					if(Keyboard.getEventKey()==Keyboard.KEY_P && Keyboard.getEventKeyState())
 					{
 						if(Game.isPaused())
@@ -499,6 +556,7 @@ public class Main {
 							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f);
 						}
 					}
+					//Activate and deactivate debug mode with TAB
 					if(Keyboard.getEventKey()==Keyboard.KEY_TAB&&Keyboard.getEventKeyState()){
 						if(debugMode){
 							debugMode = false;
@@ -508,16 +566,22 @@ public class Main {
 							gui.debugInfo.setVisible(true);
 						}
 					}
+					//Switch Fullscreen/Window with F4 in debug mode
 					if(Keyboard.getEventKey()==Keyboard.KEY_F4&&Keyboard.getEventKeyState()&&debugMode){
 						if(Display.isFullscreen())try {Display.setFullscreen(false);} catch (LWJGLException e) {e.printStackTrace();}
 						else try {Display.setFullscreen(true);} catch (LWJGLException e) {e.printStackTrace();}
 					}
+					//Get money with F1 in debug mode
 					if(Keyboard.getEventKey()==Keyboard.KEY_F1&&Keyboard.getEventKeyState()&&debugMode){
 						money += 50000;
 					}
 				}
 	}
 	
+	/**
+	 * Process mouse inputs
+	 * @param delta The calculated delta for timing
+	 */
 	public void inputMouse(int delta)
 	{
 		//Is the mouse over a gui item?
@@ -530,25 +594,30 @@ public class Main {
 			int MX = Mouse.getDX();
 			int MY = Mouse.getDY();
 	
-			
+			//Rotate the camera with right mouse button
 			if(Mouse.isButtonDown(1)){
 				camera.setRotY(camera.getRotY()-0.1f*MX);
 				camera.setRotX(camera.getRotX()-0.1f*MY);
 			}
+			//Move the camera with middle mouse button
 			if(Mouse.isButtonDown(2)){
 				camera.setX((float) (camera.getX()+0.0002f*delta*camera.getZoom()*MY*Math.sin(Math.toRadians(camera.getRotY()))-0.0002f*delta*camera.getZoom()*MX*Math.cos(Math.toRadians(camera.getRotY()))));
 				camera.setZ((float) (camera.getZ()+0.0002f*delta*camera.getZoom()*MY*Math.cos(Math.toRadians(camera.getRotY()))+0.0002f*delta*camera.getZoom()*MX*Math.sin(Math.toRadians(camera.getRotY()))));
 			}
 		}
 		
+		//Process Mouse events
 		while(Mouse.next())
 		{
+			//Don't grab mouse when right and middle button are relesed
 			if((Mouse.getEventButton()==1||Mouse.getEventButton()==2)&&!Mouse.getEventButtonState())
 			{
 				Mouse.setGrabbed(false);
 			}
+			//Only do things when the mouse is not over the gui
 			if(guihit==null)
 			{
+				//Do some action with the left mouse button based on the selected tool
 				if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
 					switch(selectedTool)
 					{
@@ -560,7 +629,7 @@ public class Main {
 							} catch (Exception e) {}
 							break;
 						
-						case(TOOL_ADD): // Create a new Building
+						case(TOOL_ADD): // Create a new Building at mouse position
 							if(currentBuildingType==-1)break;
 							if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), ResourceManager.getBuildingType(currentBuildingType).getWidth(), ResourceManager.getBuildingType(currentBuildingType).getDepth())||money<ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost())break;
 								ResourceManager.playSound(ResourceManager.SOUND_DROP);
@@ -571,7 +640,7 @@ public class Main {
 								ParticleEffects.dustEffect(Grid.cellSize*Math.round(mousepos3d[0]/Grid.cellSize), Grid.cellSize*Math.round(mousepos3d[1]/Grid.cellSize), Grid.cellSize*Math.round(mousepos3d[2]/Grid.cellSize));
 							break;
 							
-						case(TOOL_DELETE): // Delete the Object
+						case(TOOL_DELETE): // Delete the hovered Building
 							if(hoveredEntity==-1)break;
 							try {
 								ResourceManager.playSound(ResourceManager.SOUND_DESTROY);
@@ -582,6 +651,7 @@ public class Main {
 							break;
 					}
 				}
+				//Select the select tool with right mouse button
 				if(Mouse.getEventButton()==1&&Mouse.getEventButtonState()){
 					selectedTool = TOOL_SELECT;
 					gui.toolAdd.setColor(Color.white);
@@ -591,9 +661,11 @@ public class Main {
 					currentBuildingType = -1;
 					gui.deleteBorder.setVisible(false);
 				}
+				//Set mouse grabbes when pressing irght or middle mouse button
 				if((Mouse.getEventButton()==2||Mouse.getEventButton()==1)&&Mouse.getEventButtonState()){
 						Mouse.setGrabbed(true);
 				}
+				//Control the zoom with the mouse wheel
 				camera.setZoom((float) (camera.getZoom()-0.001*camera.getZoom()*Mouse.getEventDWheel()));
 				if(camera.getZoom()<5)camera.setZoom(5);
 				if(camera.getZoom()>100)camera.setZoom(100);
@@ -656,8 +728,10 @@ public class Main {
 		gui.infoMoney.setText(ResourceManager.getString("INFOBAR_LABEL_MONEY")+": "+money+"$");
 		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+0);
 		
+		//Update the paticle effects
 		ParticleEffects.update(delta);
 		
+		//Rotate the camera while in pause mode
 		if(Game.isPaused())camera.setRotY(camera.getRotY()+0.05f);
 		
 		// update FPS Counter
@@ -721,17 +795,20 @@ public class Main {
 		//glUseProgram(shaderProgram);
 //		
 		
+		//Apply the camera transformations
 		camera.applyTransform();
 		
+		//Set the light positions
 		glLight(GL_LIGHT0, GL_POSITION, BufferTools.asFlippedFloatBuffer(new float[]{-30f,50,100f,0f}));
         
 		if(gui.mouseover()==null)
 		{
+			//Picking requires the fog to be disables and the background to be white
 			glDisable(GL_FOG);
 			glClearColor(1f, 1f, 1f, 1f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			picking();//Picking
-			picking3d();
+			picking3d();//Calculate 3d mouse position
 			glClearColor(0f,0f, 0f, 1f);
 			glEnable(GL_FOG);
 		}else hoveredEntity = -1;
@@ -741,8 +818,10 @@ public class Main {
         glEnable(GL_LIGHTING);
         glEnable(GL_TEXTURE_2D);
         
+        //Draw the terrain first
         terrain.draw();
        
+        //Draw the buidings
         for(int i=0;i<ResourceManager.objects.size();i++){
         	if(i==hoveredEntity&&!Mouse.isGrabbed()&&selectedTool!=TOOL_ADD){
         		if(selectedTool==TOOL_DELETE)glColor3f(1f, 0f, 0f);
@@ -755,8 +834,10 @@ public class Main {
 			glEnable(GL_LIGHTING);
 		}
         
+        //Draw the building preview
         buildpreview.draw();
         
+        //Draw the particle effects
         ParticleEffects.draw();
 
 //		glUseProgram(0);
@@ -768,19 +849,28 @@ public class Main {
 		
 	}
 	
+	/**
+	 * Draw the Main menu
+	 */
 	public void renderMenu()
 	{
 		gui.drawMenu();
 	}
 	
-	float i=0;
+	float i=0; //value for the menu animation
+	/**
+	 * Update the Main menu
+	 * @param delta
+	 */
 	public void updateMenu(int delta)
 	{
+		//Animate the background image
 		gui.MenuBG.setX((float) (30*Math.sin(i)-30));
 		gui.MenuBG.setWidth((float) (Display.getWidth()-60*Math.sin(i)+60));
 		gui.MenuBG.setY((float) (30*Math.sin(i))-30);
 		gui.MenuBG.setHeight((float) (Display.getHeight()-60*Math.sin(i)+60));
 		i=(i<2*Math.PI)?i+0.005f:0;
+		//Process mouse inputs
 		while(Mouse.next())
 		{
 			if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){

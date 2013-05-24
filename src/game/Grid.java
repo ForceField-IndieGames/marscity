@@ -5,6 +5,12 @@ import java.util.List;
 
 import objects.Building;
 
+/**
+ * This grid contain information about placed buildings. It is used when
+ * new buildings are placed to determine if there is already an object at this position.
+ * @author Benedikt Ringlein
+ */
+
 public class Grid {
 
 	public final static int cellSize = 1;

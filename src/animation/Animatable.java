@@ -1,5 +1,10 @@
 package animation;
 
+/**
+ * @author Benedikt Ringlein
+ * This is an interface that enables an object to be animated via the AnimationManager
+ */
+
 public interface Animatable {
 	public void setX(float x);
 	public void setY(float y);

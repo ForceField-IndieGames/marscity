@@ -18,6 +18,12 @@ import objects.Building;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 
+/**
+ * This class provides static methods for pausing, resuming, saving and loading the game or
+ * restarting it.
+ * @author Benedikt Ringlein
+ */
+
 public class Game {
 	private static boolean pause = false;
 	

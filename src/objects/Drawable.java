@@ -1,5 +1,10 @@
 package objects;
 
+/**
+ * All objects that are drawn have to implement this
+ * @author Benedikt Ringlein
+ */
+
 public interface Drawable {
 	public void draw();
 	public void update(int delta);
