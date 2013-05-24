@@ -10,6 +10,10 @@ import org.lwjgl.opengl.Display;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureImpl;
 
+/**
+ * A simpla button with background image.
+ * @author Benedikt Ringlein
+ */
 
 public class GuiButton extends AbstractGuiElement {
 	

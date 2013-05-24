@@ -9,6 +9,11 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.newdawn.slick.opengl.Texture;
 
+/**
+ * @author Benedikt Ringlein
+ * This is a particle effect. It generates particles and updates and displays them.
+ */
+
 public class ParticleEffect {
 
 	private float x = 0, y = 0, z = 0;

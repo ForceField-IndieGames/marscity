@@ -7,6 +7,12 @@ import java.util.List;
 
 import org.newdawn.slick.opengl.Texture;
 
+/**
+ * @author Benedikt Ringlein
+ * This class provides static methods for creating particle effects
+ * and updates and displays them.
+ */
+
 public class ParticleEffects {
 	
 	public static final int PARTICLESOFF = 0;

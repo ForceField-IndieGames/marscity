@@ -7,6 +7,12 @@ import game.ResourceManager;
 
 import org.newdawn.slick.opengl.Texture;
 
+/**
+ * This preview is visible when in building mode. It It shows what and where will be build
+ * with the next mouse click.
+ * @author Benedikt Ringlein
+ */
+
 public class BuildPreview extends Entity {
 	
 	private boolean show = false;

@@ -39,7 +39,8 @@ import animation.AnimationValue;
 
 /**
  * @author: Benedikt Ringlein
- * Just testing the Light Weight Java Game Library! :D
+ * This is the main class with all the rendering and updating code.
+ * Input is handled here as well.
  **/
 
 class splashScreen extends JFrame implements Runnable{
@@ -408,6 +409,11 @@ public class Main {
  		if(guihit==gui.pauseMainmenu){
 			gameState = STATE_MENU;
 		}
+ 		if(guihit==gui.buildingStreet){
+ 			currentBuildingType = ResourceManager.BUILDINGTYPE_STREET;
+ 			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_STREET);
+ 			gui.buildingStreet.setColor(Color.gray);
+ 		}else gui.buildingStreet.setColor(Color.white);
  		if(guihit==gui.buildingHouse){
  			currentBuildingType = ResourceManager.BUILDINGTYPE_HOUSE;
  			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_HOUSE);

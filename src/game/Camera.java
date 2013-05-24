@@ -2,6 +2,11 @@ package game;
 import static org.lwjgl.util.glu.GLU.gluLookAt;
 import animation.Animatable;
 
+/**
+ * @author Benedikt Ringlein
+ * This is the camera. It contains information like posiiton, rotation and zoom and
+ * also applies those transformations.
+ */
 
 public class Camera implements Animatable {
 	

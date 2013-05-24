@@ -41,6 +41,11 @@ import org.w3c.dom.*;
 
 import animation.Animatable;
 
+/**
+ * The resourcemanager provides static methods for accessing resources.
+ * It also loads them when the game starts and maintains the list of objects.
+ * @author Benedikt Ringlein
+ */
 
 public class ResourceManager {
 	
@@ -56,16 +61,19 @@ public class ResourceManager {
 	
 	public final static int BUILDINGTYPE_HOUSE = 0;
 	public final static int BUILDINGTYPE_BIGHOUSE = 1;
+	public final static int BUILDINGTYPE_STREET = 2;
 	
 	public final static int OBJECT_HOUSE = addObject("/res/house.obj");
 	public final static int OBJECT_TERRAIN = addObject("/res/terrain.obj");
 	public final static int OBJECT_BIGHOUSE = addObject("/res/bighouse.obj");
+	public final static int OBJECT_STREET = addObject("/res/streetsegment.obj");
 	
 	public final static Audio SOUND_DROP = addSound("WAV", "/res/drop.wav");
 	public final static Audio SOUND_DESTROY = addSound("WAV", "/res/destroy.wav");
 	
 	public final static Texture TEXTURE_HOUSE = addTexture("/res/housetexture.png");
 	public final static Texture TEXTURE_TERRAIN = addTexture("/res/mars.png");
+	public final static Texture TEXTURE_STREET = addTexture("/res/street.png");
 	public final static Texture TEXTURE_GUITOOLSBG = addTexture("/res/guitoolsBG.png");
 	public final static Texture TEXTURE_GUISELECT = addTexture("/res/guiselect.png");
 	public final static Texture TEXTURE_GUIMENUBUTTON = addTexture("/res/guimenubutton.png");
@@ -120,7 +128,8 @@ public class ResourceManager {
 		
 		//Building Types
 		buildingTypes.add(BUILDINGTYPE_HOUSE,new BuildingType("BUILDINGTYPE_HOUSE",OBJECT_HOUSE,TEXTURE_HOUSE,500,2,2,0.25f));
-		buildingTypes.add(BUILDINGTYPE_BIGHOUSE,new BuildingType("BUILDINGTYPE_BIGHOUSE",OBJECT_BIGHOUSE,TEXTURE_BIGHOUSE,1500,4,4,4));
+		buildingTypes.add(BUILDINGTYPE_BIGHOUSE,new BuildingType("BUILDINGTYPE_BIGHOUSE",OBJECT_BIGHOUSE,TEXTURE_BIGHOUSE,1500,4,4,4f));
+		buildingTypes.add(BUILDINGTYPE_STREET,new BuildingType("BUILDINGTYPE_STREET",OBJECT_STREET,TEXTURE_STREET,5,1,1,0f));
 		
 		//create necessary folders and extract files
 		if(!(new File("res")).exists()){

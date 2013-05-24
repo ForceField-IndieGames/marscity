@@ -2,10 +2,12 @@ Mars City started...
 Loading object: /res/house.obj
 Loading object: /res/terrain.obj
 Loading object: /res/bighouse.obj
+Loading object: /res/streetsegment.obj
 Loading sound: /res/drop.wav
 Loading sound: /res/destroy.wav
 Loading texture: /res/housetexture.png
 Loading texture: /res/mars.png
+Loading texture: /res/street.png
 Loading texture: /res/guitoolsBG.png
 Loading texture: /res/guiselect.png
 Loading texture: /res/guimenubutton.png
