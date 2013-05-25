@@ -128,28 +128,56 @@ public class Grid {
 		int y1;
 		int x2;
 		int y2;
-		if(width==1){
-			x1 = x;
-			x2 = x;
-		}else{
-			x1 = x - (int) Math.ceil(width/2-1);
-			x2 = x + (int) Math.floor(width/2);
-		}
-		if(height==1){
-			y1 = y;
-			y2 = y;
-		}else{
-			y1 = y -(int) Math.ceil(height/2-1);
-			y2 = y +(int) Math.floor(height/2);
-		}
-		for(int i=y1+cellsY/2;i<=y2+cellsY/2;i++){
-			for(int j=x1+cellsX/2;j<=x2+cellsX/2;j++){
+		
+		//width!=1&&height!=1
+		x1 = x - (int) Math.ceil(width/2-1);
+		x2 = x + (int) Math.floor(width/2);
+		y1 = y -(int) Math.ceil(height/2-1);
+		y2 = y +(int) Math.floor(height/2);
+		for(int i=y1;i<=y2;i++){
+			for(int j=x1;j<=x2;j++){
 				try {
-					if(cells.get(XYtoIndex(j, i)).getBuilding()!=null)return false;
+					if(cells.get(posToIndex(j, i)).getBuilding()!=null)return false;
 				} catch (Exception e) {
 					return false;
 				}
 				
+			}
+		}
+		return true;
+	}
+	
+	public static boolean isStripFree(int xpos, int ypos, int length, boolean vertical)
+	{
+		if(vertical){
+			//vertical
+			int yposdest = ypos+length;
+			if(length<0){
+				int tmp = yposdest;
+				yposdest = ypos;
+				ypos = tmp;
+			}
+			for(int j=ypos;j<=yposdest;j++){
+				try {
+					if(cells.get(posToIndex(xpos, j)).getBuilding()!=null)return false;
+				} catch (Exception e) {
+					return false;
+				}
+			}
+		}else{
+			//horizontal
+			int xposdest = xpos+length;
+			if(length<0){
+				int tmp = xposdest;
+				xposdest = ypos;
+				xpos = tmp;
+			}
+			for(int j=xpos;j<=xposdest;j++){
+				try {
+					if(cells.get(posToIndex(j, ypos)).getBuilding()!=null)return false;
+				} catch (Exception e) {
+					return false;
+				}
 			}
 		}
 		return true;

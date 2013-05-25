@@ -25,6 +25,7 @@ import objects.BuildPreview;
 import objects.Drawable;
 import objects.Building;
 import objects.Entity;
+import objects.Streets;
 import objects.Terrain;
 
 import org.lwjgl.BufferUtils;
@@ -129,7 +130,7 @@ public class Main {
 	
 	int hoveredEntity = -1; //The index of the object that is hovered with the mouse
 	int selectedTool = 0; //The selected tool, SELECT,ADD or DELETE
-	static int money = 100000; //The players money
+	public static int money = 100000; //The players money
 	int currentBuildingType = -1; //The currently selected building type
 	float[] mousepos3d=new float[3]; //The mouse position in 3d space
 	static int gameState = STATE_MENU; //The current game state
@@ -619,6 +620,9 @@ public class Main {
 			//Only do things when the mouse is not over the gui
 			if(guihit==null)
 			{
+				if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&currentBuildingType==ResourceManager.BUILDINGTYPE_STREET){
+					Streets.endBuilding(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
+				}
 				//Do some action with the left mouse button based on the selected tool
 				if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
 					switch(selectedTool)
@@ -633,13 +637,15 @@ public class Main {
 						
 						case(TOOL_ADD): // Create a new Building at mouse position
 							if(currentBuildingType==-1)break;
+							if(currentBuildingType==ResourceManager.BUILDINGTYPE_STREET){
+								Streets.startBuilding(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
+								break;
+							}
 							if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), ResourceManager.getBuildingType(currentBuildingType).getWidth(), ResourceManager.getBuildingType(currentBuildingType).getDepth())||money<ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost())break;
 								ResourceManager.playSound(ResourceManager.SOUND_DROP);
-								Building building = new Building(currentBuildingType,(int)Grid.cellSize*Math.round(mousepos3d[0]/Grid.cellSize), (int)Grid.cellSize*Math.round(mousepos3d[1]/Grid.cellSize), (int)Grid.cellSize*Math.round(mousepos3d[2]/Grid.cellSize));
-								ResourceManager.objects.add(building);
-								Grid.setBuilding((int)building.getX(), (int)building.getZ(), building);
+								Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1], mousepos3d[2], currentBuildingType);
 								money -= ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost();
-								ParticleEffects.dustEffect(Grid.cellSize*Math.round(mousepos3d[0]/Grid.cellSize), Grid.cellSize*Math.round(mousepos3d[1]/Grid.cellSize), Grid.cellSize*Math.round(mousepos3d[2]/Grid.cellSize));
+								ParticleEffects.dustEffect(b.getX(), b.getY(), b.getZ());
 							break;
 							
 						case(TOOL_DELETE): // Delete the hovered Building

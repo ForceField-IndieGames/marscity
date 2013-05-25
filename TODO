@@ -11,12 +11,14 @@ TODO:
 - Main menu √
 - Particle Effects √
 - Settings √
-- Streets
+- Streets √
+- Improve street building √
 - Gui for building information
 - Labels: √
 	- center option √
 	- bugfix: windowed mode √
 	- more fonts √
-- Skybox
+- Skybox √
 - Icon
 - Redesign building selector gui
+- Improve camera control

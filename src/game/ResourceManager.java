@@ -473,6 +473,24 @@ public class ResourceManager {
 	}
 	
 	/**
+	 * Build a building (Adds it to the grid and to the object list)
+	 * @param x X Position
+	 * @param y Y Position
+	 * @param z Z Position
+	 * @param bt Building type
+	 */
+	public static Building buildBuilding(float x, float y, float z, int bt)
+	{
+		x = Grid.cellSize*Math.round(x/Grid.cellSize);
+		y = Grid.cellSize*Math.round(y/Grid.cellSize);
+		z = Grid.cellSize*Math.round(z/Grid.cellSize);
+		Building building = new Building(bt,x,y,z);
+		Grid.setBuilding(Math.round(x),Math.round(z), building);
+		ResourceManager.objects.add(building);
+		return building;
+	}
+	
+	/**
 	 * Loads a file into a StringBuilder
 	 * @param path The Path to the File
 	 * @return a StringBuilder conatining hte Filecontents
