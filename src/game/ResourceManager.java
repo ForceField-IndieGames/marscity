@@ -75,6 +75,7 @@ public class ResourceManager {
 	//The objects (Actually loads and pares a file and generates a displaylist)
 	public final static int OBJECT_HOUSE = addObject("/res/house.obj");
 	public final static int OBJECT_TERRAIN = addObject("/res/terrain.obj");
+	public final static int OBJECT_SKYBOX = addObject("/res/skybox.obj");
 	public final static int OBJECT_BIGHOUSE = addObject("/res/bighouse.obj");
 	public final static int OBJECT_STREET = addObject("/res/streetsegment.obj");
 	
@@ -86,6 +87,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_HOUSE = addTexture("/res/housetexture.png");
 	public final static Texture TEXTURE_TERRAIN = addTexture("/res/mars.png");
 	public final static Texture TEXTURE_STREET = addTexture("/res/street.png");
+	public final static Texture TEXTURE_SKYBOX = addTexture("/res/skybox.png");
 	public final static Texture TEXTURE_GUITOOLSBG = addTexture("/res/guitoolsBG.png");
 	public final static Texture TEXTURE_GUISELECT = addTexture("/res/guiselect.png");
 	public final static Texture TEXTURE_GUIMENUBUTTON = addTexture("/res/guimenubutton.png");

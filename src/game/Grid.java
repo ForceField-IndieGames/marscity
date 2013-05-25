@@ -51,7 +51,6 @@ public class Grid {
 			y1 = y -(int) Math.ceil(height/2-1);
 			y2 = y +(int) Math.floor(height/2);
 		}
-		System.out.println("width:"+width+", height:"+height+", x1:"+x1+", y1:"+y1+", x2:"+x2+", y2:"+y2);
 		for(int i=y1+cellsY/2;i<=y2+cellsY/2;i++){
 			for(int j=x1+cellsX/2;j<=x2+cellsX/2;j++){
 				cells.get(XYtoIndex(j, i)).setBuilding(building);
@@ -119,7 +118,11 @@ public class Grid {
 	public static boolean isAreaFree(int x, int y, int width, int height)
 	{
 		if(width==1&&height==1){
-			if(cells.get(posToIndex(x, y)).getBuilding()!=null)return false;else return true;
+			try {
+				if(cells.get(posToIndex(x, y)).getBuilding()!=null)return false;else return true;
+			} catch (Exception e) {
+				return false;
+			}
 		}
 		int x1;
 		int y1;
@@ -139,7 +142,6 @@ public class Grid {
 			y1 = y -(int) Math.ceil(height/2-1);
 			y2 = y +(int) Math.floor(height/2);
 		}
-		System.out.println("x1:"+x1+" x2:"+x2+" y1:"+y1+" y2:"+y2);
 		for(int i=y1+cellsY/2;i<=y2+cellsY/2;i++){
 			for(int j=x1+cellsX/2;j<=x2+cellsX/2;j++){
 				try {

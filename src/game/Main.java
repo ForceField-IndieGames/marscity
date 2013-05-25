@@ -24,6 +24,7 @@ import javax.swing.JLabel;
 import objects.BuildPreview;
 import objects.Drawable;
 import objects.Building;
+import objects.Entity;
 import objects.Terrain;
 
 import org.lwjgl.BufferUtils;
@@ -136,6 +137,7 @@ public class Main {
 	//Some more objects
 	public static Camera camera = new Camera();
 	Terrain terrain; 
+	Entity skybox;
 	public static GUI gui;
 	BuildPreview buildpreview;
 	static splashScreen splashscreen;
@@ -184,9 +186,8 @@ public class Main {
 		log("Finished loading resources.");
 		
 		gui = new GUI(); //Create the GUI
-		
 		buildpreview = new BuildPreview(); //Create the Building Preview
-		
+		skybox = new Entity(ResourceManager.OBJECT_SKYBOX, ResourceManager.TEXTURE_SKYBOX);
 		terrain = new Terrain(0,0,-150);//create the terrain
 		
 		//Enable vsync according to the settings
@@ -722,9 +723,13 @@ public class Main {
 		
 		//Show debug info
 		String bt = "-";
-		if(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding()!=null){
+		try {
+			if(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding()!=null){
 			bt = ""+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuidlingType()+" ("+ResourceManager.getBuildingTypeName(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuidlingType())+")";
 		}
+		} catch (Exception e) {
+		}
+		
 		gui.debugInfo.setText("debug mode | Objects: "+ResourceManager.objects.size()+
 				", FPS: "+fps+", ParticleEffects: "+ParticleEffects.getEffectCount()+", Mouse:("+Math.round(mousepos3d[0])+","+Math.round(mousepos3d[1])+","+Math.round(mousepos3d[2])+")"+
 				", GridIndex: "+Grid.posToIndex(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]))+
@@ -821,10 +826,14 @@ public class Main {
 		
         //Rendering
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glEnable(GL_LIGHTING);
         glEnable(GL_TEXTURE_2D);
         
-        //Draw the terrain first
+        //Draw the skybox
+        glDisable(GL_LIGHTING);
+        skybox.draw();
+        glEnable(GL_LIGHTING);
+        
+        //Draw the terrain
         terrain.draw();
        
         //Draw the buidings
