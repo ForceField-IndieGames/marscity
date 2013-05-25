@@ -59,7 +59,7 @@ public class GUI {
 	
 	public GuiPanel settingsMenu = new GuiPanel(Display.getWidth()/2-256,Display.getHeight()/2-256,512,512,ResourceManager.TEXTURE_GUIMENU);
 	public GuiButton settingsResume = new GuiButton(156, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
-	public GuiLabel settingsTitle = new GuiLabel(30, 470, 100, 20, (Color)null);
+	public GuiLabel settingsTitle = new GuiLabel(0, 470, 512, 20, (Color)null);
 	public GuiLabel settingsVsync = new GuiLabel(30,440,190,20,(Color)null);
 	public GuiButton settingsVsyncon = new GuiButton(30,410,100,30,ResourceManager.TEXTURE_GUIBUTTON);
 	public GuiButton settingsVsyncoff = new GuiButton(130,410,100,30,ResourceManager.TEXTURE_GUIBUTTON);
@@ -163,6 +163,7 @@ public class GUI {
 			settingsMenu.add(settingsResume);
 			
 			settingsTitle.setText(ResourceManager.getString("SETTINGSMENU_LABEL_TITLE"));
+			settingsTitle.setCentered(true);
 			settingsVsyncon.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCON"));
 			if (ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 			settingsVsyncoff.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCOFF"));
