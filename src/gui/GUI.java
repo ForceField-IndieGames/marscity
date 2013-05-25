@@ -59,7 +59,7 @@ public class GUI {
 	
 	public GuiPanel settingsMenu = new GuiPanel(Display.getWidth()/2-256,Display.getHeight()/2-256,512,512,ResourceManager.TEXTURE_GUIMENU);
 	public GuiButton settingsResume = new GuiButton(156, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
-	public GuiLabel settingsTitle = new GuiLabel(0, 470, 512, 20, (Color)null);
+	public GuiLabel settingsTitle = new GuiLabel(0, 460, 512,40, (Color)null);
 	public GuiLabel settingsVsync = new GuiLabel(30,440,190,20,(Color)null);
 	public GuiButton settingsVsyncon = new GuiButton(30,410,100,30,ResourceManager.TEXTURE_GUIBUTTON);
 	public GuiButton settingsVsyncoff = new GuiButton(130,410,100,30,ResourceManager.TEXTURE_GUIBUTTON);
@@ -97,12 +97,16 @@ public class GUI {
 		menuElements.add(MenuPanel);
 						 MenuPanel.add(MenuPlay);
 		     		    			   MenuPlay.setText(ResourceManager.getString("MAINMENU_BUTTON_PLAY"));
+		     		    			   MenuPlay.setFont(ResourceManager.Arial15B);
 		     		     MenuPanel.add(MenuLoad);
 		     		     			   MenuLoad.setText(ResourceManager.getString("MAINMENU_BUTTON_LOAD"));
+		     		     			   MenuLoad.setFont(ResourceManager.Arial15B);
 		     		     MenuPanel.add(MenuSettings);
 		     		     			   MenuSettings.setText(ResourceManager.getString("MAINMENU_BUTTON_SETTINGS"));
+		     		     			   MenuSettings.setFont(ResourceManager.Arial15B);
 		     		     MenuPanel.add(MenuExit);
 		     		     			   MenuExit.setText(ResourceManager.getString("MAINMENU_BUTTON_EXIT"));
+		     		     			   MenuExit.setFont(ResourceManager.Arial15B);
 		
 		//GUI
 		add(deleteBorder);
@@ -121,8 +125,10 @@ public class GUI {
 			toolBar.add(infoBar);
 						infoBar.add(infoMoney);
 									infoMoney.setText("Geld: 0$");
+									infoMoney.setFont(ResourceManager.Arial15B);
 						infoBar.add(infoCitizens);
 									infoCitizens.setText("Einwohner: 0");
+									infoCitizens.setFont(ResourceManager.Arial15B);
 		add(guiTools);
 		guiTools.add(menuButton);
 		guiTools.add(toolAdd);
@@ -164,12 +170,15 @@ public class GUI {
 			
 			settingsTitle.setText(ResourceManager.getString("SETTINGSMENU_LABEL_TITLE"));
 			settingsTitle.setCentered(true);
+			settingsTitle.setFont(ResourceManager.Arial30B);
 			settingsVsyncon.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCON"));
 			if (ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 			settingsVsyncoff.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCOFF"));
 			if (!ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 			settingsVsync.setText(ResourceManager.getString("SETTINGSMENU_LABEL_VSYNC"));
+			settingsVsync.setFont(ResourceManager.Arial15B);
 			settingsParticles.setText(ResourceManager.getString("SETTINGSMENU_LABEL_PARTICLES"));
+			settingsParticles.setFont(ResourceManager.Arial15B);
 			settingsParticlesoff.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESOFF"));
 			settingsParticleslow.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESLOW"));
 			settingsParticlesmiddle.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESMIDDLE"));

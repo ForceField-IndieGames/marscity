@@ -13,9 +13,10 @@ TODO:
 - Settings √
 - Streets
 - Gui for building information
-- Labels:
+- Labels: √
 	- center option √
 	- bugfix: windowed mode √
-	- more fonts
+	- more fonts √
 - Skybox
 - Icon
+- Redesign building selector gui

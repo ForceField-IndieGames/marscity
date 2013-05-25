@@ -52,7 +52,9 @@ public class ResourceManager {
 	/**
 	 * This font is used by buttons and labels in the gui
 	 */
-	public final static UnicodeFont font = new UnicodeFont(new Font("Arial",Font.BOLD,15));
+	public final static UnicodeFont Arial15 = new UnicodeFont(new Font("Arial",0,15));
+	public final static UnicodeFont Arial15B = new UnicodeFont(new Font("Arial",Font.BOLD,15));
+	public final static UnicodeFont Arial30B = new UnicodeFont(new Font("Arial",Font.BOLD,30));
 	
 	//The shaders, currently not used
 	public static int shaderProgram, vertexShader, fragmentShader;
@@ -117,10 +119,16 @@ public class ResourceManager {
 	public static void init()
 	{
 		//Set up the font
-		font.getEffects().add(new ColorEffect(Color.black));
-		font.addAsciiGlyphs();
+		Arial15.getEffects().add(new ColorEffect(Color.black));
+		Arial15B.getEffects().add(new ColorEffect(Color.black));
+		Arial30B.getEffects().add(new ColorEffect(Color.black));
+		Arial15.addAsciiGlyphs();
+		Arial15B.addAsciiGlyphs();
+		Arial30B.addAsciiGlyphs();
 		try {
-			font.loadGlyphs();
+			Arial15.loadGlyphs();
+			Arial15B.loadGlyphs();
+			Arial30B.loadGlyphs();
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}

@@ -7,6 +7,7 @@ import game.ResourceManager;
 import java.awt.Color;
 
 import org.lwjgl.opengl.Display;
+import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureImpl;
 
@@ -30,6 +31,7 @@ public class GuiLabel extends AbstractGuiElement {
 	private Texture texturer;
 	private float opacity = 1f;
 	private boolean centered = false;
+	private UnicodeFont font = ResourceManager.Arial15;
 
 	
 	
@@ -257,10 +259,10 @@ public class GuiLabel extends AbstractGuiElement {
 				glScissor((int)getScreenX(), (int)getScreenY(), (int)width, (int)height+10);
 				float xpos;
 				if(isCentered()){
-					xpos = getScreenX()+width/2-ResourceManager.font.getWidth(text)/2;
+					xpos = getScreenX()+width/2-font.getWidth(text)/2;
 				}else xpos = getScreenX();
-				float ypos = (Display.getHeight()-getScreenY())-height/2-ResourceManager.font.getHeight(text)/2;
-				ResourceManager.font.drawString(xpos, ypos, text);
+				float ypos = (Display.getHeight()-getScreenY())-height/2-font.getHeight(text)/2;
+				font.drawString(xpos, ypos, text);
 				glDisable(GL_SCISSOR_TEST);
 				TextureImpl.bindNone();
 				glPopMatrix();
@@ -290,6 +292,14 @@ public class GuiLabel extends AbstractGuiElement {
 
 	public void setCentered(boolean centered) {
 		this.centered = centered;
+	}
+
+	public UnicodeFont getFont() {
+		return font;
+	}
+
+	public void setFont(UnicodeFont font) {
+		this.font = font;
 	}
 	
 }
