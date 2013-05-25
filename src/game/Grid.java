@@ -37,15 +37,18 @@ public class Grid {
 		int y1;
 		int x2;
 		int y2;
-		if(width==1&&height==1){
-			x1 = x - (int) Math.ceil(width/2-1)-1;
-			y1 = y -(int) Math.ceil(height/2-1)-1;
-			x2 = x1;
-			y2 = y1;
+		if(width==1){
+			x1 = x;
+			x2 = x;
 		}else{
 			x1 = x - (int) Math.ceil(width/2-1);
-			y1 = y -(int) Math.ceil(height/2-1);
 			x2 = x + (int) Math.floor(width/2);
+		}
+		if(height==1){
+			y1 = y;
+			y2 = y;
+		}else{
+			y1 = y -(int) Math.ceil(height/2-1);
 			y2 = y +(int) Math.floor(height/2);
 		}
 		System.out.println("width:"+width+", height:"+height+", x1:"+x1+", y1:"+y1+", x2:"+x2+", y2:"+y2);
@@ -62,13 +65,27 @@ public class Grid {
 			cells.get(posToIndex(x, y)).setBuilding(null);
 			return;
 		}
-		int x1 = x - (int) Math.ceil(width/2-1);
-		int y1 = y -(int) Math.ceil(height/2-1);
-		int x2 = x + (int) Math.floor(width/2);
-		int y2 = y +(int) Math.floor(height/2);
-		for(int i=y1+cellsY/2;i<=y2+cellsY/2;i++){
-			for(int j=x1+cellsX/2;j<=x2+cellsX/2;j++){
-				cells.get(XYtoIndex(j, i)).setBuilding(null);
+		int x1;
+		int y1;
+		int x2;
+		int y2;
+		if(width==1){
+			x1 = x;
+			x2 = x;
+		}else{
+			x1 = x - (int) Math.ceil(width/2-1);
+			x2 = x + (int) Math.floor(width/2);
+		}
+		if(height==1){
+			y1 = y;
+			y2 = y;
+		}else{
+			y1 = y -(int) Math.ceil(height/2-1);
+			y2 = y +(int) Math.floor(height/2);
+		}
+		for(int i=y1;i<=y2;i++){
+			for(int j=x1;j<=x2;j++){
+				cells.get(posToIndex(j, i)).setBuilding(null);
 			}
 		}
 	}
@@ -104,10 +121,24 @@ public class Grid {
 		if(width==1&&height==1){
 			if(cells.get(posToIndex(x, y)).getBuilding()!=null)return false;else return true;
 		}
-		int x1 = x - (int) Math.ceil(width/2-1);
-		int y1 = y -(int) Math.ceil(height/2-1);
-		int x2 = x + (int) Math.floor(width/2);
-		int y2 = y +(int) Math.floor(height/2);
+		int x1;
+		int y1;
+		int x2;
+		int y2;
+		if(width==1){
+			x1 = x;
+			x2 = x;
+		}else{
+			x1 = x - (int) Math.ceil(width/2-1);
+			x2 = x + (int) Math.floor(width/2);
+		}
+		if(height==1){
+			y1 = y;
+			y2 = y;
+		}else{
+			y1 = y -(int) Math.ceil(height/2-1);
+			y2 = y +(int) Math.floor(height/2);
+		}
 		System.out.println("x1:"+x1+" x2:"+x2+" y1:"+y1+" y2:"+y2);
 		for(int i=y1+cellsY/2;i<=y2+cellsY/2;i++){
 			for(int j=x1+cellsX/2;j<=x2+cellsX/2;j++){
