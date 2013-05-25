@@ -254,7 +254,7 @@ public class GuiLabel extends AbstractGuiElement {
 				glMatrixMode(GL_MODELVIEW);
 				TextureImpl.bindNone();
 				glEnable(GL_SCISSOR_TEST);
-				glScissor((int)getScreenX(), (int)getScreenY(), (int)width, (int)height);
+				glScissor((int)getScreenX(), (int)getScreenY(), (int)width, (int)height+10);
 				float xpos;
 				if(isCentered()){
 					xpos = getScreenX()+width/2-ResourceManager.font.getWidth(text)/2;
@@ -262,9 +262,7 @@ public class GuiLabel extends AbstractGuiElement {
 				float ypos = (Display.getHeight()-getScreenY())-height/2-ResourceManager.font.getHeight(text)/2;
 				ResourceManager.font.drawString(xpos, ypos, text);
 				glDisable(GL_SCISSOR_TEST);
-				TextureImpl.bindNone();		
-				if(getText().equals("Einstellungen"))System.out.println("xpos:"+xpos+", ypos:"+ypos+", Disp.width:"
-						+Display.getWidth()+", Disp.height:"+Display.getHeight()+", screenY:"+getScreenY());
+				TextureImpl.bindNone();
 				glPopMatrix();
 		}
 	}
