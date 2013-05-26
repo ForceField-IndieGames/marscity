@@ -94,6 +94,7 @@ public class ParticleEffect {
 	public void draw() {
 		for (Particle p : particles) {
 			if(!p.isVisible())continue;
+			glEnable(GL_TEXTURE_2D);
 			glBindTexture(GL_TEXTURE_2D, texture.getTextureID());
 			glColor4f(1f, 1f, 1f, p.getLifetime()/p.getInitlifetime());
 			glDisable(GL_DEPTH_TEST);
@@ -101,6 +102,7 @@ public class ParticleEffect {
 			glDisable(GL_CULL_FACE);
 			glPushMatrix();
 			glTranslatef(p.getX(), p.getY(), p.getZ());
+			glRotatef(Main.camera.getRotX(), 1, 0, 0);
 			glRotatef(Main.camera.getRotY(), 0, 1, 0);
 			glTranslatef(-p.getX(), -p.getY(), -p.getZ());
 			

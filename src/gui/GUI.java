@@ -27,6 +27,7 @@ public class GUI {
 	public GuiButton MenuSettings = new GuiButton(440, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2);
 	public GuiButton MenuExit = new GuiButton(660, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2);
 	public GuiLabel MenuVersion = new GuiLabel(0,0,180,20,(Color)null);
+	public GuiPanel MenuIcon = new GuiPanel(Display.getWidth()/2-64,20,128,128,ResourceManager.TEXTURE_ICON256);
 	
 	public GuiPanel toolBar = new GuiPanel(0,0,Display.getWidth(),84, ResourceManager.TEXTURE_GUITOOLBAR);
 	public GuiPanel toolAdd = new GuiPanel(20, 10, 64, 64, ResourceManager.TEXTURE_GUIADD);
@@ -92,6 +93,8 @@ public class GUI {
 		//Main menu
 		menuElements.add(MenuBG);
 		menuElements.add(MenuFF);
+		menuElements.add(MenuIcon);
+						 MenuIcon.setOpacity(0.9f);
 		menuElements.add(MenuVersion);
 						 MenuVersion.setText("Mars City [Alpha 0.0.1]");
 		menuElements.add(MenuPanel);
