@@ -7,6 +7,7 @@ import game.ResourceManager;
 import java.awt.Color;
 
 import org.lwjgl.opengl.Display;
+import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureImpl;
 
@@ -26,7 +27,7 @@ public class GuiButton extends AbstractGuiElement {
 	private Texture texture;
 	private boolean showBackground = true;
 	private float opacity = 1f;
-
+	private UnicodeFont font = ResourceManager.Arial15;
 	
 	
 	public float getOpacity() {
@@ -219,9 +220,9 @@ public class GuiButton extends AbstractGuiElement {
 				TextureImpl.bindNone();
 				glEnable(GL_SCISSOR_TEST);
 				glScissor((int)getScreenX(), (int)getScreenY(), (int)width, (int)height);
-				float xpos = getScreenX()+width/2-ResourceManager.font.getWidth(text)/2;
-				float ypos = Display.getHeight()-getScreenY()-height/2-ResourceManager.font.getHeight(text)/2;
-				ResourceManager.font.drawString(xpos, ypos, text);
+				float xpos = getScreenX()+width/2-font.getWidth(text)/2;
+				float ypos = Display.getHeight()-getScreenY()-height/2-font.getHeight(text)/2;
+				font.drawString(xpos, ypos, text);
 				glDisable(GL_SCISSOR_TEST);
 				TextureImpl.bindNone();		
 				glPopMatrix();
@@ -248,6 +249,14 @@ public class GuiButton extends AbstractGuiElement {
 	public void setClickThrough(boolean clockthrough) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public UnicodeFont getFont() {
+		return font;
+	}
+
+	public void setFont(UnicodeFont font) {
+		this.font = font;
 	}
 	
 }

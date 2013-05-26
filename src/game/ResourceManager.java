@@ -52,7 +52,9 @@ public class ResourceManager {
 	/**
 	 * This font is used by buttons and labels in the gui
 	 */
-	public final static UnicodeFont font = new UnicodeFont(new Font("Arial",Font.BOLD,15));
+	public final static UnicodeFont Arial15 = new UnicodeFont(new Font("Arial",0,15));
+	public final static UnicodeFont Arial15B = new UnicodeFont(new Font("Arial",Font.BOLD,15));
+	public final static UnicodeFont Arial30B = new UnicodeFont(new Font("Arial",Font.BOLD,30));
 	
 	//The shaders, currently not used
 	public static int shaderProgram, vertexShader, fragmentShader;
@@ -73,6 +75,7 @@ public class ResourceManager {
 	//The objects (Actually loads and pares a file and generates a displaylist)
 	public final static int OBJECT_HOUSE = addObject("/res/house.obj");
 	public final static int OBJECT_TERRAIN = addObject("/res/terrain.obj");
+	public final static int OBJECT_SKYBOX = addObject("/res/skybox.obj");
 	public final static int OBJECT_BIGHOUSE = addObject("/res/bighouse.obj");
 	public final static int OBJECT_STREET = addObject("/res/streetsegment.obj");
 	
@@ -84,6 +87,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_HOUSE = addTexture("/res/housetexture.png");
 	public final static Texture TEXTURE_TERRAIN = addTexture("/res/mars.png");
 	public final static Texture TEXTURE_STREET = addTexture("/res/street.png");
+	public final static Texture TEXTURE_SKYBOX = addTexture("/res/skybox.png");
 	public final static Texture TEXTURE_GUITOOLSBG = addTexture("/res/guitoolsBG.png");
 	public final static Texture TEXTURE_GUISELECT = addTexture("/res/guiselect.png");
 	public final static Texture TEXTURE_GUIMENUBUTTON = addTexture("/res/guimenubutton.png");
@@ -117,10 +121,16 @@ public class ResourceManager {
 	public static void init()
 	{
 		//Set up the font
-		font.getEffects().add(new ColorEffect(Color.black));
-		font.addAsciiGlyphs();
+		Arial15.getEffects().add(new ColorEffect(Color.black));
+		Arial15B.getEffects().add(new ColorEffect(Color.black));
+		Arial30B.getEffects().add(new ColorEffect(Color.black));
+		Arial15.addAsciiGlyphs();
+		Arial15B.addAsciiGlyphs();
+		Arial30B.addAsciiGlyphs();
 		try {
-			font.loadGlyphs();
+			Arial15.loadGlyphs();
+			Arial15B.loadGlyphs();
+			Arial30B.loadGlyphs();
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
@@ -460,6 +470,24 @@ public class ResourceManager {
 	public static String getBuildingTypeName(int buildingtype)
 	{
 		return ResourceManager.getString(ResourceManager.getBuildingType(buildingtype).getName());
+	}
+	
+	/**
+	 * Build a building (Adds it to the grid and to the object list)
+	 * @param x X Position
+	 * @param y Y Position
+	 * @param z Z Position
+	 * @param bt Building type
+	 */
+	public static Building buildBuilding(float x, float y, float z, int bt)
+	{
+		x = Grid.cellSize*Math.round(x/Grid.cellSize);
+		y = Grid.cellSize*Math.round(y/Grid.cellSize);
+		z = Grid.cellSize*Math.round(z/Grid.cellSize);
+		Building building = new Building(bt,x,y,z);
+		Grid.setBuilding(Math.round(x),Math.round(z), building);
+		ResourceManager.objects.add(building);
+		return building;
 	}
 	
 	/**
