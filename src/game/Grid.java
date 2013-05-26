@@ -169,7 +169,7 @@ public class Grid {
 			int xposdest = xpos+length;
 			if(length<0){
 				int tmp = xposdest;
-				xposdest = ypos;
+				xposdest = xpos;
 				xpos = tmp;
 			}
 			for(int j=xpos;j<=xposdest;j++){
