@@ -24,9 +24,13 @@ public class Grid {
 		cells = initCells();
 	}
 	
-	public static GridCell getCell(int x, int y)
+	public static GridCell getCell(int x, int y) throws IndexOutOfBoundsException
 	{
-		return cells.get(XYtoIndex(x+cellsX/2, y+cellsY/2));
+		try {
+			return cells.get(XYtoIndex(x+cellsX/2, y+cellsY/2));
+		} catch (Exception e) {
+			return null;
+		}
 	}
 	
 	public static void setBuilding(int x, int y, Building building)

@@ -73,6 +73,7 @@ public class BuildPreview extends Entity {
 					}
 					else {
 						//Color other cells within the radius
+						if(Grid.getCell(x, z)==null)break;
 						if(Grid.getCell(x, z).getBuilding()!=null){
 							if(Grid.getCell(x, z).getBuilding().getBuidlingType()==ResourceManager.BUILDINGTYPE_STREET)glColor4f(0.5f, 0.5f, 0.5f,(1-(Math.abs(getX()-x))/radius)*(1-(Math.abs(getZ()-z)/radius)));
 							else glColor4f(0.5f, 0.5f, 0f,(1-(Math.abs(getX()-x))/radius)*(1-(Math.abs(getZ()-z)/radius)));

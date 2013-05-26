@@ -131,7 +131,7 @@ public class Main {
 	
 	int hoveredEntity = -1; //The index of the object that is hovered with the mouse
 	int selectedTool = 0; //The selected tool, SELECT,ADD or DELETE
-	public static int money = 100000; //The players money
+	public static int money = 10000000; //The players money
 	int currentBuildingType = -1; //The currently selected building type
 	float[] mousepos3d=new float[3]; //The mouse position in 3d space
 	static int gameState = STATE_MENU; //The current game state
@@ -613,8 +613,8 @@ public class Main {
 			}
 			//Move the camera with middle mouse button
 			if(Mouse.isButtonDown(2)){
-				camera.setX((float) (camera.getX()+0.0002f*delta*camera.getZoom()*MY*Math.sin(Math.toRadians(camera.getRotY()))-0.0002f*delta*camera.getZoom()*MX*Math.cos(Math.toRadians(camera.getRotY()))));
-				camera.setZ((float) (camera.getZ()+0.0002f*delta*camera.getZoom()*MY*Math.cos(Math.toRadians(camera.getRotY()))+0.0002f*delta*camera.getZoom()*MX*Math.sin(Math.toRadians(camera.getRotY()))));
+				camera.setX((float) (camera.getX()+delta*(0.00008f*camera.getZoom()+0.0005f)*MY*Math.sin(Math.toRadians(camera.getRotY()))-delta*(0.00008f*camera.getZoom()+0.0005f)*MX*Math.cos(Math.toRadians(camera.getRotY()))));
+				camera.setZ((float) (camera.getZ()+delta*(0.00008f*camera.getZoom()+0.0005f)*MY*Math.cos(Math.toRadians(camera.getRotY()))+delta*(0.00008f*camera.getZoom()+0.0005f)*MX*Math.sin(Math.toRadians(camera.getRotY()))));
 			}
 		}
 		
@@ -639,7 +639,6 @@ public class Main {
 						case(TOOL_SELECT): //Zoom to a house
 							try {
 								AnimationManager.animateValue(camera, AnimationValue.X, ResourceManager.getObject(hoveredEntity).getX(), 0.2f);
-								AnimationManager.animateValue(camera, AnimationValue.Y, ResourceManager.getObject(hoveredEntity).getY()+ResourceManager.getObject(hoveredEntity).getPreferredY(), 0.2f);
 								AnimationManager.animateValue(camera, AnimationValue.Z, ResourceManager.getObject(hoveredEntity).getZ(), 0.2f);
 							} catch (Exception e) {}
 							break;
@@ -684,8 +683,8 @@ public class Main {
 				}
 				//Control the zoom with the mouse wheel
 				camera.setZoom((float) (camera.getZoom()-0.001*camera.getZoom()*Mouse.getEventDWheel()));
-				if(camera.getZoom()<5)camera.setZoom(5);
-				if(camera.getZoom()>200)camera.setZoom(200);
+				if(camera.getZoom()<7)camera.setZoom(7);
+				if(camera.getZoom()>1000)camera.setZoom(1000);
 		}else{
 				//GUI behavior
 				if(Mouse.getEventButton()==0&&Mouse.getEventButtonState())
