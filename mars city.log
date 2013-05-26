@@ -4,6 +4,7 @@ Loading object: /res/terrain.obj
 Loading object: /res/skybox.obj
 Loading object: /res/bighouse.obj
 Loading object: /res/streetsegment.obj
+Loading object: /res/gridcell.obj
 Loading sound: /res/drop.wav
 Loading sound: /res/destroy.wav
 Loading texture: /res/housetexture.png

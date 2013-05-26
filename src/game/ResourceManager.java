@@ -78,6 +78,7 @@ public class ResourceManager {
 	public final static int OBJECT_SKYBOX = addObject("/res/skybox.obj");
 	public final static int OBJECT_BIGHOUSE = addObject("/res/bighouse.obj");
 	public final static int OBJECT_STREET = addObject("/res/streetsegment.obj");
+	public final static int OBJECT_GRIDCELL = addObject("/res/gridcell.obj");
 	
 	//The audio files
 	public final static Audio SOUND_DROP = addSound("WAV", "/res/drop.wav");
