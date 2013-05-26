@@ -63,19 +63,20 @@ public class BuildPreview extends Entity {
 			int x2 = (int) (getX() + (int) Math.floor(ResourceManager.getBuildingType(getBuildingType()).getWidth()/2));
 			int z1 = (int) (getZ() -(int) Math.ceil(ResourceManager.getBuildingType(getBuildingType()).getDepth()/2-1));
 			int z2 = (int) (getZ() +(int) Math.floor(ResourceManager.getBuildingType(getBuildingType()).getDepth()/2));
-			int envsize = 50;
-			for(int z=z1-envsize;z<=z2+envsize;z++){
-				for(int x=x1-envsize;x<=x2+envsize;x++){
+			int radius = 50;
+			for(int z=z1-radius;z<=z2+radius;z++){
+				for(int x=x1-radius;x<=x2+radius;x++){
 					if(z>=z1&&z<=z2&&x>=x1&&x<=x2){
+						//Color cells under the building
 						if(Grid.getCell(x, z).getBuilding()!=null)glColor4f(1f, 0f, 0f,0.7f);
 						else glColor4f(0f, 1f, 0f,0.7f);
 					}
 					else {
-						
+						//Color other cells within the radius
 						if(Grid.getCell(x, z).getBuilding()!=null){
-							if(Grid.getCell(x, z).getBuilding().getBuidlingType()==ResourceManager.BUILDINGTYPE_STREET)glColor4f(1f, 1f, 0f,(1-(Math.abs(getX()-x))/envsize)*(1-(Math.abs(getZ()-z)/envsize))-0.5f);
-							else glColor4f(1f, 0.5f, 0f,(1-(Math.abs(getX()-x))/envsize)*(1-(Math.abs(getZ()-z)/envsize))-0.5f);
-						}else glColor4f(1f, 1f, 1f,(1-(Math.abs(getX()-x))/envsize)*(1-(Math.abs(getZ()-z)/envsize))-0.5f);
+							if(Grid.getCell(x, z).getBuilding().getBuidlingType()==ResourceManager.BUILDINGTYPE_STREET)glColor4f(0.5f, 0.5f, 0.5f,(1-(Math.abs(getX()-x))/radius)*(1-(Math.abs(getZ()-z)/radius)));
+							else glColor4f(0.5f, 0.5f, 0f,(1-(Math.abs(getX()-x))/radius)*(1-(Math.abs(getZ()-z)/radius)));
+						}else glColor4f(1f, 1f, 1f,(1-(Math.abs(getX()-x))/radius)*(1-(Math.abs(getZ()-z)/radius))-0.5f);
 					}
 					glTranslatef(x, 0.01f, z);
 					glCallList(ResourceManager.OBJECT_GRIDCELL);

@@ -85,6 +85,9 @@ public class ResourceManager {
 	public final static Audio SOUND_DESTROY = addSound("WAV", "/res/destroy.wav");
 	
 	//Loads the textures
+	public final static Texture TEXTURE_ICON16 = addTexture("/res/icon16.png");
+	public final static Texture TEXTURE_ICON32 = addTexture("/res/icon32.png");
+	public final static Texture TEXTURE_ICON256 = addTexture("/res/icon256.png");
 	public final static Texture TEXTURE_HOUSE = addTexture("/res/housetexture.png");
 	public final static Texture TEXTURE_TERRAIN = addTexture("/res/mars.png");
 	public final static Texture TEXTURE_STREET = addTexture("/res/street.png");

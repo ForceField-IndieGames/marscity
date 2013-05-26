@@ -17,6 +17,7 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -175,6 +176,12 @@ public class Main {
 			System.out.println("Display konnte nicht erstellt werden");
 			Game.exit();
 		}
+		
+		//Set the icon
+		ByteBuffer[] list = new ByteBuffer[2];
+		list[0] = ByteBuffer.wrap(ResourceManager.TEXTURE_ICON16.getTextureData());
+		list[1] =  ByteBuffer.wrap(ResourceManager.TEXTURE_ICON32.getTextureData());
+		Display.setIcon(list);
 		
 		//Delete the log file
 		try {(new File("mars city.log")).delete();} catch (Exception e) {}
@@ -890,12 +897,25 @@ public class Main {
 		gui.MenuBG.setWidth((float) (Display.getWidth()-60*Math.sin(i)+60));
 		gui.MenuBG.setY((float) (30*Math.sin(i))-30);
 		gui.MenuBG.setHeight((float) (Display.getHeight()-60*Math.sin(i)+60));
+		gui.MenuIcon.setX((float) (Display.getWidth()/2-gui.MenuIcon.getWidth()/2+3*Math.sin(2*i)-3));
+		gui.MenuIcon.setWidth((float) (128-12*Math.sin(2*i)+12));
+		gui.MenuIcon.setY((float) (20+6*Math.sin(2*i)-6));
+		gui.MenuIcon.setHeight((float) (128-12*Math.sin(2*i)+12));
 		i=(i<2*Math.PI)?i+0.005f:0;
 		//Process mouse inputs
+		guiElement guihit = gui.mouseoverMenu();
+		if(guihit==gui.MenuPlay)gui.MenuPlay.setColor(Color.gray);
+		else gui.MenuPlay.setColor(Color.white);
+		if(guihit==gui.MenuLoad)gui.MenuLoad.setColor(Color.gray);
+		else gui.MenuLoad.setColor(Color.white);
+		if(guihit==gui.MenuSettings)gui.MenuSettings.setColor(Color.gray);
+		else gui.MenuSettings.setColor(Color.white);
+		if(guihit==gui.MenuExit)gui.MenuExit.setColor(Color.gray);
+		else gui.MenuExit.setColor(Color.white);
 		while(Mouse.next())
 		{
 			if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
-				guiElement guihit = gui.mouseoverMenu();
+				
 				if(guihit==null)return;
 				if(guihit==gui.MenuPlay){
 					Game.newGame();
