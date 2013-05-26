@@ -607,7 +607,9 @@ public class Main {
 			//Rotate the camera with right mouse button
 			if(Mouse.isButtonDown(1)){
 				camera.setRotY(camera.getRotY()-0.1f*MX);
-				camera.setRotX(camera.getRotX()-0.1f*MY);
+				camera.setRotX(camera.getRotX()+0.1f*MY);
+				if(camera.getRotX()<-89)camera.setRotX(-89);
+				if(camera.getRotX()>-1)camera.setRotX(-1);
 			}
 			//Move the camera with middle mouse button
 			if(Mouse.isButtonDown(2)){
@@ -683,7 +685,7 @@ public class Main {
 				//Control the zoom with the mouse wheel
 				camera.setZoom((float) (camera.getZoom()-0.001*camera.getZoom()*Mouse.getEventDWheel()));
 				if(camera.getZoom()<5)camera.setZoom(5);
-				if(camera.getZoom()>100)camera.setZoom(100);
+				if(camera.getZoom()>200)camera.setZoom(200);
 		}else{
 				//GUI behavior
 				if(Mouse.getEventButton()==0&&Mouse.getEventButtonState())
