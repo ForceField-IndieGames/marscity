@@ -16,7 +16,7 @@ import animation.Animatable;
 
 public class Entity implements Drawable, Animatable {
 
-	private float x = 0, y = 0, z=-100;
+	private float x = 0, y = 0, z=0;
 	private float rotX=0,rotY=0,rotZ=0;
 	private float scaleX=1,scaleY=1,scaleZ=1;
 	private Texture texture;
