@@ -153,6 +153,11 @@ public class Grid {
 	
 	public static boolean isStripFree(int xpos, int ypos, int length, boolean vertical)
 	{
+		return isStripFree(xpos, ypos, length, vertical, -1);
+	}
+	
+	public static boolean isStripFree(int xpos, int ypos, int length, boolean vertical, int ignore)
+	{
 		if(vertical){
 			//vertical
 			int yposdest = ypos+length;
@@ -163,7 +168,7 @@ public class Grid {
 			}
 			for(int j=ypos;j<=yposdest;j++){
 				try {
-					if(cells.get(posToIndex(xpos, j)).getBuilding()!=null)return false;
+					if(cells.get(posToIndex(xpos, j)).getBuilding()!=null&&cells.get(posToIndex(xpos, j)).getBuilding().getBuidlingType()!=ignore)return false;
 				} catch (Exception e) {
 					return false;
 				}
@@ -178,7 +183,7 @@ public class Grid {
 			}
 			for(int j=xpos;j<=xposdest;j++){
 				try {
-					if(cells.get(posToIndex(j, ypos)).getBuilding()!=null)return false;
+					if(cells.get(posToIndex(j, ypos)).getBuilding()!=null&&cells.get(posToIndex(j, ypos)).getBuilding().getBuidlingType()!=ignore)return false;
 				} catch (Exception e) {
 					return false;
 				}

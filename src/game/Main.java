@@ -112,9 +112,9 @@ class splashScreen extends JFrame implements Runnable{
 public class Main {
 	
 	//The tools
-	final static int TOOL_SELECT = 0;
-	final static int TOOL_ADD = 1;
-	final static int TOOL_DELETE = 2;
+	public final static int TOOL_SELECT = 0;
+	public final static int TOOL_ADD = 1;
+	public final static int TOOL_DELETE = 2;
 	
 	//The game states (intro is currently not used)
 	final static int STATE_INTRO = 0;
@@ -129,11 +129,11 @@ public class Main {
 	//The debugmode enables cheats and displays additional debug information
 	public static boolean debugMode = true;
 	
-	int hoveredEntity = -1; //The index of the object that is hovered with the mouse
-	int selectedTool = 0; //The selected tool, SELECT,ADD or DELETE
+	public static int hoveredEntity = -1; //The index of the object that is hovered with the mouse
+	public static int selectedTool = 0; //The selected tool, SELECT,ADD or DELETE
 	public static int money = 10000000; //The players money
-	int currentBuildingType = -1; //The currently selected building type
-	float[] mousepos3d=new float[3]; //The mouse position in 3d space
+	public static int currentBuildingType = -1; //The currently selected building type
+	public static float[] mousepos3d=new float[3]; //The mouse position in 3d space
 	static int gameState = STATE_MENU; //The current game state
 	
 	//Some more objects
@@ -167,7 +167,10 @@ public class Main {
 		
 		try {
 			//Setup the display
-			Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
+			if(debugMode){
+				Display.setDisplayMode(new DisplayMode(1300, 690));
+				Display.setResizable(true);
+			}else Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
 			Display.setTitle("Mars City");
 			Display.setLocation(0, 0);
 			Display.create();
@@ -196,7 +199,7 @@ public class Main {
 		gui = new GUI(); //Create the GUI
 		buildpreview = new BuildPreview(); //Create the Building Preview
 		skybox = new Entity(ResourceManager.OBJECT_SKYBOX, ResourceManager.TEXTURE_SKYBOX);
-		terrain = new Terrain(0,0,-150);//create the terrain
+		terrain = new Terrain(0,0,0);//create the terrain
 		
 		//Enable vsync according to the settings
 		if(ResourceManager.getSetting("vsync").equals("enabled"))Display.setVSyncEnabled(true);
