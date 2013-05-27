@@ -4,6 +4,7 @@ import static org.lwjgl.util.glu.GLU.*;
 
 import effects.ParticleEffects;
 import gui.GUI;
+import gui.GuiEventType;
 import gui.guiElement;
 
 import java.awt.Color;
@@ -467,7 +468,7 @@ public class Main {
 			
 			//Start gui click event
 			if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
-				gui.Click();
+				gui.callGuiEvents(GuiEventType.Click);
 			}
 			
 			//Only do things when the mouse is not over the gui
