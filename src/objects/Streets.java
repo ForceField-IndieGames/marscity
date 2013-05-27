@@ -16,7 +16,37 @@ public class Streets {
 	private static int startposy;
 	private static int endposx;
 	private static int endposy;
+	private static int x1;
+	private static int x2;
+	private static int y1;
+	private static int y2;
+	public static int getX1() {
+		return x1;
+	}
+
+	public static int getX2() {
+		return x2;
+	}
+
+	public static int getY1() {
+		return y1;
+	}
+
+	public static int getY2() {
+		return y2;
+	}
+
+	private static int length;
+	private static boolean vertical;
 	
+	public static int getLength() {
+		return length;
+	}
+
+	public static boolean isVertical() {
+		return vertical;
+	}
+
 	/**
 	 * Marks the starting point of a new road
 	 * @param posx
@@ -26,6 +56,39 @@ public class Streets {
 	{
 		startposx = posx;
 		startposy = posy;
+	}
+	
+	public static void updateBuilding(int posx, int posy)
+	{
+		if(Math.abs(startposx-posx)<Math.abs(startposy-posy)){
+			// vertical
+			vertical = true;
+			x1 = startposx;
+			x2 = startposx;
+			y1=startposy;
+			y2 = posy;
+			if(startposy>y2){
+				int tmp = startposy;
+				y1 = y2;
+				y2 = tmp;
+			}
+			y2+=1;
+			length = Math.abs(endposy-startposy)+1;
+		}else{
+			// horizontal
+			vertical = false;
+			x1 = startposx;
+			x2 = posx;
+			y1 = startposy;
+			y2 = startposy;
+			if(startposx>x2){
+				int tmp = x1;
+				x1 = x2;
+				x2 = tmp;
+			}
+			x2+=1;
+			length = Math.abs(endposx-startposx)+1;
+		}
 	}
 	
 	/**
@@ -39,7 +102,7 @@ public class Streets {
 			// vertical
 			endposx = startposx;
 			endposy = posy;
-			if(!Grid.isStripFree(startposx, startposy, endposy-startposy, true))return;
+			if(!Grid.isStripFree(startposx, startposy, endposy-startposy, true, ResourceManager.BUILDINGTYPE_STREET))return;
 			if(Main.money<ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost()*(Math.abs(endposy-startposy)+1))return;
 			Main.money -= ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost()*(Math.abs(endposy-startposy)+1);
 			if(startposy>endposy){
@@ -48,13 +111,15 @@ public class Streets {
 				endposy = tmp;
 			}
 			for(int i=startposy;i<=endposy;i++){
-				ResourceManager.buildBuilding(startposx, 0, i, ResourceManager.BUILDINGTYPE_STREET);
+				if(Grid.isAreaFree(startposx, i, 1, 1)){
+					ResourceManager.buildBuilding(startposx, 0, i, ResourceManager.BUILDINGTYPE_STREET);
+				}
 			}
 		}else{
 			// horizontal
 			endposx = posx;
 			endposy = startposy;
-			if(!Grid.isStripFree(startposx, startposy, endposx-startposx, false))return;
+			if(!Grid.isStripFree(startposx, startposy, endposx-startposx, false, ResourceManager.BUILDINGTYPE_STREET))return;
 			if(Main.money<ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost()*(Math.abs(endposx-startposx)+1))return;
 			Main.money -= ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost()*(Math.abs(endposx-startposx)+1);
 			if(startposx>endposx){
@@ -63,14 +128,43 @@ public class Streets {
 				endposx = tmp;
 			}
 			for(int i=startposx;i<=endposx;i++){
-				ResourceManager.buildBuilding(i, 0, startposy, ResourceManager.BUILDINGTYPE_STREET);
+				if(Grid.isAreaFree(i, startposy, 1, 1)){
+					ResourceManager.buildBuilding(i, 0, startposy, ResourceManager.BUILDINGTYPE_STREET);
+				}
 			}
 		}
-		if((startposx!=endposx)||(startposy!=endposy)){
-			ResourceManager.buildBuilding(endposx, 0, endposy, ResourceManager.BUILDINGTYPE_STREET);
-		}
-		
 	}
-	
+
+	public static int getStartposx() {
+		return startposx;
+	}
+
+	public static void setStartposx(int startposx) {
+		Streets.startposx = startposx;
+	}
+
+	public static int getStartposy() {
+		return startposy;
+	}
+
+	public static void setStartposy(int startposy) {
+		Streets.startposy = startposy;
+	}
+
+	public static int getEndposx() {
+		return endposx;
+	}
+
+	public static void setEndposx(int endposx) {
+		Streets.endposx = endposx;
+	}
+
+	public static int getEndposy() {
+		return endposy;
+	}
+
+	public static void setEndposy(int endposy) {
+		Streets.endposy = endposy;
+	}
 }
 

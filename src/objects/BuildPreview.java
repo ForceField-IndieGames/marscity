@@ -2,9 +2,11 @@ package objects;
 
 import static org.lwjgl.opengl.GL11.*;
 import game.Grid;
+import game.Main;
 import game.ResourceManager;
 
 
+import org.lwjgl.input.Mouse;
 import org.newdawn.slick.opengl.Texture;
 
 /**
@@ -73,15 +75,39 @@ public class BuildPreview extends Entity {
 					}
 					else {
 						//Color other cells within the radius
+						if(Grid.getCell(x, z)==null)break;
 						if(Grid.getCell(x, z).getBuilding()!=null){
-							if(Grid.getCell(x, z).getBuilding().getBuidlingType()==ResourceManager.BUILDINGTYPE_STREET)glColor4f(0.5f, 0.5f, 0.5f,(1-(Math.abs(getX()-x))/radius)*(1-(Math.abs(getZ()-z)/radius)));
+							if(Grid.getCell(x, z).getBuilding().getBuidlingType()==ResourceManager.BUILDINGTYPE_STREET)glColor4f(0.8f, 0.8f, 0.8f,(1-(Math.abs(getX()-x))/radius)*(1-(Math.abs(getZ()-z)/radius)));
 							else glColor4f(0.5f, 0.5f, 0f,(1-(Math.abs(getX()-x))/radius)*(1-(Math.abs(getZ()-z)/radius)));
 						}else glColor4f(1f, 1f, 1f,(1-(Math.abs(getX()-x))/radius)*(1-(Math.abs(getZ()-z)/radius))-0.5f);
 					}
-					glTranslatef(x, 0.01f, z);
+					glTranslatef(x, 0.001f, z);
 					glCallList(ResourceManager.OBJECT_GRIDCELL);
-					glTranslatef(-x, -0.01f, -z);
+					glTranslatef(-x, -0.001f, -z);
 				}
+			}
+			
+			//Draw street prewiev, if needed
+			if(Main.selectedTool==Main.TOOL_ADD &&Main.currentBuildingType==ResourceManager.BUILDINGTYPE_STREET&&Mouse.isButtonDown(0)){
+				Streets.updateBuilding(Math.round(Main.mousepos3d[0]), Math.round(Main.mousepos3d[2]));
+				if(Streets.isVertical()){
+					for(int y=Streets.getY1();y<Streets.getY2();y++){
+						glTranslatef(Streets.getX1(), 0.002f, y);
+						if(Grid.isAreaFree(Streets.getX1(), y, 1, 1))glColor3f(0.8f, 0.5f, 0f);
+						else glColor3f(1f, 0.8f, 0f);
+						glCallList(ResourceManager.OBJECT_GRIDCELL);
+						glTranslatef(-Streets.getX1(), -0.002f, -y);
+					}
+				}else{
+					for(int x=Streets.getX1();x<Streets.getX2();x++){
+						glTranslatef(x, 0.002f, Streets.getY1());
+						if(Grid.isAreaFree(x, Streets.getY1(), 1, 1))glColor3f(0.8f, 0.5f, 0f);
+						else glColor3f(1f, 0.8f, 0f);
+						glCallList(ResourceManager.OBJECT_GRIDCELL);
+						glTranslatef(-x, -0.002f, -Streets.getY1());
+					}
+				}
+				
 			}
 			
 			//Draw building
