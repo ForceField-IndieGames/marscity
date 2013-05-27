@@ -15,6 +15,8 @@ import animation.Animatable;
 
 public abstract class AbstractGuiElement implements guiElement, Animatable {
 
+	private GuiEvent event;
+	
 	@Override
 	public void setZ(float z) {
 		// TODO Auto-generated method stub
@@ -79,6 +81,15 @@ public abstract class AbstractGuiElement implements guiElement, Animatable {
 	public void draw() {
 		// TODO Auto-generated method stub
 
+	}
+	
+	@Override
+	public void Click()
+	{
+		try {
+			getEvent().run(GuiEventType.Click);
+		} catch (Exception e) {
+		}
 	}
 
 	@Override
@@ -199,6 +210,14 @@ public abstract class AbstractGuiElement implements guiElement, Animatable {
 	public void setColor(Color color) {
 		// TODO Auto-generated method stub
 
+	}
+
+	public GuiEvent getEvent() {
+		return event;
+	}
+
+	public void setEvent(GuiEvent event) {
+		this.event = event;
 	}
 
 }

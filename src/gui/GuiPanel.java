@@ -271,11 +271,4 @@ public class GuiPanel extends AbstractGuiElement {
 		return this;
 	}
 
-	
-	
-	
-
-	
-	
-
 }

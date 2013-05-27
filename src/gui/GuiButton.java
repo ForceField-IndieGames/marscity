@@ -258,5 +258,6 @@ public class GuiButton extends AbstractGuiElement {
 	public void setFont(UnicodeFont font) {
 		this.font = font;
 	}
+
 	
 }
