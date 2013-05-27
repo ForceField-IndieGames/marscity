@@ -1,9 +1,6 @@
 package game;
 import static org.lwjgl.util.glu.GLU.gluLookAt;
 
-import org.lwjgl.util.vector.Matrix3f;
-import org.lwjgl.util.vector.Vector3f;
-
 import animation.Animatable;
 
 /**

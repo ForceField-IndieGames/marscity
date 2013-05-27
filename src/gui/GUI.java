@@ -121,10 +121,13 @@ public class GUI {
 			toolBar.add(buildingChooser);
 						buildingChooser.add(buildingStreet);
 						buildingStreet.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_STREET));
+						buildingStreet.setEvent(GuiEvents.buildingStreet);
 						buildingChooser.add(buildingHouse);
-											buildingHouse.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_HOUSE));
+						buildingHouse.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_HOUSE));
+						buildingHouse.setEvent(GuiEvents.buildingHouse);
 						buildingChooser.add(buildingBighouse);
-											buildingBighouse.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_BIGHOUSE));
+						buildingBighouse.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_BIGHOUSE));
+						buildingBighouse.setEvent(GuiEvents.buildingBighouse);
 			toolBar.add(infoBar);
 						infoBar.add(infoMoney);
 									infoMoney.setText("Geld: 0$");
@@ -134,8 +137,11 @@ public class GUI {
 									infoCitizens.setFont(ResourceManager.Arial15B);
 		add(guiTools);
 		guiTools.add(menuButton);
+					 menuButton.setEvent(GuiEvents.menuButton);
 		guiTools.add(toolAdd);
+					 toolAdd.setEvent(GuiEvents.toolAdd);
 		guiTools.add(toolDelete);
+					 toolDelete.setEvent(GuiEvents.toolDelete);
 		
 		add(blur);
 			blur.setBlurBehind(true);
@@ -146,16 +152,22 @@ public class GUI {
 			pauseMenu.add(pauseLogo);
 			pauseMenu.add(pauseMainmenu);
 						  pauseMainmenu.setText(ResourceManager.getString("PAUSEMENU_BUTTON_MAINMENU"));
+						  pauseMainmenu.setEvent(GuiEvents.pauseMainmenu);
 			pauseMenu.add(pauseLoad);
 						  pauseLoad.setText(ResourceManager.getString("PAUSEMENU_BUTTON_LOAD"));
+						  pauseLoad.setEvent(GuiEvents.pauseLoad);
 			pauseMenu.add(pauseSave);
 						  pauseSave.setText(ResourceManager.getString("PAUSEMENU_BUTTON_SAVE"));
+						  pauseSave.setEvent(GuiEvents.pauseSave);
 			pauseMenu.add(pauseSettings);
 						  pauseSettings.setText(ResourceManager.getString("PAUSEMENU_BUTTON_SETTINGS"));
+						  pauseSettings.setEvent(GuiEvents.pauseSettings);
 			pauseMenu.add(pauseExit);
-						  pauseExit.setText(ResourceManager.getString("PAUSEMENU_BUTTON_EXIT"));			  
+						  pauseExit.setText(ResourceManager.getString("PAUSEMENU_BUTTON_EXIT"));
+						  pauseExit.setEvent(GuiEvents.pauseExit);
 			pauseMenu.add(pauseResume);
 						  pauseResume.setText(ResourceManager.getString("PAUSEMENU_BUTTON_RESUME"));
+						  pauseResume.setEvent(GuiEvents.pauseResume);
 
   ///////////		
 		add(settingsMenu);
@@ -174,19 +186,35 @@ public class GUI {
 			settingsTitle.setText(ResourceManager.getString("SETTINGSMENU_LABEL_TITLE"));
 			settingsTitle.setCentered(true);
 			settingsTitle.setFont(ResourceManager.Arial30B);
+			
 			settingsVsyncon.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCON"));
+			settingsVsyncon.setEvent(GuiEvents.settingsVsyncon);
 			if (ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+			
 			settingsVsyncoff.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCOFF"));
+			settingsVsyncoff.setEvent(GuiEvents.settingsVsyncoff);
 			if (!ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+			
 			settingsVsync.setText(ResourceManager.getString("SETTINGSMENU_LABEL_VSYNC"));
 			settingsVsync.setFont(ResourceManager.Arial15B);
+			
 			settingsParticles.setText(ResourceManager.getString("SETTINGSMENU_LABEL_PARTICLES"));
 			settingsParticles.setFont(ResourceManager.Arial15B);
+			
 			settingsParticlesoff.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESOFF"));
+			settingsParticlesoff.setEvent(GuiEvents.settingsParticlesoff);
+			
 			settingsParticleslow.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESLOW"));
+			settingsParticleslow.setEvent(GuiEvents.settingsParticleslow);
+			
 			settingsParticlesmiddle.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESMIDDLE"));
+			settingsParticlesmiddle.setEvent(GuiEvents.settingsParticlesmiddle);
+			
 			settingsParticleshigh.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESHIGH"));
+			settingsParticleshigh.setEvent(GuiEvents.settingsParticleshigh);
+			
 			settingsResume.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_RESUME"));
+			settingsResume.setEvent(GuiEvents.settingsResume);
 ///////////
 			
 		add(debugInfo);	
@@ -251,7 +279,7 @@ public class GUI {
 		return null;
 	}
 	
-	public guiElement mouseover()
+	public guiElement getMouseover()
 	{
 		for(int i=elements.size()-1;i>=0;i--)
 		{
@@ -263,6 +291,12 @@ public class GUI {
 					&&!elements.get(i).isClickThrough()) return elements.get(i).mouseover();
 		}
 		return null;
+	}
+	
+	public void Click()
+	{
+		guiElement mo = getMouseover();
+		if(mo!=null)mo.Click();
 	}
 	
 }

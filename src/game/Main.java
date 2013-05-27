@@ -17,7 +17,6 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -117,9 +116,9 @@ public class Main {
 	public final static int TOOL_DELETE = 2;
 	
 	//The game states (intro is currently not used)
-	final static int STATE_INTRO = 0;
-	final static int STATE_MENU = 1;
-	final static int STATE_GAME = 2;
+	public final static int STATE_INTRO = 0;
+	public final static int STATE_MENU = 1;
+	public final static int STATE_GAME = 2;
 
 	//Variables that are used for calculating the delta and fps
 	long lastFrame;
@@ -134,14 +133,14 @@ public class Main {
 	public static int money = 10000000; //The players money
 	public static int currentBuildingType = -1; //The currently selected building type
 	public static float[] mousepos3d=new float[3]; //The mouse position in 3d space
-	static int gameState = STATE_MENU; //The current game state
+	public static int gameState = STATE_MENU; //The current game state
 	
 	//Some more objects
 	public static Camera camera = new Camera();
 	Terrain terrain; 
 	Entity skybox;
 	public static GUI gui;
-	BuildPreview buildpreview;
+	public static BuildPreview buildpreview;
 	static splashScreen splashscreen;
 	
 	/**
@@ -333,169 +332,6 @@ public class Main {
 	}
 	
 	/**
-	 * Manages the gui input
-	 * @param guihit The element that was hit
-	 */
-	public void inputGui(guiElement guihit)
-	{
-		//The menu button (...)
-		if(guihit==gui.menuButton){
-			Game.Pause();
-			gui.blur.setVisible(true);
-			gui.pauseMenu.setVisible(true);
-			AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f);
-		}
-		//The add tool button (+)
-		if(guihit==gui.toolAdd){
-			selectedTool = TOOL_ADD;
-			gui.toolAdd.setColor(Color.gray);
-			gui.toolDelete.setColor(Color.white);
-			AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, 0, 0.5f);
-			gui.deleteBorder.setVisible(false);
-		}
-		//The delete tool button (X)
- 		if(guihit==gui.toolDelete){
-			selectedTool = TOOL_DELETE;
-			gui.toolAdd.setColor(Color.white);
-			gui.toolDelete.setColor(Color.gray);
-			AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, -40, 0.5f);
-			buildpreview.setBuilding(-1);
-			currentBuildingType = -1;
-			gui.deleteBorder.setVisible(true);
-		}
- 		//The resume button in the pause menu
- 		if(guihit==gui.pauseResume){
-			gui.blur.setVisible(false);
-			Game.Resume();
-			AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
-		}
- 		//The exit button in the pause menu
- 		if(guihit==gui.pauseExit){
-			Game.exit();
-		}
- 		//The button for switching on vsync in the settings
- 		if(guihit==gui.settingsVsyncon){
- 			try {
-				gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-				gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-				ResourceManager.setSetting("vsync", "enabled");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
- 		}
- 		//The button for switching off vsync in the settings
- 		if(guihit==gui.settingsVsyncoff){
- 			try {
-	 			gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-				gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-	 			ResourceManager.setSetting("vsync", "disabled");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
- 		}
- 		//The button for switching off particles in the settings
- 		if(guihit==gui.settingsParticlesoff){
- 			try {
-				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-	 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESOFF;
-	 			ResourceManager.setSetting("particlequality", "off");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
- 		}
- 		//The button for low quality particles in the settings
- 		if(guihit==gui.settingsParticleslow){
- 			try {
-				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-	 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESLOW;
-	 			ResourceManager.setSetting("particlequality", "low");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
- 		}
- 		//The button for middle quality particles in the settings
- 		if(guihit==gui.settingsParticlesmiddle){
- 			try {
-				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-	 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESMIDDLE;
-	 			ResourceManager.setSetting("particlequality", "middle");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
- 		}
- 		//The button for high quality particles in the settings
- 		if(guihit==gui.settingsParticleshigh){
- 			try {
-				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-	 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESHIGH;
-	 			ResourceManager.setSetting("particlequality", "high");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
- 		}
- 		//The resume button in the settings panel
- 		if(guihit==gui.settingsResume){
-			Game.Resume();
-			gui.blur.setVisible(false);
-			AnimationManager.animateValue(gui.settingsMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
-		}
- 		//The settings button in the pause menu
-		if(guihit==gui.pauseSettings){
-		gui.pauseMenu.setVisible(false);
-		gui.settingsMenu.setVisible(true);
-		AnimationManager.animateValue(gui.settingsMenu, AnimationValue.opacity, 1, 0.005f);
-		}
-		//The main menu button in the pause menu
- 		if(guihit==gui.pauseMainmenu){
-			gameState = STATE_MENU;
-		}
- 		//The street button in the building menu
- 		if(guihit==gui.buildingStreet){
- 			currentBuildingType = ResourceManager.BUILDINGTYPE_STREET;
- 			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_STREET);
- 			gui.buildingStreet.setColor(Color.gray);
- 		}else gui.buildingStreet.setColor(Color.white);
- 		//The house button in the building menu
- 		if(guihit==gui.buildingHouse){
- 			currentBuildingType = ResourceManager.BUILDINGTYPE_HOUSE;
- 			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_HOUSE);
- 			gui.buildingHouse.setColor(Color.gray);
- 		}else gui.buildingHouse.setColor(Color.white);
- 		//The big house button in the building menu
- 		if(guihit==gui.buildingBighouse){
- 			currentBuildingType = ResourceManager.BUILDINGTYPE_BIGHOUSE;
- 			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_BIGHOUSE);
- 			gui.buildingBighouse.setColor(Color.gray);
- 		}else gui.buildingBighouse.setColor(Color.white);
- 		//The save button in the pause menu
- 		if(guihit==gui.pauseSave){
- 			Game.Save("res/saves/savegame.save");
- 			Game.Resume();
- 			gui.blur.setVisible(false);
-			AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f, AnimationManager.ACTION_HIDE);
- 		}
- 		//The load button in the pause menu
- 		if(guihit==gui.pauseLoad){
- 			Game.Load("res/saves/savegame.save");
-			gui = null;
-			gui = new GUI();
-			Game.Resume();
- 		}
-	}
-	
-	/**
 	 * Processes Keyboard inputs
 	 * @param delta The calculated delta for timing
 	 */
@@ -598,12 +434,11 @@ public class Main {
 	public void inputMouse(int delta)
 	{
 		//Is the mouse over a gui item?
-		guiElement guihit = gui.mouseover();
+		guiElement guihit = gui.getMouseover();
 		
 		
 		if(guihit==null || Mouse.isGrabbed())
 		{
-			
 			int MX = Mouse.getDX();
 			int MY = Mouse.getDY();
 	
@@ -629,9 +464,15 @@ public class Main {
 			{
 				Mouse.setGrabbed(false);
 			}
+			
+			//Start gui click event
+			if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
+				gui.Click();
+			}
+			
 			//Only do things when the mouse is not over the gui
-			if(guihit==null)
-			{
+			if(guihit!=null)return;
+				
 				if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&currentBuildingType==ResourceManager.BUILDINGTYPE_STREET){
 					Streets.endBuilding(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
 				}
@@ -688,14 +529,7 @@ public class Main {
 				camera.setZoom((float) (camera.getZoom()-0.001*camera.getZoom()*Mouse.getEventDWheel()));
 				if(camera.getZoom()<7)camera.setZoom(7);
 				if(camera.getZoom()>1000)camera.setZoom(1000);
-		}else{
-				//GUI behavior
-				if(Mouse.getEventButton()==0&&Mouse.getEventButtonState())
-				{
-					inputGui(guihit);
-				}
-			}
-	}
+		}
 	}
 	
 	
@@ -721,7 +555,7 @@ public class Main {
 		AnimationManager.update(delta);
 		
 		//Move the BuildPreview
-		if(selectedTool==TOOL_ADD&&gui.mouseover()==null&&!Mouse.isGrabbed()){
+		if(selectedTool==TOOL_ADD&&gui.getMouseover()==null&&!Mouse.isGrabbed()){
 			buildpreview.setX(Grid.cellSize*Math.round(mousepos3d[0]/Grid.cellSize));
 			buildpreview.setY(Grid.cellSize*Math.round(mousepos3d[1]/Grid.cellSize));
 			buildpreview.setZ(Grid.cellSize*Math.round(mousepos3d[2]/Grid.cellSize));
@@ -829,7 +663,7 @@ public class Main {
 		//Set the light positions
 		glLight(GL_LIGHT0, GL_POSITION, BufferTools.asFlippedFloatBuffer(new float[]{-30f,50,100f,0f}));
         
-		if(gui.mouseover()==null)
+		if(gui.getMouseover()==null)
 		{
 			//Picking requires the fog to be disables and the background to be white
 			glDisable(GL_FOG);
