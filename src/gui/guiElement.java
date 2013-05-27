@@ -19,6 +19,7 @@ public interface guiElement {
 	
 	public void draw();
 	public guiElement mouseover();
+	public void Click();
 	
 	public float getX();
 	public float getY();
