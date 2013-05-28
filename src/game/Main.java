@@ -78,7 +78,7 @@ class splashScreen extends JFrame implements Runnable{
 		add(label2);
 		label2.setForeground(Color.white);
 		label2.setBounds(0, 0, 500, 20);
-		background = new JLabel(new ImageIcon(Main.class.getResource("/res/forcefieldbackground.png")));
+		background = new JLabel(new ImageIcon(Main.class.getResource("/res/textures/forcefieldbackground.png")));
 		add(background);
 		background.setBounds(0, 0, getWidth(), getHeight());
 		background.setDoubleBuffered(true);
