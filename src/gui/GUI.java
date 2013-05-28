@@ -42,9 +42,9 @@ public class GUI {
 	public GuiLabel infoCitizens = new GuiLabel(250,0,200,50,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
 	
 	public GuiPanel buildingChooser = new GuiPanel(300,0,700,50, (Color)null);
-	public GuiButton buildingStreet = new GuiButton(0,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2, Color.gray);
-	public GuiButton buildingHouse = new GuiButton(100,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2, Color.gray);
-	public GuiButton buildingBighouse = new GuiButton(200,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2, Color.gray);
+	public GuiButton buildingStreet = new GuiButton(0,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiButton buildingHouse = new GuiButton(100,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiButton buildingBighouse = new GuiButton(200,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2);
 	
 	public GuiPanel blur = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),(Color)null);
 	public GuiPanel pauseMenu = new GuiPanel(Display.getWidth()/2-128,Display.getHeight()/2-128,256,256,ResourceManager.TEXTURE_GUIMENU);
@@ -293,10 +293,10 @@ public class GUI {
 		return null;
 	}
 	
-	public void Click()
+	public void callGuiEvents(GuiEventType eventtype)
 	{
 		guiElement mo = getMouseover();
-		if(mo!=null)mo.Click();
+		if(mo!=null)mo.callGuiEvents(eventtype,mo);
 	}
 	
 }

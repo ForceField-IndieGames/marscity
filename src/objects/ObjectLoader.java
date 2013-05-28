@@ -4,6 +4,7 @@ import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
 import game.BufferTools;
+import game.ResourceManager;
 
 import java.io.*;
 
@@ -79,7 +80,7 @@ public class ObjectLoader {
             }
             if (line.startsWith("mtllib ")) {
                 String materialFileName = line.split(" ")[1];
-                BufferedReader materialFileReader = new BufferedReader(new InputStreamReader(ObjectLoader.class.getResourceAsStream("/res/" + materialFileName)));
+                BufferedReader materialFileReader = new BufferedReader(new InputStreamReader(ObjectLoader.class.getResourceAsStream(ResourceManager.objectspath + materialFileName)));
                 String materialLine;
                 Model.Material parseMaterial = new Model.Material();
                 String parseMaterialName = "";

@@ -67,52 +67,57 @@ public class ResourceManager {
 	//The path of the settings file
 	static final String FILE_SETTINGS = "res/settings/settings.xml";
 	
+	public static final String objectspath = "/res/objects/";
+	public static final String soundspath = "/res/sounds/";
+	public static final String texturespath = "/res/textures/";
+	public static final String shaderpath = "/res/shader/";
+	
 	//The building types (used when placing buildings, also saving and loading)
 	public final static int BUILDINGTYPE_HOUSE = 0;
 	public final static int BUILDINGTYPE_BIGHOUSE = 1;
 	public final static int BUILDINGTYPE_STREET = 2;
 	
 	//The objects (Actually loads and pares a file and generates a displaylist)
-	public final static int OBJECT_HOUSE = addObject("/res/house.obj");
-	public final static int OBJECT_TERRAIN = addObject("/res/terrain.obj");
-	public final static int OBJECT_SKYBOX = addObject("/res/skybox.obj");
-	public final static int OBJECT_BIGHOUSE = addObject("/res/bighouse.obj");
-	public final static int OBJECT_STREET = addObject("/res/streetsegment.obj");
-	public final static int OBJECT_GRIDCELL = addObject("/res/gridcell.obj");
+	public final static int OBJECT_HOUSE = addObject("house.obj");
+	public final static int OBJECT_TERRAIN = addObject("terrain.obj");
+	public final static int OBJECT_SKYBOX = addObject("skybox.obj");
+	public final static int OBJECT_BIGHOUSE = addObject("bighouse.obj");
+	public final static int OBJECT_STREET = addObject("streetsegment.obj");
+	public final static int OBJECT_GRIDCELL = addObject("gridcell.obj");
 	
 	//The audio files
-	public final static Audio SOUND_DROP = addSound("WAV", "/res/drop.wav");
-	public final static Audio SOUND_DESTROY = addSound("WAV", "/res/destroy.wav");
+	public final static Audio SOUND_DROP = addSound("WAV", "drop.wav");
+	public final static Audio SOUND_DESTROY = addSound("WAV", "destroy.wav");
 	
 	//Loads the textures
-	public final static Texture TEXTURE_ICON16 = addTexture("/res/icon16.png");
-	public final static Texture TEXTURE_ICON32 = addTexture("/res/icon32.png");
-	public final static Texture TEXTURE_ICON256 = addTexture("/res/icon256.png");
-	public final static Texture TEXTURE_HOUSE = addTexture("/res/housetexture.png");
-	public final static Texture TEXTURE_TERRAIN = addTexture("/res/mars.png");
-	public final static Texture TEXTURE_STREET = addTexture("/res/street.png");
-	public final static Texture TEXTURE_SKYBOX = addTexture("/res/skybox.png");
-	public final static Texture TEXTURE_GUITOOLSBG = addTexture("/res/guitoolsBG.png");
-	public final static Texture TEXTURE_GUISELECT = addTexture("/res/guiselect.png");
-	public final static Texture TEXTURE_GUIMENUBUTTON = addTexture("/res/guimenubutton.png");
-	public final static Texture TEXTURE_GUIADD = addTexture("/res/guiadd.png");
-	public final static Texture TEXTURE_GUIDELETE = addTexture("/res/guidelete.png");
-	public final static Texture TEXTURE_GUITOOLBAR = addTexture("/res/guitoolbar.png");
-	public final static Texture TEXTURE_GUIMENU = addTexture("/res/guimenu.png");
-	public final static Texture TEXTURE_EMPTY = addTexture("/res/empty.png");
-	public final static Texture TEXTURE_GUIBUTTON = addTexture("/res/guibutton.png");
-	public final static Texture TEXTURE_GUIBUTTONDOWN = addTexture("/res/guibuttondown.png");
-	public final static Texture TEXTURE_MAINMENUBG = addTexture("/res/mainmenubg.png");
-	public final static Texture TEXTURE_GUIBUTTON2 = addTexture("/res/guibutton2.png");
-	public final static Texture TEXTURE_GUIBUTTON2DOWN = addTexture("/res/guibutton2down.png");
-	public final static Texture TEXTURE_GUILABELBG = addTexture("/res/guilabelbg.png");
-	public final static Texture TEXTURE_GUILABELBGL = addTexture("/res/guilabelbgl.png");
-	public final static Texture TEXTURE_GUILABELBGR = addTexture("/res/guilabelbgr.png");
-	public final static Texture TEXTURE_MAINMENUFF = addTexture("/res/ForceField.png");
-	public final static Texture TEXTURE_MARSCITYLOGO = addTexture("/res/marscitylogo.png");
-	public final static Texture TEXTURE_BIGHOUSE = addTexture("/res/bighousetexture.png");
-	public final static Texture TEXTURE_PARTICLEFOG = addTexture("/res/fogparticle.png");
-	public final static Texture TEXTURE_GUIDELETEBORDER = addTexture("/res/guideleteborder.png");
+	public final static Texture TEXTURE_ICON16 = addTexture("icon16.png");
+	public final static Texture TEXTURE_ICON32 = addTexture("icon32.png");
+	public final static Texture TEXTURE_ICON256 = addTexture("icon256.png");
+	public final static Texture TEXTURE_HOUSE = addTexture("housetexture.png");
+	public final static Texture TEXTURE_TERRAIN = addTexture("mars.png");
+	public final static Texture TEXTURE_STREET = addTexture("street.png");
+	public final static Texture TEXTURE_SKYBOX = addTexture("skybox.png");
+	public final static Texture TEXTURE_GUITOOLSBG = addTexture("guitoolsBG.png");
+	public final static Texture TEXTURE_GUISELECT = addTexture("guiselect.png");
+	public final static Texture TEXTURE_GUIMENUBUTTON = addTexture("guimenubutton.png");
+	public final static Texture TEXTURE_GUIADD = addTexture("guiadd.png");
+	public final static Texture TEXTURE_GUIDELETE = addTexture("guidelete.png");
+	public final static Texture TEXTURE_GUITOOLBAR = addTexture("guitoolbar.png");
+	public final static Texture TEXTURE_GUIMENU = addTexture("guimenu.png");
+	public final static Texture TEXTURE_EMPTY = addTexture("empty.png");
+	public final static Texture TEXTURE_GUIBUTTON = addTexture("guibutton.png");
+	public final static Texture TEXTURE_GUIBUTTONDOWN = addTexture("guibuttondown.png");
+	public final static Texture TEXTURE_MAINMENUBG = addTexture("mainmenubg.png");
+	public final static Texture TEXTURE_GUIBUTTON2 = addTexture("guibutton2.png");
+	public final static Texture TEXTURE_GUIBUTTON2DOWN = addTexture("guibutton2down.png");
+	public final static Texture TEXTURE_GUILABELBG = addTexture("guilabelbg.png");
+	public final static Texture TEXTURE_GUILABELBGL = addTexture("guilabelbgl.png");
+	public final static Texture TEXTURE_GUILABELBGR = addTexture("guilabelbgr.png");
+	public final static Texture TEXTURE_MAINMENUFF = addTexture("ForceField.png");
+	public final static Texture TEXTURE_MARSCITYLOGO = addTexture("marscitylogo.png");
+	public final static Texture TEXTURE_BIGHOUSE = addTexture("bighousetexture.png");
+	public final static Texture TEXTURE_PARTICLEFOG = addTexture("fogparticle.png");
+	public final static Texture TEXTURE_GUIDELETEBORDER = addTexture("guideleteborder.png");
 	
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	
@@ -140,7 +145,7 @@ public class ResourceManager {
 		}
 		
 		//Set up the shader
-		setupShader("/res/shader.v","/res/shader.f");
+		setupShader("shader.v","shader.f");
 		
 		//Load and parse the Language file
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -254,6 +259,8 @@ public class ResourceManager {
 	 */
 	public static int addObject(String path)
 	{
+		path = objectspath + path;
+		System.out.println(path);
 		try {
 			Main.log("Loading object: "+path);
 			Main.splashscreen.label2.setText("Loading object: "+path);
@@ -274,6 +281,7 @@ public class ResourceManager {
 	 */
 	public static Audio addSound(String format,String path)
 	{
+		path = soundspath + path;
 		Main.log("Loading sound: "+path);
 		Main.splashscreen.label2.setText("Loading sound: "+path);
 		try {
@@ -293,6 +301,7 @@ public class ResourceManager {
 	 */
 	public static Texture addTexture(String path)
 	{
+		path = texturespath + path;
 		Main.log("Loading texture: "+path);
 		Main.splashscreen.label2.setText("Loading texture: "+path);
 		try {
@@ -434,8 +443,8 @@ public class ResourceManager {
 		shaderProgram = glCreateProgram();
 		vertexShader = glCreateShader(GL_VERTEX_SHADER);
 		fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-		StringBuilder vertexShaderSource = readFile(vert);
-		StringBuilder fragmentShaderSource = readFile(frag);
+		StringBuilder vertexShaderSource = readFile(shaderpath+vert);
+		StringBuilder fragmentShaderSource = readFile(shaderpath+frag);
 		glShaderSource(vertexShader, vertexShaderSource);
 		glCompileShader(vertexShader);
 		if(glGetShaderi(vertexShader, GL_COMPILE_STATUS)==GL_FALSE){

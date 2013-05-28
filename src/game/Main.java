@@ -4,6 +4,7 @@ import static org.lwjgl.util.glu.GLU.*;
 
 import effects.ParticleEffects;
 import gui.GUI;
+import gui.GuiEventType;
 import gui.guiElement;
 
 import java.awt.Color;
@@ -77,7 +78,7 @@ class splashScreen extends JFrame implements Runnable{
 		add(label2);
 		label2.setForeground(Color.white);
 		label2.setBounds(0, 0, 500, 20);
-		background = new JLabel(new ImageIcon(Main.class.getResource("/res/forcefieldbackground.png")));
+		background = new JLabel(new ImageIcon(Main.class.getResource("/res/textures/forcefieldbackground.png")));
 		add(background);
 		background.setBounds(0, 0, getWidth(), getHeight());
 		background.setDoubleBuffered(true);
@@ -467,7 +468,7 @@ public class Main {
 			
 			//Start gui click event
 			if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
-				gui.Click();
+				gui.callGuiEvents(GuiEventType.Click);
 			}
 			
 			//Only do things when the mouse is not over the gui

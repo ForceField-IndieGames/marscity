@@ -1,6 +1,6 @@
 Mars City started...
-Reading file: /res/shader.v
-Reading file: /res/shader.f
+Reading file: /res/shader/shader.v
+Reading file: /res/shader/shader.f
 Loading XML: res/settings/settings.xml
 Loading XML: res/lang/DE.xml
 Finished loading resources.
