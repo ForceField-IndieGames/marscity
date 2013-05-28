@@ -84,10 +84,10 @@ public abstract class AbstractGuiElement implements guiElement, Animatable {
 	}
 	
 	@Override
-	public void Click()
+	public void callGuiEvents(GuiEventType eventtype, guiElement element)
 	{
 		try {
-			getEvent().run(GuiEventType.Click);
+			getEvent().run(eventtype, element);
 		} catch (Exception e) {
 		}
 	}
