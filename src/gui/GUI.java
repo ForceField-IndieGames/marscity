@@ -29,7 +29,7 @@ public class GUI {
 	public GuiLabel MenuVersion = new GuiLabel(0,0,180,20,(Color)null);
 	public GuiPanel MenuIcon = new GuiPanel(Display.getWidth()/2-64,20,128,128,ResourceManager.TEXTURE_ICON256);
 	
-	public GuiPanel toolBar = new GuiPanel(0,0,Display.getWidth(),84, ResourceManager.TEXTURE_GUITOOLBAR);
+	public GuiPanel toolBar = new GuiPanel(0,-40,Display.getWidth(),84, ResourceManager.TEXTURE_GUITOOLBAR);
 	public GuiPanel toolAdd = new GuiPanel(20, 10, 64, 64, ResourceManager.TEXTURE_GUIADD);
 	public GuiPanel toolDelete = new GuiPanel(80, 5, 32, 32, ResourceManager.TEXTURE_GUIDELETE);
 	public GuiPanel guiTools = new GuiPanel(0,0,128,128,ResourceManager.TEXTURE_GUITOOLSBG);
@@ -70,6 +70,9 @@ public class GUI {
 	public GuiButton settingsParticlesmiddle = new GuiButton(230,350,100,30,ResourceManager.TEXTURE_GUIBUTTON);
 	public GuiButton settingsParticleshigh = new GuiButton(330,350,100,30,ResourceManager.TEXTURE_GUIBUTTON);
 	
+	public GuiPanel cameraMove = new GuiPanel(Display.getWidth()/2-16,Display.getHeight()/2-16,32,32,ResourceManager.TEXTURE_GUICAMERAMOVE);
+	public GuiPanel cameraRotate = new GuiPanel(Display.getWidth()/2-16,Display.getHeight()/2-16,32,32,ResourceManager.TEXTURE_GUICAMERAROTATE);
+	
 	List<guiElement> elements = new ArrayList<guiElement>();
 	List<guiElement> menuElements = new ArrayList<guiElement>();
 	
@@ -91,83 +94,119 @@ public class GUI {
 		}
 		
 		//Main menu
+		
 		menuElements.add(MenuBG);
 		menuElements.add(MenuFF);
 		menuElements.add(MenuIcon);
-						 MenuIcon.setOpacity(0.9f);
 		menuElements.add(MenuVersion);
-						 MenuVersion.setText("Mars City [Alpha 0.0.1]");
 		menuElements.add(MenuPanel);
-						 MenuPanel.add(MenuPlay);
-		     		    			   MenuPlay.setText(ResourceManager.getString("MAINMENU_BUTTON_PLAY"));
-		     		    			   MenuPlay.setFont(ResourceManager.Arial15B);
-		     		     MenuPanel.add(MenuLoad);
-		     		     			   MenuLoad.setText(ResourceManager.getString("MAINMENU_BUTTON_LOAD"));
-		     		     			   MenuLoad.setFont(ResourceManager.Arial15B);
-		     		     MenuPanel.add(MenuSettings);
-		     		     			   MenuSettings.setText(ResourceManager.getString("MAINMENU_BUTTON_SETTINGS"));
-		     		     			   MenuSettings.setFont(ResourceManager.Arial15B);
-		     		     MenuPanel.add(MenuExit);
-		     		     			   MenuExit.setText(ResourceManager.getString("MAINMENU_BUTTON_EXIT"));
-		     		     			   MenuExit.setFont(ResourceManager.Arial15B);
+		
+		MenuPanel.add(MenuPlay);
+		MenuPanel.add(MenuLoad);
+		MenuPanel.add(MenuSettings);
+		MenuPanel.add(MenuExit);
+		
+		MenuIcon.setOpacity(0.9f);
+	
+		MenuVersion.setText("Mars City [Alpha 0.0.1]");
+		
+	    MenuPlay.setText(ResourceManager.getString("MAINMENU_BUTTON_PLAY"));
+	    MenuPlay.setFont(ResourceManager.Arial15B);
+ 
+	    MenuLoad.setText(ResourceManager.getString("MAINMENU_BUTTON_LOAD"));
+	    MenuLoad.setFont(ResourceManager.Arial15B);
+ 
+	    MenuSettings.setText(ResourceManager.getString("MAINMENU_BUTTON_SETTINGS"));
+	    MenuSettings.setFont(ResourceManager.Arial15B);
+ 
+	    MenuExit.setText(ResourceManager.getString("MAINMENU_BUTTON_EXIT"));
+	    MenuExit.setFont(ResourceManager.Arial15B);
 		
 		//GUI
+	    
+	    
 		add(deleteBorder);
+		add(cameraMove);
+		add(cameraRotate);
+		add(toolBar);
+		add(guiTools);
+		add(blur);
+		add(pauseMenu);
+		
+		toolBar.add(buildingChooser);
+		toolBar.add(infoBar);
+		
+		buildingChooser.add(buildingStreet);
+		buildingChooser.add(buildingHouse);
+		buildingChooser.add(buildingBighouse);
+		
+		infoBar.add(infoMoney);
+		infoBar.add(infoCitizens);
+		
+		guiTools.add(menuButton);
+		guiTools.add(toolAdd);
+		guiTools.add(toolDelete);
+		
+		pauseMenu.add(pauseLogo);
+		pauseMenu.add(pauseMainmenu);
+		pauseMenu.add(pauseLoad);
+		pauseMenu.add(pauseSave);
+		pauseMenu.add(pauseSettings);
+		pauseMenu.add(pauseExit);
+		pauseMenu.add(pauseResume);
+		
+		
+		
 		deleteBorder.setClickThrough(true);
 		deleteBorder.setVisible(false);
-		     		     			   
-		add(toolBar);
-			toolBar.setY(-40);
-			toolBar.add(buildingChooser);
-						buildingChooser.add(buildingStreet);
-						buildingStreet.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_STREET));
-						buildingStreet.setEvent(GuiEvents.buildingStreet);
-						buildingChooser.add(buildingHouse);
-						buildingHouse.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_HOUSE));
-						buildingHouse.setEvent(GuiEvents.buildingHouse);
-						buildingChooser.add(buildingBighouse);
-						buildingBighouse.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_BIGHOUSE));
-						buildingBighouse.setEvent(GuiEvents.buildingBighouse);
-			toolBar.add(infoBar);
-						infoBar.add(infoMoney);
-									infoMoney.setText("Geld: 0$");
-									infoMoney.setFont(ResourceManager.Arial15B);
-						infoBar.add(infoCitizens);
-									infoCitizens.setText("Einwohner: 0");
-									infoCitizens.setFont(ResourceManager.Arial15B);
-		add(guiTools);
-		guiTools.add(menuButton);
-					 menuButton.setEvent(GuiEvents.menuButton);
-		guiTools.add(toolAdd);
-					 toolAdd.setEvent(GuiEvents.toolAdd);
-		guiTools.add(toolDelete);
-					 toolDelete.setEvent(GuiEvents.toolDelete);
 		
-		add(blur);
-			blur.setBlurBehind(true);
-			blur.setVisible(false);
-			
-		add(pauseMenu);
-			pauseMenu.setVisible(false);
-			pauseMenu.add(pauseLogo);
-			pauseMenu.add(pauseMainmenu);
-						  pauseMainmenu.setText(ResourceManager.getString("PAUSEMENU_BUTTON_MAINMENU"));
-						  pauseMainmenu.setEvent(GuiEvents.pauseMainmenu);
-			pauseMenu.add(pauseLoad);
-						  pauseLoad.setText(ResourceManager.getString("PAUSEMENU_BUTTON_LOAD"));
-						  pauseLoad.setEvent(GuiEvents.pauseLoad);
-			pauseMenu.add(pauseSave);
-						  pauseSave.setText(ResourceManager.getString("PAUSEMENU_BUTTON_SAVE"));
-						  pauseSave.setEvent(GuiEvents.pauseSave);
-			pauseMenu.add(pauseSettings);
-						  pauseSettings.setText(ResourceManager.getString("PAUSEMENU_BUTTON_SETTINGS"));
-						  pauseSettings.setEvent(GuiEvents.pauseSettings);
-			pauseMenu.add(pauseExit);
-						  pauseExit.setText(ResourceManager.getString("PAUSEMENU_BUTTON_EXIT"));
-						  pauseExit.setEvent(GuiEvents.pauseExit);
-			pauseMenu.add(pauseResume);
-						  pauseResume.setText(ResourceManager.getString("PAUSEMENU_BUTTON_RESUME"));
-						  pauseResume.setEvent(GuiEvents.pauseResume);
+		cameraMove.setVisible(false);
+		
+		cameraRotate.setVisible(false);
+						
+		buildingStreet.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_STREET));
+		buildingStreet.setEvent(GuiEvents.buildingStreet);
+		
+		buildingHouse.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_HOUSE));
+		buildingHouse.setEvent(GuiEvents.buildingHouse);
+		
+		buildingBighouse.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_BIGHOUSE));
+		buildingBighouse.setEvent(GuiEvents.buildingBighouse);
+						
+		infoMoney.setText("Geld: 0$");
+		infoMoney.setFont(ResourceManager.Arial15B);
+
+		infoCitizens.setText("Einwohner: 0");
+		infoCitizens.setFont(ResourceManager.Arial15B);
+		
+		menuButton.setEvent(GuiEvents.menuButton);
+
+		toolAdd.setEvent(GuiEvents.toolAdd);
+
+		toolDelete.setEvent(GuiEvents.toolDelete);
+		
+		blur.setBlurBehind(true);
+		blur.setVisible(false);
+		
+		pauseMenu.setVisible(false);
+		
+	    pauseMainmenu.setText(ResourceManager.getString("PAUSEMENU_BUTTON_MAINMENU"));
+	    pauseMainmenu.setEvent(GuiEvents.pauseMainmenu);
+
+	    pauseLoad.setText(ResourceManager.getString("PAUSEMENU_BUTTON_LOAD"));
+	    pauseLoad.setEvent(GuiEvents.pauseLoad);
+
+	    pauseSave.setText(ResourceManager.getString("PAUSEMENU_BUTTON_SAVE"));
+	    pauseSave.setEvent(GuiEvents.pauseSave);
+
+	    pauseSettings.setText(ResourceManager.getString("PAUSEMENU_BUTTON_SETTINGS"));
+	    pauseSettings.setEvent(GuiEvents.pauseSettings);
+
+	    pauseExit.setText(ResourceManager.getString("PAUSEMENU_BUTTON_EXIT"));
+	    pauseExit.setEvent(GuiEvents.pauseExit);
+
+	    pauseResume.setText(ResourceManager.getString("PAUSEMENU_BUTTON_RESUME"));
+	    pauseResume.setEvent(GuiEvents.pauseResume);
 
   ///////////		
 		add(settingsMenu);

@@ -63,30 +63,6 @@ public class GuiEvents {
 	default:break;}}};
 	
 	
-	public static GuiEvent pauseResume = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype) {
-	switch (eventtype) {
-	case Click:
-			Main.gui.blur.setVisible(false);
-			Game.Resume();
-			AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
-			break;
-	case Mouseover:
-			break;
-	default:break;}}};
-	
-	
-	public static GuiEvent pauseExit = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype) {
-	switch (eventtype) {
-	case Click:
-			Game.exit();
-			break;
-	case Mouseover:
-			break;
-	default:break;}}};
-	
-	
 	public static GuiEvent settingsVsyncon = new GuiEvent(){
 	@Override public void run(GuiEventType eventtype) {
 	switch (eventtype) {
@@ -214,6 +190,17 @@ public class GuiEvents {
 	default:break;}}};
 	
 	
+	public static GuiEvent pauseMainmenu = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype) {
+	switch (eventtype) {
+	case Click:
+			Main.gameState = Main.STATE_MENU;
+			break;
+	case Mouseover:
+			break;
+	default:break;}}};
+
+
 	public static GuiEvent pauseSettings = new GuiEvent(){
 	@Override public void run(GuiEventType eventtype) {
 	switch (eventtype) {
@@ -227,17 +214,58 @@ public class GuiEvents {
 	default:break;}}};
 	
 	
-	public static GuiEvent pauseMainmenu = new GuiEvent(){
+	public static GuiEvent pauseSave = new GuiEvent(){
 	@Override public void run(GuiEventType eventtype) {
 	switch (eventtype) {
 	case Click:
-			Main.gameState = Main.STATE_MENU;
+			Game.Save("res/saves/savegame.save");
+			Game.Resume();
+			Main.gui.blur.setVisible(false);
+			AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.opacity, 1, 0.005f, AnimationManager.ACTION_HIDE);
 			break;
 	case Mouseover:
 			break;
 	default:break;}}};
-	
-	
+
+
+	public static GuiEvent pauseLoad = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype) {
+	switch (eventtype) {
+	case Click:
+			Game.Load("res/saves/savegame.save");
+			Main.gui = null;
+			Main.gui = new GUI();
+			Game.Resume();
+			break;
+	case Mouseover:
+			break;
+	default:break;}}};
+
+
+	public static GuiEvent pauseResume = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype) {
+	switch (eventtype) {
+	case Click:
+			Main.gui.blur.setVisible(false);
+			Game.Resume();
+			AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
+			break;
+	case Mouseover:
+			break;
+	default:break;}}};
+
+
+	public static GuiEvent pauseExit = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype) {
+	switch (eventtype) {
+	case Click:
+			Game.exit();
+			break;
+	case Mouseover:
+			break;
+	default:break;}}};
+
+
 	public static GuiEvent buildingStreet = new GuiEvent(){
 	@Override public void run(GuiEventType eventtype) {
 	switch (eventtype) {
@@ -271,34 +299,6 @@ public class GuiEvents {
 			Main.currentBuildingType = ResourceManager.BUILDINGTYPE_BIGHOUSE;
 			Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_BIGHOUSE);
 			Main.gui.buildingBighouse.setColor(Color.gray);
-			break;
-	case Mouseover:
-			break;
-	default:break;}}};
-	
-	
-	public static GuiEvent pauseSave = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype) {
-	switch (eventtype) {
-	case Click:
-			Game.Save("res/saves/savegame.save");
-			Game.Resume();
-			Main.gui.blur.setVisible(false);
-			AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.opacity, 1, 0.005f, AnimationManager.ACTION_HIDE);
-			break;
-	case Mouseover:
-			break;
-	default:break;}}};
-	
-	
-	public static GuiEvent pauseLoad = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype) {
-	switch (eventtype) {
-	case Click:
-			Game.Load("res/saves/savegame.save");
-			Main.gui = null;
-			Main.gui = new GUI();
-			Game.Resume();
 			break;
 	case Mouseover:
 			break;

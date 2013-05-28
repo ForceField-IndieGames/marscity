@@ -78,7 +78,7 @@ class splashScreen extends JFrame implements Runnable{
 		add(label2);
 		label2.setForeground(Color.white);
 		label2.setBounds(0, 0, 500, 20);
-		background = new JLabel(new ImageIcon(Main.class.getResource("/res/textures/forcefieldbackground.png")));
+		background = new JLabel(new ImageIcon(Main.class.getResource(ResourceManager.texturespath+"forcefieldbackground.png")));
 		add(background);
 		background.setBounds(0, 0, getWidth(), getHeight());
 		background.setDoubleBuffered(true);
@@ -449,12 +449,14 @@ public class Main {
 				camera.setRotX(camera.getRotX()+0.1f*MY);
 				if(camera.getRotX()<-89)camera.setRotX(-89);
 				if(camera.getRotX()>-1)camera.setRotX(-1);
-			}
+				gui.cameraRotate.setVisible(true);
+			}else gui.cameraRotate.setVisible(false);
 			//Move the camera with middle mouse button
 			if(Mouse.isButtonDown(2)){
 				camera.setX((float) (camera.getX()+delta*(0.00008f*camera.getZoom()+0.0005f)*MY*Math.sin(Math.toRadians(camera.getRotY()))-delta*(0.00008f*camera.getZoom()+0.0005f)*MX*Math.cos(Math.toRadians(camera.getRotY()))));
 				camera.setZ((float) (camera.getZ()+delta*(0.00008f*camera.getZoom()+0.0005f)*MY*Math.cos(Math.toRadians(camera.getRotY()))+delta*(0.00008f*camera.getZoom()+0.0005f)*MX*Math.sin(Math.toRadians(camera.getRotY()))));
-			}
+				gui.cameraMove.setVisible(true);
+			}else gui.cameraMove.setVisible(false);
 		}
 		
 		//Process Mouse events

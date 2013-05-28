@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL20.*;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.SplashScreen;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -118,6 +119,8 @@ public class ResourceManager {
 	public final static Texture TEXTURE_BIGHOUSE = addTexture("bighousetexture.png");
 	public final static Texture TEXTURE_PARTICLEFOG = addTexture("fogparticle.png");
 	public final static Texture TEXTURE_GUIDELETEBORDER = addTexture("guideleteborder.png");
+	public final static Texture TEXTURE_GUICAMERAMOVE = addTexture("cameramove.png");
+	public final static Texture TEXTURE_GUICAMERAROTATE = addTexture("camerarotate.png");
 	
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	
@@ -137,17 +140,22 @@ public class ResourceManager {
 		Arial15B.addAsciiGlyphs();
 		Arial30B.addAsciiGlyphs();
 		try {
+			Main.splashscreen.label2.setText("Loading Font: Arial15");
 			Arial15.loadGlyphs();
+			Main.splashscreen.label2.setText("Loading Font: Arial15B");
 			Arial15B.loadGlyphs();
+			Main.splashscreen.label2.setText("Loading Font: Arial30B");
 			Arial30B.loadGlyphs();
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
 		
 		//Set up the shader
+		Main.splashscreen.label2.setText("Loading shader...");
 		setupShader("shader.v","shader.f");
 		
 		//Load and parse the Language file
+		Main.splashscreen.label2.setText("Loading xml files...");
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		try {
 			builder = factory.newDocumentBuilder();

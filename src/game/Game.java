@@ -61,7 +61,7 @@ public class Game {
 	
 	public static void Load(String path)
 	{
-		//TODO Load the game
+		newGame();
 		try {
 			if(!(new File(path)).exists())return;
 			BufferedReader file = new BufferedReader(new FileReader(path));
@@ -79,9 +79,7 @@ public class Game {
 					float y = Float.parseFloat(line.split(" ")[3]);
 					float z = Float.parseFloat(line.split(" ")[4]);
 					
-					Grid.setBuilding((int)x, (int)z, new Building(bt));
-					
-					ResourceManager.objects.add(new Building(bt,x,y,z));
+					ResourceManager.buildBuilding(x, y, z, bt);
 				}
 			}
 			
