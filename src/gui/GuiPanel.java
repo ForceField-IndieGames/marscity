@@ -74,6 +74,20 @@ public class GuiPanel extends AbstractGuiElement {
 		this.texture = texture;
 		this.color = color;
 	}
+	
+	public void setElementsColor(Color color)
+	{
+		for(guiElement e: elements){
+			e.setColor(color);
+		}
+	}
+	
+	public void setElementsVisible(Boolean visible)
+	{
+		for(guiElement e: elements){
+			e.setVisible(visible);
+		}
+	}
 
 	public boolean isClickThrough() {
 		return clickThrough;

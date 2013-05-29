@@ -118,6 +118,13 @@ public class ResourceManager {
 	public final static Texture TEXTURE_BIGHOUSE = addTexture("bighousetexture.png");
 	public final static Texture TEXTURE_PARTICLEFOG = addTexture("fogparticle.png");
 	public final static Texture TEXTURE_GUIDELETEBORDER = addTexture("guideleteborder.png");
+	public final static Texture TEXTURE_GUICAMERAMOVE = addTexture("cameramove.png");
+	public final static Texture TEXTURE_GUICAMERAROTATE = addTexture("camerarotate.png");
+	public final static Texture TEXTURE_GUIBUILDINGSPANEL = addTexture("buildingspanel.png");
+	public final static Texture TEXTURE_GUIBUILDINGSPANELL = addTexture("buildingspanell.png");
+	public final static Texture TEXTURE_GUITHUMBSTREET = addTexture("thumbstreet.png");
+	public final static Texture TEXTURE_GUITHUMBHOUSE = addTexture("thumbhouse.png");
+	public final static Texture TEXTURE_GUITHUMBBIGHOUSE = addTexture("thumbbighouse.png");
 	
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	
@@ -137,17 +144,22 @@ public class ResourceManager {
 		Arial15B.addAsciiGlyphs();
 		Arial30B.addAsciiGlyphs();
 		try {
+			Main.splashscreen.label2.setText("Loading Font: Arial15");
 			Arial15.loadGlyphs();
+			Main.splashscreen.label2.setText("Loading Font: Arial15B");
 			Arial15B.loadGlyphs();
+			Main.splashscreen.label2.setText("Loading Font: Arial30B");
 			Arial30B.loadGlyphs();
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
 		
 		//Set up the shader
+		Main.splashscreen.label2.setText("Loading shader...");
 		setupShader("shader.v","shader.f");
 		
 		//Load and parse the Language file
+		Main.splashscreen.label2.setText("Loading xml files...");
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		try {
 			builder = factory.newDocumentBuilder();
