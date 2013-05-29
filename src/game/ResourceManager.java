@@ -5,7 +5,6 @@ import static org.lwjgl.opengl.GL20.*;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.SplashScreen;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -121,6 +120,11 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUIDELETEBORDER = addTexture("guideleteborder.png");
 	public final static Texture TEXTURE_GUICAMERAMOVE = addTexture("cameramove.png");
 	public final static Texture TEXTURE_GUICAMERAROTATE = addTexture("camerarotate.png");
+	public final static Texture TEXTURE_GUIBUILDINGSPANEL = addTexture("buildingspanel.png");
+	public final static Texture TEXTURE_GUIBUILDINGSPANELL = addTexture("buildingspanell.png");
+	public final static Texture TEXTURE_GUITHUMBSTREET = addTexture("thumbstreet.png");
+	public final static Texture TEXTURE_GUITHUMBHOUSE = addTexture("thumbhouse.png");
+	public final static Texture TEXTURE_GUITHUMBBIGHOUSE = addTexture("thumbbighouse.png");
 	
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	

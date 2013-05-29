@@ -453,8 +453,8 @@ public class Main {
 			}else gui.cameraRotate.setVisible(false);
 			//Move the camera with middle mouse button
 			if(Mouse.isButtonDown(2)){
-				camera.setX((float) (camera.getX()+delta*(0.00008f*camera.getZoom()+0.0005f)*MY*Math.sin(Math.toRadians(camera.getRotY()))-delta*(0.00008f*camera.getZoom()+0.0005f)*MX*Math.cos(Math.toRadians(camera.getRotY()))));
-				camera.setZ((float) (camera.getZ()+delta*(0.00008f*camera.getZoom()+0.0005f)*MY*Math.cos(Math.toRadians(camera.getRotY()))+delta*(0.00008f*camera.getZoom()+0.0005f)*MX*Math.sin(Math.toRadians(camera.getRotY()))));
+				camera.setX((float) (camera.getX()+delta*(0.00008f*camera.getZoom()+0.0004f)*MY*Math.sin(Math.toRadians(camera.getRotY()))-delta*(0.00008f*camera.getZoom()+0.0004f)*MX*Math.cos(Math.toRadians(camera.getRotY()))));
+				camera.setZ((float) (camera.getZ()+delta*(0.00008f*camera.getZoom()+0.0004f)*MY*Math.cos(Math.toRadians(camera.getRotY()))+delta*(0.00008f*camera.getZoom()+0.0004f)*MX*Math.sin(Math.toRadians(camera.getRotY()))));
 				gui.cameraMove.setVisible(true);
 			}else gui.cameraMove.setVisible(false);
 		}
@@ -476,7 +476,7 @@ public class Main {
 			//Only do things when the mouse is not over the gui
 			if(guihit!=null)return;
 				
-				if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&currentBuildingType==ResourceManager.BUILDINGTYPE_STREET){
+				if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&currentBuildingType==ResourceManager.BUILDINGTYPE_STREET&&selectedTool==TOOL_ADD){
 					Streets.endBuilding(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
 				}
 				//Do some action with the left mouse button based on the selected tool
@@ -515,16 +515,15 @@ public class Main {
 					}
 				}
 				//Select the select tool with right mouse button
-				if(Mouse.getEventButton()==1&&Mouse.getEventButtonState()){
+				if(Mouse.getEventButton()==1&&!Mouse.getEventButtonState()){
 					selectedTool = TOOL_SELECT;
-					gui.toolAdd.setColor(Color.white);
 					gui.toolDelete.setColor(Color.white);
-					AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, -40, 0.5f);
 					buildpreview.setBuilding(-1);
 					currentBuildingType = -1;
 					gui.deleteBorder.setVisible(false);
+					AnimationManager.animateValue(Main.gui.buildingsPanel, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
 				}
-				//Set mouse grabbes when pressing irght or middle mouse button
+				//Set mouse grabbed when pressing right or middle mouse button
 				if((Mouse.getEventButton()==2||Mouse.getEventButton()==1)&&Mouse.getEventButtonState()){
 						Mouse.setGrabbed(true);
 				}
@@ -549,10 +548,10 @@ public class Main {
 		inputMouse(delta);
 		
 		//Continous Mouse
-		if(Mouse.getX()<=1) Mouse.setCursorPosition(Display.getWidth()-2, Mouse.getY());
-		if(Mouse.getX()>=Display.getWidth()-1) Mouse.setCursorPosition(2, Mouse.getY());
-		if(Mouse.getY()<=0) Mouse.setCursorPosition(Mouse.getX(), Display.getHeight()-2);
-		if(Mouse.getY()>=Display.getHeight()-1) Mouse.setCursorPosition(Mouse.getX(), 2);
+//		if(Mouse.getX()<=1) Mouse.setCursorPosition(Display.getWidth()-2, Mouse.getY());
+//		if(Mouse.getX()>=Display.getWidth()-1) Mouse.setCursorPosition(2, Mouse.getY());
+//		if(Mouse.getY()<=0) Mouse.setCursorPosition(Mouse.getX(), Display.getHeight()-2);
+//		if(Mouse.getY()>=Display.getHeight()-1) Mouse.setCursorPosition(Mouse.getX(), 2);
 		
 		//Run the animations
 		AnimationManager.update(delta);

@@ -31,29 +31,12 @@ public class GuiEvents {
 	default:break;}}};
 	
 	
-	public static GuiEvent toolAdd = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype) {
-	switch (eventtype) {
-	case Click:
-			Main.selectedTool = Main.TOOL_ADD;
-			Main.gui.toolAdd.setColor(Color.gray);
-			Main.gui.toolDelete.setColor(Color.white);
-			AnimationManager.animateValue(Main.gui.toolBar, AnimationValue.Y, 0, 0.5f);
-			Main.gui.deleteBorder.setVisible(false);
-			break;
-	case Mouseover:
-			break;
-	default:break;}}};
-	
-	
 	public static GuiEvent toolDelete = new GuiEvent(){
 	@Override public void run(GuiEventType eventtype) {
 	switch (eventtype) {
 	case Click:
 			Main.selectedTool = Main.TOOL_DELETE;
-			Main.gui.toolAdd.setColor(Color.white);
 			Main.gui.toolDelete.setColor(Color.gray);
-			AnimationManager.animateValue(Main.gui.toolBar, AnimationValue.Y, -40, 0.5f);
 			Main.buildpreview.setBuilding(-1);
 			Main.currentBuildingType = -1;
 			Main.gui.deleteBorder.setVisible(true);
@@ -272,7 +255,7 @@ public class GuiEvents {
 	case Click:
 			Main.currentBuildingType = ResourceManager.BUILDINGTYPE_STREET;
 			Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_STREET);
-			Main.gui.buildingStreet.setColor(Color.gray);
+			Main.selectedTool = Main.TOOL_ADD;
 			break;
 	case Mouseover:
 			break;
@@ -285,7 +268,7 @@ public class GuiEvents {
 	case Click:
 			Main.currentBuildingType = ResourceManager.BUILDINGTYPE_HOUSE;
 			Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_HOUSE);
-			Main.gui.buildingHouse.setColor(Color.gray);
+			Main.selectedTool = Main.TOOL_ADD;
 			break;
 	case Mouseover:
 			break;
@@ -298,34 +281,36 @@ public class GuiEvents {
 	case Click:
 			Main.currentBuildingType = ResourceManager.BUILDINGTYPE_BIGHOUSE;
 			Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_BIGHOUSE);
-			Main.gui.buildingBighouse.setColor(Color.gray);
+			Main.selectedTool = Main.TOOL_ADD;
 			break;
 	case Mouseover:
 			break;
 	default:break;}}};
 	
 	
-//	public static GuiEvent event = new GuiEvent(){
-//	@Override public void run(GuiEventType eventtype) {
-//	switch (eventtype) {
-//	case Click:
-//			
-//			break;
-//	case Mouseover:
-//			break;
-//	default:break;}}};
-	
-	
-//	public static GuiEvent event = new GuiEvent(){
-//	@Override public void run(GuiEventType eventtype) {
-//	switch (eventtype) {
-//	case Click:
-//			
-//			break;
-//	case Mouseover:
-//			break;
-//	default:break;}}};
-	
+	public static GuiEvent buildingCategorys = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype, guiElement e) {
+	switch (eventtype) {
+	case Click:
+			Main.gui.buildingsPanel.setElementsVisible(false);
+			Main.gui.buildingsPanell.setVisible(true);
+			Main.gui.buildingsPanel.setVisible(true);
+			Main.selectedTool = Main.TOOL_SELECT;
+			Main.buildpreview.setBuilding(-1);
+			Main.currentBuildingType = -1;
+			Main.gui.deleteBorder.setVisible(false);
+			AnimationManager.animateValue(Main.gui.buildingsPanel, AnimationValue.Y, 68f, 0.5f);
+		if(e==Main.gui.categoryStreets){
+			Main.gui.buildingsStreet.setVisible(true);
+		}
+		if(e==Main.gui.categoryResidential){
+			Main.gui.buildingsResidential.setVisible(true);
+		}
+			break;
+	case Mouseover:
+			break;
+	default:break;}}};
+
 	
 //	public static GuiEvent event = new GuiEvent(){
 //	@Override public void run(GuiEventType eventtype) {

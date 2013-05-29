@@ -29,22 +29,31 @@ public class GUI {
 	public GuiLabel MenuVersion = new GuiLabel(0,0,180,20,(Color)null);
 	public GuiPanel MenuIcon = new GuiPanel(Display.getWidth()/2-64,20,128,128,ResourceManager.TEXTURE_ICON256);
 	
-	public GuiPanel toolBar = new GuiPanel(0,-40,Display.getWidth(),84, ResourceManager.TEXTURE_GUITOOLBAR);
-	public GuiPanel toolAdd = new GuiPanel(20, 10, 64, 64, ResourceManager.TEXTURE_GUIADD);
-	public GuiPanel toolDelete = new GuiPanel(80, 5, 32, 32, ResourceManager.TEXTURE_GUIDELETE);
-	public GuiPanel guiTools = new GuiPanel(0,0,128,128,ResourceManager.TEXTURE_GUITOOLSBG);
-	public GuiPanel menuButton = new GuiPanel(10, 65, 32, 32, ResourceManager.TEXTURE_GUIMENUBUTTON);
-	
 	public GuiPanel deleteBorder = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_GUIDELETEBORDER);
 	
-	public GuiPanel infoBar = new GuiPanel(300,45,700,30,(Color)null);
-	public GuiLabel infoMoney = new GuiLabel(0,0,200,50,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
-	public GuiLabel infoCitizens = new GuiLabel(250,0,200,50,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
+	public GuiPanel toolBar = new GuiPanel(0,0,Display.getWidth(),70, ResourceManager.TEXTURE_GUITOOLBAR);
 	
-	public GuiPanel buildingChooser = new GuiPanel(300,0,700,50, (Color)null);
-	public GuiButton buildingStreet = new GuiButton(0,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2);
-	public GuiButton buildingHouse = new GuiButton(100,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2);
-	public GuiButton buildingBighouse = new GuiButton(200,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiPanel guiTools = new GuiPanel(0,0,69,100,ResourceManager.TEXTURE_GUITOOLSBG);
+	public GuiPanel menuButton = new GuiPanel(0, 64, 32, 32, ResourceManager.TEXTURE_GUIMENUBUTTON);
+	public GuiPanel toolDelete = new GuiPanel(0, 0, 64, 64, ResourceManager.TEXTURE_GUIDELETE);
+	
+	public GuiPanel infoBar = new GuiPanel(0,30,Display.getWidth(),40,ResourceManager.TEXTURE_GUITOOLBAR);
+	public GuiLabel infoMoney = new GuiLabel(300,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
+	public GuiLabel infoCitizens = new GuiLabel(550,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
+	
+	public GuiPanel buildingCategories = new GuiPanel(150,0,Display.getWidth(),50, (Color)null);
+	public GuiButton categoryStreets = new GuiButton(0,0,150,30,ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton categoryResidential = new GuiButton(150,0,150,30,ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiPanel buildingsPanel = new GuiPanel(100,20,Display.getWidth(),100,(Color)null);
+	public GuiPanel buildingsPanell = new GuiPanel(0,0,50,100,ResourceManager.TEXTURE_GUIBUILDINGSPANELL);
+	public GuiPanel buildingsStreet = new GuiPanel(50,0,Display.getWidth(),100, ResourceManager.TEXTURE_GUIBUILDINGSPANEL);
+	public GuiPanel buildingsResidential = new GuiPanel(50,0,Display.getWidth(),100, ResourceManager.TEXTURE_GUIBUILDINGSPANEL);
+	public GuiLabel buildingStreetLabel = new GuiLabel(0,0,100,30, (Color)null);
+	public GuiPanel buildingStreet = new GuiPanel(10,25,80,80, ResourceManager.TEXTURE_GUITHUMBSTREET);
+	public GuiLabel buildingHouseLabel = new GuiLabel(0,0,100,30, (Color)null);
+	public GuiPanel buildingHouse = new GuiPanel(10,25,80,80, ResourceManager.TEXTURE_GUITHUMBHOUSE);
+	public GuiLabel buildingBighouseLabel = new GuiLabel(100,0,100,30, (Color)null);
+	public GuiPanel buildingBighouse = new GuiPanel(110,25,80,80, ResourceManager.TEXTURE_GUITHUMBBIGHOUSE);
 	
 	public GuiPanel blur = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),(Color)null);
 	public GuiPanel pauseMenu = new GuiPanel(Display.getWidth()/2-128,Display.getHeight()/2-128,256,256,ResourceManager.TEXTURE_GUIMENU);
@@ -128,23 +137,35 @@ public class GUI {
 		add(deleteBorder);
 		add(cameraMove);
 		add(cameraRotate);
+		add(buildingsPanel);
 		add(toolBar);
+		
 		add(guiTools);
 		add(blur);
 		add(pauseMenu);
 		
-		toolBar.add(buildingChooser);
+		buildingsPanel.add(buildingsPanell);
+		buildingsPanel.add(buildingsStreet);
+		buildingsPanel.add(buildingsResidential);
+		
+		toolBar.add(buildingCategories);
 		toolBar.add(infoBar);
 		
-		buildingChooser.add(buildingStreet);
-		buildingChooser.add(buildingHouse);
-		buildingChooser.add(buildingBighouse);
+		buildingCategories.add(categoryStreets);
+		buildingCategories.add(categoryResidential);
+		
+		buildingsStreet.add(buildingStreetLabel);
+		buildingsStreet.add(buildingStreet);
+		
+		buildingsResidential.add(buildingHouseLabel);
+		buildingsResidential.add(buildingHouse);
+		buildingsResidential.add(buildingBighouseLabel);
+		buildingsResidential.add(buildingBighouse);
 		
 		infoBar.add(infoMoney);
 		infoBar.add(infoCitizens);
 		
 		guiTools.add(menuButton);
-		guiTools.add(toolAdd);
 		guiTools.add(toolDelete);
 		
 		pauseMenu.add(pauseLogo);
@@ -155,7 +176,16 @@ public class GUI {
 		pauseMenu.add(pauseExit);
 		pauseMenu.add(pauseResume);
 		
+		buildingsPanel.setVisible(false);
 		
+		buildingsStreet.setVisible(false);
+		buildingsResidential.setVisible(false);
+		
+		categoryStreets.setText(ResourceManager.getString("BUILDINGSCATEGORIES_BUTTON_STREETS"));
+		categoryStreets.setEvent(GuiEvents.buildingCategorys);
+		
+		categoryResidential.setText(ResourceManager.getString("BUILDINGSCATEGORIES_BUTTON_RESIDENTIAL"));
+		categoryResidential.setEvent(GuiEvents.buildingCategorys);
 		
 		deleteBorder.setClickThrough(true);
 		deleteBorder.setVisible(false);
@@ -164,13 +194,19 @@ public class GUI {
 		
 		cameraRotate.setVisible(false);
 						
-		buildingStreet.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_STREET));
+		buildingStreetLabel.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_STREET));
+		buildingStreetLabel.setEvent(GuiEvents.buildingStreet);
+		buildingStreetLabel.setCentered(true);
 		buildingStreet.setEvent(GuiEvents.buildingStreet);
 		
-		buildingHouse.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_HOUSE));
+		buildingHouseLabel.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_HOUSE));
+		buildingHouseLabel.setEvent(GuiEvents.buildingHouse);
+		buildingHouseLabel.setCentered(true);
 		buildingHouse.setEvent(GuiEvents.buildingHouse);
 		
-		buildingBighouse.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_BIGHOUSE));
+		buildingBighouseLabel.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_BIGHOUSE));
+		buildingBighouseLabel.setEvent(GuiEvents.buildingBighouse);
+		buildingBighouseLabel.setCentered(true);
 		buildingBighouse.setEvent(GuiEvents.buildingBighouse);
 						
 		infoMoney.setText("Geld: 0$");
@@ -180,8 +216,6 @@ public class GUI {
 		infoCitizens.setFont(ResourceManager.Arial15B);
 		
 		menuButton.setEvent(GuiEvents.menuButton);
-
-		toolAdd.setEvent(GuiEvents.toolAdd);
 
 		toolDelete.setEvent(GuiEvents.toolDelete);
 		
