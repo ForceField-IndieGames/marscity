@@ -13,7 +13,7 @@ public class Camera implements Animatable {
 	
 	private float x=0,y=0,z=0;
 	private float rotX=-45,rotY=0,rotZ=0;
-	private float zoom = 25;
+	private float zoom = 50;
 	private boolean animate = false;
 	public boolean isAnimate() {
 		return animate;
