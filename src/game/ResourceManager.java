@@ -93,10 +93,17 @@ public class ResourceManager {
 	public final static Texture TEXTURE_ICON16 = addTexture("icon16.png");
 	public final static Texture TEXTURE_ICON32 = addTexture("icon32.png");
 	public final static Texture TEXTURE_ICON256 = addTexture("icon256.png");
-	public final static Texture TEXTURE_HOUSE = addTexture("housetexture.png");
+	public final static Texture TEXTURE_SKYBOX = addTexture("skybox.png");
 	public final static Texture TEXTURE_TERRAIN = addTexture("mars.png");
 	public final static Texture TEXTURE_STREET = addTexture("street.png");
-	public final static Texture TEXTURE_SKYBOX = addTexture("skybox.png");
+	public final static Texture TEXTURE_HOUSE = addTexture("housetexture.png");
+	public final static Texture TEXTURE_BIGHOUSE = addTexture("bighousetexture.png");
+	public final static Texture TEXTURE_EMPTY = addTexture("empty.png");
+	public final static Texture TEXTURE_MAINMENUBG = addTexture("mainmenubg.png");
+	public final static Texture TEXTURE_MAINMENUFF = addTexture("ForceField.png");
+	public final static Texture TEXTURE_MARSCITYLOGO = addTexture("marscitylogo.png");
+	public final static Texture TEXTURE_FORCEFIELDBG = addTexture("forcefieldbackground2.png");
+	public final static Texture TEXTURE_MSGBOX = addTexture("msgbox.png");
 	public final static Texture TEXTURE_GUITOOLSBG = addTexture("guitoolsBG.png");
 	public final static Texture TEXTURE_GUISELECT = addTexture("guiselect.png");
 	public final static Texture TEXTURE_GUIMENUBUTTON = addTexture("guimenubutton.png");
@@ -104,18 +111,13 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUIDELETE = addTexture("guidelete.png");
 	public final static Texture TEXTURE_GUITOOLBAR = addTexture("guitoolbar.png");
 	public final static Texture TEXTURE_GUIMENU = addTexture("guimenu.png");
-	public final static Texture TEXTURE_EMPTY = addTexture("empty.png");
 	public final static Texture TEXTURE_GUIBUTTON = addTexture("guibutton.png");
 	public final static Texture TEXTURE_GUIBUTTONDOWN = addTexture("guibuttondown.png");
-	public final static Texture TEXTURE_MAINMENUBG = addTexture("mainmenubg.png");
 	public final static Texture TEXTURE_GUIBUTTON2 = addTexture("guibutton2.png");
 	public final static Texture TEXTURE_GUIBUTTON2DOWN = addTexture("guibutton2down.png");
 	public final static Texture TEXTURE_GUILABELBG = addTexture("guilabelbg.png");
 	public final static Texture TEXTURE_GUILABELBGL = addTexture("guilabelbgl.png");
 	public final static Texture TEXTURE_GUILABELBGR = addTexture("guilabelbgr.png");
-	public final static Texture TEXTURE_MAINMENUFF = addTexture("ForceField.png");
-	public final static Texture TEXTURE_MARSCITYLOGO = addTexture("marscitylogo.png");
-	public final static Texture TEXTURE_BIGHOUSE = addTexture("bighousetexture.png");
 	public final static Texture TEXTURE_PARTICLEFOG = addTexture("fogparticle.png");
 	public final static Texture TEXTURE_GUIDELETEBORDER = addTexture("guideleteborder.png");
 	public final static Texture TEXTURE_GUICAMERAMOVE = addTexture("cameramove.png");
@@ -125,8 +127,6 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUITHUMBSTREET = addTexture("thumbstreet.png");
 	public final static Texture TEXTURE_GUITHUMBHOUSE = addTexture("thumbhouse.png");
 	public final static Texture TEXTURE_GUITHUMBBIGHOUSE = addTexture("thumbbighouse.png");
-	public final static Texture TEXTURE_FORCEFIELDBG = addTexture("forcefieldbackground2.png");
-	
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	
 	public static List<Building> objects = new ArrayList<Building>();

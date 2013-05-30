@@ -127,7 +127,7 @@ public class Main {
 	long lastTime;
 	
 	//The debugmode enables cheats and displays additional debug information
-	public static boolean debugMode = false;
+	public static boolean debugMode = true;
 	
 	public static int hoveredEntity = -1; //The index of the object that is hovered with the mouse
 	public static int selectedTool = 0; //The selected tool, SELECT,ADD or DELETE
@@ -394,6 +394,10 @@ public class Main {
 							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f);
 						}
 						if(debugMode)Game.exit();
+					}
+					if(debugMode&&Keyboard.getEventKey()==Keyboard.KEY_M&&Keyboard.getEventKeyState()){
+						gui.MsgBox("Text", "Sie haben auf die M Taste gedrückt und"+System.lineSeparator()+
+								"eine Messagebox aufgerufen.");
 					}
 					//Pause and resume game with p
 					if(Keyboard.getEventKey()==Keyboard.KEY_P && Keyboard.getEventKeyState())
@@ -765,8 +769,6 @@ public class Main {
 					Game.exit();
 				}else if(guihit==gui.MenuLoad){
 					Game.Load("res/saves/savegame.save");
-					gui = null;
-					gui = new GUI();
 					Game.Resume();
 					gameState = STATE_GAME;
 				}

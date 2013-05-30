@@ -2,11 +2,14 @@ package gui;
 
 import java.awt.Color;
 
+import org.newdawn.slick.openal.AiffData;
+
 import effects.ParticleEffects;
 
 import game.Game;
 import game.Main;
 import game.ResourceManager;
+import animation.Animatable;
 import animation.AnimationManager;
 import animation.AnimationValue;
 
@@ -216,8 +219,6 @@ public class GuiEvents {
 	switch (eventtype) {
 	case Click:
 			Game.Load("res/saves/savegame.save");
-			Main.gui = null;
-			Main.gui = new GUI();
 			Game.Resume();
 			break;
 	case Mouseover:
@@ -312,15 +313,15 @@ public class GuiEvents {
 	default:break;}}};
 
 	
-//	public static GuiEvent event = new GuiEvent(){
-//	@Override public void run(GuiEventType eventtype) {
-//	switch (eventtype) {
-//	case Click:
-//			
-//			break;
-//	case Mouseover:
-//			break;
-//	default:break;}}};
+	public static GuiEvent MsgBox = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype, guiElement element) {
+	switch (eventtype) {
+	case Click:
+			AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.opacity, 0f, 0.005f, AnimationManager.ACTION_REMOVEGUI);
+			break;
+	case Mouseover:
+			break;
+	default:break;}}};
 	
 	
 //	public static GuiEvent event = new GuiEvent(){

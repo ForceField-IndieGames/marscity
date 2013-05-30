@@ -12,6 +12,9 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
+import animation.AnimationManager;
+import animation.AnimationValue;
+
 /**
  * This class generates and displays the gui.
  * @author Benedikt Ringlein
@@ -147,7 +150,7 @@ public class GUI {
 		add(guiTools);
 		add(blur);
 		add(pauseMenu);
-		
+
 		buildingsPanel.add(buildingsPanell);
 		buildingsPanel.add(buildingsStreet);
 		buildingsPanel.add(buildingsResidential);
@@ -299,11 +302,33 @@ public class GUI {
 						  
 	}
 	
+	/**
+	 * Shows a message box with an ok button that hides it again.
+	 * The messagebox smoothly fades in and out.
+	 * @param title The title of the message
+	 * @param text The message's text
+	 */
+	public void MsgBox(String title, String text)
+	{
+		MsgBox msgbox = new MsgBox(title, text);
+		msgbox.setOpacity(0f);
+		AnimationManager.animateValue(msgbox, AnimationValue.opacity, 1f, 0.005f);
+		add(msgbox);
+	}
+	
+	/**
+	 * Adds an element to the gui
+	 * @param guielement
+	 */
 	public void add(guiElement guielement)
 	{
 		elements.add(guielement);
 	}
 	
+	/**
+	 * Removes an element from the gui
+	 * @param index
+	 */
 	public void remove(int index){
 		elements.remove(index);}
 	public void remove(guiElement guielement){

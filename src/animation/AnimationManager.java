@@ -1,6 +1,8 @@
 package animation;
 
+import game.Main;
 import game.ResourceManager;
+import gui.guiElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +39,7 @@ public class AnimationManager {
 	public static final int ACTION_HIDE = 3;
 	public static final int ACTION_RESET = 4;
 	public static final int ACTION_REVERSE = 5;
+	public static final int ACTION_REMOVEGUI = 6;
 	
 	private static List<Animation> animations = new ArrayList<Animation>();
 	
@@ -180,6 +183,9 @@ public class AnimationManager {
 		if(animation.finishedAction==ACTION_DELETE)
 		{
 			ResourceManager.deleteObject(animation.object);
+		}else if(animation.finishedAction==ACTION_REMOVEGUI)
+		{
+			Main.gui.remove((guiElement)animation.object);
 		}else if(animation.finishedAction==ACTION_HIDE)
 		{
 			animation.object.setVisible(false);
