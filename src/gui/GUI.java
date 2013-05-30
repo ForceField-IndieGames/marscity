@@ -28,6 +28,7 @@ public class GUI {
 	public GuiButton MenuExit = new GuiButton(660, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2);
 	public GuiLabel MenuVersion = new GuiLabel(0,0,180,20,(Color)null);
 	public GuiPanel MenuIcon = new GuiPanel(Display.getWidth()/2-64,20,128,128,ResourceManager.TEXTURE_ICON256);
+	public GuiPanel IntroFF = new GuiPanel(Display.getWidth()/2-960,Display.getHeight()/2-540,1920,1080,ResourceManager.TEXTURE_FORCEFIELDBG);
 	
 	public GuiPanel deleteBorder = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_GUIDELETEBORDER);
 	
@@ -109,11 +110,14 @@ public class GUI {
 		menuElements.add(MenuIcon);
 		menuElements.add(MenuVersion);
 		menuElements.add(MenuPanel);
+		menuElements.add(IntroFF);
 		
 		MenuPanel.add(MenuPlay);
 		MenuPanel.add(MenuLoad);
 		MenuPanel.add(MenuSettings);
 		MenuPanel.add(MenuExit);
+		
+		IntroFF.setVisible(false);
 		
 		MenuIcon.setOpacity(0.9f);
 	

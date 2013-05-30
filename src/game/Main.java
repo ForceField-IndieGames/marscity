@@ -127,14 +127,14 @@ public class Main {
 	long lastTime;
 	
 	//The debugmode enables cheats and displays additional debug information
-	public static boolean debugMode = true;
+	public static boolean debugMode = false;
 	
 	public static int hoveredEntity = -1; //The index of the object that is hovered with the mouse
 	public static int selectedTool = 0; //The selected tool, SELECT,ADD or DELETE
-	public static int money = 10000000; //The players money
+	public static int money; //The players money
 	public static int currentBuildingType = -1; //The currently selected building type
 	public static float[] mousepos3d=new float[3]; //The mouse position in 3d space
-	public static int gameState = STATE_MENU; //The current game state
+	public static int gameState = STATE_INTRO; //The current game state
 	
 	//Some more objects
 	public static Camera camera = new Camera();
@@ -206,10 +206,12 @@ public class Main {
 
 		initGL(); // init OpenGL
 		getDelta(); // call once before loop to initialise lastFrame
+		
 		lastTime = getTime(); // call before loop to initialise fps timer
 		
 		splashscreen.setVisible(false); //Hide the splashscreen
 		
+		gui.IntroFF.setVisible(true);
 
 		//Main Gameloop
 		while (!Display.isCloseRequested()) {
@@ -218,6 +220,8 @@ public class Main {
 			
 			switch(gameState){
 			case(STATE_INTRO): 
+				updateIntro(delta);
+				renderMenu();
 				break;
 			case(STATE_MENU):
 				updateMenu(delta);
@@ -727,7 +731,7 @@ public class Main {
 		gui.drawMenu();
 	}
 	
-	float i=0; //value for the menu animation
+	float i= (float) (0.5*Math.PI); //value for the menu animation
 	/**
 	 * Update the Main menu
 	 * @param delta
@@ -739,10 +743,6 @@ public class Main {
 		gui.MenuBG.setWidth((float) (Display.getWidth()-60*Math.sin(i)+60));
 		gui.MenuBG.setY((float) (30*Math.sin(i))-30);
 		gui.MenuBG.setHeight((float) (Display.getHeight()-60*Math.sin(i)+60));
-		gui.MenuIcon.setX((float) (Display.getWidth()/2-gui.MenuIcon.getWidth()/2+3*Math.sin(2*i)-3));
-		gui.MenuIcon.setWidth((float) (128-12*Math.sin(2*i)+12));
-		gui.MenuIcon.setY((float) (20+6*Math.sin(2*i)-6));
-		gui.MenuIcon.setHeight((float) (128-12*Math.sin(2*i)+12));
 		i=(i<2*Math.PI)?i+0.005f:0;
 		//Process mouse inputs
 		guiElement guihit = gui.mouseoverMenu();
@@ -773,6 +773,21 @@ public class Main {
 			}
 		}
 		while(Keyboard.next()){} //So key events dont get saved
+	}
+	
+	int anim = 0;
+	public void updateIntro(int delta)
+	{
+		gui.IntroFF.setOpacity(1f-(float)anim/1000);
+		gui.IntroFF.setX(gui.IntroFF.getX()-0.2f*delta);
+		gui.IntroFF.setY(gui.IntroFF.getY()-0.1f*delta);
+		gui.IntroFF.setWidth(gui.IntroFF.getWidth()+0.4f*delta);
+		gui.IntroFF.setHeight(gui.IntroFF.getHeight()+0.2f*delta);
+		if(anim>=1000){
+			gameState = STATE_MENU;
+			gui.IntroFF.setVisible(false);
+		}
+		anim+=delta;
 	}
 	
 	public static void main(String[] argv) throws FileNotFoundException {
