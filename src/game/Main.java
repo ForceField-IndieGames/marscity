@@ -498,9 +498,11 @@ public class Main {
 							}
 							if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), ResourceManager.getBuildingType(currentBuildingType).getWidth(), ResourceManager.getBuildingType(currentBuildingType).getDepth())||money<ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost())break;
 								ResourceManager.playSound(ResourceManager.SOUND_DROP);
-								Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1], mousepos3d[2], currentBuildingType);
+								Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBuildingType);
 								money -= ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost();
-								ParticleEffects.dustEffect(b.getX(), b.getY(), b.getZ());
+								ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
+								AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
+								AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
 							break;
 							
 						case(TOOL_DELETE): // Delete the hovered Building

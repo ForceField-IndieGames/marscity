@@ -176,6 +176,7 @@ public class ResourceManager {
 		if(!(new File("res")).exists()){
 			(new File("res")).mkdir();
 			(new File("res/lang")).mkdir();
+			
 			(new File("res/settings")).mkdir();
 			(new File("res/saves")).mkdir();
 			Main.log("Created necessary folders.");
