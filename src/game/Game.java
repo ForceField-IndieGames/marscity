@@ -56,7 +56,10 @@ public class Game {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			Main.gui.MsgBox("Fehler beim Speichern", "Beim speichern des Spielstandes ist ein Fehler aufgetreten.");
+			return;
 		}
+		Main.gui.MsgBox("Spiel gespeichert", "Der Spielstand wurde erfolgreich gespeichert.");
 	}
 	
 	public static void Load(String path)
@@ -88,12 +91,16 @@ public class Game {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			Main.gui.MsgBox("Fehler beim Laden", "Beim Laden des Spielstandes ist ein Fehler aufgetreten.");
+			return;
 		}
+		Main.gui.MsgBox("Spielstand geladen", "Der Spielstand wurde erfolgreich geladen."+System.lineSeparator()+"Viel Spaﬂ beim spielen!");
 	}
 	
 	public static void newGame()
 	{
-		Main.money = 10000000;
+		int initialmoney = 5000;
+		Main.money = initialmoney;
 		Grid.init();
 		ResourceManager.objects = new ArrayList<Building>();
 		Main.gameState = Main.STATE_GAME;

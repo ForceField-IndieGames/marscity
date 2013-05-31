@@ -11,7 +11,7 @@ public class GuiEvent {
 		
 	}
 	
-	public void run(GuiEventType eventtype, guiElement element){
+	public void run(GuiEventType eventtype, GuiElement element){
 		run(eventtype);
 	}
 	

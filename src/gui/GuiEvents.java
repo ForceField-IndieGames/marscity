@@ -7,6 +7,7 @@ import effects.ParticleEffects;
 import game.Game;
 import game.Main;
 import game.ResourceManager;
+import animation.Animatable;
 import animation.AnimationManager;
 import animation.AnimationValue;
 
@@ -216,11 +217,7 @@ public class GuiEvents {
 	switch (eventtype) {
 	case Click:
 			Game.Load("res/saves/savegame.save");
-			Main.gui = null;
-			Main.gui = new GUI();
 			Game.Resume();
-			break;
-	case Mouseover:
 			break;
 	default:break;}}};
 
@@ -249,47 +246,41 @@ public class GuiEvents {
 	default:break;}}};
 
 
-	public static GuiEvent buildingStreet = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype) {
+	public static GuiEvent building = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype, GuiElement e) {
 	switch (eventtype) {
 	case Click:
-			Main.currentBuildingType = ResourceManager.BUILDINGTYPE_STREET;
-			Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_STREET);
-			Main.selectedTool = Main.TOOL_ADD;
+			if(e==Main.gui.buildingStreet){
+				Main.currentBuildingType = ResourceManager.BUILDINGTYPE_STREET;
+				Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_STREET);
+				Main.selectedTool = Main.TOOL_ADD;
+			}else if(e==Main.gui.buildingHouse){
+				Main.currentBuildingType = ResourceManager.BUILDINGTYPE_HOUSE;
+				Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_HOUSE);
+				Main.selectedTool = Main.TOOL_ADD;
+			}else if(e==Main.gui.buildingBighouse){
+				Main.currentBuildingType = ResourceManager.BUILDINGTYPE_BIGHOUSE;
+				Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_BIGHOUSE);
+				Main.selectedTool = Main.TOOL_ADD;
+			}
 			break;
 	case Mouseover:
+			Main.gui.buildingTooltip.setVisible(true);
+			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.opacity, 1f, 0.005f);
+			Main.gui.buildingTooltip.setY(e.getScreenY()+e.getHeight());
+			Main.gui.buildingTooltip.setX(e.getScreenX()+e.getWidth()/2-Main.gui.buildingTooltip.getWidth()/2);
+			if(e==Main.gui.buildingStreet)Main.gui.buildingTooltip.setBuilding(ResourceManager.BUILDINGTYPE_STREET);
+			else if(e==Main.gui.buildingHouse)Main.gui.buildingTooltip.setBuilding(ResourceManager.BUILDINGTYPE_HOUSE);
+			else if(e==Main.gui.buildingBighouse)Main.gui.buildingTooltip.setBuilding(ResourceManager.BUILDINGTYPE_BIGHOUSE);
 			break;
-	default:break;}}};
-	
-	
-	public static GuiEvent buildingHouse = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype) {
-	switch (eventtype) {
-	case Click:
-			Main.currentBuildingType = ResourceManager.BUILDINGTYPE_HOUSE;
-			Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_HOUSE);
-			Main.selectedTool = Main.TOOL_ADD;
-			break;
-	case Mouseover:
-			break;
-	default:break;}}};
-	
-	
-	public static GuiEvent buildingBighouse = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype) {
-	switch (eventtype) {
-	case Click:
-			Main.currentBuildingType = ResourceManager.BUILDINGTYPE_BIGHOUSE;
-			Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_BIGHOUSE);
-			Main.selectedTool = Main.TOOL_ADD;
-			break;
-	case Mouseover:
-			break;
+	case Mouseout:
+		AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.opacity, 0f, 0.005f,AnimationManager.ACTION_HIDE);
+		break;
 	default:break;}}};
 	
 	
 	public static GuiEvent buildingCategorys = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype, guiElement e) {
+	@Override public void run(GuiEventType eventtype, GuiElement e) {
 	switch (eventtype) {
 	case Click:
 			Main.gui.buildingsPanel.setElementsVisible(false);
@@ -312,26 +303,28 @@ public class GuiEvents {
 	default:break;}}};
 
 	
-//	public static GuiEvent event = new GuiEvent(){
-//	@Override public void run(GuiEventType eventtype) {
-//	switch (eventtype) {
-//	case Click:
-//			
-//			break;
-//	case Mouseover:
-//			break;
-//	default:break;}}};
+	public static GuiEvent MsgBox = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype, GuiElement element) {
+	switch (eventtype) {
+	case Click:
+			AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.opacity, 0f, 0.005f, AnimationManager.ACTION_REMOVEGUI);
+			AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.Y, element.getParent().getY()-20, 0.1f);
+			break;
+	case Mouseover:
+			break;
+	default:break;}}};
 	
 	
-//	public static GuiEvent event = new GuiEvent(){
-//	@Override public void run(GuiEventType eventtype) {
-//	switch (eventtype) {
-//	case Click:
-//			
-//			break;
-//	case Mouseover:
-//			break;
-//	default:break;}}};
+	public static GuiEvent GuiButtons = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype, GuiElement e) {
+	switch (eventtype) {
+	case Mouseover:
+			e.setColor(new Color(235,235,235));
+			break;
+	case Mouseout:
+			e.setColor(Color.white);
+			break;
+	default:break;}}};
 	
 	
 //	public static GuiEvent event = new GuiEvent(){
