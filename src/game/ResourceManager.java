@@ -3,7 +3,6 @@ package game;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -88,6 +87,7 @@ public class ResourceManager {
 	//The audio files
 	public final static Audio SOUND_DROP = addSound("WAV", "drop.wav");
 	public final static Audio SOUND_DESTROY = addSound("WAV", "destroy.wav");
+	public final static Audio SOUND_SELECT = addSound("WAV", "select.wav");
 	
 	//Loads the textures
 	public final static Texture TEXTURE_ICON16 = addTexture("icon16.png");
@@ -431,10 +431,21 @@ public class ResourceManager {
 	 * Plays a sound from the soundPool
 	 * @param sound The sound that should be played
 	 */
+	public static void playSoundRandom(Audio sound)
+	{
+		try {
+			sound.playAsSoundEffect((float)(Math.random()+0.5), 1f, false);
+		} catch (Exception e) {e.printStackTrace();}
+	}
+	
+	/**
+	 * Plays a sound from the soundPool
+	 * @param sound The sound that should be played
+	 */
 	public static void playSound(Audio sound)
 	{
 		try {
-			sound.playAsSoundEffect((float)(Math.random()+0.5), 1, false);
+			sound.playAsSoundEffect(1f, 1f, false);
 		} catch (Exception e) {e.printStackTrace();}
 	}
 	

@@ -23,7 +23,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import objects.BuildPreview;
-import objects.Drawable;
 import objects.Building;
 import objects.Entity;
 import objects.Streets;
@@ -510,7 +509,7 @@ public class Main {
 								break;
 							}
 							if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), ResourceManager.getBuildingType(currentBuildingType).getWidth(), ResourceManager.getBuildingType(currentBuildingType).getDepth())||money<ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost())break;
-								ResourceManager.playSound(ResourceManager.SOUND_DROP);
+								ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
 								Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBuildingType);
 								money -= ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost();
 								ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
@@ -521,7 +520,7 @@ public class Main {
 						case(TOOL_DELETE): // Delete the hovered Building
 							if(hoveredEntity==-1)break;
 							try {
-								ResourceManager.playSound(ResourceManager.SOUND_DESTROY);
+								ResourceManager.playSoundRandom(ResourceManager.SOUND_DESTROY);
 								Grid.clearsCells((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuidlingType()).getWidth(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuidlingType()).getDepth());
 								ParticleEffects.dustEffect(ResourceManager.getObject(hoveredEntity).getX(),ResourceManager.getObject(hoveredEntity).getY(),ResourceManager.getObject(hoveredEntity).getZ());
 								ResourceManager.getObject(hoveredEntity).delete();

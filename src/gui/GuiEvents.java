@@ -318,6 +318,8 @@ public class GuiEvents {
 	public static GuiEvent GuiButtons = new GuiEvent(){
 	@Override public void run(GuiEventType eventtype, GuiElement e) {
 	switch (eventtype) {
+	case Click:
+			ResourceManager.playSound(ResourceManager.SOUND_SELECT);
 	case Mouseover:
 			e.setColor(new Color(235,235,235));
 			break;

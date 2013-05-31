@@ -2,8 +2,6 @@ package gui;
 
 import java.awt.Color;
 
-import objects.BuildingType;
-
 import game.Main;
 import game.ResourceManager;
 
