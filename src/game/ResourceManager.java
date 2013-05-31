@@ -93,29 +93,32 @@ public class ResourceManager {
 	public final static Texture TEXTURE_ICON16 = addTexture("icon16.png");
 	public final static Texture TEXTURE_ICON32 = addTexture("icon32.png");
 	public final static Texture TEXTURE_ICON256 = addTexture("icon256.png");
-	public final static Texture TEXTURE_HOUSE = addTexture("housetexture.png");
+	public final static Texture TEXTURE_SKYBOX = addTexture("skybox.png");
 	public final static Texture TEXTURE_TERRAIN = addTexture("mars.png");
 	public final static Texture TEXTURE_STREET = addTexture("street.png");
-	public final static Texture TEXTURE_SKYBOX = addTexture("skybox.png");
+	public final static Texture TEXTURE_HOUSE = addTexture("housetexture.png");
+	public final static Texture TEXTURE_BIGHOUSE = addTexture("bighousetexture.png");
+	public final static Texture TEXTURE_EMPTY = addTexture("empty.png");
+	public final static Texture TEXTURE_MAINMENUBG = addTexture("mainmenubg.png");
+	public final static Texture TEXTURE_MAINMENUFF = addTexture("ForceField.png");
+	public final static Texture TEXTURE_MARSCITYLOGO = addTexture("marscitylogo.png");
+	public final static Texture TEXTURE_FORCEFIELDBG = addTexture("forcefieldbackground2.png");
+	public final static Texture TEXTURE_MSGBOX = addTexture("msgbox.png");
 	public final static Texture TEXTURE_GUITOOLSBG = addTexture("guitoolsBG.png");
+	public final static Texture TEXTURE_GUITOOLTIP = addTexture("guitooltip.png");
 	public final static Texture TEXTURE_GUISELECT = addTexture("guiselect.png");
 	public final static Texture TEXTURE_GUIMENUBUTTON = addTexture("guimenubutton.png");
 	public final static Texture TEXTURE_GUIADD = addTexture("guiadd.png");
 	public final static Texture TEXTURE_GUIDELETE = addTexture("guidelete.png");
 	public final static Texture TEXTURE_GUITOOLBAR = addTexture("guitoolbar.png");
 	public final static Texture TEXTURE_GUIMENU = addTexture("guimenu.png");
-	public final static Texture TEXTURE_EMPTY = addTexture("empty.png");
 	public final static Texture TEXTURE_GUIBUTTON = addTexture("guibutton.png");
 	public final static Texture TEXTURE_GUIBUTTONDOWN = addTexture("guibuttondown.png");
-	public final static Texture TEXTURE_MAINMENUBG = addTexture("mainmenubg.png");
 	public final static Texture TEXTURE_GUIBUTTON2 = addTexture("guibutton2.png");
 	public final static Texture TEXTURE_GUIBUTTON2DOWN = addTexture("guibutton2down.png");
 	public final static Texture TEXTURE_GUILABELBG = addTexture("guilabelbg.png");
 	public final static Texture TEXTURE_GUILABELBGL = addTexture("guilabelbgl.png");
 	public final static Texture TEXTURE_GUILABELBGR = addTexture("guilabelbgr.png");
-	public final static Texture TEXTURE_MAINMENUFF = addTexture("ForceField.png");
-	public final static Texture TEXTURE_MARSCITYLOGO = addTexture("marscitylogo.png");
-	public final static Texture TEXTURE_BIGHOUSE = addTexture("bighousetexture.png");
 	public final static Texture TEXTURE_PARTICLEFOG = addTexture("fogparticle.png");
 	public final static Texture TEXTURE_GUIDELETEBORDER = addTexture("guideleteborder.png");
 	public final static Texture TEXTURE_GUICAMERAMOVE = addTexture("cameramove.png");
@@ -125,7 +128,6 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUITHUMBSTREET = addTexture("thumbstreet.png");
 	public final static Texture TEXTURE_GUITHUMBHOUSE = addTexture("thumbhouse.png");
 	public final static Texture TEXTURE_GUITHUMBBIGHOUSE = addTexture("thumbbighouse.png");
-	
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	
 	public static List<Building> objects = new ArrayList<Building>();
@@ -137,9 +139,9 @@ public class ResourceManager {
 	public static void init()
 	{
 		//Set up the font
-		Arial15.getEffects().add(new ColorEffect(Color.black));
-		Arial15B.getEffects().add(new ColorEffect(Color.black));
-		Arial30B.getEffects().add(new ColorEffect(Color.black));
+		Arial15.getEffects().add(new ColorEffect());
+		Arial15B.getEffects().add(new ColorEffect());
+		Arial30B.getEffects().add(new ColorEffect());
 		Arial15.addAsciiGlyphs();
 		Arial15B.addAsciiGlyphs();
 		Arial30B.addAsciiGlyphs();
@@ -173,9 +175,10 @@ public class ResourceManager {
 		buildingTypes.add(BUILDINGTYPE_STREET,new BuildingType("BUILDINGTYPE_STREET",OBJECT_STREET,TEXTURE_STREET,5,1,1,0f));
 		
 		//create necessary folders and extract files
-		if(!(new File("res")).exists()){
+		if(!(new File("res")).exists()||Main.debugMode){
 			(new File("res")).mkdir();
 			(new File("res/lang")).mkdir();
+			
 			(new File("res/settings")).mkdir();
 			(new File("res/saves")).mkdir();
 			Main.log("Created necessary folders.");

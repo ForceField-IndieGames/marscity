@@ -5,7 +5,7 @@ import static org.lwjgl.util.glu.GLU.*;
 import effects.ParticleEffects;
 import gui.GUI;
 import gui.GuiEventType;
-import gui.guiElement;
+import gui.GuiElement;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -131,10 +131,10 @@ public class Main {
 	
 	public static int hoveredEntity = -1; //The index of the object that is hovered with the mouse
 	public static int selectedTool = 0; //The selected tool, SELECT,ADD or DELETE
-	public static int money = 10000000; //The players money
+	public static int money; //The players money
 	public static int currentBuildingType = -1; //The currently selected building type
 	public static float[] mousepos3d=new float[3]; //The mouse position in 3d space
-	public static int gameState = STATE_MENU; //The current game state
+	public static int gameState = STATE_INTRO; //The current game state
 	
 	//Some more objects
 	public static Camera camera = new Camera();
@@ -206,10 +206,12 @@ public class Main {
 
 		initGL(); // init OpenGL
 		getDelta(); // call once before loop to initialise lastFrame
+		
 		lastTime = getTime(); // call before loop to initialise fps timer
 		
 		splashscreen.setVisible(false); //Hide the splashscreen
 		
+		gui.IntroFF.setVisible(true);
 
 		//Main Gameloop
 		while (!Display.isCloseRequested()) {
@@ -218,6 +220,8 @@ public class Main {
 			
 			switch(gameState){
 			case(STATE_INTRO): 
+				updateIntro(delta);
+				renderMenu();
 				break;
 			case(STATE_MENU):
 				updateMenu(delta);
@@ -391,6 +395,10 @@ public class Main {
 						}
 						if(debugMode)Game.exit();
 					}
+					if(debugMode&&Keyboard.getEventKey()==Keyboard.KEY_M&&Keyboard.getEventKeyState()){
+						gui.MsgBox("Text", "Sie haben auf die M Taste gedrückt und"+System.lineSeparator()+
+								"eine Messagebox aufgerufen.");
+					}
 					//Pause and resume game with p
 					if(Keyboard.getEventKey()==Keyboard.KEY_P && Keyboard.getEventKeyState())
 					{
@@ -435,7 +443,7 @@ public class Main {
 	public void inputMouse(int delta)
 	{
 		//Is the mouse over a gui item?
-		guiElement guihit = gui.getMouseover();
+		GuiElement guihit = gui.getMouseover();
 		
 		
 		if(guihit==null || Mouse.isGrabbed())
@@ -459,6 +467,11 @@ public class Main {
 			}else gui.cameraMove.setVisible(false);
 		}
 		
+		//Fire Mouseover and Mouseout events
+		if(gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mouseover);
+		if(gui.lastHovered!=null&&gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mouseout,gui.lastHovered);
+		gui.lastHovered = guihit;
+		
 		//Process Mouse events
 		while(Mouse.next())
 		{
@@ -469,7 +482,7 @@ public class Main {
 			}
 			
 			//Start gui click event
-			if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
+			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()){
 				gui.callGuiEvents(GuiEventType.Click);
 			}
 			
@@ -498,9 +511,11 @@ public class Main {
 							}
 							if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), ResourceManager.getBuildingType(currentBuildingType).getWidth(), ResourceManager.getBuildingType(currentBuildingType).getDepth())||money<ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost())break;
 								ResourceManager.playSound(ResourceManager.SOUND_DROP);
-								Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1], mousepos3d[2], currentBuildingType);
+								Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBuildingType);
 								money -= ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost();
-								ParticleEffects.dustEffect(b.getX(), b.getY(), b.getZ());
+								ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
+								AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
+								AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
 							break;
 							
 						case(TOOL_DELETE): // Delete the hovered Building
@@ -547,12 +562,6 @@ public class Main {
 		//Mouse input
 		inputMouse(delta);
 		
-		//Continous Mouse
-//		if(Mouse.getX()<=1) Mouse.setCursorPosition(Display.getWidth()-2, Mouse.getY());
-//		if(Mouse.getX()>=Display.getWidth()-1) Mouse.setCursorPosition(2, Mouse.getY());
-//		if(Mouse.getY()<=0) Mouse.setCursorPosition(Mouse.getX(), Display.getHeight()-2);
-//		if(Mouse.getY()>=Display.getHeight()-1) Mouse.setCursorPosition(Mouse.getX(), 2);
-		
 		//Run the animations
 		AnimationManager.update(delta);
 		
@@ -566,12 +575,9 @@ public class Main {
 			buildpreview.setVisible(false);
 		}
 		
-		
-		//Update the objects
-		for(Drawable object:ResourceManager.objects)
+		for(int i=0;i<ResourceManager.objects.size();i++)
 		{
-			object.update(delta);
-			if(!ResourceManager.objects.contains(object))break;
+			ResourceManager.objects.get(i).update(delta);
 		}
 		
 		//Show debug info
@@ -591,6 +597,11 @@ public class Main {
 		//Update gui info labels
 		gui.infoMoney.setText(ResourceManager.getString("INFOBAR_LABEL_MONEY")+": "+money+"$");
 		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+0);
+		if(money<=2000){
+			if(money<=0)gui.infoMoney.setTextColor(Color.red);
+			else gui.infoMoney.setTextColor(new Color(200,100,0));
+		}else gui.infoMoney.setTextColor(Color.black);
+		
 		
 		//Update the paticle effects
 		ParticleEffects.update(delta);
@@ -725,7 +736,7 @@ public class Main {
 		gui.drawMenu();
 	}
 	
-	float i=0; //value for the menu animation
+	float i= (float) (0.5*Math.PI); //value for the menu animation
 	/**
 	 * Update the Main menu
 	 * @param delta
@@ -737,13 +748,9 @@ public class Main {
 		gui.MenuBG.setWidth((float) (Display.getWidth()-60*Math.sin(i)+60));
 		gui.MenuBG.setY((float) (30*Math.sin(i))-30);
 		gui.MenuBG.setHeight((float) (Display.getHeight()-60*Math.sin(i)+60));
-		gui.MenuIcon.setX((float) (Display.getWidth()/2-gui.MenuIcon.getWidth()/2+3*Math.sin(2*i)-3));
-		gui.MenuIcon.setWidth((float) (128-12*Math.sin(2*i)+12));
-		gui.MenuIcon.setY((float) (20+6*Math.sin(2*i)-6));
-		gui.MenuIcon.setHeight((float) (128-12*Math.sin(2*i)+12));
 		i=(i<2*Math.PI)?i+0.005f:0;
 		//Process mouse inputs
-		guiElement guihit = gui.mouseoverMenu();
+		GuiElement guihit = gui.mouseoverMenu();
 		if(guihit==gui.MenuPlay)gui.MenuPlay.setColor(Color.gray);
 		else gui.MenuPlay.setColor(Color.white);
 		if(guihit==gui.MenuLoad)gui.MenuLoad.setColor(Color.gray);
@@ -763,14 +770,27 @@ public class Main {
 					Game.exit();
 				}else if(guihit==gui.MenuLoad){
 					Game.Load("res/saves/savegame.save");
-					gui = null;
-					gui = new GUI();
 					Game.Resume();
 					gameState = STATE_GAME;
 				}
 			}
 		}
 		while(Keyboard.next()){} //So key events dont get saved
+	}
+	
+	int anim = 0;
+	public void updateIntro(int delta)
+	{
+		gui.IntroFF.setOpacity(1f-(float)anim/1000);
+		gui.IntroFF.setX(gui.IntroFF.getX()-0.2f*delta);
+		gui.IntroFF.setY(gui.IntroFF.getY()-0.1f*delta);
+		gui.IntroFF.setWidth(gui.IntroFF.getWidth()+0.4f*delta);
+		gui.IntroFF.setHeight(gui.IntroFF.getHeight()+0.2f*delta);
+		if(anim>=1000){
+			gameState = STATE_MENU;
+			gui.IntroFF.setVisible(false);
+		}
+		anim+=delta;
 	}
 	
 	public static void main(String[] argv) throws FileNotFoundException {

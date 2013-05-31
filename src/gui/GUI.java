@@ -12,6 +12,9 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
+import animation.AnimationManager;
+import animation.AnimationValue;
+
 /**
  * This class generates and displays the gui.
  * @author Benedikt Ringlein
@@ -28,6 +31,9 @@ public class GUI {
 	public GuiButton MenuExit = new GuiButton(660, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2);
 	public GuiLabel MenuVersion = new GuiLabel(0,0,180,20,(Color)null);
 	public GuiPanel MenuIcon = new GuiPanel(Display.getWidth()/2-64,20,128,128,ResourceManager.TEXTURE_ICON256);
+	public GuiPanel IntroFF = new GuiPanel(Display.getWidth()/2-960,Display.getHeight()/2-540,1920,1080,ResourceManager.TEXTURE_FORCEFIELDBG);
+	
+	public BuildingToolTip buildingTooltip = new BuildingToolTip();
 	
 	public GuiPanel deleteBorder = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_GUIDELETEBORDER);
 	
@@ -82,8 +88,9 @@ public class GUI {
 	public GuiPanel cameraMove = new GuiPanel(Display.getWidth()/2-16,Display.getHeight()/2-16,32,32,ResourceManager.TEXTURE_GUICAMERAMOVE);
 	public GuiPanel cameraRotate = new GuiPanel(Display.getWidth()/2-16,Display.getHeight()/2-16,32,32,ResourceManager.TEXTURE_GUICAMERAROTATE);
 	
-	List<guiElement> elements = new ArrayList<guiElement>();
-	List<guiElement> menuElements = new ArrayList<guiElement>();
+	List<GuiElement> elements = new ArrayList<GuiElement>();
+	List<GuiElement> menuElements = new ArrayList<GuiElement>();
+	public GuiElement lastHovered;
 	
 	public GUI()
 	{
@@ -109,11 +116,14 @@ public class GUI {
 		menuElements.add(MenuIcon);
 		menuElements.add(MenuVersion);
 		menuElements.add(MenuPanel);
+		menuElements.add(IntroFF);
 		
 		MenuPanel.add(MenuPlay);
 		MenuPanel.add(MenuLoad);
 		MenuPanel.add(MenuSettings);
 		MenuPanel.add(MenuExit);
+		
+		IntroFF.setVisible(false);
 		
 		MenuIcon.setOpacity(0.9f);
 	
@@ -141,9 +151,12 @@ public class GUI {
 		add(toolBar);
 		
 		add(guiTools);
+		add(buildingTooltip);
 		add(blur);
 		add(pauseMenu);
 		
+		buildingTooltip.setVisible(false);
+
 		buildingsPanel.add(buildingsPanell);
 		buildingsPanel.add(buildingsStreet);
 		buildingsPanel.add(buildingsResidential);
@@ -195,19 +208,16 @@ public class GUI {
 		cameraRotate.setVisible(false);
 						
 		buildingStreetLabel.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_STREET));
-		buildingStreetLabel.setEvent(GuiEvents.buildingStreet);
 		buildingStreetLabel.setCentered(true);
-		buildingStreet.setEvent(GuiEvents.buildingStreet);
+		buildingStreet.setEvent(GuiEvents.building);
 		
 		buildingHouseLabel.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_HOUSE));
-		buildingHouseLabel.setEvent(GuiEvents.buildingHouse);
 		buildingHouseLabel.setCentered(true);
-		buildingHouse.setEvent(GuiEvents.buildingHouse);
+		buildingHouse.setEvent(GuiEvents.building);
 		
 		buildingBighouseLabel.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_BIGHOUSE));
-		buildingBighouseLabel.setEvent(GuiEvents.buildingBighouse);
 		buildingBighouseLabel.setCentered(true);
-		buildingBighouse.setEvent(GuiEvents.buildingBighouse);
+		buildingBighouse.setEvent(GuiEvents.building);
 						
 		infoMoney.setText("Geld: 0$");
 		infoMoney.setFont(ResourceManager.Arial15B);
@@ -295,14 +305,37 @@ public class GUI {
 						  
 	}
 	
-	public void add(guiElement guielement)
+	/**
+	 * Shows a message box with an ok button that hides it again.
+	 * The messagebox smoothly fades in and out.
+	 * @param title The title of the message
+	 * @param text The message's text
+	 */
+	public void MsgBox(String title, String text)
+	{
+		MsgBox msgbox = new MsgBox(title, text);
+		msgbox.setOpacity(0f);
+		AnimationManager.animateValue(msgbox, AnimationValue.opacity, 1f, 0.005f);
+		AnimationManager.animateValue(msgbox, AnimationValue.Y, msgbox.getY()+10, 0.1f, AnimationManager.ACTION_REVERSE);
+		add(msgbox);
+	}
+	
+	/**
+	 * Adds an element to the gui
+	 * @param guielement
+	 */
+	public void add(GuiElement guielement)
 	{
 		elements.add(guielement);
 	}
 	
+	/**
+	 * Removes an element from the gui
+	 * @param index
+	 */
 	public void remove(int index){
 		elements.remove(index);}
-	public void remove(guiElement guielement){
+	public void remove(GuiElement guielement){
 		elements.remove(guielement);}
 	
 	public void draw()
@@ -311,7 +344,7 @@ public class GUI {
 		glPushMatrix();
 		
 		glDisable(GL_LIGHTING);
-		for(guiElement element: elements) {
+		for(GuiElement element: elements) {
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			glOrtho(0, Display.getWidth(), 0, Display.getHeight(), 1, -1);
@@ -328,7 +361,7 @@ public class GUI {
 		glPushMatrix();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glDisable(GL_LIGHTING);
-		for(guiElement element: menuElements) {
+		for(GuiElement element: menuElements) {
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			glOrtho(0, Display.getWidth(), 0, Display.getHeight(), 1, -1);
@@ -339,7 +372,7 @@ public class GUI {
 		glEnable(GL_DEPTH_TEST);
 	}
 	
-	public guiElement mouseoverMenu()
+	public GuiElement mouseoverMenu()
 	{
 		for(int i=menuElements.size()-1;i>=0;i--)
 		{
@@ -352,7 +385,7 @@ public class GUI {
 		return null;
 	}
 	
-	public guiElement getMouseover()
+	public GuiElement getMouseover()
 	{
 		for(int i=elements.size()-1;i>=0;i--)
 		{
@@ -368,8 +401,13 @@ public class GUI {
 	
 	public void callGuiEvents(GuiEventType eventtype)
 	{
-		guiElement mo = getMouseover();
-		if(mo!=null)mo.callGuiEvents(eventtype,mo);
+		GuiElement mo = getMouseover();
+		if(mo!=null)mo.callGuiEvents(eventtype);
+	}
+	
+	public void callGuiEvents(GuiEventType eventtype, GuiElement element)
+	{
+		if(element!=null)element.callGuiEvents(eventtype);
 	}
 	
 }

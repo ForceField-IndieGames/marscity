@@ -1,6 +1,8 @@
 package animation;
 
+import game.Main;
 import game.ResourceManager;
+import gui.GuiElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,19 +16,15 @@ import java.util.List;
 class Animation{
 	Animatable object;
 	AnimationValue value;
+	float startvalue;
 	float destValue;
 	float speed;
 	int finishedAction = AnimationManager.ACTION_NOTHING;
 
-	public Animation(Animatable object, AnimationValue value, float destValue, float speed){
+	public Animation(Animatable object, AnimationValue value, float startvalue, float destValue, float speed, int finishedAction){
 		this.object=object;
 		this.value = value;
-		this.destValue = destValue;
-		this.speed = speed;
-	}
-	public Animation(Animatable object, AnimationValue value, float destValue, float speed, int finishedAction){
-		this.object=object;
-		this.value = value;
+		this.startvalue = startvalue;
 		this.destValue = destValue;
 		this.speed = speed;
 		this.finishedAction = finishedAction;
@@ -39,16 +37,42 @@ public class AnimationManager {
 	public static final int ACTION_DELETE = 1;
 	public static final int ACTION_SHOW = 2;
 	public static final int ACTION_HIDE = 3;
+	public static final int ACTION_RESET = 4;
+	public static final int ACTION_REVERSE = 5;
+	public static final int ACTION_REMOVEGUI = 6;
 	
 	private static List<Animation> animations = new ArrayList<Animation>();
 	
 	public static void animateValue(Animatable object, AnimationValue value, float destValue, float speed)
 	{
-		animations.add(new Animation(object, value, destValue, speed));
+		animateValue(object, value, destValue, speed, ACTION_NOTHING);
+		
 	}
 	public static void animateValue(Animatable object, AnimationValue value, float destValue, float speed, int action)
 	{
-		animations.add(new Animation(object, value, destValue, speed, action));
+		switch(value){
+		case X:
+			animations.add(new Animation(object, value, object.getX() , destValue, speed, action));
+			break;
+		case Y:
+			animations.add(new Animation(object, value, object.getY() , destValue, speed, action));
+			break;
+		case Z:
+			animations.add(new Animation(object, value, object.getZ() , destValue, speed, action));
+			break;
+		case rotX:
+			animations.add(new Animation(object, value, object.getRotX() , destValue, speed, action));
+			break;
+		case rotY:
+			animations.add(new Animation(object, value, object.getRotY() , destValue, speed, action));
+			break;
+		case rotZ:
+			animations.add(new Animation(object, value, object.getRotZ() , destValue, speed, action));
+			break;
+		case opacity:
+			animations.add(new Animation(object, value, object.getOpacity() , destValue, speed, action));
+			break;
+		}
 	}
 	
 	public static void update(int delta)
@@ -80,7 +104,6 @@ public class AnimationManager {
 					}else{
 						animation.object.setY(animation.destValue);
 						ExecuteFinishedAction(animation);
-						animations.remove(animation);
 						return;
 					}
 				break;
@@ -94,7 +117,6 @@ public class AnimationManager {
 					}else{
 						animation.object.setZ(animation.destValue);
 						ExecuteFinishedAction(animation);
-						animations.remove(animation);
 						return;
 					}
 				break;
@@ -108,7 +130,6 @@ public class AnimationManager {
 					}else{
 						animation.object.setRotX(animation.destValue);
 						ExecuteFinishedAction(animation);
-						animations.remove(animation);
 						return;
 					}
 				break;
@@ -122,7 +143,6 @@ public class AnimationManager {
 					}else{
 						animation.object.setRotY(animation.destValue);
 						ExecuteFinishedAction(animation);
-						animations.remove(animation);
 						return;
 					}
 				break;
@@ -136,7 +156,6 @@ public class AnimationManager {
 					}else{
 						animation.object.setRotZ(animation.destValue);
 						ExecuteFinishedAction(animation);
-						animations.remove(animation);
 						return;
 					}
 				break;
@@ -150,7 +169,6 @@ public class AnimationManager {
 					}else{
 						animation.object.setOpacity(animation.destValue);
 						ExecuteFinishedAction(animation);
-						animations.remove(animation);
 						return;
 					}
 				break;
@@ -165,12 +183,41 @@ public class AnimationManager {
 		if(animation.finishedAction==ACTION_DELETE)
 		{
 			ResourceManager.deleteObject(animation.object);
+		}else if(animation.finishedAction==ACTION_REMOVEGUI)
+		{
+			Main.gui.remove((GuiElement)animation.object);
 		}else if(animation.finishedAction==ACTION_HIDE)
 		{
 			animation.object.setVisible(false);
 		}else if(animation.finishedAction==ACTION_SHOW)
 		{
 			animation.object.setVisible(true);
+		}else if(animation.finishedAction==ACTION_RESET){
+			switch(animation.value){
+			case X: 
+				animation.object.setX(animation.startvalue);
+				break;
+			case Y: 
+				animation.object.setX(animation.startvalue);
+				break;
+			case Z: 
+				animation.object.setZ(animation.startvalue);
+				break;
+			case rotX: 
+				animation.object.setRotX(animation.startvalue);
+				break;
+			case rotY: 
+				animation.object.setRotY(animation.startvalue);
+				break;
+			case rotZ: 
+				animation.object.setRotZ(animation.startvalue);
+				break;
+			case opacity: 
+				animation.object.setOpacity(animation.startvalue);
+				break;
+			}
+		}else if(animation.finishedAction==ACTION_REVERSE){
+			animateValue(animation.object, animation.value, animation.startvalue, animation.speed);
 		}
 		animations.remove(animation);
 	}
