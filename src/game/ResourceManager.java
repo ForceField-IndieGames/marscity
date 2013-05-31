@@ -138,9 +138,9 @@ public class ResourceManager {
 	public static void init()
 	{
 		//Set up the font
-		Arial15.getEffects().add(new ColorEffect(Color.black));
-		Arial15B.getEffects().add(new ColorEffect(Color.black));
-		Arial30B.getEffects().add(new ColorEffect(Color.black));
+		Arial15.getEffects().add(new ColorEffect());
+		Arial15B.getEffects().add(new ColorEffect());
+		Arial30B.getEffects().add(new ColorEffect());
 		Arial15.addAsciiGlyphs();
 		Arial15B.addAsciiGlyphs();
 		Arial30B.addAsciiGlyphs();

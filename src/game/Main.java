@@ -5,7 +5,7 @@ import static org.lwjgl.util.glu.GLU.*;
 import effects.ParticleEffects;
 import gui.GUI;
 import gui.GuiEventType;
-import gui.guiElement;
+import gui.GuiElement;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -443,7 +443,7 @@ public class Main {
 	public void inputMouse(int delta)
 	{
 		//Is the mouse over a gui item?
-		guiElement guihit = gui.getMouseover();
+		GuiElement guihit = gui.getMouseover();
 		
 		
 		if(guihit==null || Mouse.isGrabbed())
@@ -467,6 +467,11 @@ public class Main {
 			}else gui.cameraMove.setVisible(false);
 		}
 		
+		//Fire Mouseover and Mouseout events
+		if(gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mouseover);
+		if(gui.lastHovered!=null&&gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mouseout,gui.lastHovered);
+		gui.lastHovered = guihit;
+		
 		//Process Mouse events
 		while(Mouse.next())
 		{
@@ -477,7 +482,7 @@ public class Main {
 			}
 			
 			//Start gui click event
-			if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
+			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()){
 				gui.callGuiEvents(GuiEventType.Click);
 			}
 			
@@ -557,12 +562,6 @@ public class Main {
 		//Mouse input
 		inputMouse(delta);
 		
-		//Continous Mouse
-//		if(Mouse.getX()<=1) Mouse.setCursorPosition(Display.getWidth()-2, Mouse.getY());
-//		if(Mouse.getX()>=Display.getWidth()-1) Mouse.setCursorPosition(2, Mouse.getY());
-//		if(Mouse.getY()<=0) Mouse.setCursorPosition(Mouse.getX(), Display.getHeight()-2);
-//		if(Mouse.getY()>=Display.getHeight()-1) Mouse.setCursorPosition(Mouse.getX(), 2);
-		
 		//Run the animations
 		AnimationManager.update(delta);
 		
@@ -576,12 +575,9 @@ public class Main {
 			buildpreview.setVisible(false);
 		}
 		
-		
-		//Update the objects
-		for(Drawable object:ResourceManager.objects)
+		for(int i=0;i<ResourceManager.objects.size();i++)
 		{
-			object.update(delta);
-			if(!ResourceManager.objects.contains(object))break;
+			ResourceManager.objects.get(i).update(delta);
 		}
 		
 		//Show debug info
@@ -601,6 +597,11 @@ public class Main {
 		//Update gui info labels
 		gui.infoMoney.setText(ResourceManager.getString("INFOBAR_LABEL_MONEY")+": "+money+"$");
 		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+0);
+		if(money<=2000){
+			if(money<=0)gui.infoMoney.setTextColor(Color.red);
+			else gui.infoMoney.setTextColor(new Color(200,100,0));
+		}else gui.infoMoney.setTextColor(Color.black);
+		
 		
 		//Update the paticle effects
 		ParticleEffects.update(delta);
@@ -749,7 +750,7 @@ public class Main {
 		gui.MenuBG.setHeight((float) (Display.getHeight()-60*Math.sin(i)+60));
 		i=(i<2*Math.PI)?i+0.005f:0;
 		//Process mouse inputs
-		guiElement guihit = gui.mouseoverMenu();
+		GuiElement guihit = gui.mouseoverMenu();
 		if(guihit==gui.MenuPlay)gui.MenuPlay.setColor(Color.gray);
 		else gui.MenuPlay.setColor(Color.white);
 		if(guihit==gui.MenuLoad)gui.MenuLoad.setColor(Color.gray);

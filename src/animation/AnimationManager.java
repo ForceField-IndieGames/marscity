@@ -2,7 +2,7 @@ package animation;
 
 import game.Main;
 import game.ResourceManager;
-import gui.guiElement;
+import gui.GuiElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -185,7 +185,7 @@ public class AnimationManager {
 			ResourceManager.deleteObject(animation.object);
 		}else if(animation.finishedAction==ACTION_REMOVEGUI)
 		{
-			Main.gui.remove((guiElement)animation.object);
+			Main.gui.remove((GuiElement)animation.object);
 		}else if(animation.finishedAction==ACTION_HIDE)
 		{
 			animation.object.setVisible(false);

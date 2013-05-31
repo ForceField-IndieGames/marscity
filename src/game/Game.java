@@ -99,7 +99,8 @@ public class Game {
 	
 	public static void newGame()
 	{
-		Main.money = 10000000;
+		int initialmoney = 5000;
+		Main.money = initialmoney;
 		Grid.init();
 		ResourceManager.objects = new ArrayList<Building>();
 		Main.gameState = Main.STATE_GAME;

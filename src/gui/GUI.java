@@ -86,8 +86,9 @@ public class GUI {
 	public GuiPanel cameraMove = new GuiPanel(Display.getWidth()/2-16,Display.getHeight()/2-16,32,32,ResourceManager.TEXTURE_GUICAMERAMOVE);
 	public GuiPanel cameraRotate = new GuiPanel(Display.getWidth()/2-16,Display.getHeight()/2-16,32,32,ResourceManager.TEXTURE_GUICAMERAROTATE);
 	
-	List<guiElement> elements = new ArrayList<guiElement>();
-	List<guiElement> menuElements = new ArrayList<guiElement>();
+	List<GuiElement> elements = new ArrayList<GuiElement>();
+	List<GuiElement> menuElements = new ArrayList<GuiElement>();
+	public GuiElement lastHovered;
 	
 	public GUI()
 	{
@@ -313,6 +314,7 @@ public class GUI {
 		MsgBox msgbox = new MsgBox(title, text);
 		msgbox.setOpacity(0f);
 		AnimationManager.animateValue(msgbox, AnimationValue.opacity, 1f, 0.005f);
+		AnimationManager.animateValue(msgbox, AnimationValue.Y, msgbox.getY()+10, 0.1f, AnimationManager.ACTION_REVERSE);
 		add(msgbox);
 	}
 	
@@ -320,7 +322,7 @@ public class GUI {
 	 * Adds an element to the gui
 	 * @param guielement
 	 */
-	public void add(guiElement guielement)
+	public void add(GuiElement guielement)
 	{
 		elements.add(guielement);
 	}
@@ -331,7 +333,7 @@ public class GUI {
 	 */
 	public void remove(int index){
 		elements.remove(index);}
-	public void remove(guiElement guielement){
+	public void remove(GuiElement guielement){
 		elements.remove(guielement);}
 	
 	public void draw()
@@ -340,7 +342,7 @@ public class GUI {
 		glPushMatrix();
 		
 		glDisable(GL_LIGHTING);
-		for(guiElement element: elements) {
+		for(GuiElement element: elements) {
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			glOrtho(0, Display.getWidth(), 0, Display.getHeight(), 1, -1);
@@ -357,7 +359,7 @@ public class GUI {
 		glPushMatrix();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glDisable(GL_LIGHTING);
-		for(guiElement element: menuElements) {
+		for(GuiElement element: menuElements) {
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			glOrtho(0, Display.getWidth(), 0, Display.getHeight(), 1, -1);
@@ -368,7 +370,7 @@ public class GUI {
 		glEnable(GL_DEPTH_TEST);
 	}
 	
-	public guiElement mouseoverMenu()
+	public GuiElement mouseoverMenu()
 	{
 		for(int i=menuElements.size()-1;i>=0;i--)
 		{
@@ -381,7 +383,7 @@ public class GUI {
 		return null;
 	}
 	
-	public guiElement getMouseover()
+	public GuiElement getMouseover()
 	{
 		for(int i=elements.size()-1;i>=0;i--)
 		{
@@ -397,8 +399,13 @@ public class GUI {
 	
 	public void callGuiEvents(GuiEventType eventtype)
 	{
-		guiElement mo = getMouseover();
-		if(mo!=null)mo.callGuiEvents(eventtype,mo);
+		GuiElement mo = getMouseover();
+		if(mo!=null)mo.callGuiEvents(eventtype);
+	}
+	
+	public void callGuiEvents(GuiEventType eventtype, GuiElement element)
+	{
+		if(element!=null)element.callGuiEvents(eventtype);
 	}
 	
 }

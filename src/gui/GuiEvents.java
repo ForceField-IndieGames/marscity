@@ -2,8 +2,6 @@ package gui;
 
 import java.awt.Color;
 
-import org.newdawn.slick.openal.AiffData;
-
 import effects.ParticleEffects;
 
 import game.Game;
@@ -221,8 +219,6 @@ public class GuiEvents {
 			Game.Load("res/saves/savegame.save");
 			Game.Resume();
 			break;
-	case Mouseover:
-			break;
 	default:break;}}};
 
 
@@ -290,7 +286,7 @@ public class GuiEvents {
 	
 	
 	public static GuiEvent buildingCategorys = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype, guiElement e) {
+	@Override public void run(GuiEventType eventtype, GuiElement e) {
 	switch (eventtype) {
 	case Click:
 			Main.gui.buildingsPanel.setElementsVisible(false);
@@ -314,25 +310,27 @@ public class GuiEvents {
 
 	
 	public static GuiEvent MsgBox = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype, guiElement element) {
+	@Override public void run(GuiEventType eventtype, GuiElement element) {
 	switch (eventtype) {
 	case Click:
 			AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.opacity, 0f, 0.005f, AnimationManager.ACTION_REMOVEGUI);
+			AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.Y, element.getParent().getY()-20, 0.1f);
 			break;
 	case Mouseover:
 			break;
 	default:break;}}};
 	
 	
-//	public static GuiEvent event = new GuiEvent(){
-//	@Override public void run(GuiEventType eventtype) {
-//	switch (eventtype) {
-//	case Click:
-//			
-//			break;
-//	case Mouseover:
-//			break;
-//	default:break;}}};
+	public static GuiEvent GuiButtons = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype, GuiElement e) {
+	switch (eventtype) {
+	case Mouseover:
+			e.setColor(new Color(235,235,235));
+			break;
+	case Mouseout:
+			e.setColor(Color.white);
+			break;
+	default:break;}}};
 	
 	
 //	public static GuiEvent event = new GuiEvent(){

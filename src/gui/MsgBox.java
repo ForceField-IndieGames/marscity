@@ -8,16 +8,12 @@ import org.lwjgl.opengl.Display;
 
 public class MsgBox extends GuiPanel {
 
-	private String title = "";
-	private String text = "";
 	private GuiLabel titlelabel;
 	private GuiLabel textlabel;
 	private GuiButton button;
 	
 	public MsgBox(String title, String text)
 	{
-		this.title = title;
-		this.text = text;
 		setTexture(ResourceManager.TEXTURE_MSGBOX);
 		setColor(Color.white);
 		setWidth(512);
@@ -35,7 +31,7 @@ public class MsgBox extends GuiPanel {
 		add(textlabel);
 		button = new GuiButton(156,20,200,30,ResourceManager.TEXTURE_GUIBUTTON);
 		button.setEvent(GuiEvents.MsgBox);
-		button.setText("OK");
+		button.setText(ResourceManager.getString("MSGBOX_BUTTON_OK"));
 		add(button);
 	}
 	
