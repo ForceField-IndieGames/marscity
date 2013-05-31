@@ -694,6 +694,7 @@ public class Main {
         
         //Draw the skybox
         glDisable(GL_LIGHTING);
+        glColor3f(1f, 1f, 1f);
         skybox.draw();
         glEnable(GL_LIGHTING);
         

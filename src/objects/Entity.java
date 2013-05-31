@@ -1,6 +1,7 @@
 package objects;
 import static org.lwjgl.opengl.GL11.*;
 
+import game.Main;
 import game.ResourceManager;
 
 import java.io.IOException;
