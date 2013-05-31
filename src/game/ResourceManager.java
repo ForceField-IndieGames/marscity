@@ -105,6 +105,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_FORCEFIELDBG = addTexture("forcefieldbackground2.png");
 	public final static Texture TEXTURE_MSGBOX = addTexture("msgbox.png");
 	public final static Texture TEXTURE_GUITOOLSBG = addTexture("guitoolsBG.png");
+	public final static Texture TEXTURE_GUITOOLTIP = addTexture("guitooltip.png");
 	public final static Texture TEXTURE_GUISELECT = addTexture("guiselect.png");
 	public final static Texture TEXTURE_GUIMENUBUTTON = addTexture("guimenubutton.png");
 	public final static Texture TEXTURE_GUIADD = addTexture("guiadd.png");
@@ -174,7 +175,7 @@ public class ResourceManager {
 		buildingTypes.add(BUILDINGTYPE_STREET,new BuildingType("BUILDINGTYPE_STREET",OBJECT_STREET,TEXTURE_STREET,5,1,1,0f));
 		
 		//create necessary folders and extract files
-		if(!(new File("res")).exists()){
+		if(!(new File("res")).exists()||Main.debugMode){
 			(new File("res")).mkdir();
 			(new File("res/lang")).mkdir();
 			

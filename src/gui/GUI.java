@@ -33,6 +33,8 @@ public class GUI {
 	public GuiPanel MenuIcon = new GuiPanel(Display.getWidth()/2-64,20,128,128,ResourceManager.TEXTURE_ICON256);
 	public GuiPanel IntroFF = new GuiPanel(Display.getWidth()/2-960,Display.getHeight()/2-540,1920,1080,ResourceManager.TEXTURE_FORCEFIELDBG);
 	
+	public BuildingToolTip buildingTooltip = new BuildingToolTip();
+	
 	public GuiPanel deleteBorder = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_GUIDELETEBORDER);
 	
 	public GuiPanel toolBar = new GuiPanel(0,0,Display.getWidth(),70, ResourceManager.TEXTURE_GUITOOLBAR);
@@ -149,8 +151,11 @@ public class GUI {
 		add(toolBar);
 		
 		add(guiTools);
+		add(buildingTooltip);
 		add(blur);
 		add(pauseMenu);
+		
+		buildingTooltip.setVisible(false);
 
 		buildingsPanel.add(buildingsPanell);
 		buildingsPanel.add(buildingsStreet);
@@ -203,19 +208,16 @@ public class GUI {
 		cameraRotate.setVisible(false);
 						
 		buildingStreetLabel.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_STREET));
-		buildingStreetLabel.setEvent(GuiEvents.buildingStreet);
 		buildingStreetLabel.setCentered(true);
-		buildingStreet.setEvent(GuiEvents.buildingStreet);
+		buildingStreet.setEvent(GuiEvents.building);
 		
 		buildingHouseLabel.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_HOUSE));
-		buildingHouseLabel.setEvent(GuiEvents.buildingHouse);
 		buildingHouseLabel.setCentered(true);
-		buildingHouse.setEvent(GuiEvents.buildingHouse);
+		buildingHouse.setEvent(GuiEvents.building);
 		
 		buildingBighouseLabel.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_BIGHOUSE));
-		buildingBighouseLabel.setEvent(GuiEvents.buildingBighouse);
 		buildingBighouseLabel.setCentered(true);
-		buildingBighouse.setEvent(GuiEvents.buildingBighouse);
+		buildingBighouse.setEvent(GuiEvents.building);
 						
 		infoMoney.setText("Geld: 0$");
 		infoMoney.setFont(ResourceManager.Arial15B);

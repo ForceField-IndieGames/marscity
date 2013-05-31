@@ -136,7 +136,7 @@ public class GuiButton extends AbstractGuiElement {
 				glScissor((int)getScreenX(), (int)getScreenY(), (int)getWidth(), (int)getHeight());
 				float xpos = getScreenX()+getWidth()/2-font.getWidth(getText())/2;
 				float ypos = Display.getHeight()-getScreenY()-getHeight()/2-font.getHeight(getText())/2;
-				font.drawString(xpos, ypos, getText(),new org.newdawn.slick.Color(getTextColor().getRed(), getTextColor().getGreen(), getTextColor().getBlue()));
+				font.drawString(xpos, ypos, getText(),new org.newdawn.slick.Color(getTextColor().getRed(), getTextColor().getGreen(), getTextColor().getBlue(),getScreenOpacity()));
 				glDisable(GL_SCISSOR_TEST);
 				TextureImpl.bindNone();		
 				glPopMatrix();
