@@ -183,6 +183,7 @@ public class GuiEvents {
 	switch (eventtype) {
 	case Click:
 			Main.gameState = Main.STATE_MENU;
+			Main.gui = new GUI();
 			break;
 	case Mouseover:
 			break;
@@ -206,7 +207,7 @@ public class GuiEvents {
 	@Override public void run(GuiEventType eventtype) {
 	switch (eventtype) {
 	case Click:
-			Game.Save("res/saves/savegame.save");
+			Game.Save("res/cities/"+Main.cityname+".city");
 			Game.Resume();
 			Main.gui.blur.setVisible(false);
 			AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.opacity, 1, 0.005f, AnimationManager.ACTION_HIDE);
@@ -220,8 +221,7 @@ public class GuiEvents {
 	@Override public void run(GuiEventType eventtype) {
 	switch (eventtype) {
 	case Click:
-			Game.Load("res/saves/savegame.save");
-			Game.Resume();
+			Main.gui.loadingscreen.setVisible(true);
 			break;
 	default:break;}}};
 
@@ -329,15 +329,15 @@ public class GuiEvents {
 	case Click:
 			ResourceManager.playSound(ResourceManager.SOUND_SELECT);
 	case Mouseover:
-			e.setColor(new Color(235,235,235));
+			if(e.getColor().equals(Color.white))e.setColor(new Color(235,235,235));
 			break;
 	case Mouseout:
-			e.setColor(Color.white);
+			if(e.getColor().equals(new Color(235,235,235)))e.setColor(Color.white);
 			break;
 	default:break;}}};
 	
 	
-	public static GuiEvent GuiTextFields = new GuiEvent(){
+	public static GuiEvent GuiTextBoxes = new GuiEvent(){
 	@Override public void run(GuiEventType eventtype, GuiElement e) {
 	switch (eventtype) {
 	case Click:
@@ -361,6 +361,10 @@ public class GuiEvents {
 				((GuiTextbox)e).setText(((GuiTextbox)e).getText().substring(0, ((GuiTextbox)e).getText().length()-1));
 				return;
 			}
+			if(Keyboard.getEventKey()==Keyboard.KEY_DELETE&&Keyboard.getEventKeyState()){
+				((GuiTextbox)e).setText("");
+				return;
+			}
 			if(Keyboard.getEventKeyState()&&(((GuiTextbox)e).getText().length()<((GuiTextbox)e).getCharlimit()||((GuiTextbox)e).getCharlimit()==0)){
 				((GuiTextbox)e).setText(((GuiTextbox)e).getText()+Keyboard.getEventCharacter());
 			}
@@ -368,70 +372,77 @@ public class GuiEvents {
 	default:break;}}};
 	
 	
-//	public static GuiEvent event = new GuiEvent(){
-//	@Override public void run(GuiEventType eventtype) {
-//	switch (eventtype) {
-//	case Click:
-//			
-//			break;
-//	case Mouseover:
-//			break;
-//	default:break;}}};
+	public static GuiEvent MenuPlay = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype) {
+	switch (eventtype) {
+	case Click:
+			Game.newGame();
+			break;
+	default:break;}}};
 	
 	
-//	public static GuiEvent event = new GuiEvent(){
-//	@Override public void run(GuiEventType eventtype) {
-//	switch (eventtype) {
-//	case Click:
-//			
-//			break;
-//	case Mouseover:
-//			break;
-//	default:break;}}};
+	public static GuiEvent MenuExit = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype) {
+	switch (eventtype) {
+	case Click:
+			Game.exit();
+			break;
+	default:break;}}};
 	
 	
-//	public static GuiEvent event = new GuiEvent(){
-//	@Override public void run(GuiEventType eventtype) {
-//	switch (eventtype) {
-//	case Click:
-//			
-//			break;
-//	case Mouseover:
-//			break;
-//	default:break;}}};
+	public static GuiEvent MenuLoad = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype) {
+	switch (eventtype) {
+	case Click:
+			Game.Load("res/cities/Meine Stadt.city");
+			Game.Resume();
+			Main.gameState = Main.STATE_GAME;
+			break;
+	default:break;}}};
 	
 	
-//	public static GuiEvent event = new GuiEvent(){
-//	@Override public void run(GuiEventType eventtype) {
-//	switch (eventtype) {
-//	case Click:
-//			
-//			break;
-//	case Mouseover:
-//			break;
-//	default:break;}}};
+	public static GuiEvent MenuSettings = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype) {
+	switch (eventtype) {
+	case Click:
+			break;
+	default:break;}}};
 	
 	
-//	public static GuiEvent event = new GuiEvent(){
-//	@Override public void run(GuiEventType eventtype) {
-//	switch (eventtype) {
-//	case Click:
-//			
-//			break;
-//	case Mouseover:
-//			break;
-//	default:break;}}};
+	public static GuiEvent cityName = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype, GuiElement e) {
+	switch (eventtype) {
+	case Keypress:
+			if(Keyboard.getEventKey()==Keyboard.KEY_RETURN&&Keyboard.getEventKeyState()){
+				Main.cityname = ((GuiTextbox)e).getText();
+			}
+			break;
+	default:break;}}};
 	
 	
-//	public static GuiEvent event = new GuiEvent(){
-//	@Override public void run(GuiEventType eventtype) {
-//	switch (eventtype) {
-//	case Click:
-//			
-//			break;
-//	case Mouseover:
-//			break;
-//	default:break;}}};
+	public static GuiEvent LoadingScreenButton = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype) {
+	switch (eventtype) {
+	case Click:
+			Game.Load("res/cities/"+Main.gui.loadingscreen.getCityName()+".city");
+			Game.Resume();
+			break;
+	case Mouseover:
+			break;
+	default:break;}}};
+	
+	public static GuiEvent LoadingScreenAbort = new GuiEvent(){
+		@Override public void run(GuiEventType eventtype) {
+		switch (eventtype) {
+		case Click:
+				Main.gui.blur.setVisible(false);
+				Game.Resume();
+				AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
+				Main.gui.loadingscreen.setVisible(false);
+				break;
+		case Mouseover:
+				break;
+		default:break;}}};
 	
 	
 //	public static GuiEvent event = new GuiEvent(){

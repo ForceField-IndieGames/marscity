@@ -184,7 +184,7 @@ public class ResourceManager {
 			(new File("res/lang")).mkdir();
 			
 			(new File("res/settings")).mkdir();
-			(new File("res/saves")).mkdir();
+			(new File("res/cities")).mkdir();
 			Main.log("Created necessary folders.");
 			try {
 				(new File("res/lang/DE.xml")).createNewFile();

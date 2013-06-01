@@ -12,10 +12,10 @@ public class MsgBox extends GuiPanel {
 	private GuiLabel textlabel;
 	private GuiButton button;
 	
-	public MsgBox(String title, String text)
+	public MsgBox(String title, String text, Color color)
 	{
 		setTexture(ResourceManager.TEXTURE_MSGBOX);
-		setColor(Color.white);
+		setColor(color);
 		setWidth(512);
 		setHeight(256);
 		setX(Display.getWidth()/2-256);
@@ -32,6 +32,7 @@ public class MsgBox extends GuiPanel {
 		button = new GuiButton(156,20,200,30,ResourceManager.TEXTURE_GUIBUTTON);
 		button.setEvent(GuiEvents.MsgBox);
 		button.setText(ResourceManager.getString("MSGBOX_BUTTON_OK"));
+		button.setColor(color);
 		add(button);
 	}
 	

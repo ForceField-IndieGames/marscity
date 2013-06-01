@@ -28,7 +28,7 @@ public class GuiTextbox extends GuiLabel {
 	public void callGuiEvents(GuiEventType eventtype)
 	{
 		try {
-			GuiEvents.GuiTextFields.run(eventtype, this);
+			GuiEvents.GuiTextBoxes.run(eventtype, this);
 			getEvent().run(eventtype, this);
 		} catch (Exception e) {
 		}

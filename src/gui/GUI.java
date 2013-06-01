@@ -34,6 +34,7 @@ public class GUI {
 	public GuiLabel MenuVersion = new GuiLabel(0,0,180,20,(Color)null);
 	public GuiPanel MenuIcon = new GuiPanel(Display.getWidth()/2-64,20,128,128,ResourceManager.TEXTURE_ICON256);
 	public GuiPanel IntroFF = new GuiPanel(Display.getWidth()/2-960,Display.getHeight()/2-540,1920,1080,ResourceManager.TEXTURE_FORCEFIELDBG);
+	public LoadingScreen loadingscreen = new LoadingScreen();
 	
 	public BuildingToolTip buildingTooltip = new BuildingToolTip();
 	
@@ -134,15 +135,20 @@ public class GUI {
 		
 	    MenuPlay.setText(ResourceManager.getString("MAINMENU_BUTTON_PLAY"));
 	    MenuPlay.setFont(ResourceManager.Arial15B);
+	    MenuPlay.setEvent(GuiEvents.MenuPlay);
  
 	    MenuLoad.setText(ResourceManager.getString("MAINMENU_BUTTON_LOAD"));
 	    MenuLoad.setFont(ResourceManager.Arial15B);
+	    MenuLoad.setEvent(GuiEvents.MenuLoad);
  
 	    MenuSettings.setText(ResourceManager.getString("MAINMENU_BUTTON_SETTINGS"));
 	    MenuSettings.setFont(ResourceManager.Arial15B);
+	    MenuSettings.setEvent(GuiEvents.MenuSettings);
+	    MenuSettings.setColor(Color.red);
  
 	    MenuExit.setText(ResourceManager.getString("MAINMENU_BUTTON_EXIT"));
 	    MenuExit.setFont(ResourceManager.Arial15B);
+	    MenuExit.setEvent(GuiEvents.MenuExit);
 		
 		//GUI
 	    
@@ -157,6 +163,7 @@ public class GUI {
 		add(buildingTooltip);
 		add(blur);
 		add(pauseMenu);
+		add(loadingscreen);
 		
 		buildingTooltip.setVisible(false);
 
@@ -198,6 +205,7 @@ public class GUI {
 		
 		cityName.setText(Main.cityname);
 		cityName.setCharlimit(25);
+		cityName.setEvent(GuiEvents.cityName);
 		
 		buildingsStreet.setVisible(false);
 		buildingsResidential.setVisible(false);
@@ -318,10 +326,16 @@ public class GUI {
 	 * The messagebox smoothly fades in and out.
 	 * @param title The title of the message
 	 * @param text The message's text
+	 * @param color [OPTIONAL] The background color of the message
 	 */
 	public void MsgBox(String title, String text)
 	{
-		MsgBox msgbox = new MsgBox(title, text);
+		MsgBox(title, text, Color.white);
+	}
+	
+	public void MsgBox(String title, String text, Color color)
+	{
+		MsgBox msgbox = new MsgBox(title, text, color);
 		msgbox.setOpacity(0f);
 		AnimationManager.animateValue(msgbox, AnimationValue.opacity, 1f, 0.005f);
 		AnimationManager.animateValue(msgbox, AnimationValue.Y, msgbox.getY()+10, 0.1f, AnimationManager.ACTION_REVERSE);
@@ -410,6 +424,12 @@ public class GUI {
 	public void callGuiEvents(GuiEventType eventtype)
 	{
 		GuiElement mo = getMouseover();
+		if(mo!=null)mo.callGuiEvents(eventtype);
+	}
+	
+	public void callGuiEventsMenu(GuiEventType eventtype)
+	{
+		GuiElement mo = mouseoverMenu();
 		if(mo!=null)mo.callGuiEvents(eventtype);
 	}
 	

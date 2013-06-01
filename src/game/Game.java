@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL20.glDeleteShader;
 
 import gui.GUI;
 
+import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -67,7 +68,10 @@ public class Game {
 	{
 		newGame();
 		try {
-			if(!(new File(path)).exists())return;
+			if(!(new File(path)).exists()){
+				Main.gui.MsgBox("Datei nicht gefunden", "Die Stadt "+(new File(path)).getName().substring(0, (new File(path)).getName().length()-5)+" ist nicht auffindbar.",new Color(200,0,0));
+				return;
+			}
 			BufferedReader file = new BufferedReader(new FileReader(path));
 			
 			String line;
@@ -87,15 +91,16 @@ public class Game {
 				}
 			}
 			
-			
 			file.close();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			Main.gui.MsgBox("Fehler beim Laden", "Beim Laden des Spielstandes ist ein Fehler aufgetreten.");
+			Main.gui.MsgBox("Fehler beim Laden", "Beim Laden der Stadt "+(new File(path)).getName().substring(0, (new File(path)).getName().length()-5)+" ist ein Fehler aufgetreten.");
 			return;
 		}
-		Main.gui.MsgBox("Spielstand geladen", "Der Spielstand wurde erfolgreich geladen."+System.lineSeparator()+"Viel Spaﬂ beim spielen!");
+		Main.cityname = (new File(path)).getName().substring(0, (new File(path)).getName().length()-5);
+		Main.gui.cityName.setText(Main.cityname);
+		Main.gui.MsgBox("Stadt geladen", Main.cityname+" wurde erfolgreich geladen."+System.lineSeparator()+"Viel Spaﬂ beim spielen!");
 	}
 	
 	public static void newGame()

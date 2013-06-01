@@ -763,28 +763,13 @@ public class Main {
 		i=(i<2*Math.PI)?i+0.005f:0;
 		//Process mouse inputs
 		GuiElement guihit = gui.mouseoverMenu();
-		if(guihit==gui.MenuPlay)gui.MenuPlay.setColor(Color.gray);
-		else gui.MenuPlay.setColor(Color.white);
-		if(guihit==gui.MenuLoad)gui.MenuLoad.setColor(Color.gray);
-		else gui.MenuLoad.setColor(Color.white);
-		if(guihit==gui.MenuSettings)gui.MenuSettings.setColor(Color.gray);
-		else gui.MenuSettings.setColor(Color.white);
-		if(guihit==gui.MenuExit)gui.MenuExit.setColor(Color.gray);
-		else gui.MenuExit.setColor(Color.white);
+		if(gui.lastHovered!=guihit)gui.callGuiEventsMenu(GuiEventType.Mouseover);
+		if(gui.lastHovered!=null&&gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mouseout,gui.lastHovered);
+		gui.lastHovered = guihit;
 		while(Mouse.next())
 		{
-			if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
-				
-				if(guihit==null)return;
-				if(guihit==gui.MenuPlay){
-					Game.newGame();
-				}else if(guihit==gui.MenuExit){
-					Game.exit();
-				}else if(guihit==gui.MenuLoad){
-					Game.Load("res/saves/savegame.save");
-					Game.Resume();
-					gameState = STATE_GAME;
-				}
+			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()){
+				gui.callGuiEventsMenu(GuiEventType.Click);
 			}
 		}
 		while(Keyboard.next()){} //So key events dont get saved
