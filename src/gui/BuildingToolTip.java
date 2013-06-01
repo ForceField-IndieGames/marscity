@@ -16,6 +16,7 @@ public class BuildingToolTip extends GuiPanel {
 		setTexture(ResourceManager.TEXTURE_GUITOOLTIP);
 		setWidth(256);
 		setHeight(128);
+		setOpacity(0f);
 		title = new GuiLabel(0,85,256,30,(Color)null);
 		title.setFont(ResourceManager.Arial15B);
 		title.setCentered(true);

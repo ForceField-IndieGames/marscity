@@ -250,31 +250,33 @@ public class GuiEvents {
 	@Override public void run(GuiEventType eventtype, GuiElement e) {
 	switch (eventtype) {
 	case Click:
+			Main.selectedTool = Main.TOOL_ADD;
 			if(e==Main.gui.buildingStreet){
 				Main.currentBuildingType = ResourceManager.BUILDINGTYPE_STREET;
 				Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_STREET);
-				Main.selectedTool = Main.TOOL_ADD;
 			}else if(e==Main.gui.buildingHouse){
 				Main.currentBuildingType = ResourceManager.BUILDINGTYPE_HOUSE;
 				Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_HOUSE);
-				Main.selectedTool = Main.TOOL_ADD;
 			}else if(e==Main.gui.buildingBighouse){
 				Main.currentBuildingType = ResourceManager.BUILDINGTYPE_BIGHOUSE;
 				Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_BIGHOUSE);
-				Main.selectedTool = Main.TOOL_ADD;
 			}
 			break;
 	case Mouseover:
 			Main.gui.buildingTooltip.setVisible(true);
 			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.opacity, 1f, 0.005f);
-			Main.gui.buildingTooltip.setY(e.getScreenY()+e.getHeight());
-			Main.gui.buildingTooltip.setX(e.getScreenX()+e.getWidth()/2-Main.gui.buildingTooltip.getWidth()/2);
+			Main.gui.buildingTooltip.setY(e.getScreenY()+e.getHeight()-10);
+			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.Y, Main.gui.buildingTooltip.getY()+10, 0.05f);
+			if(Main.gui.buildingTooltip.getOpacity()>0)
+			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.X, e.getScreenX()+e.getWidth()/2-Main.gui.buildingTooltip.getWidth()/2, 0.5f);
+			else Main.gui.buildingTooltip.setX(e.getScreenX()+e.getWidth()/2-Main.gui.buildingTooltip.getWidth()/2);
 			if(e==Main.gui.buildingStreet)Main.gui.buildingTooltip.setBuilding(ResourceManager.BUILDINGTYPE_STREET);
 			else if(e==Main.gui.buildingHouse)Main.gui.buildingTooltip.setBuilding(ResourceManager.BUILDINGTYPE_HOUSE);
 			else if(e==Main.gui.buildingBighouse)Main.gui.buildingTooltip.setBuilding(ResourceManager.BUILDINGTYPE_BIGHOUSE);
 			break;
 	case Mouseout:
 		AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.opacity, 0f, 0.005f,AnimationManager.ACTION_HIDE);
+		AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.Y, Main.gui.buildingTooltip.getY()-10, 0.05f);
 		break;
 	default:break;}}};
 	
