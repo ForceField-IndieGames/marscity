@@ -41,6 +41,7 @@ public class GuiEvents {
 			Main.buildpreview.setBuilding(-1);
 			Main.currentBuildingType = -1;
 			Main.gui.deleteBorder.setVisible(true);
+			AnimationManager.animateValue(Main.gui.buildingsPanel, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
 			break;
 	case Mouseover:
 			break;
@@ -251,6 +252,7 @@ public class GuiEvents {
 	switch (eventtype) {
 	case Click:
 			Main.selectedTool = Main.TOOL_ADD;
+			AnimationManager.animateValue(Main.gui.buildingsPanel, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
 			if(e==Main.gui.buildingStreet){
 				Main.currentBuildingType = ResourceManager.BUILDINGTYPE_STREET;
 				Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_STREET);

@@ -529,13 +529,17 @@ public class Main {
 					}
 				}
 				//Select the select tool with right mouse button
-				if(Mouse.getEventButton()==1&&!Mouse.getEventButtonState()){
+				if(Mouse.getEventButton()==1&&!Mouse.getEventButtonState()&&!camera.wasRotated()){
 					selectedTool = TOOL_SELECT;
 					gui.toolDelete.setColor(Color.white);
 					buildpreview.setBuilding(-1);
 					currentBuildingType = -1;
 					gui.deleteBorder.setVisible(false);
 					AnimationManager.animateValue(Main.gui.buildingsPanel, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
+				}
+				if(Mouse.getEventButton()==1&&Mouse.getEventButtonState()){
+					camera.setLastrotx();
+					camera.setLastroty();
 				}
 				//Set mouse grabbed when pressing right or middle mouse button
 				if((Mouse.getEventButton()==2||Mouse.getEventButton()==1)&&Mouse.getEventButtonState()){
