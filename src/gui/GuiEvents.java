@@ -1,6 +1,9 @@
 package gui;
 
 import java.awt.Color;
+import java.awt.RenderingHints.Key;
+
+import org.lwjgl.input.Keyboard;
 
 import effects.ParticleEffects;
 
@@ -294,6 +297,7 @@ public class GuiEvents {
 			Main.buildpreview.setBuilding(-1);
 			Main.currentBuildingType = -1;
 			Main.gui.deleteBorder.setVisible(false);
+			Main.gui.toolDelete.setColor(Color.white);
 			AnimationManager.animateValue(Main.gui.buildingsPanel, AnimationValue.Y, 68f, 0.5f);
 		if(e==Main.gui.categoryStreets){
 			Main.gui.buildingsStreet.setVisible(true);
@@ -331,6 +335,103 @@ public class GuiEvents {
 			e.setColor(Color.white);
 			break;
 	default:break;}}};
+	
+	
+	public static GuiEvent GuiTextFields = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype, GuiElement e) {
+	switch (eventtype) {
+	case Click:
+			Main.gui.setKeyboardfocus(e);
+			e.setColor(Color.darkGray);
+			((GuiTextbox)e).setTextColor(Color.white);
+			break;
+	case Keypress:
+			if(Keyboard.getEventKey()==Keyboard.KEY_RETURN
+			||Keyboard.getEventKey()==Keyboard.KEY_ESCAPE){
+				Main.gui.setKeyboardfocus(null);
+				e.setColor(Color.white);
+				((GuiTextbox)e).setTextColor(Color.black);
+				return;
+			}
+			if(Keyboard.getEventKey()==Keyboard.KEY_LSHIFT
+					||Keyboard.getEventKey()==Keyboard.KEY_RSHIFT
+					||Keyboard.getEventKey()==Keyboard.KEY_LCONTROL
+					||Keyboard.getEventKey()==Keyboard.KEY_RCONTROL)return;
+			if(Keyboard.getEventKey()==Keyboard.KEY_BACK&&Keyboard.getEventKeyState()){
+				((GuiTextbox)e).setText(((GuiTextbox)e).getText().substring(0, ((GuiTextbox)e).getText().length()-1));
+				return;
+			}
+			if(Keyboard.getEventKeyState()&&(((GuiTextbox)e).getText().length()<((GuiTextbox)e).getCharlimit()||((GuiTextbox)e).getCharlimit()==0)){
+				((GuiTextbox)e).setText(((GuiTextbox)e).getText()+Keyboard.getEventCharacter());
+			}
+			break;
+	default:break;}}};
+	
+	
+//	public static GuiEvent event = new GuiEvent(){
+//	@Override public void run(GuiEventType eventtype) {
+//	switch (eventtype) {
+//	case Click:
+//			
+//			break;
+//	case Mouseover:
+//			break;
+//	default:break;}}};
+	
+	
+//	public static GuiEvent event = new GuiEvent(){
+//	@Override public void run(GuiEventType eventtype) {
+//	switch (eventtype) {
+//	case Click:
+//			
+//			break;
+//	case Mouseover:
+//			break;
+//	default:break;}}};
+	
+	
+//	public static GuiEvent event = new GuiEvent(){
+//	@Override public void run(GuiEventType eventtype) {
+//	switch (eventtype) {
+//	case Click:
+//			
+//			break;
+//	case Mouseover:
+//			break;
+//	default:break;}}};
+	
+	
+//	public static GuiEvent event = new GuiEvent(){
+//	@Override public void run(GuiEventType eventtype) {
+//	switch (eventtype) {
+//	case Click:
+//			
+//			break;
+//	case Mouseover:
+//			break;
+//	default:break;}}};
+	
+	
+//	public static GuiEvent event = new GuiEvent(){
+//	@Override public void run(GuiEventType eventtype) {
+//	switch (eventtype) {
+//	case Click:
+//			
+//			break;
+//	case Mouseover:
+//			break;
+//	default:break;}}};
+	
+	
+//	public static GuiEvent event = new GuiEvent(){
+//	@Override public void run(GuiEventType eventtype) {
+//	switch (eventtype) {
+//	case Click:
+//			
+//			break;
+//	case Mouseover:
+//			break;
+//	default:break;}}};
 	
 	
 //	public static GuiEvent event = new GuiEvent(){

@@ -125,12 +125,15 @@ public class Main {
 	int fpsnow, fps;
 	long lastTime;
 	
-	//The debugmode enables cheats and displays additional debug information
-	public static boolean debugMode = true;
+	//////////////////////////////////////////////////////////////////////////
+	//The debugmode enables cheats and displays additional debug information//
+	public static boolean debugMode = true;//////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////
 	
 	public static int hoveredEntity = -1; //The index of the object that is hovered with the mouse
 	public static int selectedTool = 0; //The selected tool, SELECT,ADD or DELETE
-	public static int money; //The players money
+	public static int money = Game.INITIALMONEY; //The players money
+	public static String cityname = "Meine Stadt"; //The city's name
 	public static int currentBuildingType = -1; //The currently selected building type
 	public static float[] mousepos3d=new float[3]; //The mouse position in 3d space
 	public static int gameState = debugMode?STATE_GAME:STATE_INTRO; //The current game state
@@ -559,11 +562,16 @@ public class Main {
 	 */
 	public void update(int delta) {
 		
-		//Keyboard input
-		inputKeyboard(delta);
-
 		//Mouse input
 		inputMouse(delta);
+		
+		//Keyboard input
+		if(gui.getKeyboardfocus()==null)inputKeyboard(delta);
+		else{
+			while(Keyboard.next()){
+				gui.getKeyboardfocus().callGuiEvents(GuiEventType.Keypress);
+			}
+		}
 		
 		//Run the animations
 		AnimationManager.update(delta);

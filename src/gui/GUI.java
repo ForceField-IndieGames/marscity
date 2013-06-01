@@ -22,6 +22,8 @@ import animation.AnimationValue;
 
 public class GUI {
 	
+	private GuiElement keyboardfocus;
+	
 	public GuiPanel MenuBG = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_MAINMENUBG);
 	public GuiPanel MenuFF = new GuiPanel(Display.getWidth()-512,0,512,128,ResourceManager.TEXTURE_MAINMENUFF);
 	public GuiPanel MenuPanel = new GuiPanel(Display.getWidth()/2-430,Display.getHeight()-150,1080,50,(Color)null);
@@ -44,8 +46,9 @@ public class GUI {
 	public GuiPanel toolDelete = new GuiPanel(0, 0, 64, 64, ResourceManager.TEXTURE_GUIDELETE);
 	
 	public GuiPanel infoBar = new GuiPanel(0,30,Display.getWidth(),40,ResourceManager.TEXTURE_GUITOOLBAR);
-	public GuiLabel infoMoney = new GuiLabel(300,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
-	public GuiLabel infoCitizens = new GuiLabel(550,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
+	public GuiTextbox cityName = new GuiTextbox(100,5,200,30);
+	public GuiLabel infoMoney = new GuiLabel(350,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
+	public GuiLabel infoCitizens = new GuiLabel(600,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
 	
 	public GuiPanel buildingCategories = new GuiPanel(150,0,Display.getWidth(),50, (Color)null);
 	public GuiButton categoryStreets = new GuiButton(0,0,150,30,ResourceManager.TEXTURE_GUIBUTTON);
@@ -178,6 +181,8 @@ public class GUI {
 		infoBar.add(infoMoney);
 		infoBar.add(infoCitizens);
 		
+		infoBar.add(cityName);
+		
 		guiTools.add(menuButton);
 		guiTools.add(toolDelete);
 		
@@ -190,6 +195,9 @@ public class GUI {
 		pauseMenu.add(pauseResume);
 		
 		buildingsPanel.setVisible(false);
+		
+		cityName.setText(Main.cityname);
+		cityName.setCharlimit(25);
 		
 		buildingsStreet.setVisible(false);
 		buildingsResidential.setVisible(false);
@@ -408,6 +416,14 @@ public class GUI {
 	public void callGuiEvents(GuiEventType eventtype, GuiElement element)
 	{
 		if(element!=null)element.callGuiEvents(eventtype);
+	}
+
+	public GuiElement getKeyboardfocus() {
+		return keyboardfocus;
+	}
+
+	public void setKeyboardfocus(GuiElement keyboardfocus) {
+		this.keyboardfocus = keyboardfocus;
 	}
 	
 }

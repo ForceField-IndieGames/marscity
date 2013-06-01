@@ -26,6 +26,7 @@ import org.lwjgl.opengl.Display;
 
 public class Game {
 	private static boolean pause = false;
+	public static final int INITIALMONEY = 5000;
 	
 	public static void Pause()
 	{
@@ -99,8 +100,7 @@ public class Game {
 	
 	public static void newGame()
 	{
-		int initialmoney = 5000;
-		Main.money = initialmoney;
+		Main.money = INITIALMONEY;
 		Grid.init();
 		ResourceManager.objects = new ArrayList<Building>();
 		Main.gameState = Main.STATE_GAME;

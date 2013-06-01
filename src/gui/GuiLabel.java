@@ -194,4 +194,24 @@ public class GuiLabel extends AbstractGuiElement {
 		this.textColor = new org.newdawn.slick.Color(textColor.getRed(), textColor.getGreen(), textColor.getBlue());
 	}
 	
+	public Texture getTexturel()
+	{
+		return this.texturel;
+	}
+	
+	public void setTexturel(Texture l)
+	{
+		this.texturel = l;
+	}
+	
+	public Texture getTexturer()
+	{
+		return this.texturer;
+	}
+	
+	public void setTexturer(Texture r)
+	{
+		this.texturer = r;
+	}
+	
 }

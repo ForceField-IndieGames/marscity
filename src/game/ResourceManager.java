@@ -128,6 +128,10 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUITHUMBSTREET = addTexture("thumbstreet.png");
 	public final static Texture TEXTURE_GUITHUMBHOUSE = addTexture("thumbhouse.png");
 	public final static Texture TEXTURE_GUITHUMBBIGHOUSE = addTexture("thumbbighouse.png");
+	public final static Texture TEXTURE_GUITEXTFIELD = addTexture("guitextfield.png");
+	public final static Texture TEXTURE_GUITEXTFIELDL = addTexture("guitextfieldl.png");
+	public final static Texture TEXTURE_GUITEXTFIELDR = addTexture("guitextfieldr.png");
+	
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	
 	public static List<Building> objects = new ArrayList<Building>();
