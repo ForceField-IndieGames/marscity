@@ -1,8 +1,6 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.Toolkit;
-
 import org.lwjgl.input.Keyboard;
 
 import effects.ParticleEffects;
@@ -221,7 +219,7 @@ public class GuiEvents {
 	@Override public void run(GuiEventType eventtype) {
 	switch (eventtype) {
 	case Click:
-			Main.gui.loadingscreen.setVisible(true);
+			Main.gui.loadingscreen.show();
 			break;
 	default:break;}}};
 
@@ -454,6 +452,10 @@ public class GuiEvents {
 	@Override public void run(GuiEventType eventtype) {
 	switch (eventtype) {
 	case Click:
+			if(Main.gui.loadingscreen.getCityName()==""){
+				Main.gui.MsgBox("Keine Auswahl", "Bitte eine Stadt auswählen!");
+				break;
+			}
 			Game.Load("res/cities/"+Main.gui.loadingscreen.getCityName()+".city");
 			Game.Resume();
 			break;
@@ -475,15 +477,14 @@ public class GuiEvents {
 		default:break;}}};
 	
 	
-//	public static GuiEvent event = new GuiEvent(){
-//	@Override public void run(GuiEventType eventtype) {
-//	switch (eventtype) {
-//	case Click:
-//			
-//			break;
-//	case Mouseover:
-//			break;
-//	default:break;}}};
+	public static GuiEvent CityPreview = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype, GuiElement e) {
+	switch (eventtype) {
+	case Click:
+			if(((CityPreview)e).getCityname()!="")
+			Main.gui.loadingscreen.setCityName(((CityPreview)e).getCityname());
+			break;
+	default:break;}}};
 	
 	
 //	public static GuiEvent event = new GuiEvent(){

@@ -41,7 +41,6 @@ public class Game {
 	
 	public static void Save(String path)
 	{
-		//TODO Save the game
 		try {
 			if(!(new File(path)).exists())(new File(path)).createNewFile();
 
@@ -60,10 +59,10 @@ public class Game {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			Main.gui.MsgBox("Fehler beim Speichern", "Beim speichern des Spielstandes ist ein Fehler aufgetreten.");
+			Main.gui.MsgBox("Fehler beim Speichern", "Beim speichern der Stadt "+Main.cityname+" ist ein Fehler aufgetreten.");
 			return;
 		}
-		Main.gui.MsgBox("Spiel gespeichert", "Der Spielstand wurde erfolgreich gespeichert.");
+		Main.gui.MsgBox("Stadt gespeichert", Main.cityname+" wurde erfolgreich gespeichert.");
 	}
 	
 	public static void Load(String path)
