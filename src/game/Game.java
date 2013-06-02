@@ -9,8 +9,12 @@ import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 
@@ -45,16 +49,19 @@ public class Game {
 		try {
 			if(!(new File(path)).exists())(new File(path)).createNewFile();
 			BufferedWriter file = new BufferedWriter(new FileWriter(path));
-			
-			//Money
-			file.write("m "+Main.money+System.lineSeparator());
-			
-			//grid
+
+			/////////////////////
+			ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(new File(path)));
+			o.writeInt(Main.money);
+			o.writeInt(ResourceManager.objects.size());
 			for(Building b:ResourceManager.objects){
-				file.write("b "+b.getBuidlingType()+" "+b.getX()+" "+b.getY()+" "+b.getZ()+System.lineSeparator());
+				o.writeFloat(b.getX());
+				o.writeFloat(b.getY());
+				o.writeFloat(b.getZ());
+				o.writeInt(b.getBuidlingType());
 			}
-			
-			file.close();
+			o.close();
+			/////////////////////
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -72,26 +79,14 @@ public class Game {
 				Main.gui.MsgBox("Datei nicht gefunden", "Die Stadt "+(new File(path)).getName().substring(0, (new File(path)).getName().length()-5)+" ist nicht auffindbar.",new Color(200,0,0));
 				return;
 			}
-			BufferedReader file = new BufferedReader(new FileReader(path));
 			
-			String line;
-			while((line=file.readLine())!=null)
-			{
-				//Money
-				if(line.startsWith("m")){
-					Main.money = Integer.parseInt(line.split(" ")[1]);
-				}
-				if(line.startsWith("b")){
-					int bt = Integer.parseInt(line.split(" ")[1]);
-					float x = Float.parseFloat(line.split(" ")[2]);
-					float y = Float.parseFloat(line.split(" ")[3]);
-					float z = Float.parseFloat(line.split(" ")[4]);
-					
-					ResourceManager.buildBuilding(x, y, z, bt);
-				}
+			ObjectInputStream i = new ObjectInputStream(new FileInputStream(new File(path)));
+			Main.money=i.readInt();
+			int count = i.readInt();
+			for(int j=0;j<count;j++){
+				ResourceManager.buildBuilding(i.readFloat(), i.readFloat(), i.readFloat(), i.readInt());
 			}
-			
-			file.close();
+			i.close();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
