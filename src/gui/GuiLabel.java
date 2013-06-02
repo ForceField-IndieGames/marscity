@@ -33,7 +33,7 @@ public class GuiLabel extends AbstractGuiElement {
 		
 	}
 
-	public GuiLabel(int x, int y, int width, int height)
+	public GuiLabel(float x, float y, float width, float height)
 	{
 		setX(x);
 		setY(y);
@@ -41,7 +41,7 @@ public class GuiLabel extends AbstractGuiElement {
 		setHeight(height);
 	}
 	
-	public GuiLabel(int x, int y, int width, int height, Color color)
+	public GuiLabel(float x, float y, float width, float height, Color color)
 	{
 		setX(x);
 		setY(y);
@@ -50,7 +50,7 @@ public class GuiLabel extends AbstractGuiElement {
 		setColor(color);
 	}
 	
-	public GuiLabel(int x, int y, int width, int height, Texture texture)
+	public GuiLabel(float x, float y, float width, float height, Texture texture)
 	{
 		setX(x);
 		setY(y);
@@ -59,7 +59,7 @@ public class GuiLabel extends AbstractGuiElement {
 		setTexture(texture);
 	}
 	
-	public GuiLabel(int x, int y, int width, int height, Texture texture, Texture texturel, Texture texturer)
+	public GuiLabel(float x, float y, float width, float height, Texture texture, Texture texturel, Texture texturer)
 	{
 		setX(x);
 		setY(y);
@@ -70,7 +70,7 @@ public class GuiLabel extends AbstractGuiElement {
 		this.texturer = texturer;
 	}
 	
-	public GuiLabel(int x, int y, int width, int height, Texture texture, Color color)
+	public GuiLabel(float x, float y, float width, float height, Texture texture, Color color)
 	{
 		setX(x);
 		setY(y);
@@ -167,6 +167,8 @@ public class GuiLabel extends AbstractGuiElement {
 				glDisable(GL_SCISSOR_TEST);
 				TextureImpl.bindNone();
 				glPopMatrix();
+				
+				for(GuiElement element: elements) element.draw();
 		}
 	}
 

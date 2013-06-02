@@ -137,6 +137,7 @@ public class Main {
 	public static int currentBuildingType = -1; //The currently selected building type
 	public static float[] mousepos3d=new float[3]; //The mouse position in 3d space
 	public static int gameState = debugMode?STATE_GAME:STATE_INTRO; //The current game state
+	public static String clipboard=""; //A local text clipboard
 	
 	//Some more objects
 	public static Camera camera = new Camera();

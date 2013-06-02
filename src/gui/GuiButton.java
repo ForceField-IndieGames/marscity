@@ -140,6 +140,8 @@ public class GuiButton extends AbstractGuiElement {
 				glDisable(GL_SCISSOR_TEST);
 				TextureImpl.bindNone();		
 				glPopMatrix();
+				
+				for(GuiElement element: elements) element.draw();
 		}
 	}
 

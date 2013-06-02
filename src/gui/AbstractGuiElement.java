@@ -1,6 +1,8 @@
 package gui;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.newdawn.slick.opengl.Texture;
 
@@ -23,6 +25,13 @@ public abstract class AbstractGuiElement implements GuiElement, Animatable {
 	private Color color = Color.white;
 	private float opacity = 1f;
 	private boolean clickThrough = false;
+	public List<GuiElement> elements = new ArrayList<GuiElement>();
+	
+	public void add(GuiElement guielement)
+	{
+		guielement.setParent(this);
+		elements.add(guielement);
+	}
 	
 	@Override
 	public void setZ(float z) {

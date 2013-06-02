@@ -6,13 +6,9 @@ import static org.lwjgl.opengl.GL20.glDeleteShader;
 import gui.GUI;
 
 import java.awt.Color;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
@@ -48,7 +44,6 @@ public class Game {
 		//TODO Save the game
 		try {
 			if(!(new File(path)).exists())(new File(path)).createNewFile();
-			BufferedWriter file = new BufferedWriter(new FileWriter(path));
 
 			/////////////////////
 			ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(new File(path)));

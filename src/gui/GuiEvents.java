@@ -1,7 +1,7 @@
 package gui;
 
 import java.awt.Color;
-import java.awt.RenderingHints.Key;
+import java.awt.Toolkit;
 
 import org.lwjgl.input.Keyboard;
 
@@ -339,18 +339,21 @@ public class GuiEvents {
 	
 	public static GuiEvent GuiTextBoxes = new GuiEvent(){
 	@Override public void run(GuiEventType eventtype, GuiElement e) {
+	GuiTextbox t = ((GuiTextbox)e);
 	switch (eventtype) {
 	case Click:
 			Main.gui.setKeyboardfocus(e);
-			e.setColor(Color.darkGray);
-			((GuiTextbox)e).setTextColor(Color.white);
+			t.setColor(Color.darkGray);
+			t.setTextColor(Color.white);
+			t.setCaret(true);
 			break;
 	case Keypress:
 			if(Keyboard.getEventKey()==Keyboard.KEY_RETURN
 			||Keyboard.getEventKey()==Keyboard.KEY_ESCAPE){
 				Main.gui.setKeyboardfocus(null);
-				e.setColor(Color.white);
-				((GuiTextbox)e).setTextColor(Color.black);
+				t.setColor(Color.white);
+				t.setTextColor(Color.black);
+				t.setCaret(false);
 				return;
 			}
 			if(Keyboard.getEventKey()==Keyboard.KEY_LSHIFT
@@ -358,15 +361,42 @@ public class GuiEvents {
 					||Keyboard.getEventKey()==Keyboard.KEY_LCONTROL
 					||Keyboard.getEventKey()==Keyboard.KEY_RCONTROL)return;
 			if(Keyboard.getEventKey()==Keyboard.KEY_BACK&&Keyboard.getEventKeyState()){
-				((GuiTextbox)e).setText(((GuiTextbox)e).getText().substring(0, ((GuiTextbox)e).getText().length()-1));
+				t.setText(t.getText().substring(0, t.getCaretPos()-1)+t.getText().substring(t.getCaretPos()));
+				if(t.getCaretPos()>0)t.setCaretPos(t.getCaretPos()-1);
+				return;
+			}
+			if(Keyboard.getEventKey()==Keyboard.KEY_END&&Keyboard.getEventKeyState()){
+				t.setCaretPos(t.getText().length());
+				return;
+			}
+			if(Keyboard.getEventKey()==Keyboard.KEY_HOME&&Keyboard.getEventKeyState()){
+				t.setCaretPos(0);
+				return;
+			}
+			if(Keyboard.getEventKey()==Keyboard.KEY_LEFT&&Keyboard.getEventKeyState()){
+				if(t.getCaretPos()>0)t.setCaretPos(t.getCaretPos()-1);
+				return;
+			}
+			if(Keyboard.getEventKey()==Keyboard.KEY_RIGHT&&Keyboard.getEventKeyState()){
+				if(t.getCaretPos()<t.getText().length())t.setCaretPos(t.getCaretPos()+1);
 				return;
 			}
 			if(Keyboard.getEventKey()==Keyboard.KEY_DELETE&&Keyboard.getEventKeyState()){
-				((GuiTextbox)e).setText("");
+				t.setText(t.getText().substring(0, t.getCaretPos())+t.getText().substring(t.getCaretPos()+1));
 				return;
 			}
-			if(Keyboard.getEventKeyState()&&(((GuiTextbox)e).getText().length()<((GuiTextbox)e).getCharlimit()||((GuiTextbox)e).getCharlimit()==0)){
-				((GuiTextbox)e).setText(((GuiTextbox)e).getText()+Keyboard.getEventCharacter());
+			if((Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)||Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))&&Keyboard.getEventKey()==Keyboard.KEY_C&&Keyboard.getEventKeyState()){
+				Main.clipboard = t.getText();
+				return;
+			}
+			if((Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)||Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))&&Keyboard.getEventKey()==Keyboard.KEY_V&&Keyboard.getEventKeyState()){
+				t.setText(Main.clipboard);
+				if(t.getCaretPos()>t.getText().length())t.setCaretPos(t.getText().length());
+				return;
+			}
+			if(Keyboard.getEventKeyState()&&(t.getText().length()<t.getCharlimit()||t.getCharlimit()==0)){
+				t.setText(t.getText().substring(0, t.getCaretPos())+Keyboard.getEventCharacter()+t.getText().substring(t.getCaretPos()));
+				t.setCaretPos(t.getCaretPos()+1);
 			}
 			break;
 	default:break;}}};
