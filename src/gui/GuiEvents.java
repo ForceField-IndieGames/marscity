@@ -449,22 +449,6 @@ public class GuiEvents {
 			break;
 	default:break;}}};
 	
-	
-	public static GuiEvent LoadingScreenButton = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype) {
-	switch (eventtype) {
-	case Click:
-			if(Main.gui.loadingscreen.getCityName()==""){
-				Main.gui.MsgBox("Keine Auswahl", "Bitte eine Stadt auswählen!");
-				break;
-			}
-			Game.Load("res/cities/"+Main.gui.loadingscreen.getCityName()+".city");
-			Game.Resume();
-			break;
-	case Mouseover:
-			break;
-	default:break;}}};
-	
 	public static GuiEvent LoadingScreenAbort = new GuiEvent(){
 		@Override public void run(GuiEventType eventtype) {
 		switch (eventtype) {
@@ -483,8 +467,11 @@ public class GuiEvents {
 	@Override public void run(GuiEventType eventtype, GuiElement e) {
 	switch (eventtype) {
 	case Click:
-			if(((CityPreview)e).getCityname()!="")
-				Main.gui.loadingscreen.setCityName(((CityPreview)e).getCityname());
+			if(((CityPreview)e).getCityname()==""){
+				Main.gui.MsgBox("Keine Auswahl", "Bitte eine Stadt auswählen!");
+				break;
+			}
+			Game.Load("res/cities/"+((CityPreview)e).getCityname()+".city");
 			break;
 	default:break;}}};
 	

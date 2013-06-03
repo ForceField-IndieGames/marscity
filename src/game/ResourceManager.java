@@ -141,6 +141,8 @@ public class ResourceManager {
 	public final static Texture TEXTURE_CPSHADOW = addTexture("cpshadow.png");
 	public final static Texture TEXTURE_SCROLLUP = addTexture("scrollup.png");
 	public final static Texture TEXTURE_SCROLLDOWN = addTexture("scrolldown.png");
+	public final static Texture TEXTURE_LOADABORT = addTexture("loadabort.png");
+	public final static Texture TEXTURE_CPSPEC = addTexture("cpspec.png");
 	
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	

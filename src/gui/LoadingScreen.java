@@ -16,24 +16,18 @@ public class LoadingScreen extends GuiPanel {
 
 	private int scrolling=0;
 	private GuiLabel title;
-	private GuiTextbox cityname;
-	private GuiButton load;
 	private GuiButton abort;
-	private GuiPanel up;
-	private GuiPanel down;
+	private GuiButton up;
+	private GuiButton down;
+	private int h=295;
+	private int h2=112;
 	private CityPreview[] cps = new CityPreview[]{
-		new CityPreview(30, 350, "Stadt 1"),
-		new CityPreview(180, 350, "Stadt 2"),
-		new CityPreview(330, 350, "Stadt 3"),
-		new CityPreview(30, 265, "Stadt 4"),
-		new CityPreview(180, 265, "Stadt 5"),
-		new CityPreview(330, 265, "Stadt 6"),
-		new CityPreview(30, 180, "Stadt 7"),
-		new CityPreview(180, 180, "Stadt 8"),
-		new CityPreview(330, 180, "Stadt 9"),
-		new CityPreview(30, 95, "Stadt 10"),
-		new CityPreview(180, 95, "Stadt 11"),
-		new CityPreview(330, 95, "Stadt 12"),
+		new CityPreview(30, h, "Stadt 1"),
+		new CityPreview(255, h, "Stadt 2"),
+		new CityPreview(30, h-h2, "Stadt 3"),
+		new CityPreview(255, h-h2, "Stadt 4"),
+		new CityPreview(30, h-2*h2, "Stadt 5"),
+		new CityPreview(255, h-2*h2, "Stadt 6")
 	};
 	
 	public LoadingScreen()
@@ -49,19 +43,11 @@ public class LoadingScreen extends GuiPanel {
 		title.setFont(ResourceManager.Arial30B);
 		title.setCentered(true);
 		add(title);
-		cityname = new GuiTextbox(55, 30, 200, 30);
-		cityname.setText("Meine Stadt");
-		cityname.setCharlimit(25);
-		add(cityname);
-		load = new GuiButton(275, 30, 100, 30, ResourceManager.TEXTURE_GUIBUTTON2);
-		load.setText("Laden");
-		load.setEvent(GuiEvents.LoadingScreenButton);
-		add(load);
-		abort = new GuiButton(375, 30, 100, 30, ResourceManager.TEXTURE_GUIBUTTON2);
+		abort = new GuiButton(206, 20, 100, 32, ResourceManager.TEXTURE_LOADABORT);
 		abort.setText("Abbrechen");
 		abort.setEvent(GuiEvents.LoadingScreenAbort);
 		add(abort);
-		up = new GuiPanel(72,430,32,32,ResourceManager.TEXTURE_SCROLLUP);
+		up = new GuiButton(306,20,32,32,ResourceManager.TEXTURE_SCROLLUP);
 		up.setEvent(new GuiEvent(){
 			@Override public void run(GuiEventType eventtype, GuiElement e) {
 				switch (eventtype) {
@@ -73,7 +59,7 @@ public class LoadingScreen extends GuiPanel {
 						break;
 				default:break;}}});
 		add(up);
-		down = new GuiPanel(40,430,32,32,ResourceManager.TEXTURE_SCROLLDOWN);
+		down = new GuiButton(174,20,32,32,ResourceManager.TEXTURE_SCROLLDOWN);
 		down.setEvent(new GuiEvent(){
 			@Override public void run(GuiEventType eventtype, GuiElement e) {
 				switch (eventtype) {
@@ -88,16 +74,6 @@ public class LoadingScreen extends GuiPanel {
 		}
 	}
 	
-	public String getCityName()
-	{
-		return cityname.getText();
-	}
-	
-	public void setCityName(String name)
-	{
-		cityname.setText(name);
-	}
-	
 	public void show()
 	{
 		setVisible(true);
@@ -110,8 +86,8 @@ public class LoadingScreen extends GuiPanel {
 			}
 		});
 		for(int i=0;i<cps.length;i++){
-			if(f.length>i+getScrolling()*12){
-				cps[i].setCityname(f[i+getScrolling()*12].getName().substring(0,f[i+getScrolling()*12].getName().length()-5));
+			if(f.length>i+getScrolling()*cps.length){
+				cps[i].setCityname(f[i+getScrolling()*cps.length].getName().substring(0,f[i+getScrolling()*cps.length].getName().length()-5));
 				cps[i].setEnabled(true);
 			}else{
 				cps[i].setCityname("");

@@ -5,32 +5,23 @@ import static org.lwjgl.opengl.GL20.*;
 import gui.GUI;
 
 import java.awt.Color;
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-
 
 import objects.Building;
 
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
-import org.newdawn.slick.imageout.ImageIOWriter;
-import org.newdawn.slick.opengl.ImageIOImageData;
 
 /**
  * This class provides static methods for pausing, resuming, saving and loading the game or
@@ -130,6 +121,9 @@ public class Game {
 		 boolean prevguiv = GUI.isVisible();
 		 GUI.setVisible(withgui);
 		 
+		 //Render
+		 Main.renderGL();
+		 
          //Creating an rbg array of total pixels
          int[] pixels = new int[Display.getWidth() * Display.getHeight()];
          int bindex;
@@ -176,6 +170,9 @@ public static void saveThumbnail(File file){
 		 boolean prevguiv = GUI.isVisible();
 		 GUI.setVisible(false);
 		 
+		 //render
+		 Main.renderGL();
+		 
          //Creating an rbg array of total pixels
          int[] pixels = new int[1024 * 512];
          int bindex;
@@ -199,7 +196,7 @@ public static void saveThumbnail(File file){
 
 
          //Creating the transformation direction (horizontal)
-         AffineTransform at =  AffineTransform.getScaleInstance(1, -1);
+         AffineTransform at =  AffineTransform.getScaleInstance(0.25, -0.25);
          at.translate(0, -imageIn.getHeight(null));
 
          //Applying transformation

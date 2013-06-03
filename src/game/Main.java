@@ -141,8 +141,8 @@ public class Main {
 	
 	//Some more objects
 	public static Camera camera = new Camera();
-	Terrain terrain; 
-	Entity skybox;
+	static Terrain terrain; 
+	static Entity skybox;
 	public static GUI gui;
 	public static BuildPreview buildpreview;
 	static splashScreen splashscreen;
@@ -289,7 +289,7 @@ public class Main {
 	/**
 	 * Get the Objectindex of the Object under the Mousecursor
 	 */
-	private void picking()
+	private static void picking()
 	{
 		glEnable(GL_SCISSOR_TEST);
 		glScissor(Mouse.getX(), Mouse.getY(), 1, 1);
@@ -314,7 +314,7 @@ public class Main {
 	 * Calculates the position of the mousecursor in 3d space.
 	 * Only points on the terrain can be mouse positions.
 	 */
-	private void picking3d()
+	private static void picking3d()
 	{
 		final IntBuffer vp = BufferUtils.createIntBuffer(16);
         final FloatBuffer mv = BufferUtils.createFloatBuffer(16);
@@ -668,7 +668,7 @@ public class Main {
 	/**
 	 * Do the actual rendering
 	 */
-	public void renderGL() {
+	public static void renderGL() {
 		// Clear The Screen And The Depth Buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
