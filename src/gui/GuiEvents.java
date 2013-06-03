@@ -1,6 +1,8 @@
 package gui;
 
 import java.awt.Color;
+import java.io.File;
+
 import org.lwjgl.input.Keyboard;
 
 import effects.ParticleEffects;
@@ -482,7 +484,7 @@ public class GuiEvents {
 	switch (eventtype) {
 	case Click:
 			if(((CityPreview)e).getCityname()!="")
-			Main.gui.loadingscreen.setCityName(((CityPreview)e).getCityname());
+				Main.gui.loadingscreen.setCityName(((CityPreview)e).getCityname());
 			break;
 	default:break;}}};
 	

@@ -136,6 +136,7 @@ public class GuiPanel extends AbstractGuiElement {
 									(byte) getColor().getGreen(),
 									(byte) getColor().getBlue(),
 									(byte) (getScreenOpacity()*255));
+						else if(getTexture()!=null)glColor3f(1, 1, 1);
 						
 						glTexCoord2d(0, 1f);
 						glVertex2f(0, 0);

@@ -2,25 +2,39 @@ package gui;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.FilenameFilter;
 
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.lwjgl.opengl.Display;
 
+import game.Game;
+import game.Main;
 import game.ResourceManager;
 
 public class LoadingScreen extends GuiPanel {
 
+	private int scrolling=0;
 	private GuiLabel title;
 	private GuiTextbox cityname;
 	private GuiButton load;
 	private GuiButton abort;
-	private CityPreview city1 = new CityPreview(30, 275, "Stadt 1");
-	private CityPreview city2 = new CityPreview(180, 275, "Stadt 2");
-	private CityPreview city3 = new CityPreview(330, 275, "Stadt 3");
-	private CityPreview city4 = new CityPreview(30, 125, "Stadt 4");
-	private CityPreview city5 = new CityPreview(180, 125, "Stadt 5");
-	private CityPreview city6 = new CityPreview(330, 125, "Stadt 6");
+	private GuiPanel up;
+	private GuiPanel down;
+	private CityPreview[] cps = new CityPreview[]{
+		new CityPreview(30, 350, "Stadt 1"),
+		new CityPreview(180, 350, "Stadt 2"),
+		new CityPreview(330, 350, "Stadt 3"),
+		new CityPreview(30, 265, "Stadt 4"),
+		new CityPreview(180, 265, "Stadt 5"),
+		new CityPreview(330, 265, "Stadt 6"),
+		new CityPreview(30, 180, "Stadt 7"),
+		new CityPreview(180, 180, "Stadt 8"),
+		new CityPreview(330, 180, "Stadt 9"),
+		new CityPreview(30, 95, "Stadt 10"),
+		new CityPreview(180, 95, "Stadt 11"),
+		new CityPreview(330, 95, "Stadt 12"),
+	};
 	
 	public LoadingScreen()
 	{
@@ -47,12 +61,31 @@ public class LoadingScreen extends GuiPanel {
 		abort.setText("Abbrechen");
 		abort.setEvent(GuiEvents.LoadingScreenAbort);
 		add(abort);
-		add(city1);
-		add(city2);
-		add(city3);
-		add(city4);
-		add(city5);
-		add(city6);
+		up = new GuiPanel(72,430,32,32,ResourceManager.TEXTURE_SCROLLUP);
+		up.setEvent(new GuiEvent(){
+			@Override public void run(GuiEventType eventtype, GuiElement e) {
+				switch (eventtype) {
+				case Click:
+						if(Main.gui.loadingscreen.getScrolling()>0){
+							Main.gui.loadingscreen.setScrolling(Main.gui.loadingscreen.getScrolling()-1);
+							Main.gui.loadingscreen.show();
+						}
+						break;
+				default:break;}}});
+		add(up);
+		down = new GuiPanel(40,430,32,32,ResourceManager.TEXTURE_SCROLLDOWN);
+		down.setEvent(new GuiEvent(){
+			@Override public void run(GuiEventType eventtype, GuiElement e) {
+				switch (eventtype) {
+				case Click:
+							Main.gui.loadingscreen.setScrolling(Main.gui.loadingscreen.getScrolling()+1);
+							Main.gui.loadingscreen.show();
+						break;
+				default:break;}}});
+		add(down);
+		for(CityPreview c: cps){
+			add(c);
+		}
 	}
 	
 	public String getCityName()
@@ -69,43 +102,30 @@ public class LoadingScreen extends GuiPanel {
 	{
 		setVisible(true);
 		File d = new File("res/cities/");
-		File[] f =  d.listFiles();
-		if(f.length>0){
-			city1.setCityname(f[0].getName().substring(0,f[0].getName().length()-5));
-		}else{
-			city1.setCityname("");
-			city1.setColor(Color.gray);
+		File[] f =  d.listFiles(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				if(name.endsWith(".city"))return true;
+				return false;
+			}
+		});
+		for(int i=0;i<cps.length;i++){
+			if(f.length>i+getScrolling()*12){
+				cps[i].setCityname(f[i+getScrolling()*12].getName().substring(0,f[i+getScrolling()*12].getName().length()-5));
+				cps[i].setEnabled(true);
+			}else{
+				cps[i].setCityname("");
+				cps[i].setEnabled(false);
+			}
 		}
-		if(f.length>1){
-			city2.setCityname(f[1].getName().substring(0,f[1].getName().length()-5));
-		}else{
-			city2.setCityname("");
-			city2.setColor(Color.gray);
-		}
-		if(f.length>2){
-			city3.setCityname(f[2].getName().substring(0,f[2].getName().length()-5));
-		}else{
-			city3.setCityname("");
-			city3.setColor(Color.gray);
-		}
-		if(f.length>3){
-			city4.setCityname(f[03].getName().substring(0,f[3].getName().length()-5));
-		}else{
-			city4.setCityname("");
-			city4.setColor(Color.gray);
-		}
-		if(f.length>4){
-			city5.setCityname(f[4].getName().substring(0,f[4].getName().length()-5));
-		}else{
-			city5.setCityname("");
-			city5.setColor(Color.gray);
-		}
-		if(f.length>5){
-			city6.setCityname(f[5].getName().substring(0,f[5].getName().length()-5));
-		}else{
-			city6.setCityname("");
-			city6.setColor(Color.gray);
-		}
+	}
+
+	public int getScrolling() {
+		return scrolling;
+	}
+
+	public void setScrolling(int scrolling) {
+		this.scrolling = scrolling;
 	}
 
 	

@@ -4,6 +4,9 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
 import java.awt.Font;
+import java.awt.Image;
+import java.awt.Toolkit;
+import java.awt.image.RenderedImage;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,9 +17,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStream;
 import javax.xml.parsers.*;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
@@ -32,6 +38,7 @@ import org.lwjgl.opengl.Display;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.font.effects.ColorEffect;
+import org.newdawn.slick.imageout.ImageIOWriter;
 import org.newdawn.slick.openal.Audio;
 import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.opengl.Texture;
@@ -131,6 +138,9 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUITEXTFIELD = addTexture("guitextfield.png");
 	public final static Texture TEXTURE_GUITEXTFIELDL = addTexture("guitextfieldl.png");
 	public final static Texture TEXTURE_GUITEXTFIELDR = addTexture("guitextfieldr.png");
+	public final static Texture TEXTURE_CPSHADOW = addTexture("cpshadow.png");
+	public final static Texture TEXTURE_SCROLLUP = addTexture("scrollup.png");
+	public final static Texture TEXTURE_SCROLLDOWN = addTexture("scrolldown.png");
 	
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	
@@ -227,7 +237,7 @@ public class ResourceManager {
 	 * @param stream The imput stream
 	 * @return The loaded texture
 	 */
-	private static Texture LoadTexture(InputStream stream)
+	public static Texture LoadTexture(InputStream stream)
 	{
 		try {
 			return TextureLoader.getTexture("PNG", new BufferedInputStream(stream));

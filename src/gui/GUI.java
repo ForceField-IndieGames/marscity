@@ -23,6 +23,7 @@ import animation.AnimationValue;
 public class GUI {
 	
 	private GuiElement keyboardfocus;
+	private static boolean visible = true;
 	
 	public GuiPanel MenuBG = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_MAINMENUBG);
 	public GuiPanel MenuFF = new GuiPanel(Display.getWidth()-512,0,512,128,ResourceManager.TEXTURE_MAINMENUFF);
@@ -362,6 +363,8 @@ public class GUI {
 	
 	public void draw()
 	{
+		if(!isVisible())return;
+		
 		glDisable(GL_DEPTH_TEST);
 		glPushMatrix();
 		
@@ -444,6 +447,14 @@ public class GUI {
 
 	public void setKeyboardfocus(GuiElement keyboardfocus) {
 		this.keyboardfocus = keyboardfocus;
+	}
+
+	public static boolean isVisible() {
+		return visible;
+	}
+
+	public static void setVisible(boolean visible) {
+		GUI.visible = visible;
 	}
 	
 }
