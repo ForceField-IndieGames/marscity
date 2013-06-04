@@ -6,9 +6,24 @@ import org.newdawn.slick.opengl.Texture;
 
 import animation.Animatable;
 
+/**
+ * This abstract class implements the guiElement interface and can be used
+ * to easily create new gui elements without having to implement all
+ * of the methods.
+ * @author Benedikt Ringlein
+ */
 
-public abstract class AbstractGuiElement implements guiElement, Animatable {
+public abstract class AbstractGuiElement implements GuiElement, Animatable {
 
+	private GuiEvent event;
+	private float x=0,y=0,width=0,height=0;
+	private boolean visible=true;
+	private GuiElement parent = null;
+	private Texture texture = null;
+	private Color color = Color.white;
+	private float opacity = 1f;
+	private boolean clickThrough = false;
+	
 	@Override
 	public void setZ(float z) {
 		// TODO Auto-generated method stub
@@ -35,8 +50,7 @@ public abstract class AbstractGuiElement implements guiElement, Animatable {
 
 	@Override
 	public void setOpacity(float opacity) {
-		// TODO Auto-generated method stub
-
+		this.opacity = opacity;
 	}
 
 	@Override
@@ -65,8 +79,7 @@ public abstract class AbstractGuiElement implements guiElement, Animatable {
 
 	@Override
 	public float getOpacity() {
-		// TODO Auto-generated method stub
-		return 0;
+		return opacity;
 	}
 
 	@Override
@@ -74,125 +87,144 @@ public abstract class AbstractGuiElement implements guiElement, Animatable {
 		// TODO Auto-generated method stub
 
 	}
+	
+	@Override
+	public void callGuiEvents(GuiEventType eventtype)
+	{
+		try {
+			getEvent().run(eventtype, this);
+		} catch (Exception e) {
+		}
+	}
 
 	@Override
-	public guiElement mouseover() {
-		// TODO Auto-generated method stub
-		return null;
+	public GuiElement mouseover() {
+		return this;
 	}
 
 	@Override
 	public float getX() {
-		// TODO Auto-generated method stub
-		return 0;
+		return x;
 	}
 
 	@Override
 	public float getY() {
-		// TODO Auto-generated method stub
-		return 0;
+		return y;
 	}
 
 	@Override
 	public float getWidth() {
-		// TODO Auto-generated method stub
-		return 0;
+		return width;
 	}
 
 	@Override
 	public float getHeight() {
-		// TODO Auto-generated method stub
-		return 0;
+		return height;
 	}
 
 	@Override
 	public boolean isVisible() {
-		// TODO Auto-generated method stub
-		return false;
+		return visible;
 	}
 
 	@Override
 	public float getScreenX() {
-		// TODO Auto-generated method stub
-		return 0;
+		if(getParent()!=null)return getX()+getParent().getScreenX();
+		return getX();
 	}
 
 	@Override
 	public float getScreenY() {
-		// TODO Auto-generated method stub
-		return 0;
+		if(getParent()!=null)return getY()+getParent().getScreenY();
+		return getY();
 	}
 
 	@Override
 	public boolean isScreenVisible() {
-		// TODO Auto-generated method stub
-		return false;
+		if(getParent()!=null)return isVisible()&&getParent().isScreenVisible();
+		return isVisible();
+	}
+	
+	@Override
+	public float getScreenOpacity() {
+		if(getParent()!=null)return getOpacity()*getParent().getOpacity();
+		return getOpacity();
 	}
 
 	@Override
-	public guiElement getParent() {
-		// TODO Auto-generated method stub
-		return null;
+	public GuiElement getParent() {
+		return parent;
 	}
 
 	@Override
 	public Texture getTexture() {
-		// TODO Auto-generated method stub
-		return null;
+		return texture;
 	}
 
 	@Override
 	public Color getColor() {
-		// TODO Auto-generated method stub
-		return null;
+		return color;
 	}
 
 	@Override
 	public void setX(float x) {
-		// TODO Auto-generated method stub
+		this.x = x;
 
 	}
 
 	@Override
 	public void setY(float y) {
-		// TODO Auto-generated method stub
+		this.y = y;
 
 	}
 
 	@Override
 	public void setWidth(float width) {
-		// TODO Auto-generated method stub
-
+		this.width = width;
 	}
 
 	@Override
 	public void setHeight(float height) {
-		// TODO Auto-generated method stub
+		this.height = height;
 
 	}
 
 	@Override
 	public void setVisible(boolean visible) {
-		// TODO Auto-generated method stub
-
+		this.visible = visible;
 	}
 
 	@Override
-	public void setParent(guiElement guielement) {
-		// TODO Auto-generated method stub
-
+	public void setParent(GuiElement guielement) {
+		this.parent = guielement;
 	}
 
 	@Override
 	public void setTexture(Texture texure) {
-		// TODO Auto-generated method stub
-
+		this.texture = texure;
 	}
 
 	@Override
 	public void setColor(Color color) {
-		// TODO Auto-generated method stub
+		this.color = color;
+	}
 
+	public GuiEvent getEvent() {
+		return event;
+	}
+
+	public void setEvent(GuiEvent event) {
+		this.event = event;
+	}
+
+	@Override
+	public boolean isClickThrough() {
+		return this.clickThrough;
+	}
+
+	@Override
+	public void setClickThrough(boolean clickthrough) {
+		this.clickThrough = clickthrough;
 	}
 
 }

@@ -9,10 +9,14 @@ import org.newdawn.slick.opengl.Texture;
 
 import animation.Animatable;
 
+/**
+ * This is a basic entity with texture, model and transforms.
+ * @author Benedikt Ringlein
+ */
 
 public class Entity implements Drawable, Animatable {
 
-	private float x = 0, y = 0, z=-100;
+	private float x = 0, y = 0, z=0;
 	private float rotX=0,rotY=0,rotZ=0;
 	private float scaleX=1,scaleY=1,scaleZ=1;
 	private Texture texture;
@@ -22,6 +26,82 @@ public class Entity implements Drawable, Animatable {
 	private float destY;
 	private float preferredY;
 	private boolean visible = true;
+
+	public Entity()
+	{
+		
+	}
+	
+	public Entity(String modelpath, Texture texture)
+	{
+		try {
+			model = ObjectLoader.loadModel(modelpath);
+			this.displayList = ObjectLoader.createDisplayList(model);
+			this.texture = texture;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Entity(String modelpath, Texture texture, int x, int y, int z)
+	{
+		try {
+			model = ObjectLoader.loadModel(modelpath);
+			this.displayList = ObjectLoader.createDisplayList(model);
+			this.texture = texture;
+			this.x=x;
+			this.y=y;
+			this.z=z;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Entity(int displaylist, Texture texture, float x, float y, float z)
+	{
+			this.displayList = displaylist;
+			this.texture = texture;
+			this.x=x;
+			this.y=y;
+			this.z=z;
+	}
+
+	public Entity(int displaylist, Texture texture)
+	{
+			this.displayList = displaylist;
+			this.texture = texture;
+	}
+
+	public Entity(int displaylist, float x, float y, float z)
+	{
+			this.displayList = displaylist;
+			this.x=x;
+			this.y=y;
+			this.z=z;
+	}
+
+	public Entity(String modelpath)
+	{
+		try {
+			model = ObjectLoader.loadModel(modelpath);
+			this.displayList = ObjectLoader.createDisplayList(model);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Entity(String modelpath, int x, int y, int z)
+	{
+		try {
+			model = ObjectLoader.loadModel(modelpath);
+			this.displayList = ObjectLoader.createDisplayList(model);
+			this.x=x;
+			this.y=y;
+			this.z=z;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	public int getDisplayList() {
 		return displayList;
@@ -126,78 +206,6 @@ public class Entity implements Drawable, Animatable {
 	public void setTexture(Texture texture) {
 		this.texture = texture;
 	}
-
-	public Entity(String modelpath, Texture texture)
-	{
-		try {
-			model = ObjectLoader.loadModel(modelpath);
-			this.displayList = ObjectLoader.createDisplayList(model);
-			this.texture = texture;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public Entity(String modelpath, Texture texture, int x, int y, int z)
-	{
-		try {
-			model = ObjectLoader.loadModel(modelpath);
-			this.displayList = ObjectLoader.createDisplayList(model);
-			this.texture = texture;
-			this.x=x;
-			this.y=y;
-			this.z=z;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public Entity(int displaylist, Texture texture, float x, float y, float z)
-	{
-			this.displayList = displaylist;
-			this.texture = texture;
-			this.x=x;
-			this.y=y;
-			this.z=z;
-	}
-	
-	public Entity(int displaylist, Texture texture)
-	{
-			this.displayList = displaylist;
-			this.texture = texture;
-	}
-	
-	public Entity(int displaylist, float x, float y, float z)
-	{
-			this.displayList = displaylist;
-			this.x=x;
-			this.y=y;
-			this.z=z;
-	}
-	
-	public Entity(String modelpath)
-	{
-		try {
-			model = ObjectLoader.loadModel(modelpath);
-			this.displayList = ObjectLoader.createDisplayList(model);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public Entity(String modelpath, int x, int y, int z)
-	{
-		try {
-			model = ObjectLoader.loadModel(modelpath);
-			this.displayList = ObjectLoader.createDisplayList(model);
-			this.x=x;
-			this.y=y;
-			this.z=z;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 
 	@Override
 	public void draw() {

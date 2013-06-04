@@ -12,6 +12,14 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
+import animation.AnimationManager;
+import animation.AnimationValue;
+
+/**
+ * This class generates and displays the gui.
+ * @author Benedikt Ringlein
+ */
+
 public class GUI {
 	
 	public GuiPanel MenuBG = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_MAINMENUBG);
@@ -22,20 +30,36 @@ public class GUI {
 	public GuiButton MenuSettings = new GuiButton(440, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2);
 	public GuiButton MenuExit = new GuiButton(660, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2);
 	public GuiLabel MenuVersion = new GuiLabel(0,0,180,20,(Color)null);
+	public GuiPanel MenuIcon = new GuiPanel(Display.getWidth()/2-64,20,128,128,ResourceManager.TEXTURE_ICON256);
+	public GuiPanel IntroFF = new GuiPanel(Display.getWidth()/2-960,Display.getHeight()/2-540,1920,1080,ResourceManager.TEXTURE_FORCEFIELDBG);
 	
-	public GuiPanel toolBar = new GuiPanel(0,0,Display.getWidth(),84, ResourceManager.TEXTURE_GUITOOLBAR);
-	public GuiPanel toolAdd = new GuiPanel(20, 10, 64, 64, ResourceManager.TEXTURE_GUIADD);
-	public GuiPanel toolDelete = new GuiPanel(80, 5, 32, 32, ResourceManager.TEXTURE_GUIDELETE);
-	public GuiPanel guiTools = new GuiPanel(0,0,128,128,ResourceManager.TEXTURE_GUITOOLSBG);
-	public GuiPanel menuButton = new GuiPanel(10, 65, 32, 32, ResourceManager.TEXTURE_GUIMENUBUTTON);
+	public BuildingToolTip buildingTooltip = new BuildingToolTip();
 	
-	public GuiPanel infoBar = new GuiPanel(300,55,700,20,(Color)null);
-	public GuiLabel infoMoney = new GuiLabel(0,0,150,20,(Color)null);
-	public GuiLabel infoCitizens = new GuiLabel(150,0,150,20,(Color)null);
+	public GuiPanel deleteBorder = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_GUIDELETEBORDER);
 	
-	public GuiPanel buildingChooser = new GuiPanel(300,0,700,50, (Color)null);
-	public GuiButton buildingHouse = new GuiButton(0,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2, Color.gray);
-	public GuiButton buildingBighouse = new GuiButton(100,0,100,40, ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiPanel toolBar = new GuiPanel(0,0,Display.getWidth(),70, ResourceManager.TEXTURE_GUITOOLBAR);
+	
+	public GuiPanel guiTools = new GuiPanel(0,0,69,100,ResourceManager.TEXTURE_GUITOOLSBG);
+	public GuiPanel menuButton = new GuiPanel(0, 64, 32, 32, ResourceManager.TEXTURE_GUIMENUBUTTON);
+	public GuiPanel toolDelete = new GuiPanel(0, 0, 64, 64, ResourceManager.TEXTURE_GUIDELETE);
+	
+	public GuiPanel infoBar = new GuiPanel(0,30,Display.getWidth(),40,ResourceManager.TEXTURE_GUITOOLBAR);
+	public GuiLabel infoMoney = new GuiLabel(300,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
+	public GuiLabel infoCitizens = new GuiLabel(550,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
+	
+	public GuiPanel buildingCategories = new GuiPanel(150,0,Display.getWidth(),50, (Color)null);
+	public GuiButton categoryStreets = new GuiButton(0,0,150,30,ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton categoryResidential = new GuiButton(150,0,150,30,ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiPanel buildingsPanel = new GuiPanel(100,20,Display.getWidth(),100,(Color)null);
+	public GuiPanel buildingsPanell = new GuiPanel(0,0,50,100,ResourceManager.TEXTURE_GUIBUILDINGSPANELL);
+	public GuiPanel buildingsStreet = new GuiPanel(50,0,Display.getWidth(),100, ResourceManager.TEXTURE_GUIBUILDINGSPANEL);
+	public GuiPanel buildingsResidential = new GuiPanel(50,0,Display.getWidth(),100, ResourceManager.TEXTURE_GUIBUILDINGSPANEL);
+	public GuiLabel buildingStreetLabel = new GuiLabel(0,0,100,30, (Color)null);
+	public GuiPanel buildingStreet = new GuiPanel(10,25,80,80, ResourceManager.TEXTURE_GUITHUMBSTREET);
+	public GuiLabel buildingHouseLabel = new GuiLabel(0,0,100,30, (Color)null);
+	public GuiPanel buildingHouse = new GuiPanel(10,25,80,80, ResourceManager.TEXTURE_GUITHUMBHOUSE);
+	public GuiLabel buildingBighouseLabel = new GuiLabel(100,0,100,30, (Color)null);
+	public GuiPanel buildingBighouse = new GuiPanel(110,25,80,80, ResourceManager.TEXTURE_GUITHUMBBIGHOUSE);
 	
 	public GuiPanel blur = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),(Color)null);
 	public GuiPanel pauseMenu = new GuiPanel(Display.getWidth()/2-128,Display.getHeight()/2-128,256,256,ResourceManager.TEXTURE_GUIMENU);
@@ -51,88 +75,182 @@ public class GUI {
 	
 	public GuiPanel settingsMenu = new GuiPanel(Display.getWidth()/2-256,Display.getHeight()/2-256,512,512,ResourceManager.TEXTURE_GUIMENU);
 	public GuiButton settingsResume = new GuiButton(156, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON);
-	public GuiLabel settingsTitle = new GuiLabel(30, 470, 100, 20, (Color)null);
+	public GuiLabel settingsTitle = new GuiLabel(0, 460, 512,40, (Color)null);
 	public GuiLabel settingsVsync = new GuiLabel(30,440,190,20,(Color)null);
-	public GuiButton settingsVsyncon = new GuiButton(30,410,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
-	public GuiButton settingsVsyncoff = new GuiButton(130,410,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiButton settingsVsyncon = new GuiButton(30,410,100,30,ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton settingsVsyncoff = new GuiButton(130,410,100,30,ResourceManager.TEXTURE_GUIBUTTON);
 	public GuiLabel settingsParticles = new GuiLabel(30,380,190,20,(Color)null);
-	public GuiButton settingsParticlesoff = new GuiButton(30,350,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
-	public GuiButton settingsParticleslow = new GuiButton(130,350,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
-	public GuiButton settingsParticlesmiddle = new GuiButton(230,350,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
-	public GuiButton settingsParticleshigh = new GuiButton(330,350,100,30,ResourceManager.TEXTURE_GUIBUTTON2);
+	public GuiButton settingsParticlesoff = new GuiButton(30,350,100,30,ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton settingsParticleslow = new GuiButton(130,350,100,30,ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton settingsParticlesmiddle = new GuiButton(230,350,100,30,ResourceManager.TEXTURE_GUIBUTTON);
+	public GuiButton settingsParticleshigh = new GuiButton(330,350,100,30,ResourceManager.TEXTURE_GUIBUTTON);
 	
-	List<guiElement> elements = new ArrayList<guiElement>();
-	List<guiElement> menuElements = new ArrayList<guiElement>();
+	public GuiPanel cameraMove = new GuiPanel(Display.getWidth()/2-16,Display.getHeight()/2-16,32,32,ResourceManager.TEXTURE_GUICAMERAMOVE);
+	public GuiPanel cameraRotate = new GuiPanel(Display.getWidth()/2-16,Display.getHeight()/2-16,32,32,ResourceManager.TEXTURE_GUICAMERAROTATE);
+	
+	List<GuiElement> elements = new ArrayList<GuiElement>();
+	List<GuiElement> menuElements = new ArrayList<GuiElement>();
+	public GuiElement lastHovered;
 	
 	public GUI()
 	{
 		
 		if(ResourceManager.getSetting("particlequality").equals("off")){
-			settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESOFF;
 		}else if(ResourceManager.getSetting("particlequality").equals("low")){
-			settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESLOW;
 		}else if(ResourceManager.getSetting("particlequality").equals("middle")){
-			settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESMIDDLE;
 		}else if(ResourceManager.getSetting("particlequality").equals("high")){
-			settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESHIGH;
 		}
 		
 		//Main menu
+		
 		menuElements.add(MenuBG);
 		menuElements.add(MenuFF);
+		menuElements.add(MenuIcon);
 		menuElements.add(MenuVersion);
-						 MenuVersion.setText("Mars City [Alpha 0.0.1]");
 		menuElements.add(MenuPanel);
-						 MenuPanel.add(MenuPlay);
-		     		    			   MenuPlay.setText(ResourceManager.getString("MAINMENU_BUTTON_PLAY"));
-		     		     MenuPanel.add(MenuLoad);
-		     		     			   MenuLoad.setText(ResourceManager.getString("MAINMENU_BUTTON_LOAD"));
-		     		     MenuPanel.add(MenuSettings);
-		     		     			   MenuSettings.setText(ResourceManager.getString("MAINMENU_BUTTON_SETTINGS"));
-		     		     MenuPanel.add(MenuExit);
-		     		     			   MenuExit.setText(ResourceManager.getString("MAINMENU_BUTTON_EXIT"));
+		menuElements.add(IntroFF);
+		
+		MenuPanel.add(MenuPlay);
+		MenuPanel.add(MenuLoad);
+		MenuPanel.add(MenuSettings);
+		MenuPanel.add(MenuExit);
+		
+		IntroFF.setVisible(false);
+		
+		MenuIcon.setOpacity(0.9f);
+	
+		MenuVersion.setText("Mars City [Alpha 0.0.1]");
+		
+	    MenuPlay.setText(ResourceManager.getString("MAINMENU_BUTTON_PLAY"));
+	    MenuPlay.setFont(ResourceManager.Arial15B);
+ 
+	    MenuLoad.setText(ResourceManager.getString("MAINMENU_BUTTON_LOAD"));
+	    MenuLoad.setFont(ResourceManager.Arial15B);
+ 
+	    MenuSettings.setText(ResourceManager.getString("MAINMENU_BUTTON_SETTINGS"));
+	    MenuSettings.setFont(ResourceManager.Arial15B);
+ 
+	    MenuExit.setText(ResourceManager.getString("MAINMENU_BUTTON_EXIT"));
+	    MenuExit.setFont(ResourceManager.Arial15B);
 		
 		//GUI
+	    
+	    
+		add(deleteBorder);
+		add(cameraMove);
+		add(cameraRotate);
+		add(buildingsPanel);
 		add(toolBar);
-			toolBar.setY(-40);
-			toolBar.add(buildingChooser);
-						buildingChooser.add(buildingHouse);
-											buildingHouse.setText(ResourceManager.getString(ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_HOUSE).getName()));
-						buildingChooser.add(buildingBighouse);
-											buildingBighouse.setText(ResourceManager.getString(ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_BIGHOUSE).getName()));
-			toolBar.add(infoBar);
-						infoBar.add(infoMoney);
-									infoMoney.setText("Geld: 0$");
-						infoBar.add(infoCitizens);
-									infoCitizens.setText("Einwohner: 0");
+		
 		add(guiTools);
+		add(buildingTooltip);
+		add(blur);
+		add(pauseMenu);
+		
+		buildingTooltip.setVisible(false);
+
+		buildingsPanel.add(buildingsPanell);
+		buildingsPanel.add(buildingsStreet);
+		buildingsPanel.add(buildingsResidential);
+		
+		toolBar.add(buildingCategories);
+		toolBar.add(infoBar);
+		
+		buildingCategories.add(categoryStreets);
+		buildingCategories.add(categoryResidential);
+		
+		buildingsStreet.add(buildingStreetLabel);
+		buildingsStreet.add(buildingStreet);
+		
+		buildingsResidential.add(buildingHouseLabel);
+		buildingsResidential.add(buildingHouse);
+		buildingsResidential.add(buildingBighouseLabel);
+		buildingsResidential.add(buildingBighouse);
+		
+		infoBar.add(infoMoney);
+		infoBar.add(infoCitizens);
+		
 		guiTools.add(menuButton);
-		guiTools.add(toolAdd);
 		guiTools.add(toolDelete);
 		
-		add(blur);
-			blur.setBlurBehind(true);
-			blur.setVisible(false);
-			
-		add(pauseMenu);
-			pauseMenu.setVisible(false);
-			pauseMenu.add(pauseLogo);
-			pauseMenu.add(pauseMainmenu);
-						  pauseMainmenu.setText(ResourceManager.getString("PAUSEMENU_BUTTON_MAINMENU"));
-			pauseMenu.add(pauseLoad);
-						  pauseLoad.setText(ResourceManager.getString("PAUSEMENU_BUTTON_LOAD"));
-			pauseMenu.add(pauseSave);
-						  pauseSave.setText(ResourceManager.getString("PAUSEMENU_BUTTON_SAVE"));
-			pauseMenu.add(pauseSettings);
-						  pauseSettings.setText(ResourceManager.getString("PAUSEMENU_BUTTON_SETTINGS"));
-			pauseMenu.add(pauseExit);
-						  pauseExit.setText(ResourceManager.getString("PAUSEMENU_BUTTON_EXIT"));			  
-			pauseMenu.add(pauseResume);
-						  pauseResume.setText(ResourceManager.getString("PAUSEMENU_BUTTON_RESUME"));
+		pauseMenu.add(pauseLogo);
+		pauseMenu.add(pauseMainmenu);
+		pauseMenu.add(pauseLoad);
+		pauseMenu.add(pauseSave);
+		pauseMenu.add(pauseSettings);
+		pauseMenu.add(pauseExit);
+		pauseMenu.add(pauseResume);
+		
+		buildingsPanel.setVisible(false);
+		
+		buildingsStreet.setVisible(false);
+		buildingsResidential.setVisible(false);
+		
+		categoryStreets.setText(ResourceManager.getString("BUILDINGSCATEGORIES_BUTTON_STREETS"));
+		categoryStreets.setEvent(GuiEvents.buildingCategorys);
+		
+		categoryResidential.setText(ResourceManager.getString("BUILDINGSCATEGORIES_BUTTON_RESIDENTIAL"));
+		categoryResidential.setEvent(GuiEvents.buildingCategorys);
+		
+		deleteBorder.setClickThrough(true);
+		deleteBorder.setVisible(false);
+		
+		cameraMove.setVisible(false);
+		
+		cameraRotate.setVisible(false);
+						
+		buildingStreetLabel.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_STREET));
+		buildingStreetLabel.setCentered(true);
+		buildingStreet.setEvent(GuiEvents.building);
+		
+		buildingHouseLabel.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_HOUSE));
+		buildingHouseLabel.setCentered(true);
+		buildingHouse.setEvent(GuiEvents.building);
+		
+		buildingBighouseLabel.setText(ResourceManager.getBuildingTypeName(ResourceManager.BUILDINGTYPE_BIGHOUSE));
+		buildingBighouseLabel.setCentered(true);
+		buildingBighouse.setEvent(GuiEvents.building);
+						
+		infoMoney.setText("Geld: 0$");
+		infoMoney.setFont(ResourceManager.Arial15B);
+
+		infoCitizens.setText("Einwohner: 0");
+		infoCitizens.setFont(ResourceManager.Arial15B);
+		
+		menuButton.setEvent(GuiEvents.menuButton);
+
+		toolDelete.setEvent(GuiEvents.toolDelete);
+		
+		blur.setBlurBehind(true);
+		blur.setVisible(false);
+		
+		pauseMenu.setVisible(false);
+		
+	    pauseMainmenu.setText(ResourceManager.getString("PAUSEMENU_BUTTON_MAINMENU"));
+	    pauseMainmenu.setEvent(GuiEvents.pauseMainmenu);
+
+	    pauseLoad.setText(ResourceManager.getString("PAUSEMENU_BUTTON_LOAD"));
+	    pauseLoad.setEvent(GuiEvents.pauseLoad);
+
+	    pauseSave.setText(ResourceManager.getString("PAUSEMENU_BUTTON_SAVE"));
+	    pauseSave.setEvent(GuiEvents.pauseSave);
+
+	    pauseSettings.setText(ResourceManager.getString("PAUSEMENU_BUTTON_SETTINGS"));
+	    pauseSettings.setEvent(GuiEvents.pauseSettings);
+
+	    pauseExit.setText(ResourceManager.getString("PAUSEMENU_BUTTON_EXIT"));
+	    pauseExit.setEvent(GuiEvents.pauseExit);
+
+	    pauseResume.setText(ResourceManager.getString("PAUSEMENU_BUTTON_RESUME"));
+	    pauseResume.setEvent(GuiEvents.pauseResume);
 
   ///////////		
 		add(settingsMenu);
@@ -149,17 +267,37 @@ public class GUI {
 			settingsMenu.add(settingsResume);
 			
 			settingsTitle.setText(ResourceManager.getString("SETTINGSMENU_LABEL_TITLE"));
+			settingsTitle.setCentered(true);
+			settingsTitle.setFont(ResourceManager.Arial30B);
+			
 			settingsVsyncon.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCON"));
-			if (ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			settingsVsyncon.setEvent(GuiEvents.settingsVsyncon);
+			if (ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+			
 			settingsVsyncoff.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCOFF"));
-			if (!ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
+			settingsVsyncoff.setEvent(GuiEvents.settingsVsyncoff);
+			if (!ResourceManager.getSetting("vsync").equals("enabled"))settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+			
 			settingsVsync.setText(ResourceManager.getString("SETTINGSMENU_LABEL_VSYNC"));
+			settingsVsync.setFont(ResourceManager.Arial15B);
+			
 			settingsParticles.setText(ResourceManager.getString("SETTINGSMENU_LABEL_PARTICLES"));
+			settingsParticles.setFont(ResourceManager.Arial15B);
+			
 			settingsParticlesoff.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESOFF"));
+			settingsParticlesoff.setEvent(GuiEvents.settingsParticlesoff);
+			
 			settingsParticleslow.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESLOW"));
+			settingsParticleslow.setEvent(GuiEvents.settingsParticleslow);
+			
 			settingsParticlesmiddle.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESMIDDLE"));
+			settingsParticlesmiddle.setEvent(GuiEvents.settingsParticlesmiddle);
+			
 			settingsParticleshigh.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESHIGH"));
+			settingsParticleshigh.setEvent(GuiEvents.settingsParticleshigh);
+			
 			settingsResume.setText(ResourceManager.getString("SETTINGSMENU_BUTTON_RESUME"));
+			settingsResume.setEvent(GuiEvents.settingsResume);
 ///////////
 			
 		add(debugInfo);	
@@ -167,14 +305,37 @@ public class GUI {
 						  
 	}
 	
-	public void add(guiElement guielement)
+	/**
+	 * Shows a message box with an ok button that hides it again.
+	 * The messagebox smoothly fades in and out.
+	 * @param title The title of the message
+	 * @param text The message's text
+	 */
+	public void MsgBox(String title, String text)
+	{
+		MsgBox msgbox = new MsgBox(title, text);
+		msgbox.setOpacity(0f);
+		AnimationManager.animateValue(msgbox, AnimationValue.opacity, 1f, 0.005f);
+		AnimationManager.animateValue(msgbox, AnimationValue.Y, msgbox.getY()+10, 0.1f, AnimationManager.ACTION_REVERSE);
+		add(msgbox);
+	}
+	
+	/**
+	 * Adds an element to the gui
+	 * @param guielement
+	 */
+	public void add(GuiElement guielement)
 	{
 		elements.add(guielement);
 	}
 	
+	/**
+	 * Removes an element from the gui
+	 * @param index
+	 */
 	public void remove(int index){
 		elements.remove(index);}
-	public void remove(guiElement guielement){
+	public void remove(GuiElement guielement){
 		elements.remove(guielement);}
 	
 	public void draw()
@@ -183,7 +344,7 @@ public class GUI {
 		glPushMatrix();
 		
 		glDisable(GL_LIGHTING);
-		for(guiElement element: elements) {
+		for(GuiElement element: elements) {
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			glOrtho(0, Display.getWidth(), 0, Display.getHeight(), 1, -1);
@@ -200,7 +361,7 @@ public class GUI {
 		glPushMatrix();
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glDisable(GL_LIGHTING);
-		for(guiElement element: menuElements) {
+		for(GuiElement element: menuElements) {
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
 			glOrtho(0, Display.getWidth(), 0, Display.getHeight(), 1, -1);
@@ -211,7 +372,7 @@ public class GUI {
 		glEnable(GL_DEPTH_TEST);
 	}
 	
-	public guiElement mouseoverMenu()
+	public GuiElement mouseoverMenu()
 	{
 		for(int i=menuElements.size()-1;i>=0;i--)
 		{
@@ -224,7 +385,7 @@ public class GUI {
 		return null;
 	}
 	
-	public guiElement mouseover()
+	public GuiElement getMouseover()
 	{
 		for(int i=elements.size()-1;i>=0;i--)
 		{
@@ -232,9 +393,21 @@ public class GUI {
 					&&elements.get(i).getX()<Mouse.getX()
 					&&elements.get(i).getY()<Mouse.getY()
 					&&elements.get(i).getWidth()+elements.get(i).getX()>Mouse.getX()
-					&&elements.get(i).getHeight()+elements.get(i).getY()>Mouse.getY()) return elements.get(i).mouseover();
+					&&elements.get(i).getHeight()+elements.get(i).getY()>Mouse.getY()
+					&&!elements.get(i).isClickThrough()) return elements.get(i).mouseover();
 		}
 		return null;
+	}
+	
+	public void callGuiEvents(GuiEventType eventtype)
+	{
+		GuiElement mo = getMouseover();
+		if(mo!=null)mo.callGuiEvents(eventtype);
+	}
+	
+	public void callGuiEvents(GuiEventType eventtype, GuiElement element)
+	{
+		if(element!=null)element.callGuiEvents(eventtype);
 	}
 	
 }

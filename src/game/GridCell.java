@@ -2,6 +2,11 @@ package game;
 
 import objects.Building;
 
+/**
+ * GridCells are used in the grid to contain the information needed.
+ * @author Benedikt Ringlein
+ */
+
 public class GridCell {
 	private Building building;
 

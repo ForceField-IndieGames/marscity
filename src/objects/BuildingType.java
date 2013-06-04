@@ -2,6 +2,13 @@ package objects;
 
 import org.newdawn.slick.opengl.Texture;
 
+/**
+ * The buildings type represents a type of building, e.g. House, Street, etc.
+ * It not only contains information about model and texture but also about the price,
+ * size and the height that is best suited when the camera looks at it when selected.
+ * @author Benedikt Ringlein
+ */
+
 public class BuildingType {
 
 	private String name;

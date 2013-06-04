@@ -18,6 +18,12 @@ import objects.Building;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 
+/**
+ * This class provides static methods for pausing, resuming, saving and loading the game or
+ * restarting it.
+ * @author Benedikt Ringlein
+ */
+
 public class Game {
 	private static boolean pause = false;
 	
@@ -50,12 +56,15 @@ public class Game {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			Main.gui.MsgBox("Fehler beim Speichern", "Beim speichern des Spielstandes ist ein Fehler aufgetreten.");
+			return;
 		}
+		Main.gui.MsgBox("Spiel gespeichert", "Der Spielstand wurde erfolgreich gespeichert.");
 	}
 	
 	public static void Load(String path)
 	{
-		//TODO Load the game
+		newGame();
 		try {
 			if(!(new File(path)).exists())return;
 			BufferedReader file = new BufferedReader(new FileReader(path));
@@ -73,9 +82,7 @@ public class Game {
 					float y = Float.parseFloat(line.split(" ")[3]);
 					float z = Float.parseFloat(line.split(" ")[4]);
 					
-					Grid.setBuilding((int)x, (int)z, new Building(bt));
-					
-					ResourceManager.objects.add(new Building(bt,x,y,z));
+					ResourceManager.buildBuilding(x, y, z, bt);
 				}
 			}
 			
@@ -84,12 +91,16 @@ public class Game {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
+			Main.gui.MsgBox("Fehler beim Laden", "Beim Laden des Spielstandes ist ein Fehler aufgetreten.");
+			return;
 		}
+		Main.gui.MsgBox("Spielstand geladen", "Der Spielstand wurde erfolgreich geladen."+System.lineSeparator()+"Viel Spaﬂ beim spielen!");
 	}
 	
 	public static void newGame()
 	{
-		Main.money = 10000;
+		int initialmoney = 5000;
+		Main.money = initialmoney;
 		Grid.init();
 		ResourceManager.objects = new ArrayList<Building>();
 		Main.gameState = Main.STATE_GAME;
