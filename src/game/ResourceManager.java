@@ -41,48 +41,93 @@ import org.w3c.dom.*;
 
 import animation.Animatable;
 
+/**
+ * The resourcemanager provides static methods for accessing resources.
+ * It also loads them when the game starts and maintains the list of objects.
+ * @author Benedikt Ringlein
+ */
 
 public class ResourceManager {
 	
-	public final static UnicodeFont font = new UnicodeFont(new Font("Arial",Font.BOLD,15));
+	/**
+	 * This font is used by buttons and labels in the gui
+	 */
+	public final static UnicodeFont Arial15 = new UnicodeFont(new Font("Arial",0,15));
+	public final static UnicodeFont Arial15B = new UnicodeFont(new Font("Arial",Font.BOLD,15));
+	public final static UnicodeFont Arial30B = new UnicodeFont(new Font("Arial",Font.BOLD,30));
 	
+	//The shaders, currently not used
 	public static int shaderProgram, vertexShader, fragmentShader;
 	
+	//Some xml stuff that is only used internally
 	static Document langFile = null;
 	static Document settingsFile = null;
 	static DocumentBuilder builder = null;
 	
+	//The path of the settings file
 	static final String FILE_SETTINGS = "res/settings/settings.xml";
 	
+	public static final String objectspath = "/res/objects/";
+	public static final String soundspath = "/res/sounds/";
+	public static final String texturespath = "/res/textures/";
+	public static final String shaderpath = "/res/shader/";
+	
+	//The building types (used when placing buildings, also saving and loading)
 	public final static int BUILDINGTYPE_HOUSE = 0;
 	public final static int BUILDINGTYPE_BIGHOUSE = 1;
+	public final static int BUILDINGTYPE_STREET = 2;
 	
-	public final static int OBJECT_HOUSE = addObject("/res/house.obj");
-	public final static int OBJECT_TERRAIN = addObject("/res/terrain.obj");
-	public final static int OBJECT_BIGHOUSE = addObject("/res/bighouse.obj");
+	//The objects (Actually loads and pares a file and generates a displaylist)
+	public final static int OBJECT_HOUSE = addObject("house.obj");
+	public final static int OBJECT_TERRAIN = addObject("terrain.obj");
+	public final static int OBJECT_SKYBOX = addObject("skybox.obj");
+	public final static int OBJECT_BIGHOUSE = addObject("bighouse.obj");
+	public final static int OBJECT_STREET = addObject("streetsegment.obj");
+	public final static int OBJECT_GRIDCELL = addObject("gridcell.obj");
 	
-	public final static Audio SOUND_DROP = addSound("WAV", "/res/drop.wav");
-	public final static Audio SOUND_DESTROY = addSound("WAV", "/res/destroy.wav");
+	//The audio files
+	public final static Audio SOUND_DROP = addSound("WAV", "drop.wav");
+	public final static Audio SOUND_DESTROY = addSound("WAV", "destroy.wav");
 	
-	public final static Texture TEXTURE_HOUSE = addTexture("/res/housetexture.png");
-	public final static Texture TEXTURE_TERRAIN = addTexture("/res/mars.png");
-	public final static Texture TEXTURE_GUITOOLSBG = addTexture("/res/guitoolsBG.png");
-	public final static Texture TEXTURE_GUISELECT = addTexture("/res/guiselect.png");
-	public final static Texture TEXTURE_GUIMENUBUTTON = addTexture("/res/guimenubutton.png");
-	public final static Texture TEXTURE_GUIADD = addTexture("/res/guiadd.png");
-	public final static Texture TEXTURE_GUIDELETE = addTexture("/res/guidelete.png");
-	public final static Texture TEXTURE_GUITOOLBAR = addTexture("/res/guitoolbar.png");
-	public final static Texture TEXTURE_GUIMENU = addTexture("/res/guimenu.png");
-	public final static Texture TEXTURE_EMPTY = addTexture("/res/empty.png");
-	public final static Texture TEXTURE_GUIBUTTON = addTexture("/res/guibutton.png");
-	public final static Texture TEXTURE_MAINMENUBG = addTexture("/res/mainmenubg.png");
-	public final static Texture TEXTURE_GUIBUTTON2 = addTexture("/res/guibutton2.png");
-	public final static Texture TEXTURE_GUIBUTTON2DOWN = addTexture("/res/guibutton2down.png");
-	public final static Texture TEXTURE_MAINMENUFF = addTexture("/res/ForceField.png");
-	public final static Texture TEXTURE_MARSCITYLOGO = addTexture("/res/marscitylogo.png");
-	public final static Texture TEXTURE_BIGHOUSE = addTexture("/res/bighousetexture.png");
-	public final static Texture TEXTURE_PARTICLEFOG = addTexture("/res/fogparticle.png");
-	
+	//Loads the textures
+	public final static Texture TEXTURE_ICON16 = addTexture("icon16.png");
+	public final static Texture TEXTURE_ICON32 = addTexture("icon32.png");
+	public final static Texture TEXTURE_ICON256 = addTexture("icon256.png");
+	public final static Texture TEXTURE_SKYBOX = addTexture("skybox.png");
+	public final static Texture TEXTURE_TERRAIN = addTexture("mars.png");
+	public final static Texture TEXTURE_STREET = addTexture("street.png");
+	public final static Texture TEXTURE_HOUSE = addTexture("housetexture.png");
+	public final static Texture TEXTURE_BIGHOUSE = addTexture("bighousetexture.png");
+	public final static Texture TEXTURE_EMPTY = addTexture("empty.png");
+	public final static Texture TEXTURE_MAINMENUBG = addTexture("mainmenubg.png");
+	public final static Texture TEXTURE_MAINMENUFF = addTexture("ForceField.png");
+	public final static Texture TEXTURE_MARSCITYLOGO = addTexture("marscitylogo.png");
+	public final static Texture TEXTURE_FORCEFIELDBG = addTexture("forcefieldbackground2.png");
+	public final static Texture TEXTURE_MSGBOX = addTexture("msgbox.png");
+	public final static Texture TEXTURE_GUITOOLSBG = addTexture("guitoolsBG.png");
+	public final static Texture TEXTURE_GUITOOLTIP = addTexture("guitooltip.png");
+	public final static Texture TEXTURE_GUISELECT = addTexture("guiselect.png");
+	public final static Texture TEXTURE_GUIMENUBUTTON = addTexture("guimenubutton.png");
+	public final static Texture TEXTURE_GUIADD = addTexture("guiadd.png");
+	public final static Texture TEXTURE_GUIDELETE = addTexture("guidelete.png");
+	public final static Texture TEXTURE_GUITOOLBAR = addTexture("guitoolbar.png");
+	public final static Texture TEXTURE_GUIMENU = addTexture("guimenu.png");
+	public final static Texture TEXTURE_GUIBUTTON = addTexture("guibutton.png");
+	public final static Texture TEXTURE_GUIBUTTONDOWN = addTexture("guibuttondown.png");
+	public final static Texture TEXTURE_GUIBUTTON2 = addTexture("guibutton2.png");
+	public final static Texture TEXTURE_GUIBUTTON2DOWN = addTexture("guibutton2down.png");
+	public final static Texture TEXTURE_GUILABELBG = addTexture("guilabelbg.png");
+	public final static Texture TEXTURE_GUILABELBGL = addTexture("guilabelbgl.png");
+	public final static Texture TEXTURE_GUILABELBGR = addTexture("guilabelbgr.png");
+	public final static Texture TEXTURE_PARTICLEFOG = addTexture("fogparticle.png");
+	public final static Texture TEXTURE_GUIDELETEBORDER = addTexture("guideleteborder.png");
+	public final static Texture TEXTURE_GUICAMERAMOVE = addTexture("cameramove.png");
+	public final static Texture TEXTURE_GUICAMERAROTATE = addTexture("camerarotate.png");
+	public final static Texture TEXTURE_GUIBUILDINGSPANEL = addTexture("buildingspanel.png");
+	public final static Texture TEXTURE_GUIBUILDINGSPANELL = addTexture("buildingspanell.png");
+	public final static Texture TEXTURE_GUITHUMBSTREET = addTexture("thumbstreet.png");
+	public final static Texture TEXTURE_GUITHUMBHOUSE = addTexture("thumbhouse.png");
+	public final static Texture TEXTURE_GUITHUMBBIGHOUSE = addTexture("thumbbighouse.png");
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	
 	public static List<Building> objects = new ArrayList<Building>();
@@ -94,18 +139,29 @@ public class ResourceManager {
 	public static void init()
 	{
 		//Set up the font
-		font.getEffects().add(new ColorEffect(Color.black));
-		font.addAsciiGlyphs();
+		Arial15.getEffects().add(new ColorEffect());
+		Arial15B.getEffects().add(new ColorEffect());
+		Arial30B.getEffects().add(new ColorEffect());
+		Arial15.addAsciiGlyphs();
+		Arial15B.addAsciiGlyphs();
+		Arial30B.addAsciiGlyphs();
 		try {
-			font.loadGlyphs();
+			Main.splashscreen.label2.setText("Loading Font: Arial15");
+			Arial15.loadGlyphs();
+			Main.splashscreen.label2.setText("Loading Font: Arial15B");
+			Arial15B.loadGlyphs();
+			Main.splashscreen.label2.setText("Loading Font: Arial30B");
+			Arial30B.loadGlyphs();
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
 		
 		//Set up the shader
-		setupShader("/res/shader.v","/res/shader.f");
+		Main.splashscreen.label2.setText("Loading shader...");
+		setupShader("shader.v","shader.f");
 		
 		//Load and parse the Language file
+		Main.splashscreen.label2.setText("Loading xml files...");
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		try {
 			builder = factory.newDocumentBuilder();
@@ -115,12 +171,14 @@ public class ResourceManager {
 		
 		//Building Types
 		buildingTypes.add(BUILDINGTYPE_HOUSE,new BuildingType("BUILDINGTYPE_HOUSE",OBJECT_HOUSE,TEXTURE_HOUSE,500,2,2,0.25f));
-		buildingTypes.add(BUILDINGTYPE_BIGHOUSE,new BuildingType("BUILDINGTYPE_BIGHOUSE",OBJECT_BIGHOUSE,TEXTURE_BIGHOUSE,1500,4,4,4));
+		buildingTypes.add(BUILDINGTYPE_BIGHOUSE,new BuildingType("BUILDINGTYPE_BIGHOUSE",OBJECT_BIGHOUSE,TEXTURE_BIGHOUSE,1500,4,4,4f));
+		buildingTypes.add(BUILDINGTYPE_STREET,new BuildingType("BUILDINGTYPE_STREET",OBJECT_STREET,TEXTURE_STREET,5,1,1,0f));
 		
 		//create necessary folders and extract files
-		if(!(new File("res")).exists()){
+		if(!(new File("res")).exists()||Main.debugMode){
 			(new File("res")).mkdir();
 			(new File("res/lang")).mkdir();
+			
 			(new File("res/settings")).mkdir();
 			(new File("res/saves")).mkdir();
 			Main.log("Created necessary folders.");
@@ -155,11 +213,16 @@ public class ResourceManager {
 			
 		
 		
-		//XML files
+		//make XML files available for the static methods
 		settingsFile = addXML("res/settings/settings.xml");
 		langFile = addXML("res/lang/"+getSetting("lang")+".xml");
 	}
 
+	/**
+	 * Loads a texture from the specified input stream
+	 * @param stream The imput stream
+	 * @return The loaded texture
+	 */
 	private static Texture LoadTexture(InputStream stream)
 	{
 		try {
@@ -177,24 +240,42 @@ public class ResourceManager {
 		return null;
 	}
 	
+	/**
+	 * Deletes an object from the render list
+	 * @param obj The object to delete
+	 */
 	public static void deleteObject(Drawable obj)
 	{
 		objects.remove(obj);
 	}
 	
+	/**
+	 * Deletes an animatable from the render list ()for compatibility
+	 * @param obj
+	 */
 	public static void deleteObject(Animatable obj)
 	{
 		objects.remove(obj);
 	}
 	
+	/**
+	 * Deletes an object from the render list
+	 * @param obj The objects index
+	 */
 	public static void deleteObject(int obj)
 	{
 		objects.remove(obj);
 	}
 	
-	
+	/**
+	 * Adds an object to the render list
+	 * @param path Path to the .obj file
+	 * @return An integer representing the displaylist
+	 */
 	public static int addObject(String path)
 	{
+		path = objectspath + path;
+		System.out.println(path);
 		try {
 			Main.log("Loading object: "+path);
 			Main.splashscreen.label2.setText("Loading object: "+path);
@@ -207,8 +288,15 @@ public class ResourceManager {
 		return -1;
 	}
 	
+	/**
+	 * Adds a sound file
+	 * @param format The files format, e.g. "WAV"
+	 * @param path The path of the sound file
+	 * @return The loaded Audio
+	 */
 	public static Audio addSound(String format,String path)
 	{
+		path = soundspath + path;
 		Main.log("Loading sound: "+path);
 		Main.splashscreen.label2.setText("Loading sound: "+path);
 		try {
@@ -221,8 +309,14 @@ public class ResourceManager {
 		return null;
 	}
 	
+	/**
+	 * Loads a texture
+	 * @param path The path of the texture file (has to be .png!)
+	 * @return The loaded texture
+	 */
 	public static Texture addTexture(String path)
 	{
+		path = texturespath + path;
 		Main.log("Loading texture: "+path);
 		Main.splashscreen.label2.setText("Loading texture: "+path);
 		try {
@@ -263,7 +357,7 @@ public class ResourceManager {
 	
 	/**
 	 * Returns a the setting from the settings file
-	 * @param input
+	 * @param setting The setting that should be loaded
 	 * @return The value of the setting or "Setting not found: #"
 	 */
 	public static String getSetting(String setting)
@@ -287,8 +381,8 @@ public class ResourceManager {
 	
 	/**
 	 * Writes a setting into the settings file
-	 * @param setting
-	 * @param value
+	 * @param setting The setting that should be written
+	 * @param value The new value of the setting
 	 */
 	public static void setSetting(String setting, String value)
 	{
@@ -313,8 +407,8 @@ public class ResourceManager {
 	
 	/**
 	 * Loads an XML file
-	 * @param path
-	 * @return
+	 * @param path Path of the file
+	 * @return A Document representing the file
 	 */
 	public static Document addXML(String path)
 	{
@@ -335,7 +429,7 @@ public class ResourceManager {
 	
 	/**
 	 * Plays a sound from the soundPool
-	 * @param sound
+	 * @param sound The sound that should be played
 	 */
 	public static void playSound(Audio sound)
 	{
@@ -344,19 +438,28 @@ public class ResourceManager {
 		} catch (Exception e) {e.printStackTrace();}
 	}
 	
+	/**
+	 * Return the object at the given index in the render list
+	 * @param index
+	 * @return
+	 */
 	public static Building getObject(int index)
 	{
 		return objects.get(index);
 	}
 	
-	
+	/**
+	 * Sets up a shader
+	 * @param vert The vertex shader (path)
+	 * @param frag The fragment shader (path)
+	 */
 	public static void setupShader(String vert, String frag)
 	{
 		shaderProgram = glCreateProgram();
 		vertexShader = glCreateShader(GL_VERTEX_SHADER);
 		fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-		StringBuilder vertexShaderSource = readFile(vert);
-		StringBuilder fragmentShaderSource = readFile(frag);
+		StringBuilder vertexShaderSource = readFile(shaderpath+vert);
+		StringBuilder fragmentShaderSource = readFile(shaderpath+frag);
 		glShaderSource(vertexShader, vertexShaderSource);
 		glCompileShader(vertexShader);
 		if(glGetShaderi(vertexShader, GL_COMPILE_STATUS)==GL_FALSE){
@@ -385,6 +488,34 @@ public class ResourceManager {
 	public static BuildingType getBuildingType(int index)
 	{
 		return buildingTypes.get(index);
+	}
+	
+	/**
+	 * Gets the localized name of the building type
+	 * @param buildingtype
+	 * @return
+	 */
+	public static String getBuildingTypeName(int buildingtype)
+	{
+		return ResourceManager.getString(ResourceManager.getBuildingType(buildingtype).getName());
+	}
+	
+	/**
+	 * Build a building (Adds it to the grid and to the object list)
+	 * @param x X Position
+	 * @param y Y Position
+	 * @param z Z Position
+	 * @param bt Building type
+	 */
+	public static Building buildBuilding(float x, float y, float z, int bt)
+	{
+		x = Grid.cellSize*Math.round(x/Grid.cellSize);
+		y = Grid.cellSize*Math.round(y/Grid.cellSize);
+		z = Grid.cellSize*Math.round(z/Grid.cellSize);
+		Building building = new Building(bt,x,y,z);
+		Grid.setBuilding(Math.round(x),Math.round(z), building);
+		ResourceManager.objects.add(building);
+		return building;
 	}
 	
 	/**

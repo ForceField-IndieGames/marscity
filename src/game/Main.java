@@ -4,7 +4,8 @@ import static org.lwjgl.util.glu.GLU.*;
 
 import effects.ParticleEffects;
 import gui.GUI;
-import gui.guiElement;
+import gui.GuiEventType;
+import gui.GuiElement;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -24,6 +25,8 @@ import javax.swing.JLabel;
 import objects.BuildPreview;
 import objects.Drawable;
 import objects.Building;
+import objects.Entity;
+import objects.Streets;
 import objects.Terrain;
 
 import org.lwjgl.BufferUtils;
@@ -32,6 +35,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 
 import animation.AnimationManager;
 import animation.AnimationValue;
@@ -39,7 +43,8 @@ import animation.AnimationValue;
 
 /**
  * @author: Benedikt Ringlein
- * Just testing the Light Weight Java Game Library! :D
+ * This is the main class with all the rendering and updating code.
+ * Input is handled here as well.
  **/
 
 class splashScreen extends JFrame implements Runnable{
@@ -52,6 +57,9 @@ class splashScreen extends JFrame implements Runnable{
 	JLabel background;
 	public Thread thread;
 	
+	/**
+	 * The splash screen that is displayed while the resources are sill loaded
+	 */
 	public splashScreen()
 	{
 		this.setUndecorated(true);
@@ -70,7 +78,7 @@ class splashScreen extends JFrame implements Runnable{
 		add(label2);
 		label2.setForeground(Color.white);
 		label2.setBounds(0, 0, 500, 20);
-		background = new JLabel(new ImageIcon(Main.class.getResource("/res/forcefieldbackground.png")));
+		background = new JLabel(new ImageIcon(Main.class.getResource(ResourceManager.texturespath+"forcefieldbackground.png")));
 		add(background);
 		background.setBounds(0, 0, getWidth(), getHeight());
 		background.setDoubleBuffered(true);
@@ -80,6 +88,7 @@ class splashScreen extends JFrame implements Runnable{
 
 	@Override
 	public void run() {
+		//Animate the dots
 		while(isVisible())
 		{
 			if(label.getText()==""){
@@ -102,34 +111,43 @@ class splashScreen extends JFrame implements Runnable{
 
 public class Main {
 	
-	final static int TOOL_SELECT = 0;
-	final static int TOOL_ADD = 1;
-	final static int TOOL_DELETE = 2;
+	//The tools
+	public final static int TOOL_SELECT = 0;
+	public final static int TOOL_ADD = 1;
+	public final static int TOOL_DELETE = 2;
 	
-	final static int STATE_INTRO = 0;
-	final static int STATE_MENU = 1;
-	final static int STATE_GAME = 2;
+	//The game states (intro is currently not used)
+	public final static int STATE_INTRO = 0;
+	public final static int STATE_MENU = 1;
+	public final static int STATE_GAME = 2;
 
-//	
+	//Variables that are used for calculating the delta and fps
 	long lastFrame;
 	int fpsnow, fps;
 	long lastTime;
 	
+	//The debugmode enables cheats and displays additional debug information
 	public static boolean debugMode = true;
 	
-	int hoveredEntity = -1;
-	int selectedTool = 0;
-	static int money = 100000;
-	int currentBuildingType = -1;
-	float[] mousepos3d=new float[3];
-	static int gameState = STATE_MENU;
+	public static int hoveredEntity = -1; //The index of the object that is hovered with the mouse
+	public static int selectedTool = 0; //The selected tool, SELECT,ADD or DELETE
+	public static int money; //The players money
+	public static int currentBuildingType = -1; //The currently selected building type
+	public static float[] mousepos3d=new float[3]; //The mouse position in 3d space
+	public static int gameState = STATE_INTRO; //The current game state
 	
+	//Some more objects
 	public static Camera camera = new Camera();
-	Terrain terrain;
+	Terrain terrain; 
+	Entity skybox;
 	public static GUI gui;
-	BuildPreview buildpreview;
+	public static BuildPreview buildpreview;
 	static splashScreen splashscreen;
 	
+	/**
+	 * Writes a string into the log file
+	 * @param text The string to be written
+	 */
 	public static void log(String text)
 	{
 		try {
@@ -140,20 +158,35 @@ public class Main {
 		} catch (IOException e1) {e1.printStackTrace();}
 	}
 
+	/**
+	 * Starts the main game loop
+	 * @throws FileNotFoundException Why? idk.
+	 */
 	public void start() throws FileNotFoundException {
 		
 		
 		try {
-			Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
+			//Setup the display
+			if(debugMode){
+				Display.setDisplayMode(new DisplayMode(1300, 690));
+				Display.setResizable(true);
+			}else Display.setDisplayModeAndFullscreen(Display.getDesktopDisplayMode());
 			Display.setTitle("Mars City");
-			Display.create();
 			Display.setLocation(0, 0);
+			Display.create();
 		} catch (LWJGLException e) {
 			e.printStackTrace();
 			System.out.println("Display konnte nicht erstellt werden");
-			System.exit(0);
+			Game.exit();
 		}
 		
+		//Set the icon
+		ByteBuffer[] list = new ByteBuffer[2];
+		list[0] = ByteBuffer.wrap(ResourceManager.TEXTURE_ICON16.getTextureData());
+		list[1] =  ByteBuffer.wrap(ResourceManager.TEXTURE_ICON32.getTextureData());
+		Display.setIcon(list);
+		
+		//Delete the log file
 		try {(new File("mars city.log")).delete();} catch (Exception e) {}
 		
 		System.out.println("Mars City started...");
@@ -164,19 +197,21 @@ public class Main {
 		log("Finished loading resources.");
 		
 		gui = new GUI(); //Create the GUI
-		
 		buildpreview = new BuildPreview(); //Create the Building Preview
+		skybox = new Entity(ResourceManager.OBJECT_SKYBOX, ResourceManager.TEXTURE_SKYBOX);
+		terrain = new Terrain(0,0,0);//create the terrain
 		
-		terrain = new Terrain(0,0,-150);//create the terrain
-		
+		//Enable vsync according to the settings
 		if(ResourceManager.getSetting("vsync").equals("enabled"))Display.setVSyncEnabled(true);
 
 		initGL(); // init OpenGL
 		getDelta(); // call once before loop to initialise lastFrame
+		
 		lastTime = getTime(); // call before loop to initialise fps timer
 		
-		splashscreen.setVisible(false);
+		splashscreen.setVisible(false); //Hide the splashscreen
 		
+		gui.IntroFF.setVisible(true);
 
 		//Main Gameloop
 		while (!Display.isCloseRequested()) {
@@ -185,6 +220,8 @@ public class Main {
 			
 			switch(gameState){
 			case(STATE_INTRO): 
+				updateIntro(delta);
+				renderMenu();
 				break;
 			case(STATE_MENU):
 				updateMenu(delta);
@@ -197,10 +234,8 @@ public class Main {
 			default: break;
 			}
 			
-			
-			
-			Display.update();
-			Display.sync(60);
+			Display.update(); //Refresh the display
+			Display.sync(60); //Limit framerate to 60
 		}
 
 		Game.exit();
@@ -272,6 +307,10 @@ public class Main {
         glColor3f(1f, 1f, 1f);
 	}
 	
+	/**
+	 * Calculates the position of the mousecursor in 3d space.
+	 * Only points on the terrain can be mouse positions.
+	 */
 	private void picking3d()
 	{
 		final IntBuffer vp = BufferUtils.createIntBuffer(16);
@@ -297,140 +336,10 @@ public class Main {
         mousepos3d[2] = result.get(2);
 	}
 	
-	public void inputGui(guiElement guihit)
-	{
-		if(guihit==gui.menuButton){
-			Game.Pause();
-			gui.blur.setVisible(true);
-			gui.pauseMenu.setVisible(true);
-			AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f);
-		}
-		if(guihit==gui.toolAdd){
-			selectedTool = TOOL_ADD;
-			gui.toolAdd.setColor(Color.gray);
-			gui.toolDelete.setColor(Color.white);
-			AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, 0, 0.5f);
-		}
- 		if(guihit==gui.toolDelete){
-			selectedTool = TOOL_DELETE;
-			gui.toolAdd.setColor(Color.white);
-			gui.toolDelete.setColor(Color.gray);
-			AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, -40, 0.5f);
-			buildpreview.setBuilding(-1);
-			currentBuildingType = -1;
-		}
- 		if(guihit==gui.pauseResume){
-			gui.blur.setVisible(false);
-			Game.Resume();
-			AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
-		}
- 		if(guihit==gui.pauseExit){
-			Game.exit();
-		}
- 		if(guihit==gui.settingsVsyncon){
- 			try {
-				gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
-				gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-				ResourceManager.setSetting("vsync", "enabled");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
- 		}
- 		if(guihit==gui.settingsVsyncoff){
- 			try {
-	 			gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-				gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
-	 			ResourceManager.setSetting("vsync", "disabled");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
- 		}
- 		if(guihit==gui.settingsParticlesoff){
- 			try {
-				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
-	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESOFF;
-	 			ResourceManager.setSetting("particlequality", "off");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
- 		}
- 		if(guihit==gui.settingsParticleslow){
- 			try {
-				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
-	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESLOW;
-	 			ResourceManager.setSetting("particlequality", "low");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
- 		}
- 		if(guihit==gui.settingsParticlesmiddle){
- 			try {
-				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
-	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESMIDDLE;
-	 			ResourceManager.setSetting("particlequality", "middle");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
- 		}
- 		if(guihit==gui.settingsParticleshigh){
- 			try {
-				gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON2);
-	 			gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON2DOWN);
-	 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESHIGH;
-	 			ResourceManager.setSetting("particlequality", "high");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
- 		}
- 		if(guihit==gui.settingsResume){
-			Game.Resume();
-			gui.blur.setVisible(false);
-			AnimationManager.animateValue(gui.settingsMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
-		}
- 			if(guihit==gui.pauseSettings){
-			gui.pauseMenu.setVisible(false);
-			gui.settingsMenu.setVisible(true);
-			AnimationManager.animateValue(gui.settingsMenu, AnimationValue.opacity, 1, 0.005f);
-		}
- 		if(guihit==gui.pauseMainmenu){
-			gameState = STATE_MENU;
-		}
- 		if(guihit==gui.buildingHouse){
- 			currentBuildingType = ResourceManager.BUILDINGTYPE_HOUSE;
- 			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_HOUSE);
- 			gui.buildingHouse.setColor(Color.gray);
- 		}else gui.buildingHouse.setColor(Color.white);
- 		if(guihit==gui.buildingBighouse){
- 			currentBuildingType = ResourceManager.BUILDINGTYPE_BIGHOUSE;
- 			buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_BIGHOUSE);
- 			gui.buildingBighouse.setColor(Color.gray);
- 		}else gui.buildingBighouse.setColor(Color.white);
- 		if(guihit==gui.pauseSave){
- 			Game.Save("res/saves/savegame.save");
- 			Game.Resume();
- 			gui.blur.setVisible(false);
-			AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f, AnimationManager.ACTION_HIDE);
- 		}
- 		if(guihit==gui.pauseLoad){
- 			Game.Load("res/saves/savegame.save");
-			gui = null;
-			gui = new GUI();
-			Game.Resume();
- 		}
-	}
-	
-	
+	/**
+	 * Processes Keyboard inputs
+	 * @param delta The calculated delta for timing
+	 */
 	public void inputKeyboard(int delta)
 	{
 		//Movable object
@@ -444,7 +353,7 @@ public class Main {
 		} catch (Exception e) {
 		}
 				
-				//Camera movement with WASD
+				//Camera movement with WASD and space, leftshift
 				if(Keyboard.isKeyDown(Keyboard.KEY_W)) {
 					camera.setX((float) (camera.getX()-0.002f*delta*camera.getZoom()*Math.sin(Math.toRadians(camera.getRotY()))));
 					camera.setZ((float) (camera.getZ()-0.002f*delta*camera.getZoom()*Math.cos(Math.toRadians(camera.getRotY()))));
@@ -464,11 +373,14 @@ public class Main {
 				if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) camera.setY(camera.getY()+0.1f*delta);
 				if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) camera.setY(camera.getY()-0.1f*delta);
 				
+				//The o key aktivates a particle effect in debug mode
 				if(Keyboard.isKeyDown(Keyboard.KEY_O)&&debugMode){
 					ParticleEffects.dustEffect(mousepos3d[0], mousepos3d[1], mousepos3d[2]);
 				}
 				
+				//Process the key press and release events
 				while(Keyboard.next()){
+					//Pause and resume game with ESC
 					if(Keyboard.getEventKey()==Keyboard.KEY_ESCAPE && Keyboard.getEventKeyState()){
 						if(Game.isPaused())
 						{
@@ -483,6 +395,11 @@ public class Main {
 						}
 						if(debugMode)Game.exit();
 					}
+					if(debugMode&&Keyboard.getEventKey()==Keyboard.KEY_M&&Keyboard.getEventKeyState()){
+						gui.MsgBox("Text", "Sie haben auf die M Taste gedrückt und"+System.lineSeparator()+
+								"eine Messagebox aufgerufen.");
+					}
+					//Pause and resume game with p
 					if(Keyboard.getEventKey()==Keyboard.KEY_P && Keyboard.getEventKeyState())
 					{
 						if(Game.isPaused())
@@ -497,6 +414,7 @@ public class Main {
 							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f);
 						}
 					}
+					//Activate and deactivate debug mode with TAB
 					if(Keyboard.getEventKey()==Keyboard.KEY_TAB&&Keyboard.getEventKeyState()){
 						if(debugMode){
 							debugMode = false;
@@ -506,70 +424,101 @@ public class Main {
 							gui.debugInfo.setVisible(true);
 						}
 					}
+					//Switch Fullscreen/Window with F4 in debug mode
 					if(Keyboard.getEventKey()==Keyboard.KEY_F4&&Keyboard.getEventKeyState()&&debugMode){
-						if(Display.isFullscreen())try {Display.setFullscreen(false);} catch (LWJGLException e) {e.printStackTrace();}
+						if(Display.isFullscreen())try {Display.setFullscreen(false);Display.setDisplayMode(Display.getDesktopDisplayMode());} catch (LWJGLException e) {e.printStackTrace();}
 						else try {Display.setFullscreen(true);} catch (LWJGLException e) {e.printStackTrace();}
 					}
+					//Get money with F1 in debug mode
 					if(Keyboard.getEventKey()==Keyboard.KEY_F1&&Keyboard.getEventKeyState()&&debugMode){
 						money += 50000;
 					}
 				}
 	}
 	
+	/**
+	 * Process mouse inputs
+	 * @param delta The calculated delta for timing
+	 */
 	public void inputMouse(int delta)
 	{
 		//Is the mouse over a gui item?
-		guiElement guihit = gui.mouseover();
+		GuiElement guihit = gui.getMouseover();
 		
 		
 		if(guihit==null || Mouse.isGrabbed())
 		{
-			
 			int MX = Mouse.getDX();
 			int MY = Mouse.getDY();
 	
-			
+			//Rotate the camera with right mouse button
 			if(Mouse.isButtonDown(1)){
 				camera.setRotY(camera.getRotY()-0.1f*MX);
-				camera.setRotX(camera.getRotX()-0.1f*MY);
-			}
+				camera.setRotX(camera.getRotX()+0.1f*MY);
+				if(camera.getRotX()<-89)camera.setRotX(-89);
+				if(camera.getRotX()>-1)camera.setRotX(-1);
+				gui.cameraRotate.setVisible(true);
+			}else gui.cameraRotate.setVisible(false);
+			//Move the camera with middle mouse button
 			if(Mouse.isButtonDown(2)){
-				camera.setX((float) (camera.getX()+0.0002f*delta*camera.getZoom()*MY*Math.sin(Math.toRadians(camera.getRotY()))-0.0002f*delta*camera.getZoom()*MX*Math.cos(Math.toRadians(camera.getRotY()))));
-				camera.setZ((float) (camera.getZ()+0.0002f*delta*camera.getZoom()*MY*Math.cos(Math.toRadians(camera.getRotY()))+0.0002f*delta*camera.getZoom()*MX*Math.sin(Math.toRadians(camera.getRotY()))));
-			}
+				camera.setX((float) (camera.getX()+delta*(0.00008f*camera.getZoom()+0.0004f)*MY*Math.sin(Math.toRadians(camera.getRotY()))-delta*(0.00008f*camera.getZoom()+0.0004f)*MX*Math.cos(Math.toRadians(camera.getRotY()))));
+				camera.setZ((float) (camera.getZ()+delta*(0.00008f*camera.getZoom()+0.0004f)*MY*Math.cos(Math.toRadians(camera.getRotY()))+delta*(0.00008f*camera.getZoom()+0.0004f)*MX*Math.sin(Math.toRadians(camera.getRotY()))));
+				gui.cameraMove.setVisible(true);
+			}else gui.cameraMove.setVisible(false);
 		}
 		
+		//Fire Mouseover and Mouseout events
+		if(gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mouseover);
+		if(gui.lastHovered!=null&&gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mouseout,gui.lastHovered);
+		gui.lastHovered = guihit;
+		
+		//Process Mouse events
 		while(Mouse.next())
 		{
+			//Don't grab mouse when right and middle button are relesed
 			if((Mouse.getEventButton()==1||Mouse.getEventButton()==2)&&!Mouse.getEventButtonState())
 			{
 				Mouse.setGrabbed(false);
 			}
-			if(guihit==null)
-			{
+			
+			//Start gui click event
+			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()){
+				gui.callGuiEvents(GuiEventType.Click);
+			}
+			
+			//Only do things when the mouse is not over the gui
+			if(guihit!=null)return;
+				
+				if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&currentBuildingType==ResourceManager.BUILDINGTYPE_STREET&&selectedTool==TOOL_ADD){
+					Streets.endBuilding(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
+				}
+				//Do some action with the left mouse button based on the selected tool
 				if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
 					switch(selectedTool)
 					{
 						case(TOOL_SELECT): //Zoom to a house
 							try {
 								AnimationManager.animateValue(camera, AnimationValue.X, ResourceManager.getObject(hoveredEntity).getX(), 0.2f);
-								AnimationManager.animateValue(camera, AnimationValue.Y, ResourceManager.getObject(hoveredEntity).getY()+ResourceManager.getObject(hoveredEntity).getPreferredY(), 0.2f);
 								AnimationManager.animateValue(camera, AnimationValue.Z, ResourceManager.getObject(hoveredEntity).getZ(), 0.2f);
 							} catch (Exception e) {}
 							break;
 						
-						case(TOOL_ADD): // Create a new Building
+						case(TOOL_ADD): // Create a new Building at mouse position
 							if(currentBuildingType==-1)break;
+							if(currentBuildingType==ResourceManager.BUILDINGTYPE_STREET){
+								Streets.startBuilding(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
+								break;
+							}
 							if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), ResourceManager.getBuildingType(currentBuildingType).getWidth(), ResourceManager.getBuildingType(currentBuildingType).getDepth())||money<ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost())break;
 								ResourceManager.playSound(ResourceManager.SOUND_DROP);
-								Building building = new Building(currentBuildingType,(int)Grid.cellSize*Math.round(mousepos3d[0]/Grid.cellSize), (int)Grid.cellSize*Math.round(mousepos3d[1]/Grid.cellSize), (int)Grid.cellSize*Math.round(mousepos3d[2]/Grid.cellSize));
-								ResourceManager.objects.add(building);
-								Grid.setBuilding((int)building.getX(), (int)building.getZ(), building);
+								Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBuildingType);
 								money -= ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost();
-								ParticleEffects.dustEffect(Grid.cellSize*Math.round(mousepos3d[0]/Grid.cellSize), Grid.cellSize*Math.round(mousepos3d[1]/Grid.cellSize), Grid.cellSize*Math.round(mousepos3d[2]/Grid.cellSize));
+								ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
+								AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
+								AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
 							break;
 							
-						case(TOOL_DELETE): // Delete the Object
+						case(TOOL_DELETE): // Delete the hovered Building
 							if(hoveredEntity==-1)break;
 							try {
 								ResourceManager.playSound(ResourceManager.SOUND_DESTROY);
@@ -580,28 +529,24 @@ public class Main {
 							break;
 					}
 				}
-				if(Mouse.getEventButton()==1&&Mouse.getEventButtonState()){
+				//Select the select tool with right mouse button
+				if(Mouse.getEventButton()==1&&!Mouse.getEventButtonState()){
 					selectedTool = TOOL_SELECT;
-					gui.toolAdd.setColor(Color.white);
 					gui.toolDelete.setColor(Color.white);
-					AnimationManager.animateValue(gui.toolBar, AnimationValue.Y, -40, 0.5f);
 					buildpreview.setBuilding(-1);
 					currentBuildingType = -1;
+					gui.deleteBorder.setVisible(false);
+					AnimationManager.animateValue(Main.gui.buildingsPanel, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
 				}
+				//Set mouse grabbed when pressing right or middle mouse button
 				if((Mouse.getEventButton()==2||Mouse.getEventButton()==1)&&Mouse.getEventButtonState()){
 						Mouse.setGrabbed(true);
 				}
+				//Control the zoom with the mouse wheel
 				camera.setZoom((float) (camera.getZoom()-0.001*camera.getZoom()*Mouse.getEventDWheel()));
-				if(camera.getZoom()<5)camera.setZoom(5);
-				if(camera.getZoom()>100)camera.setZoom(100);
-		}else{
-				//GUI behavior
-				if(Mouse.getEventButton()==0&&Mouse.getEventButtonState())
-				{
-					inputGui(guihit);
-				}
-			}
-	}
+				if(camera.getZoom()<7)camera.setZoom(7);
+				if(camera.getZoom()>1000)camera.setZoom(1000);
+		}
 	}
 	
 	
@@ -617,17 +562,11 @@ public class Main {
 		//Mouse input
 		inputMouse(delta);
 		
-		//Continous Mouse
-		if(Mouse.getX()<=1) Mouse.setCursorPosition(Display.getWidth()-2, Mouse.getY());
-		if(Mouse.getX()>=Display.getWidth()-1) Mouse.setCursorPosition(2, Mouse.getY());
-		if(Mouse.getY()<=0) Mouse.setCursorPosition(Mouse.getX(), Display.getHeight()-2);
-		if(Mouse.getY()>=Display.getHeight()-1) Mouse.setCursorPosition(Mouse.getX(), 2);
-		
 		//Run the animations
 		AnimationManager.update(delta);
 		
 		//Move the BuildPreview
-		if(selectedTool==TOOL_ADD&&gui.mouseover()==null&&!Mouse.isGrabbed()){
+		if(selectedTool==TOOL_ADD&&gui.getMouseover()==null&&!Mouse.isGrabbed()){
 			buildpreview.setX(Grid.cellSize*Math.round(mousepos3d[0]/Grid.cellSize));
 			buildpreview.setY(Grid.cellSize*Math.round(mousepos3d[1]/Grid.cellSize));
 			buildpreview.setZ(Grid.cellSize*Math.round(mousepos3d[2]/Grid.cellSize));
@@ -636,24 +575,39 @@ public class Main {
 			buildpreview.setVisible(false);
 		}
 		
-		
-		//Update the objects
-		for(Drawable object:ResourceManager.objects)
+		for(int i=0;i<ResourceManager.objects.size();i++)
 		{
-			object.update(delta);
-			if(!ResourceManager.objects.contains(object))break;
+			ResourceManager.objects.get(i).update(delta);
 		}
 		
 		//Show debug info
+		String bt = "-";
+		try {
+			if(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding()!=null){
+			bt = ""+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuidlingType()+" ("+ResourceManager.getBuildingTypeName(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuidlingType())+")";
+		}
+		} catch (Exception e) {
+		}
+		
 		gui.debugInfo.setText("debug mode | Objects: "+ResourceManager.objects.size()+
 				", FPS: "+fps+", ParticleEffects: "+ParticleEffects.getEffectCount()+", Mouse:("+Math.round(mousepos3d[0])+","+Math.round(mousepos3d[1])+","+Math.round(mousepos3d[2])+")"+
-				", GridIndex: "+Grid.posToIndex(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])));
+				", GridIndex: "+Grid.posToIndex(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]))+
+				", BuildingType: "+bt);
 
 		//Update gui info labels
 		gui.infoMoney.setText(ResourceManager.getString("INFOBAR_LABEL_MONEY")+": "+money+"$");
 		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+0);
+		if(money<=2000){
+			if(money<=0)gui.infoMoney.setTextColor(Color.red);
+			else gui.infoMoney.setTextColor(new Color(200,100,0));
+		}else gui.infoMoney.setTextColor(Color.black);
 		
+		
+		//Update the paticle effects
 		ParticleEffects.update(delta);
+		
+		//Rotate the camera while in pause mode
+		if(Game.isPaused())camera.setRotY(camera.getRotY()+0.05f);
 		
 		// update FPS Counter
 		updateFPS(); 
@@ -716,28 +670,37 @@ public class Main {
 		//glUseProgram(shaderProgram);
 //		
 		
+		//Apply the camera transformations
 		camera.applyTransform();
 		
+		//Set the light positions
 		glLight(GL_LIGHT0, GL_POSITION, BufferTools.asFlippedFloatBuffer(new float[]{-30f,50,100f,0f}));
         
-		if(gui.mouseover()==null)
+		if(gui.getMouseover()==null)
 		{
+			//Picking requires the fog to be disables and the background to be white
 			glDisable(GL_FOG);
 			glClearColor(1f, 1f, 1f, 1f);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			picking();//Picking
-			picking3d();
+			picking3d();//Calculate 3d mouse position
 			glClearColor(0f,0f, 0f, 1f);
 			glEnable(GL_FOG);
 		}else hoveredEntity = -1;
 		
         //Rendering
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glEnable(GL_LIGHTING);
         glEnable(GL_TEXTURE_2D);
         
+        //Draw the skybox
+        glDisable(GL_LIGHTING);
+        skybox.draw();
+        glEnable(GL_LIGHTING);
+        
+        //Draw the terrain
         terrain.draw();
        
+        //Draw the buidings
         for(int i=0;i<ResourceManager.objects.size();i++){
         	if(i==hoveredEntity&&!Mouse.isGrabbed()&&selectedTool!=TOOL_ADD){
         		if(selectedTool==TOOL_DELETE)glColor3f(1f, 0f, 0f);
@@ -750,8 +713,10 @@ public class Main {
 			glEnable(GL_LIGHTING);
 		}
         
+        //Draw the building preview
         buildpreview.draw();
         
+        //Draw the particle effects
         ParticleEffects.draw();
 
 //		glUseProgram(0);
@@ -763,23 +728,41 @@ public class Main {
 		
 	}
 	
+	/**
+	 * Draw the Main menu
+	 */
 	public void renderMenu()
 	{
 		gui.drawMenu();
 	}
 	
-	float i=0;
+	float i= (float) (0.5*Math.PI); //value for the menu animation
+	/**
+	 * Update the Main menu
+	 * @param delta
+	 */
 	public void updateMenu(int delta)
 	{
+		//Animate the background image
 		gui.MenuBG.setX((float) (30*Math.sin(i)-30));
 		gui.MenuBG.setWidth((float) (Display.getWidth()-60*Math.sin(i)+60));
 		gui.MenuBG.setY((float) (30*Math.sin(i))-30);
 		gui.MenuBG.setHeight((float) (Display.getHeight()-60*Math.sin(i)+60));
 		i=(i<2*Math.PI)?i+0.005f:0;
+		//Process mouse inputs
+		GuiElement guihit = gui.mouseoverMenu();
+		if(guihit==gui.MenuPlay)gui.MenuPlay.setColor(Color.gray);
+		else gui.MenuPlay.setColor(Color.white);
+		if(guihit==gui.MenuLoad)gui.MenuLoad.setColor(Color.gray);
+		else gui.MenuLoad.setColor(Color.white);
+		if(guihit==gui.MenuSettings)gui.MenuSettings.setColor(Color.gray);
+		else gui.MenuSettings.setColor(Color.white);
+		if(guihit==gui.MenuExit)gui.MenuExit.setColor(Color.gray);
+		else gui.MenuExit.setColor(Color.white);
 		while(Mouse.next())
 		{
 			if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
-				guiElement guihit = gui.mouseoverMenu();
+				
 				if(guihit==null)return;
 				if(guihit==gui.MenuPlay){
 					Game.newGame();
@@ -787,14 +770,27 @@ public class Main {
 					Game.exit();
 				}else if(guihit==gui.MenuLoad){
 					Game.Load("res/saves/savegame.save");
-					gui = null;
-					gui = new GUI();
 					Game.Resume();
 					gameState = STATE_GAME;
 				}
 			}
 		}
 		while(Keyboard.next()){} //So key events dont get saved
+	}
+	
+	int anim = 0;
+	public void updateIntro(int delta)
+	{
+		gui.IntroFF.setOpacity(1f-(float)anim/1000);
+		gui.IntroFF.setX(gui.IntroFF.getX()-0.2f*delta);
+		gui.IntroFF.setY(gui.IntroFF.getY()-0.1f*delta);
+		gui.IntroFF.setWidth(gui.IntroFF.getWidth()+0.4f*delta);
+		gui.IntroFF.setHeight(gui.IntroFF.getHeight()+0.2f*delta);
+		if(anim>=1000){
+			gameState = STATE_MENU;
+			gui.IntroFF.setVisible(false);
+		}
+		anim+=delta;
 	}
 	
 	public static void main(String[] argv) throws FileNotFoundException {

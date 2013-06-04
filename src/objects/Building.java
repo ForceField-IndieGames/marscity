@@ -1,10 +1,23 @@
 package objects;
 
+import java.io.Serializable;
+
 import game.ResourceManager;
 import animation.AnimationManager;
 import animation.AnimationValue;
 
-public class Building extends Entity {
+/**
+ * This is a building. It is defined by a buildingtype and a position.
+ * It renders and updates itself. Buildings have to be added using the ResourceManager in
+ * order to be displayed.
+ * @author Benedikt Ringlein
+ */
+
+public class Building extends Entity implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4734264162688241861L;
 	private float preferredY = 0;
 	private int buidlingType;
 	
@@ -16,6 +29,8 @@ public class Building extends Entity {
 	public float getPreferredY()
 	{return preferredY;}
 	
+	public Building(){}
+	
 	public Building(int bt)
 	{
 		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture());
@@ -25,9 +40,8 @@ public class Building extends Entity {
 	
 	public Building(int bt, float x, float y, float z)
 	{
-		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture(),x,y+5,z);
+		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture(),x,y,z);
 		preferredY = ResourceManager.getBuildingType(bt).getPreferredY();
-		AnimationManager.animateValue(this, AnimationValue.Y, y, 0.05f);
 		this.buidlingType = bt;
 	}
 	

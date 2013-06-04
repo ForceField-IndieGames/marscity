@@ -1,5 +1,11 @@
 package effects;
 
+/**
+ * @author Benedikt Ringlein
+ * This class describes a particle that is used by the particle system.
+ * It is used only as a data structure to contain the necessary variables.
+ */
+
 public class Particle {
 
 	private float x = 0, y = 0, z = 0;

@@ -7,38 +7,77 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.newdawn.slick.opengl.Texture;
 
 import static org.lwjgl.opengl.GL11.*;
 
+/**
+ * A panel that can conatin other guiElements or even other panels.
+ * Visibility and position are copied to the child elements.
+ * Also click events are given to child elements when they are within the boundarys
+ * @author Benedikt Ringlein
+ */
 
 public class GuiPanel extends AbstractGuiElement {
 	
-	private float x,y;
-	private float width,height;
-	private boolean visible = true;
-	private guiElement parent;
-	private Color color = new Color(0.5f,0.5f,0.5f);
-	private Texture texture;
 	private boolean blurBehind = false;
-	private float opacity = 1f;
 	
-	List<guiElement> elements = new ArrayList<guiElement>();
+	List<GuiElement> elements = new ArrayList<GuiElement>();
+
+	public GuiPanel()
+	{
 	
-	public void setWidth(float width) {
-		this.width = width;
 	}
 
-	public void setHeight(float height) {
-		this.height = height;
+	public GuiPanel(int x, int y, int width, int height)
+	{
+		setX(x);
+		setY(y);
+		setWidth(width);
+		setHeight(height);
 	}
 
-	public float getOpacity() {
-		return opacity;
+	public GuiPanel(int x, int y, int width, int height, Color color)
+	{
+		setX(x);
+		setY(y);
+		setWidth(width);
+		setHeight(height);
+		setColor(color);
 	}
 
-	public void setOpacity(float opacity) {
-		this.opacity = opacity;
+	public GuiPanel(int x, int y, int width, int height, Texture texture)
+	{
+		setX(x);
+		setY(y);
+		setWidth(width);
+		setHeight(height);
+		setTexture(texture);
+	}
+
+	public GuiPanel(int x, int y, int width, int height, Texture texture, Color color)
+	{
+		setX(x);
+		setY(y);
+		setWidth(width);
+		setHeight(height);
+		setTexture(texture);
+		setColor(color);
+	}
+	
+	public void setElementsColor(Color color)
+	{
+		for(GuiElement e: elements){
+			e.setColor(color);
+		}
+	}
+	
+	public void setElementsVisible(Boolean visible)
+	{
+		for(GuiElement e: elements){
+			e.setVisible(visible);
+		}
 	}
 
 	public boolean isBlurBehind() {
@@ -49,130 +88,14 @@ public class GuiPanel extends AbstractGuiElement {
 		this.blurBehind = blurBehind;
 	}
 
-	public GuiPanel()
-	{
-
-	}
-
-	public GuiPanel(int x, int y, int width, int height)
-	{
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-	}
-	
-	public GuiPanel(int x, int y, int width, int height, Color color)
-	{
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.color = color;
-	}
-	
-	public GuiPanel(int x, int y, int width, int height, Texture texture)
-	{
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.texture = texture;
-		this.color = Color.white;
-	}
-	
-	public GuiPanel(int x, int y, int width, int height, Texture texture, Color color)
-	{
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.texture = texture;
-		this.color = color;
-	}
-	
-	public void add(guiElement guielement)
+	public void add(GuiElement guielement)
 	{
 		guielement.setParent(this);
 		elements.add(guielement);
 	}
 
-	public Texture getTexture() {
-		return texture;
-	}
-
-	public void setTexture(Texture texture) {
-		this.texture = texture;
-	}
-
-	public guiElement getParent() {
-		return parent;
-	}
-
-	public void setParent(guiElement parent) {
-		this.parent = parent;
-	}
-
-	public Color getColor() {
-		return color;
-	}
-
-	public void setColor(Color color) {
-		this.color = color;
-	}
-
-	public float getWidth() {
-		return width;
-	}
-	
-	public float getHeight() {
-		return height;
-	}
-	
-	public float getX() {
-		return x;
-	}
-
-	public void setX(float x) {
-		this.x = x;
-	}
-
-	public float getY() {
-		return y;
-	}
-
-	public void setY(float y) {
-		this.y = y;
-	}
-
-	public boolean isVisible() {
-		return visible;
-	}
-
-	public void setVisible(boolean visible) {
-		this.visible = visible;
-	}
-
-	public List<guiElement> getElements() {
+	public List<GuiElement> getElements() {
 		return elements;
-	}
-
-	@Override
-	public float getScreenX() {
-		if(parent!=null)return x+parent.getScreenX();
-		return x;
-	}
-
-	@Override
-	public float getScreenY() {
-		if(parent!=null)return y+parent.getScreenY();
-		return y;
-	}
-
-	@Override
-	public boolean isScreenVisible() {
-		if(parent!=null)return visible&&parent.isScreenVisible();
-		return visible;
 	}
 
 	@Override
@@ -184,7 +107,7 @@ public class GuiPanel extends AbstractGuiElement {
 					for(int j=1;j<=12;j+=3){
 						glEnable(GL_TEXTURE_2D);
 						glBindTexture(GL_TEXTURE_2D, ResourceManager.TEXTURE_EMPTY.getTextureID());
-						glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (int)-j*((j%2)*2-1),(int)-i*((i%2)*2-1), (int)width, (int)height,0);
+						glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (int)-j*((j%2)*2-1),(int)-i*((i%2)*2-1), (int)getWidth(), (int)getHeight(),0);
 						glPushMatrix();
 						glTranslated(getScreenX(), getScreenY(), 0);
 						glBegin(GL_QUADS);
@@ -192,11 +115,11 @@ public class GuiPanel extends AbstractGuiElement {
 							glTexCoord2d(0, 0f);
 							glVertex2f(0, 0);
 							glTexCoord2d(1f, 0f);
-							glVertex2f(width, 0);
+							glVertex2f(getWidth(), 0);
 							glTexCoord2d(1f, 1f);
-							glVertex2f(width, height);
+							glVertex2f(getWidth(), getHeight());
 							glTexCoord2d(0, 1f);
-							glVertex2f(0, height);
+							glVertex2f(0, getHeight());
 						glEnd();
 						glBindTexture(GL_TEXTURE_2D, 0);
 						glPopMatrix();
@@ -205,38 +128,43 @@ public class GuiPanel extends AbstractGuiElement {
 					
 			}
 			
-			if (color != null || texture != null){
-				if(texture!=null){
+			if (getColor() != null || getTexture() != null){
+				if(getTexture()!=null){
 							glEnable(GL_TEXTURE_2D);
-							glBindTexture(GL_TEXTURE_2D, texture.getTextureID());
+							glBindTexture(GL_TEXTURE_2D, getTexture().getTextureID());
 						}else glDisable(GL_TEXTURE_2D);
 				glPushMatrix();
+				glMatrixMode(GL_PROJECTION);
+				glPushMatrix();
+				glLoadIdentity();
+				glOrtho(0, Display.getWidth(), 0, Display.getHeight(), 1, -1);
+				glMatrixMode(GL_MODELVIEW);
 					glTranslated(getScreenX(), getScreenY(), 0);
 					glBegin(GL_QUADS);
-						if(color!=null)glColor4ub((byte) color.getRed(), 
-									(byte) color.getGreen(),
-									(byte) color.getBlue(),
-									(byte) (opacity*255));
+						if(getColor()!=null)glColor4ub((byte) getColor().getRed(), 
+									(byte) getColor().getGreen(),
+									(byte) getColor().getBlue(),
+									(byte) (getScreenOpacity()*255));
 						
 						glTexCoord2d(0, 1f);
 						glVertex2f(0, 0);
 						glTexCoord2d(1f, 1f);
-						glVertex2f(width, 0);
+						glVertex2f(getWidth(), 0);
 						glTexCoord2d(1f, 0);
-						glVertex2f(width, height);
+						glVertex2f(getWidth(), getHeight());
 						glTexCoord2d(0, 0);
-						glVertex2f(0, height);
+						glVertex2f(0, getHeight());
 					glEnd();
 				glPopMatrix();
 			}
 				
-			for(guiElement element: elements) element.draw();
+			for(GuiElement element: elements) element.draw();
 			
 		}
 	}
 
 	@Override
-	public guiElement mouseover() {
+	public GuiElement mouseover() {
 		
 		for(int i=elements.size()-1;i>=0;i--)
 		{
@@ -244,16 +172,10 @@ public class GuiPanel extends AbstractGuiElement {
 					&&elements.get(i).getScreenX()<Mouse.getX()
 					&&elements.get(i).getScreenY()<Mouse.getY()
 					&&elements.get(i).getWidth()+elements.get(i).getScreenX()>Mouse.getX()
-					&&elements.get(i).getHeight()+elements.get(i).getScreenY()>Mouse.getY()) return elements.get(i).mouseover();
+					&&elements.get(i).getHeight()+elements.get(i).getScreenY()>Mouse.getY()
+					&&!elements.get(i).isClickThrough()) return elements.get(i).mouseover();
 		}
 		return this;
 	}
-
-	
-	
-	
-
-	
-	
 
 }
