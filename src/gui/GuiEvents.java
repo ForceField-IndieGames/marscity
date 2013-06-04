@@ -1,8 +1,6 @@
 package gui;
 
 import java.awt.Color;
-import java.io.File;
-
 import org.lwjgl.input.Keyboard;
 
 import effects.ParticleEffects;
@@ -10,7 +8,6 @@ import effects.ParticleEffects;
 import game.Game;
 import game.Main;
 import game.ResourceManager;
-import animation.Animatable;
 import animation.AnimationManager;
 import animation.AnimationValue;
 
@@ -309,97 +306,6 @@ public class GuiEvents {
 	case Mouseover:
 			break;
 	default:break;}}};
-
-	
-	public static GuiEvent MsgBox = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype, GuiElement element) {
-	switch (eventtype) {
-	case Click:
-			AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.opacity, 0f, 0.005f, AnimationManager.ACTION_REMOVEGUI);
-			AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.Y, element.getParent().getY()-20, 0.1f);
-			break;
-	case Mouseover:
-			break;
-	default:break;}}};
-	
-	
-	public static GuiEvent GuiButtons = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype, GuiElement e) {
-	switch (eventtype) {
-	case Click:
-			ResourceManager.playSound(ResourceManager.SOUND_SELECT);
-	case Mouseover:
-			if(e.getColor().equals(Color.white))e.setColor(new Color(235,235,235));
-			break;
-	case Mouseout:
-			if(e.getColor().equals(new Color(235,235,235)))e.setColor(Color.white);
-			break;
-	default:break;}}};
-	
-	
-	public static GuiEvent GuiTextBoxes = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype, GuiElement e) {
-	GuiTextbox t = ((GuiTextbox)e);
-	switch (eventtype) {
-	case Click:
-			Main.gui.setKeyboardfocus(e);
-			t.setColor(Color.darkGray);
-			t.setTextColor(Color.white);
-			t.setCaret(true);
-			break;
-	case Keypress:
-			if(Keyboard.getEventKey()==Keyboard.KEY_RETURN
-			||Keyboard.getEventKey()==Keyboard.KEY_ESCAPE){
-				Main.gui.setKeyboardfocus(null);
-				t.setColor(Color.white);
-				t.setTextColor(Color.black);
-				t.setCaret(false);
-				return;
-			}
-			if(Keyboard.getEventKey()==Keyboard.KEY_LSHIFT
-					||Keyboard.getEventKey()==Keyboard.KEY_RSHIFT
-					||Keyboard.getEventKey()==Keyboard.KEY_LCONTROL
-					||Keyboard.getEventKey()==Keyboard.KEY_RCONTROL)return;
-			if(Keyboard.getEventKey()==Keyboard.KEY_BACK&&Keyboard.getEventKeyState()){
-				t.setText(t.getText().substring(0, t.getCaretPos()-1)+t.getText().substring(t.getCaretPos()));
-				if(t.getCaretPos()>0)t.setCaretPos(t.getCaretPos()-1);
-				return;
-			}
-			if(Keyboard.getEventKey()==Keyboard.KEY_END&&Keyboard.getEventKeyState()){
-				t.setCaretPos(t.getText().length());
-				return;
-			}
-			if(Keyboard.getEventKey()==Keyboard.KEY_HOME&&Keyboard.getEventKeyState()){
-				t.setCaretPos(0);
-				return;
-			}
-			if(Keyboard.getEventKey()==Keyboard.KEY_LEFT&&Keyboard.getEventKeyState()){
-				if(t.getCaretPos()>0)t.setCaretPos(t.getCaretPos()-1);
-				return;
-			}
-			if(Keyboard.getEventKey()==Keyboard.KEY_RIGHT&&Keyboard.getEventKeyState()){
-				if(t.getCaretPos()<t.getText().length())t.setCaretPos(t.getCaretPos()+1);
-				return;
-			}
-			if(Keyboard.getEventKey()==Keyboard.KEY_DELETE&&Keyboard.getEventKeyState()){
-				t.setText(t.getText().substring(0, t.getCaretPos())+t.getText().substring(t.getCaretPos()+1));
-				return;
-			}
-			if((Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)||Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))&&Keyboard.getEventKey()==Keyboard.KEY_C&&Keyboard.getEventKeyState()){
-				Main.clipboard = t.getText();
-				return;
-			}
-			if((Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)||Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))&&Keyboard.getEventKey()==Keyboard.KEY_V&&Keyboard.getEventKeyState()){
-				t.setText(Main.clipboard);
-				if(t.getCaretPos()>t.getText().length())t.setCaretPos(t.getText().length());
-				return;
-			}
-			if(Keyboard.getEventKeyState()&&(t.getText().length()<t.getCharlimit()||t.getCharlimit()==0)){
-				t.setText(t.getText().substring(0, t.getCaretPos())+Keyboard.getEventCharacter()+t.getText().substring(t.getCaretPos()));
-				t.setCaretPos(t.getCaretPos()+1);
-			}
-			break;
-	default:break;}}};
 	
 	
 	public static GuiEvent MenuPlay = new GuiEvent(){
@@ -446,32 +352,6 @@ public class GuiEvents {
 			if(Keyboard.getEventKey()==Keyboard.KEY_RETURN&&Keyboard.getEventKeyState()){
 				Main.cityname = ((GuiTextbox)e).getText();
 			}
-			break;
-	default:break;}}};
-	
-	public static GuiEvent LoadingScreenAbort = new GuiEvent(){
-		@Override public void run(GuiEventType eventtype) {
-		switch (eventtype) {
-		case Click:
-				Main.gui.blur.setVisible(false);
-				Game.Resume();
-				AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
-				Main.gui.loadingscreen.setVisible(false);
-				break;
-		case Mouseover:
-				break;
-		default:break;}}};
-	
-	
-	public static GuiEvent CityPreview = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype, GuiElement e) {
-	switch (eventtype) {
-	case Click:
-			if(((CityPreview)e).getCityname()==""){
-				Main.gui.MsgBox("Keine Auswahl", "Bitte eine Stadt auswählen!");
-				break;
-			}
-			Game.Load("res/cities/"+((CityPreview)e).getCityname()+".city");
 			break;
 	default:break;}}};
 	

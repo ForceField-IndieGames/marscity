@@ -6,6 +6,10 @@ import game.ResourceManager;
 
 import org.lwjgl.opengl.Display;
 
+import animation.Animatable;
+import animation.AnimationManager;
+import animation.AnimationValue;
+
 public class MsgBox extends GuiPanel {
 
 	private GuiLabel titlelabel;
@@ -25,12 +29,21 @@ public class MsgBox extends GuiPanel {
 		titlelabel.setFont(ResourceManager.Arial30B);
 		titlelabel.setCentered(true);
 		add(titlelabel);
-		textlabel = new GuiLabel(10,50,492,160,(Color)null);
+		textlabel = new GuiLabel(15,50,482,160,(Color)null);
 		textlabel.setText(text);
 		textlabel.setCentered(true);
 		add(textlabel);
 		button = new GuiButton(156,20,200,30,ResourceManager.TEXTURE_GUIBUTTON);
-		button.setEvent(GuiEvents.MsgBox);
+		button.setEvent(new GuiEvent(){
+			@Override public void run(GuiEventType eventtype, GuiElement element) {
+				switch (eventtype) {
+				case Click:
+						AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.opacity, 0f, 0.005f, AnimationManager.ACTION_REMOVEGUI);
+						AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.Y, element.getParent().getY()-20, 0.1f);
+						break;
+				case Mouseover:
+						break;
+				default:break;}}});
 		button.setText(ResourceManager.getString("MSGBOX_BUTTON_OK"));
 		button.setColor(color);
 		add(button);

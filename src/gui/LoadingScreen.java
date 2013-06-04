@@ -4,9 +4,10 @@ import java.awt.Color;
 import java.io.File;
 import java.io.FilenameFilter;
 
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import org.lwjgl.opengl.Display;
+
+import animation.AnimationManager;
+import animation.AnimationValue;
 
 import game.Game;
 import game.Main;
@@ -45,7 +46,18 @@ public class LoadingScreen extends GuiPanel {
 		add(title);
 		abort = new GuiButton(206, 20, 100, 32, ResourceManager.TEXTURE_LOADABORT);
 		abort.setText("Abbrechen");
-		abort.setEvent(GuiEvents.LoadingScreenAbort);
+		abort.setEvent(new GuiEvent(){
+			@Override public void run(GuiEventType eventtype) {
+				switch (eventtype) {
+				case Click:
+						Main.gui.blur.setVisible(false);
+						Game.Resume();
+						AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
+						Main.gui.loadingscreen.setVisible(false);
+						break;
+				case Mouseover:
+						break;
+				default:break;}}});
 		add(abort);
 		up = new GuiButton(306,20,32,32,ResourceManager.TEXTURE_SCROLLUP);
 		up.setEvent(new GuiEvent(){

@@ -399,8 +399,7 @@ public class Main {
 						if(debugMode)Game.exit();
 					}
 					if(debugMode&&Keyboard.getEventKey()==Keyboard.KEY_M&&Keyboard.getEventKeyState()){
-						gui.MsgBox("Text", "Sie haben auf die M Taste gedrückt und"+System.lineSeparator()+
-								"eine Messagebox aufgerufen.");
+						gui.MsgBox("Text", "Sie haben auf die M Taste gedrückt und eine Messagebox aufgerufen. Der Text hier sollte automatisch gewrapt werden. Das funktioniert bei allen Labels, man braucht also nicht mehr über Zeilenumbrüche nachzudenken");
 					}
 					//Pause and resume game with p
 					if(Keyboard.getEventKey()==Keyboard.KEY_P && Keyboard.getEventKeyState())

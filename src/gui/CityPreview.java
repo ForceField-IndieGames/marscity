@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
 
+import game.Game;
+import game.Main;
 import game.ResourceManager;
 
 public class CityPreview extends GuiPanel {
@@ -31,7 +33,17 @@ public class CityPreview extends GuiPanel {
 		namelabel.setCentered(true);
 		add(namelabel);
 		setCityname(cityname);
-		setEvent(GuiEvents.CityPreview);
+		setEvent(new GuiEvent(){
+			@Override public void run(GuiEventType eventtype, GuiElement e) {
+				switch (eventtype) {
+				case Click:
+						if(((CityPreview)e).getCityname()==""){
+							Main.gui.MsgBox("Keine Auswahl", "Bitte eine Stadt auswählen!");
+							break;
+						}
+						Game.Load("res/cities/"+((CityPreview)e).getCityname()+".city");
+						break;
+				default:break;}}});
 	}
 
 	public String getCityname() {

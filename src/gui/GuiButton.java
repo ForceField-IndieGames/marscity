@@ -29,10 +29,19 @@ public class GuiButton extends AbstractGuiElement {
 	public void callGuiEvents(GuiEventType eventtype)
 	{
 		try {
-			GuiEvents.GuiButtons.run(eventtype, this);
-			getEvent().run(eventtype, this);
-		} catch (Exception e) {
-		}
+				switch (eventtype) {
+				case Click:
+						ResourceManager.playSound(ResourceManager.SOUND_SELECT);
+				case Mouseover:
+						if(getColor().equals(Color.white))setColor(new Color(235,235,235));
+						break;
+				case Mouseout:
+						if(getColor().equals(new Color(235,235,235)))setColor(Color.white);
+						break;
+				default:break;
+			}
+			getEvent().run(eventtype, this);	
+		} catch (Exception e) {}
 	}
 
 	public boolean isShowBackground() {
