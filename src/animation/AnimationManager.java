@@ -50,6 +50,12 @@ public class AnimationManager {
 	}
 	public static void animateValue(Animatable object, AnimationValue value, float destValue, float speed, int action)
 	{
+		for(int i=0;i<animations.size();i++){
+			if(animations.get(i).object==object&&animations.get(i).value==value){
+				animations.remove(i);
+				i--;
+			}
+		}
 		switch(value){
 		case X:
 			animations.add(new Animation(object, value, object.getX() , destValue, speed, action));

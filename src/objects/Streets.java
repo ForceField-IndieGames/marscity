@@ -103,13 +103,18 @@ public class Streets {
 			endposx = startposx;
 			endposy = posy;
 			if(!Grid.isStripFree(startposx, startposy, endposy-startposy, true, ResourceManager.BUILDINGTYPE_STREET))return;
-			if(Main.money<ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost()*(Math.abs(endposy-startposy)+1))return;
-			Main.money -= ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost()*(Math.abs(endposy-startposy)+1);
+			int cost=0;
 			if(startposy>endposy){
 				int tmp = startposy;
 				startposy = endposy;
 				endposy = tmp;
 			}
+			for(int i=startposy;i<=endposy;i++){
+				if(Grid.isAreaFree(startposx, i, 1, 1)){
+					cost+=ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost();
+				}
+			}
+			if(Main.money<cost)return; else Main.money-=cost;
 			for(int i=startposy;i<=endposy;i++){
 				if(Grid.isAreaFree(startposx, i, 1, 1)){
 					ResourceManager.buildBuilding(startposx, 0, i, ResourceManager.BUILDINGTYPE_STREET);
@@ -120,13 +125,18 @@ public class Streets {
 			endposx = posx;
 			endposy = startposy;
 			if(!Grid.isStripFree(startposx, startposy, endposx-startposx, false, ResourceManager.BUILDINGTYPE_STREET))return;
-			if(Main.money<ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost()*(Math.abs(endposx-startposx)+1))return;
-			Main.money -= ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost()*(Math.abs(endposx-startposx)+1);
+			int cost=0;
 			if(startposx>endposx){
 				int tmp = startposx;
 				startposx = endposx;
 				endposx = tmp;
 			}
+			for(int i=startposx;i<=endposx;i++){
+				if(Grid.isAreaFree(i, startposy, 1, 1)){
+					cost+=ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost();
+				}
+			}
+			if(Main.money<cost)return; else Main.money-=cost;
 			for(int i=startposx;i<=endposx;i++){
 				if(Grid.isAreaFree(i, startposy, 1, 1)){
 					ResourceManager.buildBuilding(i, 0, startposy, ResourceManager.BUILDINGTYPE_STREET);
