@@ -538,7 +538,7 @@ public class Main {
 					buildpreview.setBuilding(-1);
 					currentBuildingType = -1;
 					gui.deleteBorder.setVisible(false);
-					AnimationManager.animateValue(Main.gui.buildingsPanel, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
+					AnimationManager.animateValue(Main.gui.buildingPanels, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
 				}
 				if(Mouse.getEventButton()==1&&Mouse.getEventButtonState()){
 					camera.setLastrotx();
