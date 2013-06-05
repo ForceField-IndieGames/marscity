@@ -3,7 +3,6 @@ package game;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -88,6 +87,7 @@ public class ResourceManager {
 	//The audio files
 	public final static Audio SOUND_DROP = addSound("WAV", "drop.wav");
 	public final static Audio SOUND_DESTROY = addSound("WAV", "destroy.wav");
+	public final static Audio SOUND_SELECT = addSound("WAV", "select.wav");
 	
 	//Loads the textures
 	public final static Texture TEXTURE_ICON16 = addTexture("icon16.png");
@@ -128,6 +128,15 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUITHUMBSTREET = addTexture("thumbstreet.png");
 	public final static Texture TEXTURE_GUITHUMBHOUSE = addTexture("thumbhouse.png");
 	public final static Texture TEXTURE_GUITHUMBBIGHOUSE = addTexture("thumbbighouse.png");
+	public final static Texture TEXTURE_GUITEXTFIELD = addTexture("guitextfield.png");
+	public final static Texture TEXTURE_GUITEXTFIELDL = addTexture("guitextfieldl.png");
+	public final static Texture TEXTURE_GUITEXTFIELDR = addTexture("guitextfieldr.png");
+	public final static Texture TEXTURE_CPSHADOW = addTexture("cpshadow.png");
+	public final static Texture TEXTURE_SCROLLUP = addTexture("scrollup.png");
+	public final static Texture TEXTURE_SCROLLDOWN = addTexture("scrolldown.png");
+	public final static Texture TEXTURE_LOADABORT = addTexture("loadabort.png");
+	public final static Texture TEXTURE_CPSPEC = addTexture("cpspec.png");
+	
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	
 	public static List<Building> objects = new ArrayList<Building>();
@@ -180,7 +189,7 @@ public class ResourceManager {
 			(new File("res/lang")).mkdir();
 			
 			(new File("res/settings")).mkdir();
-			(new File("res/saves")).mkdir();
+			(new File("res/cities")).mkdir();
 			Main.log("Created necessary folders.");
 			try {
 				(new File("res/lang/DE.xml")).createNewFile();
@@ -223,7 +232,7 @@ public class ResourceManager {
 	 * @param stream The imput stream
 	 * @return The loaded texture
 	 */
-	private static Texture LoadTexture(InputStream stream)
+	public static Texture LoadTexture(InputStream stream)
 	{
 		try {
 			return TextureLoader.getTexture("PNG", new BufferedInputStream(stream));
@@ -431,10 +440,21 @@ public class ResourceManager {
 	 * Plays a sound from the soundPool
 	 * @param sound The sound that should be played
 	 */
+	public static void playSoundRandom(Audio sound)
+	{
+		try {
+			sound.playAsSoundEffect((float)(Math.random()+0.5), 1f, false);
+		} catch (Exception e) {e.printStackTrace();}
+	}
+	
+	/**
+	 * Plays a sound from the soundPool
+	 * @param sound The sound that should be played
+	 */
 	public static void playSound(Audio sound)
 	{
 		try {
-			sound.playAsSoundEffect((float)(Math.random()+0.5), 1, false);
+			sound.playAsSoundEffect(1f, 1f, false);
 		} catch (Exception e) {e.printStackTrace();}
 	}
 	

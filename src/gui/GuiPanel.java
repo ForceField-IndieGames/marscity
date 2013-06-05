@@ -3,7 +3,6 @@ package gui;
 import game.ResourceManager;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.input.Mouse;
@@ -22,15 +21,13 @@ import static org.lwjgl.opengl.GL11.*;
 public class GuiPanel extends AbstractGuiElement {
 	
 	private boolean blurBehind = false;
-	
-	List<GuiElement> elements = new ArrayList<GuiElement>();
 
 	public GuiPanel()
 	{
 	
 	}
 
-	public GuiPanel(int x, int y, int width, int height)
+	public GuiPanel(float x, float y, float width, float height)
 	{
 		setX(x);
 		setY(y);
@@ -38,7 +35,7 @@ public class GuiPanel extends AbstractGuiElement {
 		setHeight(height);
 	}
 
-	public GuiPanel(int x, int y, int width, int height, Color color)
+	public GuiPanel(float x, float y, float width, float height, Color color)
 	{
 		setX(x);
 		setY(y);
@@ -47,7 +44,7 @@ public class GuiPanel extends AbstractGuiElement {
 		setColor(color);
 	}
 
-	public GuiPanel(int x, int y, int width, int height, Texture texture)
+	public GuiPanel(float x, float y, float width, float height, Texture texture)
 	{
 		setX(x);
 		setY(y);
@@ -56,7 +53,7 @@ public class GuiPanel extends AbstractGuiElement {
 		setTexture(texture);
 	}
 
-	public GuiPanel(int x, int y, int width, int height, Texture texture, Color color)
+	public GuiPanel(float x, float y, float width, float height, Texture texture, Color color)
 	{
 		setX(x);
 		setY(y);
@@ -86,12 +83,6 @@ public class GuiPanel extends AbstractGuiElement {
 
 	public void setBlurBehind(boolean blurBehind) {
 		this.blurBehind = blurBehind;
-	}
-
-	public void add(GuiElement guielement)
-	{
-		guielement.setParent(this);
-		elements.add(guielement);
 	}
 
 	public List<GuiElement> getElements() {
@@ -145,6 +136,7 @@ public class GuiPanel extends AbstractGuiElement {
 									(byte) getColor().getGreen(),
 									(byte) getColor().getBlue(),
 									(byte) (getScreenOpacity()*255));
+						else if(getTexture()!=null)glColor3f(1, 1, 1);
 						
 						glTexCoord2d(0, 1f);
 						glVertex2f(0, 0);

@@ -13,6 +13,7 @@ public class Camera implements Animatable {
 	
 	private float x=0,y=0,z=0;
 	private float rotX=-45,rotY=0,rotZ=0;
+	private float lastrotx=0, lastroty=0;
 	private float zoom = 50;
 	private boolean animate = false;
 	public boolean isAnimate() {
@@ -133,6 +134,28 @@ public class Camera implements Animatable {
 	@Override
 	public boolean isVisible() {
 		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public float getLastroty() {
+		return lastroty;
+	}
+
+	public void setLastroty() {
+		this.lastroty = getRotY();
+	}
+
+	public float getLastrotx() {
+		return lastrotx;
+	}
+
+	public void setLastrotx() {
+		this.lastrotx = getRotX();
+	}
+	
+	public boolean wasRotated()
+	{
+		if(getLastrotx()!=getRotX()||getLastroty()!=getRotY())return true;
 		return false;
 	}
 }

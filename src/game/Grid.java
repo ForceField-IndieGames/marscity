@@ -121,6 +121,7 @@ public class Grid {
 	
 	public static boolean isAreaFree(int x, int y, int width, int height)
 	{
+		if(x>Grid.cellsX/2||x<-Grid.cellsX/2)return false;
 		if(width==1&&height==1){
 			try {
 				if(cells.get(posToIndex(x, y)).getBuilding()!=null)return false;else return true;
