@@ -33,7 +33,7 @@ public class GuiLabel extends AbstractGuiElement {
 		
 	}
 
-	public GuiLabel(int x, int y, int width, int height)
+	public GuiLabel(float x, float y, float width, float height)
 	{
 		setX(x);
 		setY(y);
@@ -41,7 +41,7 @@ public class GuiLabel extends AbstractGuiElement {
 		setHeight(height);
 	}
 	
-	public GuiLabel(int x, int y, int width, int height, Color color)
+	public GuiLabel(float x, float y, float width, float height, Color color)
 	{
 		setX(x);
 		setY(y);
@@ -50,7 +50,7 @@ public class GuiLabel extends AbstractGuiElement {
 		setColor(color);
 	}
 	
-	public GuiLabel(int x, int y, int width, int height, Texture texture)
+	public GuiLabel(float x, float y, float width, float height, Texture texture)
 	{
 		setX(x);
 		setY(y);
@@ -59,7 +59,7 @@ public class GuiLabel extends AbstractGuiElement {
 		setTexture(texture);
 	}
 	
-	public GuiLabel(int x, int y, int width, int height, Texture texture, Texture texturel, Texture texturer)
+	public GuiLabel(float x, float y, float width, float height, Texture texture, Texture texturel, Texture texturer)
 	{
 		setX(x);
 		setY(y);
@@ -70,7 +70,7 @@ public class GuiLabel extends AbstractGuiElement {
 		this.texturer = texturer;
 	}
 	
-	public GuiLabel(int x, int y, int width, int height, Texture texture, Color color)
+	public GuiLabel(float x, float y, float width, float height, Texture texture, Color color)
 	{
 		setX(x);
 		setY(y);
@@ -84,8 +84,46 @@ public class GuiLabel extends AbstractGuiElement {
 		return text;
 	}
 
+	/**
+	 * Sets the text and automatically wraps it, if needed
+	 * @param text
+	 */
 	public void setText(String text) {
 		this.text = text;
+		wrapText();
+	}
+	
+	public void wrapText()
+	{
+		//Automatically wrap the text
+				float lineheight = getFont().getHeight("lg");
+				int maxlines = (int) Math.floor(getHeight()/lineheight);
+				if(maxlines<=1)return;
+				int currentlinestart = 0;
+				for(int i=0;i<getText().length();i++){
+					if(getWidth()<getFont().getWidth(getText().substring(currentlinestart, i))){
+						if(getText().substring(i-3, i-2).equals(" ")){
+							this.text=getText().substring(0,i-2)+System.lineSeparator()+getText().substring(i-2);
+							currentlinestart=i+1;
+						}else{
+							boolean found=false;
+							for(int j=i;j>i-6;j--){
+								if(getText().substring(j-3,j-2).equals(" ")){
+									this.text=getText().substring(0,j-2)+System.lineSeparator()+getText().substring(j-2);
+									found=true;
+									currentlinestart=j+1;
+									break;
+								}
+							}
+							if(!found){
+							this.text=getText().substring(0,i-3)+"-"+System.lineSeparator()+getText().substring(i-3);
+							currentlinestart=i+1;}
+						}
+					}
+					if(getHeight()<getFont().getHeight(getText())+lineheight){
+						return;
+					}
+				}
 	}
 
 	@Override
@@ -167,6 +205,8 @@ public class GuiLabel extends AbstractGuiElement {
 				glDisable(GL_SCISSOR_TEST);
 				TextureImpl.bindNone();
 				glPopMatrix();
+				
+				for(GuiElement element: elements) element.draw();
 		}
 	}
 
@@ -192,6 +232,26 @@ public class GuiLabel extends AbstractGuiElement {
 
 	public void setTextColor(Color textColor) {
 		this.textColor = new org.newdawn.slick.Color(textColor.getRed(), textColor.getGreen(), textColor.getBlue());
+	}
+	
+	public Texture getTexturel()
+	{
+		return this.texturel;
+	}
+	
+	public void setTexturel(Texture l)
+	{
+		this.texturel = l;
+	}
+	
+	public Texture getTexturer()
+	{
+		return this.texturer;
+	}
+	
+	public void setTexturer(Texture r)
+	{
+		this.texturer = r;
 	}
 	
 }

@@ -1,22 +1,31 @@
 package game;
 
-import static org.lwjgl.opengl.GL20.glDeleteProgram;
-import static org.lwjgl.opengl.GL20.glDeleteShader;
-
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.*;
 import gui.GUI;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
+import java.awt.Color;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 
 import objects.Building;
 
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
 
 /**
  * This class provides static methods for pausing, resuming, saving and loading the game or
@@ -26,6 +35,7 @@ import org.lwjgl.opengl.Display;
 
 public class Game {
 	private static boolean pause = false;
+	public static final int INITIALMONEY = 5000;
 	
 	public static void Pause()
 	{
@@ -39,68 +49,63 @@ public class Game {
 	
 	public static void Save(String path)
 	{
-		//TODO Save the game
 		try {
 			if(!(new File(path)).exists())(new File(path)).createNewFile();
-			BufferedWriter file = new BufferedWriter(new FileWriter(path));
-			
-			//Money
-			file.write("m "+Main.money+System.lineSeparator());
-			
-			//grid
+
+			/////////////////////
+			ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(new File(path)));
+			o.writeInt(Main.money);
+			o.writeInt(ResourceManager.objects.size());
 			for(Building b:ResourceManager.objects){
-				file.write("b "+b.getBuidlingType()+" "+b.getX()+" "+b.getY()+" "+b.getZ()+System.lineSeparator());
+				o.writeFloat(b.getX());
+				o.writeFloat(b.getY());
+				o.writeFloat(b.getZ());
+				o.writeInt(b.getBuidlingType());
 			}
+			o.close();
 			
-			file.close();
+			//Save a screenshot
+			saveThumbnail(new File("res/cities/"+((new File(path)).getName()).substring(0, ((new File(path)).getName()).length()-5)+".png"));
+			/////////////////////
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			Main.gui.MsgBox("Fehler beim Speichern", "Beim speichern des Spielstandes ist ein Fehler aufgetreten.");
+			Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_SAVINGERROR"), ResourceManager.getString("MSGBOX_TEXT_SAVINGERROR"));
 			return;
 		}
-		Main.gui.MsgBox("Spiel gespeichert", "Der Spielstand wurde erfolgreich gespeichert.");
+		Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_CITYSAVED"), ResourceManager.getString("MSGBOX_TEXT_CITYSAVED"));
 	}
 	
 	public static void Load(String path)
 	{
 		newGame();
 		try {
-			if(!(new File(path)).exists())return;
-			BufferedReader file = new BufferedReader(new FileReader(path));
-			
-			String line;
-			while((line=file.readLine())!=null)
-			{
-				//Money
-				if(line.startsWith("m")){
-					Main.money = Integer.parseInt(line.split(" ")[1]);
-				}
-				if(line.startsWith("b")){
-					int bt = Integer.parseInt(line.split(" ")[1]);
-					float x = Float.parseFloat(line.split(" ")[2]);
-					float y = Float.parseFloat(line.split(" ")[3]);
-					float z = Float.parseFloat(line.split(" ")[4]);
-					
-					ResourceManager.buildBuilding(x, y, z, bt);
-				}
+			if(!(new File(path)).exists()){
+				Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_LOADINGFILENOTFOUND"), ResourceManager.getString("MSGBOX_TEXT_LOADINGFILENOTFOUND"),new Color(200,0,0));
+				return;
 			}
 			
-			
-			file.close();
+			ObjectInputStream i = new ObjectInputStream(new FileInputStream(new File(path)));
+			Main.money=i.readInt();
+			int count = i.readInt();
+			for(int j=0;j<count;j++){
+				ResourceManager.buildBuilding(i.readFloat(), i.readFloat(), i.readFloat(), i.readInt());
+			}
+			i.close();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			Main.gui.MsgBox("Fehler beim Laden", "Beim Laden des Spielstandes ist ein Fehler aufgetreten.");
+			Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_LOADINGERROR"), ResourceManager.getString("MSGBOX_TEXT_LOADINGERROR"));
 			return;
 		}
-		Main.gui.MsgBox("Spielstand geladen", "Der Spielstand wurde erfolgreich geladen."+System.lineSeparator()+"Viel Spaß beim spielen!");
+		Main.cityname = (new File(path)).getName().substring(0, (new File(path)).getName().length()-5);
+		Main.gui.cityName.setText(Main.cityname);
+		Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_CITYLOADED"), ResourceManager.getString("MSGBOX_TEXT_CITYLOADED"));
 	}
 	
 	public static void newGame()
 	{
-		int initialmoney = 5000;
-		Main.money = initialmoney;
+		Main.money = INITIALMONEY;
 		Grid.init();
 		ResourceManager.objects = new ArrayList<Building>();
 		Main.gameState = Main.STATE_GAME;
@@ -108,6 +113,109 @@ public class Game {
 		Main.gui = new GUI();
 		Game.Resume();
 	}
+	
+	/**
+	 * Saves a screenshot of the gl contents in a file
+	 * @param file The file the screenshot should be saved in
+	 * @param withgui Shows or hides the gui in the screenshot
+	 */
+	 public static void saveScreenshot(File file, boolean withgui){
+		 
+		 //Hide/show the gui
+		 boolean prevguiv = GUI.isVisible();
+		 GUI.setVisible(withgui);
+		 
+		 //Render
+		 Main.renderGL();
+		 
+         //Creating an rbg array of total pixels
+         int[] pixels = new int[Display.getWidth() * Display.getHeight()];
+         int bindex;
+         // allocate space for RBG pixels
+         ByteBuffer fb = ByteBuffer.allocateDirect(Display.getWidth() * Display.getHeight() * 3);
+
+         // grab a copy of the current frame contents as RGB
+         glReadPixels(0, 0, Display.getWidth(), Display.getHeight(), GL_RGB, GL_UNSIGNED_BYTE, fb);
+
+         BufferedImage imageIn = new BufferedImage(Display.getWidth(), Display.getHeight(),BufferedImage.TYPE_INT_RGB);
+         // convert RGB data in ByteBuffer to integer array
+         for (int i=0; i < pixels.length; i++) {
+             bindex = i * 3;
+             pixels[i] =
+                 ((fb.get(bindex) << 16))  +
+                 ((fb.get(bindex+1) << 8))  +
+                 ((fb.get(bindex+2) << 0));
+         }
+         //Allocate colored pixel to buffered Image
+         imageIn.setRGB(0, 0, Display.getWidth(), Display.getHeight(), pixels, 0 , Display.getWidth());
+
+         //Creating the transformation direction (horizontal)
+         AffineTransform at =  AffineTransform.getScaleInstance(1, -1);
+         at.translate(0, -imageIn.getHeight(null));
+
+         //Applying transformation
+         AffineTransformOp opRotated = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+         BufferedImage imageOut = opRotated.filter(imageIn, null);
+
+         try {//Try to screate image, else show exception.
+             ImageIO.write(imageOut, "png", file);
+         }
+         catch (Exception e) {
+             System.out.println("ScreenShot() exception: " +e);
+         }
+         
+       //restore gui visibility
+		 GUI.setVisible(prevguiv);
+     }
+	 
+public static void saveThumbnail(File file){
+		 
+		 //Hide the gui
+		 boolean prevguiv = GUI.isVisible();
+		 GUI.setVisible(false);
+		 
+		 //render
+		 Main.renderGL();
+		 
+         //Creating an rbg array of total pixels
+         int[] pixels = new int[1024 * 512];
+         int bindex;
+         // allocate space for RBG pixels
+         ByteBuffer buf = ByteBuffer.allocateDirect(1024 * 512 * 3);
+
+         // grab a copy of the current frame contents as RGB
+         glReadPixels(Display.getWidth()/2-512, Display.getHeight()/2-256, 1024, 512, GL_RGB, GL_UNSIGNED_BYTE, buf);
+
+         BufferedImage imageIn = new BufferedImage(1024, 512,BufferedImage.TYPE_INT_RGB);
+         // convert RGB data in ByteBuffer to integer array
+         for (int i=0; i < pixels.length; i++) {
+             bindex = i * 3;
+             pixels[i] =
+                 ((buf.get(bindex) << 16))  +
+                 ((buf.get(bindex+1) << 8))  +
+                 ((buf.get(bindex+2) << 0));
+         }
+         //Allocate colored pixel to buffered Image
+         imageIn.setRGB(0, 0, 1024, 512, pixels, 0 , 1024);
+
+         //Creating the transformation direction (horizontal)
+         AffineTransform at =  AffineTransform.getScaleInstance(0.25, -0.25);
+         at.translate(0, -imageIn.getHeight(null));
+
+         //Applying transformation
+         AffineTransformOp opRotated = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
+         BufferedImage imageOut = opRotated.filter(imageIn, null);
+         
+         try {//Try to screate image, else show exception.
+             ImageIO.write(imageOut, "png", file);
+         }
+         catch (Exception e) {
+             e.printStackTrace();
+         }
+         
+       //restore gui visibility
+		 GUI.setVisible(prevguiv);
+     }
 	
 	public static boolean isPaused()
 	{
