@@ -11,6 +11,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
@@ -22,6 +24,8 @@ import objects.Building;
 
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
+import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.opengl.TextureLoader;
 
 /**
  * This class provides static methods for pausing, resuming, saving and loading the game or
@@ -66,10 +70,10 @@ public class Game {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			Main.gui.MsgBox("Fehler beim Speichern", "Beim speichern der Stadt "+Main.cityname+" ist ein Fehler aufgetreten.");
+			Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_SAVINGERROR"), ResourceManager.getString("MSGBOX_TEXT_SAVINGERROR"));
 			return;
 		}
-		Main.gui.MsgBox("Stadt gespeichert", Main.cityname+" wurde erfolgreich gespeichert.");
+		Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_CITYSAVED"), ResourceManager.getString("MSGBOX_TEXT_CITYSAVED"));
 	}
 	
 	public static void Load(String path)
@@ -77,7 +81,7 @@ public class Game {
 		newGame();
 		try {
 			if(!(new File(path)).exists()){
-				Main.gui.MsgBox("Datei nicht gefunden", "Die Stadt "+(new File(path)).getName().substring(0, (new File(path)).getName().length()-5)+" ist nicht auffindbar.",new Color(200,0,0));
+				Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_LOADINGFILENOTFOUND"), ResourceManager.getString("MSGBOX_TEXT_LOADINGFILENOTFOUND"),new Color(200,0,0));
 				return;
 			}
 			
@@ -91,12 +95,12 @@ public class Game {
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			Main.gui.MsgBox("Fehler beim Laden", "Beim Laden der Stadt "+(new File(path)).getName().substring(0, (new File(path)).getName().length()-5)+" ist ein Fehler aufgetreten.");
+			Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_LOADINGERROR"), ResourceManager.getString("MSGBOX_TEXT_LOADINGERROR"));
 			return;
 		}
 		Main.cityname = (new File(path)).getName().substring(0, (new File(path)).getName().length()-5);
 		Main.gui.cityName.setText(Main.cityname);
-		Main.gui.MsgBox("Stadt geladen", Main.cityname+" wurde erfolgreich geladen."+System.lineSeparator()+"Viel Spaﬂ beim spielen!");
+		Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_CITYLOADED"), ResourceManager.getString("MSGBOX_TEXT_CITYLOADED"));
 	}
 	
 	public static void newGame()
@@ -194,7 +198,6 @@ public static void saveThumbnail(File file){
          //Allocate colored pixel to buffered Image
          imageIn.setRGB(0, 0, 1024, 512, pixels, 0 , 1024);
 
-
          //Creating the transformation direction (horizontal)
          AffineTransform at =  AffineTransform.getScaleInstance(0.25, -0.25);
          at.translate(0, -imageIn.getHeight(null));
@@ -202,12 +205,12 @@ public static void saveThumbnail(File file){
          //Applying transformation
          AffineTransformOp opRotated = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
          BufferedImage imageOut = opRotated.filter(imageIn, null);
-
+         
          try {//Try to screate image, else show exception.
              ImageIO.write(imageOut, "png", file);
          }
          catch (Exception e) {
-             System.out.println("ScreenShot() exception: " +e);
+             e.printStackTrace();
          }
          
        //restore gui visibility

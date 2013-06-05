@@ -40,12 +40,12 @@ public class LoadingScreen extends GuiPanel {
 		setY(Display.getHeight()/2-getHeight()/2);
 		setVisible(false);
 		title = new GuiLabel(0,460,512,40,(Color)null);
-		title.setText("Stadt laden");
+		title.setText(ResourceManager.getString("LOADINGSCREEN_LABEL_TITLE"));
 		title.setFont(ResourceManager.Arial30B);
 		title.setCentered(true);
 		add(title);
 		abort = new GuiButton(206, 20, 100, 32, ResourceManager.TEXTURE_LOADABORT);
-		abort.setText("Abbrechen");
+		abort.setText(ResourceManager.getString("LOADINGSCREEN_LABEL_ABORT"));
 		abort.setEvent(new GuiEvent(){
 			@Override public void run(GuiEventType eventtype) {
 				switch (eventtype) {
