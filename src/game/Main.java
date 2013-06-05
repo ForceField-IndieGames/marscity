@@ -23,7 +23,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import objects.BuildPreview;
-import objects.Drawable;
 import objects.Building;
 import objects.Entity;
 import objects.Streets;
@@ -126,20 +125,24 @@ public class Main {
 	int fpsnow, fps;
 	long lastTime;
 	
-	//The debugmode enables cheats and displays additional debug information
-	public static boolean debugMode = true;
+	//////////////////////////////////////////////////////////////////////////
+	//The debugmode enables cheats and displays additional debug information//
+	public static boolean debugMode = true;//////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////
 	
 	public static int hoveredEntity = -1; //The index of the object that is hovered with the mouse
 	public static int selectedTool = 0; //The selected tool, SELECT,ADD or DELETE
-	public static int money; //The players money
+	public static int money = Game.INITIALMONEY; //The players money
+	public static String cityname = "Meine Stadt"; //The city's name
 	public static int currentBuildingType = -1; //The currently selected building type
 	public static float[] mousepos3d=new float[3]; //The mouse position in 3d space
-	public static int gameState = STATE_INTRO; //The current game state
+	public static int gameState = debugMode?STATE_GAME:STATE_INTRO; //The current game state
+	public static String clipboard=""; //A local text clipboard
 	
 	//Some more objects
 	public static Camera camera = new Camera();
-	Terrain terrain; 
-	Entity skybox;
+	static Terrain terrain; 
+	static Entity skybox;
 	public static GUI gui;
 	public static BuildPreview buildpreview;
 	static splashScreen splashscreen;
@@ -286,7 +289,7 @@ public class Main {
 	/**
 	 * Get the Objectindex of the Object under the Mousecursor
 	 */
-	private void picking()
+	private static void picking()
 	{
 		glEnable(GL_SCISSOR_TEST);
 		glScissor(Mouse.getX(), Mouse.getY(), 1, 1);
@@ -311,7 +314,7 @@ public class Main {
 	 * Calculates the position of the mousecursor in 3d space.
 	 * Only points on the terrain can be mouse positions.
 	 */
-	private void picking3d()
+	private static void picking3d()
 	{
 		final IntBuffer vp = BufferUtils.createIntBuffer(16);
         final FloatBuffer mv = BufferUtils.createFloatBuffer(16);
@@ -396,8 +399,7 @@ public class Main {
 						if(debugMode)Game.exit();
 					}
 					if(debugMode&&Keyboard.getEventKey()==Keyboard.KEY_M&&Keyboard.getEventKeyState()){
-						gui.MsgBox("Text", "Sie haben auf die M Taste gedrückt und"+System.lineSeparator()+
-								"eine Messagebox aufgerufen.");
+						gui.MsgBox("Text", "Sie haben auf die M Taste gedrückt und eine Messagebox aufgerufen. Der Text hier sollte automatisch gewrapt werden. Das funktioniert bei allen Labels, man braucht also nicht mehr über Zeilenumbrüche nachzudenken");
 					}
 					//Pause and resume game with p
 					if(Keyboard.getEventKey()==Keyboard.KEY_P && Keyboard.getEventKeyState())
@@ -510,7 +512,7 @@ public class Main {
 								break;
 							}
 							if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), ResourceManager.getBuildingType(currentBuildingType).getWidth(), ResourceManager.getBuildingType(currentBuildingType).getDepth())||money<ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost())break;
-								ResourceManager.playSound(ResourceManager.SOUND_DROP);
+								ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
 								Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBuildingType);
 								money -= ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost();
 								ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
@@ -521,7 +523,7 @@ public class Main {
 						case(TOOL_DELETE): // Delete the hovered Building
 							if(hoveredEntity==-1)break;
 							try {
-								ResourceManager.playSound(ResourceManager.SOUND_DESTROY);
+								ResourceManager.playSoundRandom(ResourceManager.SOUND_DESTROY);
 								Grid.clearsCells((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuidlingType()).getWidth(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuidlingType()).getDepth());
 								ParticleEffects.dustEffect(ResourceManager.getObject(hoveredEntity).getX(),ResourceManager.getObject(hoveredEntity).getY(),ResourceManager.getObject(hoveredEntity).getZ());
 								ResourceManager.getObject(hoveredEntity).delete();
@@ -530,13 +532,17 @@ public class Main {
 					}
 				}
 				//Select the select tool with right mouse button
-				if(Mouse.getEventButton()==1&&!Mouse.getEventButtonState()){
+				if(Mouse.getEventButton()==1&&!Mouse.getEventButtonState()&&!camera.wasRotated()){
 					selectedTool = TOOL_SELECT;
 					gui.toolDelete.setColor(Color.white);
 					buildpreview.setBuilding(-1);
 					currentBuildingType = -1;
 					gui.deleteBorder.setVisible(false);
 					AnimationManager.animateValue(Main.gui.buildingsPanel, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
+				}
+				if(Mouse.getEventButton()==1&&Mouse.getEventButtonState()){
+					camera.setLastrotx();
+					camera.setLastroty();
 				}
 				//Set mouse grabbed when pressing right or middle mouse button
 				if((Mouse.getEventButton()==2||Mouse.getEventButton()==1)&&Mouse.getEventButtonState()){
@@ -556,11 +562,16 @@ public class Main {
 	 */
 	public void update(int delta) {
 		
-		//Keyboard input
-		inputKeyboard(delta);
-
 		//Mouse input
 		inputMouse(delta);
+		
+		//Keyboard input
+		if(gui.getKeyboardfocus()==null)inputKeyboard(delta);
+		else{
+			while(Keyboard.next()){
+				gui.getKeyboardfocus().callGuiEvents(GuiEventType.Keypress);
+			}
+		}
 		
 		//Run the animations
 		AnimationManager.update(delta);
@@ -656,7 +667,7 @@ public class Main {
 	/**
 	 * Do the actual rendering
 	 */
-	public void renderGL() {
+	public static void renderGL() {
 		// Clear The Screen And The Depth Buffer
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
@@ -694,6 +705,7 @@ public class Main {
         
         //Draw the skybox
         glDisable(GL_LIGHTING);
+        glColor3f(1f, 1f, 1f);
         skybox.draw();
         glEnable(GL_LIGHTING);
         
@@ -751,28 +763,13 @@ public class Main {
 		i=(i<2*Math.PI)?i+0.005f:0;
 		//Process mouse inputs
 		GuiElement guihit = gui.mouseoverMenu();
-		if(guihit==gui.MenuPlay)gui.MenuPlay.setColor(Color.gray);
-		else gui.MenuPlay.setColor(Color.white);
-		if(guihit==gui.MenuLoad)gui.MenuLoad.setColor(Color.gray);
-		else gui.MenuLoad.setColor(Color.white);
-		if(guihit==gui.MenuSettings)gui.MenuSettings.setColor(Color.gray);
-		else gui.MenuSettings.setColor(Color.white);
-		if(guihit==gui.MenuExit)gui.MenuExit.setColor(Color.gray);
-		else gui.MenuExit.setColor(Color.white);
+		if(gui.lastHovered!=guihit)gui.callGuiEventsMenu(GuiEventType.Mouseover);
+		if(gui.lastHovered!=null&&gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mouseout,gui.lastHovered);
+		gui.lastHovered = guihit;
 		while(Mouse.next())
 		{
-			if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
-				
-				if(guihit==null)return;
-				if(guihit==gui.MenuPlay){
-					Game.newGame();
-				}else if(guihit==gui.MenuExit){
-					Game.exit();
-				}else if(guihit==gui.MenuLoad){
-					Game.Load("res/saves/savegame.save");
-					Game.Resume();
-					gameState = STATE_GAME;
-				}
+			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()){
+				gui.callGuiEventsMenu(GuiEventType.Click);
 			}
 		}
 		while(Keyboard.next()){} //So key events dont get saved
@@ -797,7 +794,5 @@ public class Main {
 		Main LwjglTest = new Main();
 		splashscreen = new splashScreen();
 		LwjglTest.start();
-		
-		
 	}
 }

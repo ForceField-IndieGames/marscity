@@ -1,13 +1,13 @@
 package gui;
 
 import java.awt.Color;
+import org.lwjgl.input.Keyboard;
 
 import effects.ParticleEffects;
 
 import game.Game;
 import game.Main;
 import game.ResourceManager;
-import animation.Animatable;
 import animation.AnimationManager;
 import animation.AnimationValue;
 
@@ -41,6 +41,7 @@ public class GuiEvents {
 			Main.buildpreview.setBuilding(-1);
 			Main.currentBuildingType = -1;
 			Main.gui.deleteBorder.setVisible(true);
+			AnimationManager.animateValue(Main.gui.buildingsPanel, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
 			break;
 	case Mouseover:
 			break;
@@ -179,6 +180,7 @@ public class GuiEvents {
 	switch (eventtype) {
 	case Click:
 			Main.gameState = Main.STATE_MENU;
+			Main.gui = new GUI();
 			break;
 	case Mouseover:
 			break;
@@ -202,7 +204,7 @@ public class GuiEvents {
 	@Override public void run(GuiEventType eventtype) {
 	switch (eventtype) {
 	case Click:
-			Game.Save("res/saves/savegame.save");
+			Game.Save("res/cities/"+Main.cityname+".city");
 			Game.Resume();
 			Main.gui.blur.setVisible(false);
 			AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.opacity, 1, 0.005f, AnimationManager.ACTION_HIDE);
@@ -216,8 +218,7 @@ public class GuiEvents {
 	@Override public void run(GuiEventType eventtype) {
 	switch (eventtype) {
 	case Click:
-			Game.Load("res/saves/savegame.save");
-			Game.Resume();
+			Main.gui.loadingscreen.show();
 			break;
 	default:break;}}};
 
@@ -250,31 +251,34 @@ public class GuiEvents {
 	@Override public void run(GuiEventType eventtype, GuiElement e) {
 	switch (eventtype) {
 	case Click:
+			Main.selectedTool = Main.TOOL_ADD;
+			AnimationManager.animateValue(Main.gui.buildingsPanel, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
 			if(e==Main.gui.buildingStreet){
 				Main.currentBuildingType = ResourceManager.BUILDINGTYPE_STREET;
 				Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_STREET);
-				Main.selectedTool = Main.TOOL_ADD;
 			}else if(e==Main.gui.buildingHouse){
 				Main.currentBuildingType = ResourceManager.BUILDINGTYPE_HOUSE;
 				Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_HOUSE);
-				Main.selectedTool = Main.TOOL_ADD;
 			}else if(e==Main.gui.buildingBighouse){
 				Main.currentBuildingType = ResourceManager.BUILDINGTYPE_BIGHOUSE;
 				Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_BIGHOUSE);
-				Main.selectedTool = Main.TOOL_ADD;
 			}
 			break;
 	case Mouseover:
 			Main.gui.buildingTooltip.setVisible(true);
 			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.opacity, 1f, 0.005f);
-			Main.gui.buildingTooltip.setY(e.getScreenY()+e.getHeight());
-			Main.gui.buildingTooltip.setX(e.getScreenX()+e.getWidth()/2-Main.gui.buildingTooltip.getWidth()/2);
+			Main.gui.buildingTooltip.setY(e.getScreenY()+e.getHeight()-10);
+			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.Y, Main.gui.buildingTooltip.getY()+10, 0.05f);
+			if(Main.gui.buildingTooltip.getOpacity()>0)
+			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.X, e.getScreenX()+e.getWidth()/2-Main.gui.buildingTooltip.getWidth()/2, 0.5f);
+			else Main.gui.buildingTooltip.setX(e.getScreenX()+e.getWidth()/2-Main.gui.buildingTooltip.getWidth()/2);
 			if(e==Main.gui.buildingStreet)Main.gui.buildingTooltip.setBuilding(ResourceManager.BUILDINGTYPE_STREET);
 			else if(e==Main.gui.buildingHouse)Main.gui.buildingTooltip.setBuilding(ResourceManager.BUILDINGTYPE_HOUSE);
 			else if(e==Main.gui.buildingBighouse)Main.gui.buildingTooltip.setBuilding(ResourceManager.BUILDINGTYPE_BIGHOUSE);
 			break;
 	case Mouseout:
 		AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.opacity, 0f, 0.005f,AnimationManager.ACTION_HIDE);
+		AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.Y, Main.gui.buildingTooltip.getY()-10, 0.05f);
 		break;
 	default:break;}}};
 	
@@ -290,6 +294,7 @@ public class GuiEvents {
 			Main.buildpreview.setBuilding(-1);
 			Main.currentBuildingType = -1;
 			Main.gui.deleteBorder.setVisible(false);
+			Main.gui.toolDelete.setColor(Color.white);
 			AnimationManager.animateValue(Main.gui.buildingsPanel, AnimationValue.Y, 68f, 0.5f);
 		if(e==Main.gui.categoryStreets){
 			Main.gui.buildingsStreet.setVisible(true);
@@ -301,41 +306,54 @@ public class GuiEvents {
 	case Mouseover:
 			break;
 	default:break;}}};
-
 	
-	public static GuiEvent MsgBox = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype, GuiElement element) {
+	
+	public static GuiEvent MenuPlay = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype) {
 	switch (eventtype) {
 	case Click:
-			AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.opacity, 0f, 0.005f, AnimationManager.ACTION_REMOVEGUI);
-			AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.Y, element.getParent().getY()-20, 0.1f);
-			break;
-	case Mouseover:
+			Game.newGame();
 			break;
 	default:break;}}};
 	
 	
-	public static GuiEvent GuiButtons = new GuiEvent(){
+	public static GuiEvent MenuExit = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype) {
+	switch (eventtype) {
+	case Click:
+			Game.exit();
+			break;
+	default:break;}}};
+	
+	
+	public static GuiEvent MenuLoad = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype) {
+	switch (eventtype) {
+	case Click:
+			Game.Load("res/cities/Meine Stadt.city");
+			Game.Resume();
+			Main.gameState = Main.STATE_GAME;
+			break;
+	default:break;}}};
+	
+	
+	public static GuiEvent MenuSettings = new GuiEvent(){
+	@Override public void run(GuiEventType eventtype) {
+	switch (eventtype) {
+	case Click:
+			break;
+	default:break;}}};
+	
+	
+	public static GuiEvent cityName = new GuiEvent(){
 	@Override public void run(GuiEventType eventtype, GuiElement e) {
 	switch (eventtype) {
-	case Mouseover:
-			e.setColor(new Color(235,235,235));
-			break;
-	case Mouseout:
-			e.setColor(Color.white);
+	case Keypress:
+			if(Keyboard.getEventKey()==Keyboard.KEY_RETURN&&Keyboard.getEventKeyState()){
+				Main.cityname = ((GuiTextbox)e).getText();
+			}
 			break;
 	default:break;}}};
-	
-	
-//	public static GuiEvent event = new GuiEvent(){
-//	@Override public void run(GuiEventType eventtype) {
-//	switch (eventtype) {
-//	case Click:
-//			
-//			break;
-//	case Mouseover:
-//			break;
-//	default:break;}}};
 	
 	
 //	public static GuiEvent event = new GuiEvent(){

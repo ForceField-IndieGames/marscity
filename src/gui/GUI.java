@@ -22,6 +22,9 @@ import animation.AnimationValue;
 
 public class GUI {
 	
+	private GuiElement keyboardfocus;
+	private static boolean visible = true;
+	
 	public GuiPanel MenuBG = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_MAINMENUBG);
 	public GuiPanel MenuFF = new GuiPanel(Display.getWidth()-512,0,512,128,ResourceManager.TEXTURE_MAINMENUFF);
 	public GuiPanel MenuPanel = new GuiPanel(Display.getWidth()/2-430,Display.getHeight()-150,1080,50,(Color)null);
@@ -32,6 +35,7 @@ public class GUI {
 	public GuiLabel MenuVersion = new GuiLabel(0,0,180,20,(Color)null);
 	public GuiPanel MenuIcon = new GuiPanel(Display.getWidth()/2-64,20,128,128,ResourceManager.TEXTURE_ICON256);
 	public GuiPanel IntroFF = new GuiPanel(Display.getWidth()/2-960,Display.getHeight()/2-540,1920,1080,ResourceManager.TEXTURE_FORCEFIELDBG);
+	public LoadingScreen loadingscreen = new LoadingScreen();
 	
 	public BuildingToolTip buildingTooltip = new BuildingToolTip();
 	
@@ -44,8 +48,9 @@ public class GUI {
 	public GuiPanel toolDelete = new GuiPanel(0, 0, 64, 64, ResourceManager.TEXTURE_GUIDELETE);
 	
 	public GuiPanel infoBar = new GuiPanel(0,30,Display.getWidth(),40,ResourceManager.TEXTURE_GUITOOLBAR);
-	public GuiLabel infoMoney = new GuiLabel(300,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
-	public GuiLabel infoCitizens = new GuiLabel(550,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
+	public GuiTextbox cityName = new GuiTextbox(100,5,200,30);
+	public GuiLabel infoMoney = new GuiLabel(350,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
+	public GuiLabel infoCitizens = new GuiLabel(600,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
 	
 	public GuiPanel buildingCategories = new GuiPanel(150,0,Display.getWidth(),50, (Color)null);
 	public GuiButton categoryStreets = new GuiButton(0,0,150,30,ResourceManager.TEXTURE_GUIBUTTON);
@@ -131,15 +136,20 @@ public class GUI {
 		
 	    MenuPlay.setText(ResourceManager.getString("MAINMENU_BUTTON_PLAY"));
 	    MenuPlay.setFont(ResourceManager.Arial15B);
+	    MenuPlay.setEvent(GuiEvents.MenuPlay);
  
 	    MenuLoad.setText(ResourceManager.getString("MAINMENU_BUTTON_LOAD"));
 	    MenuLoad.setFont(ResourceManager.Arial15B);
+	    MenuLoad.setEvent(GuiEvents.MenuLoad);
  
 	    MenuSettings.setText(ResourceManager.getString("MAINMENU_BUTTON_SETTINGS"));
 	    MenuSettings.setFont(ResourceManager.Arial15B);
+	    MenuSettings.setEvent(GuiEvents.MenuSettings);
+	    MenuSettings.setColor(Color.red);
  
 	    MenuExit.setText(ResourceManager.getString("MAINMENU_BUTTON_EXIT"));
 	    MenuExit.setFont(ResourceManager.Arial15B);
+	    MenuExit.setEvent(GuiEvents.MenuExit);
 		
 		//GUI
 	    
@@ -154,6 +164,7 @@ public class GUI {
 		add(buildingTooltip);
 		add(blur);
 		add(pauseMenu);
+		add(loadingscreen);
 		
 		buildingTooltip.setVisible(false);
 
@@ -178,6 +189,8 @@ public class GUI {
 		infoBar.add(infoMoney);
 		infoBar.add(infoCitizens);
 		
+		infoBar.add(cityName);
+		
 		guiTools.add(menuButton);
 		guiTools.add(toolDelete);
 		
@@ -190,6 +203,10 @@ public class GUI {
 		pauseMenu.add(pauseResume);
 		
 		buildingsPanel.setVisible(false);
+		
+		cityName.setText(Main.cityname);
+		cityName.setCharlimit(25);
+		cityName.setEvent(GuiEvents.cityName);
 		
 		buildingsStreet.setVisible(false);
 		buildingsResidential.setVisible(false);
@@ -310,10 +327,16 @@ public class GUI {
 	 * The messagebox smoothly fades in and out.
 	 * @param title The title of the message
 	 * @param text The message's text
+	 * @param color [OPTIONAL] The background color of the message
 	 */
 	public void MsgBox(String title, String text)
 	{
-		MsgBox msgbox = new MsgBox(title, text);
+		MsgBox(title, text, Color.white);
+	}
+	
+	public void MsgBox(String title, String text, Color color)
+	{
+		MsgBox msgbox = new MsgBox(title, text, color);
 		msgbox.setOpacity(0f);
 		AnimationManager.animateValue(msgbox, AnimationValue.opacity, 1f, 0.005f);
 		AnimationManager.animateValue(msgbox, AnimationValue.Y, msgbox.getY()+10, 0.1f, AnimationManager.ACTION_REVERSE);
@@ -340,6 +363,8 @@ public class GUI {
 	
 	public void draw()
 	{
+		if(!isVisible())return;
+		
 		glDisable(GL_DEPTH_TEST);
 		glPushMatrix();
 		
@@ -405,9 +430,31 @@ public class GUI {
 		if(mo!=null)mo.callGuiEvents(eventtype);
 	}
 	
+	public void callGuiEventsMenu(GuiEventType eventtype)
+	{
+		GuiElement mo = mouseoverMenu();
+		if(mo!=null)mo.callGuiEvents(eventtype);
+	}
+	
 	public void callGuiEvents(GuiEventType eventtype, GuiElement element)
 	{
 		if(element!=null)element.callGuiEvents(eventtype);
+	}
+
+	public GuiElement getKeyboardfocus() {
+		return keyboardfocus;
+	}
+
+	public void setKeyboardfocus(GuiElement keyboardfocus) {
+		this.keyboardfocus = keyboardfocus;
+	}
+
+	public static boolean isVisible() {
+		return visible;
+	}
+
+	public static void setVisible(boolean visible) {
+		GUI.visible = visible;
 	}
 	
 }
