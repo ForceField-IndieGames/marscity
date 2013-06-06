@@ -9,14 +9,17 @@ import game.ResourceManager;
 
 public class CategoryButton extends GuiButton {
 
-	public CategoryButton(float x, float y, String name)
+	private BuildingPanel panel;
+	
+	public CategoryButton(float x, float y, BuildingPanel panel)
 	{
+		this.setPanel(panel);
 		setX(x);
 		setY(y);
 		setWidth(150);
 		setHeight(30);
 		setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-		setText(name);
+		setText(panel.getName());
 		setEvent(new GuiEvent(){
 			@Override public void run(GuiEventType eventtype, GuiElement e) {
 				switch (eventtype) {
@@ -30,16 +33,19 @@ public class CategoryButton extends GuiButton {
 						Main.gui.deleteBorder.setVisible(false);
 						Main.gui.toolDelete.setColor(Color.white);
 						AnimationManager.animateValue(Main.gui.buildingPanels, AnimationValue.Y, 68f, 0.5f);
-						if(e==Main.gui.categoryStreets){
-							Main.gui.buildingPanelStreet.setVisible(true);
-						}
-						if(e==Main.gui.categoryResidential){
-							Main.gui.buildingPanelResidential.setVisible(true);
-						}
+						((CategoryButton) e).getPanel().setVisible(true);
 						break;
 				case Mouseover:
 						break;
 				default:break;}}});
+	}
+
+	public BuildingPanel getPanel() {
+		return panel;
+	}
+
+	public void setPanel(BuildingPanel panel) {
+		this.panel = panel;
 	}
 	
 }

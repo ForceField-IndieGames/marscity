@@ -459,14 +459,15 @@ public class Main {
 				camera.setRotX(camera.getRotX()+0.1f*MY);
 				if(camera.getRotX()<-89)camera.setRotX(-89);
 				if(camera.getRotX()>-1)camera.setRotX(-1);
-				gui.cameraRotate.setVisible(true);
-			}else gui.cameraRotate.setVisible(false);
+				if(camera.wasRotated()){
+					gui.cameraRotate.setVisible(true);
+				}
+			}
 			//Move the camera with middle mouse button
 			if(Mouse.isButtonDown(2)){
 				camera.setX((float) (camera.getX()+delta*(0.00008f*camera.getZoom()+0.0004f)*MY*Math.sin(Math.toRadians(camera.getRotY()))-delta*(0.00008f*camera.getZoom()+0.0004f)*MX*Math.cos(Math.toRadians(camera.getRotY()))));
 				camera.setZ((float) (camera.getZ()+delta*(0.00008f*camera.getZoom()+0.0004f)*MY*Math.cos(Math.toRadians(camera.getRotY()))+delta*(0.00008f*camera.getZoom()+0.0004f)*MX*Math.sin(Math.toRadians(camera.getRotY()))));
-				gui.cameraMove.setVisible(true);
-			}else gui.cameraMove.setVisible(false);
+			}
 		}
 		
 		//Fire Mouseover and Mouseout events
@@ -481,6 +482,21 @@ public class Main {
 			if((Mouse.getEventButton()==1||Mouse.getEventButton()==2)&&!Mouse.getEventButtonState())
 			{
 				Mouse.setGrabbed(false);
+			}
+			//Set mouse grabbed when pressing middl or righte mouse button
+			if((Mouse.getEventButton()==2||Mouse.getEventButton()==1)&&Mouse.getEventButtonState()){
+					Mouse.setGrabbed(true);
+			}
+			
+			if(Mouse.getEventButton()==2&&Mouse.getEventButtonState()){
+				gui.cameraMove.setVisible(true);
+			}
+			if(Mouse.getEventButton()==2&&!Mouse.getEventButtonState()){
+				gui.cameraMove.setVisible(false);
+			}
+			
+			if(Mouse.getEventButton()==1){
+				gui.cameraRotate.setVisible(false);
 			}
 			
 			//Start gui click event
@@ -543,10 +559,6 @@ public class Main {
 				if(Mouse.getEventButton()==1&&Mouse.getEventButtonState()){
 					camera.setLastrotx();
 					camera.setLastroty();
-				}
-				//Set mouse grabbed when pressing right or middle mouse button
-				if((Mouse.getEventButton()==2||Mouse.getEventButton()==1)&&Mouse.getEventButtonState()){
-						Mouse.setGrabbed(true);
 				}
 				//Control the zoom with the mouse wheel
 				camera.setZoom((float) (camera.getZoom()-0.001*camera.getZoom()*Mouse.getEventDWheel()));
