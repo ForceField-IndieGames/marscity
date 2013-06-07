@@ -21,7 +21,7 @@ public class Building extends Entity implements Serializable {
 	private float preferredY = 0;
 	private int buidlingType;
 	
-	public int getBuidlingType() {
+	public int getBuildingType() {
 		return buidlingType;
 	}
 

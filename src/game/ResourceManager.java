@@ -465,6 +465,7 @@ public class ResourceManager {
 	 */
 	public static Building getObject(int index)
 	{
+		if(index==-1)return new Building(-1);
 		return objects.get(index);
 	}
 	
@@ -507,6 +508,7 @@ public class ResourceManager {
 	 */
 	public static BuildingType getBuildingType(int index)
 	{
+		if(index==-1)return null;
 		return buildingTypes.get(index);
 	}
 	
@@ -566,5 +568,10 @@ public class ResourceManager {
 		return null;
 	}
 	
+	public static int getHoveredBuildingtype(int hoveredEntity)
+	{
+		if(hoveredEntity==-1)return -1;
+		return getObject(hoveredEntity).getBuildingType();
+	}
 	
 }

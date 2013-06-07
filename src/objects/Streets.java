@@ -20,6 +20,10 @@ public class Streets {
 	private static int x2;
 	private static int y1;
 	private static int y2;
+	
+	private static int length;
+	private static boolean vertical;
+	
 	public static int getX1() {
 		return x1;
 	}
@@ -36,9 +40,6 @@ public class Streets {
 		return y2;
 	}
 
-	private static int length;
-	private static boolean vertical;
-	
 	public static int getLength() {
 		return length;
 	}
@@ -52,13 +53,13 @@ public class Streets {
 	 * @param posx
 	 * @param posy
 	 */
-	public static void startBuilding(int posx, int posy)
+	public static void setStartPos(int posx, int posy)
 	{
 		startposx = posx;
 		startposy = posy;
 	}
 	
-	public static void updateBuilding(int posx, int posy)
+	public static void updatePreview(int posx, int posy)
 	{
 		if(Math.abs(startposx-posx)<Math.abs(startposy-posy)){
 			// vertical
@@ -96,7 +97,7 @@ public class Streets {
 	 * @param posx
 	 * @param posy
 	 */
-	public static void endBuilding(int posx, int posy)
+	public static void buildStreet(int posx, int posy)
 	{
 		if(Math.abs(startposx-posx)<Math.abs(startposy-posy)){
 			// vertical
@@ -141,6 +142,53 @@ public class Streets {
 				if(Grid.isAreaFree(i, startposy, 1, 1)){
 					ResourceManager.buildBuilding(i, 0, startposy, ResourceManager.BUILDINGTYPE_STREET);
 				}
+			}
+		}
+	}
+	
+	/**
+	 * Marks the end point of a new road and deletes it
+	 * @param posx
+	 * @param posy
+	 */
+	public static void deleteStreet(int posx, int posy)
+	{
+		if(Math.abs(startposx-posx)<Math.abs(startposy-posy)){
+			// vertical
+			endposx = startposx;
+			endposy = posy;
+			if(startposy>endposy){
+				int tmp = startposy;
+				startposy = endposy;
+				endposy = tmp;
+			}
+			for(int i=startposy;i<=endposy;i++){
+				try {
+					if((Grid.getCell(startposx, i).getBuilding().getBuildingType()==ResourceManager.BUILDINGTYPE_STREET)){
+						ResourceManager.deleteObject((Drawable)Grid.getCell(startposx, i).getBuilding());
+						Grid.getCell(startposx, i).setBuilding(null);
+					}
+				} catch (Exception e) {}
+			}
+		}else{
+			// horizontal
+			endposx = posx;
+			endposy = startposy;
+			if(startposx>endposx){
+				int tmp = startposx;
+				startposx = endposx;
+				endposx = tmp;
+			}
+			for(int i=startposx;i<=endposx;i++){
+				try {
+					if(!(Grid.getCell(i, startposy).getBuilding().getBuildingType()==ResourceManager.BUILDINGTYPE_STREET)){
+						return;
+					}
+				} catch (Exception e) {return;}
+			}
+			for(int i=startposx;i<=endposx;i++){
+				ResourceManager.deleteObject((Drawable)Grid.getCell(i, startposy).getBuilding());
+				Grid.getCell(i, startposy).setBuilding(null);
 			}
 		}
 	}

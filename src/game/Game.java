@@ -56,7 +56,7 @@ public class Game {
 				o.writeFloat(b.getX());
 				o.writeFloat(b.getY());
 				o.writeFloat(b.getZ());
-				o.writeInt(b.getBuidlingType());
+				o.writeInt(b.getBuildingType());
 			}
 			o.close();
 			
