@@ -1,7 +1,5 @@
 package gui;
 
-import game.Main;
-
 import org.lwjgl.opengl.Display;
 
 /**

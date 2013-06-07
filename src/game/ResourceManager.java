@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,7 @@ import objects.BuildingType;
 import objects.Drawable;
 import objects.ObjectLoader;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
@@ -572,6 +574,13 @@ public class ResourceManager {
 	{
 		if(hoveredEntity==-1)return -1;
 		return getObject(hoveredEntity).getBuildingType();
+	}
+
+	public static FloatBuffer toFlippedFloatBuffer(float... floats) {
+	    FloatBuffer b = BufferUtils.createFloatBuffer(floats.length);
+	    b.put(floats);
+	    b.flip();
+	    return b;
 	}
 	
 }

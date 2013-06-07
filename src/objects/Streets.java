@@ -144,6 +144,7 @@ public class Streets {
 				}
 			}
 		}
+		ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
 	}
 	
 	/**
@@ -181,16 +182,14 @@ public class Streets {
 			}
 			for(int i=startposx;i<=endposx;i++){
 				try {
-					if(!(Grid.getCell(i, startposy).getBuilding().getBuildingType()==ResourceManager.BUILDINGTYPE_STREET)){
-						return;
+					if((Grid.getCell(i, startposy).getBuilding().getBuildingType()==ResourceManager.BUILDINGTYPE_STREET)){
+						ResourceManager.deleteObject((Drawable)Grid.getCell(i, startposy).getBuilding());
+						Grid.getCell(i, startposy).setBuilding(null);
 					}
-				} catch (Exception e) {return;}
-			}
-			for(int i=startposx;i<=endposx;i++){
-				ResourceManager.deleteObject((Drawable)Grid.getCell(i, startposy).getBuilding());
-				Grid.getCell(i, startposy).setBuilding(null);
+				} catch (Exception e) {}
 			}
 		}
+		ResourceManager.playSoundRandom(ResourceManager.SOUND_DESTROY);
 	}
 
 	public static int getStartposx() {

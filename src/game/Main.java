@@ -115,7 +115,7 @@ public class Main {
 	public final static int TOOL_ADD = 1;
 	public final static int TOOL_DELETE = 2;
 	
-	//The game states (intro is currently not used)
+	//The game states
 	public final static int STATE_INTRO = 0;
 	public final static int STATE_MENU = 1;
 	public final static int STATE_GAME = 2;
@@ -163,9 +163,8 @@ public class Main {
 
 	/**
 	 * Starts the main game loop
-	 * @throws FileNotFoundException Why? idk.
 	 */
-	public void start() throws FileNotFoundException {
+	public void start(){
 		
 		
 		try {
@@ -667,9 +666,9 @@ public class Main {
 		glShadeModel(GL_SMOOTH);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
-		glLight(GL_LIGHT0, GL_POSITION, BufferTools.asFlippedFloatBuffer(new float[]{-30f,50,100f,0f}));
-		glLight(GL_LIGHT0, GL_DIFFUSE, BufferTools.asFlippedFloatBuffer(new float[]{1f,1f,0.9f,1f}));
-		glLightModel(GL_LIGHT_MODEL_AMBIENT, BufferTools.asFlippedFloatBuffer(new float[] {0.9f,0.9f,0.9f,1f}));
+		glLight(GL_LIGHT0, GL_POSITION, ResourceManager.toFlippedFloatBuffer(new float[]{-30f,50,100f,0f}));
+		glLight(GL_LIGHT0, GL_DIFFUSE, ResourceManager.toFlippedFloatBuffer(new float[]{1f,1f,0.9f,1f}));
+		glLightModel(GL_LIGHT_MODEL_AMBIENT, ResourceManager.toFlippedFloatBuffer(new float[] {0.9f,0.9f,0.9f,1f}));
 		
 		glEnable(GL_MAP_COLOR);
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
@@ -677,7 +676,7 @@ public class Main {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		glEnable(GL_FOG);
-		glFog(GL_FOG_COLOR, BufferTools.asFlippedFloatBuffer(new float[]{0f,0f,0f,1f}));
+		glFog(GL_FOG_COLOR, ResourceManager.toFlippedFloatBuffer(new float[]{0f,0f,0f,1f}));
 		glFogi(GL_FOG_MODE, GL_LINEAR);
 		glHint(GL_FOG_HINT, GL_NICEST);
 		glFogf(GL_FOG_START, 4000);
@@ -706,7 +705,7 @@ public class Main {
 		camera.applyTransform();
 		
 		//Set the light positions
-		glLight(GL_LIGHT0, GL_POSITION, BufferTools.asFlippedFloatBuffer(new float[]{-30f,50,100f,0f}));
+		glLight(GL_LIGHT0, GL_POSITION, ResourceManager.toFlippedFloatBuffer(new float[]{-30f,50,100f,0f}));
         
 		if(gui.getMouseover()==null)
 		{

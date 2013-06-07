@@ -64,17 +64,21 @@ public class BuildPreview extends Entity {
 				Streets.updatePreview(Math.round(Main.mousepos3d[0]), Math.round(Main.mousepos3d[2]));
 				if(Streets.isVertical()){
 					for(int y=Streets.getY1();y<Streets.getY2();y++){
-						glTranslatef(Streets.getX1(), 0.002f, y);
-						glColor3f(1f, 0f, 0f);
-						glCallList(ResourceManager.OBJECT_GRIDCELL);
-						glTranslatef(-Streets.getX1(), -0.002f, -y);
+						if(Grid.getCell(Streets.getX1(), y).getBuildingType()==ResourceManager.BUILDINGTYPE_STREET){
+							glTranslatef(Streets.getX1(), 0.002f, y);
+							glColor3f(1f, 0f, 0f);
+							glCallList(ResourceManager.OBJECT_GRIDCELL);
+							glTranslatef(-Streets.getX1(), -0.002f, -y);
+						}	
 					}
 				}else{
 					for(int x=Streets.getX1();x<Streets.getX2();x++){
-						glTranslatef(x, 0.002f, Streets.getY1());
-						glColor3f(1f, 0f, 0f);
-						glCallList(ResourceManager.OBJECT_GRIDCELL);
-						glTranslatef(-x, -0.002f, -Streets.getY1());
+						if(Grid.getCell(x, Streets.getY1()).getBuildingType()==ResourceManager.BUILDINGTYPE_STREET){
+							glTranslatef(x, 0.002f, Streets.getY1());
+							glColor3f(1f, 0f, 0f);
+							glCallList(ResourceManager.OBJECT_GRIDCELL);
+							glTranslatef(-x, -0.002f, -Streets.getY1());
+						}
 					}
 				}
 			}
@@ -113,7 +117,7 @@ public class BuildPreview extends Entity {
 				}
 			}
 			
-			//Draw street prewiev, if needed
+			//Draw street preview, if needed
 			if(Main.selectedTool==Main.TOOL_ADD &&Main.currentBuildingType==ResourceManager.BUILDINGTYPE_STREET&&Mouse.isButtonDown(0)){
 				Streets.updatePreview(Math.round(Main.mousepos3d[0]), Math.round(Main.mousepos3d[2]));
 				if(Streets.isVertical()){
