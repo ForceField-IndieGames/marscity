@@ -38,6 +38,7 @@ import org.lwjgl.opengl.DisplayMode;
 
 import animation.AnimationManager;
 import animation.AnimationValue;
+import animation.CustomAnimationValue;
 
 
 /**
@@ -520,8 +521,8 @@ public class Main {
 				{
 					case(TOOL_SELECT): //Zoom to a house
 						try {
-							AnimationManager.animateValue(camera, AnimationValue.X, ResourceManager.getObject(hoveredEntity).getX(), 0.2f);
-							AnimationManager.animateValue(camera, AnimationValue.Z, ResourceManager.getObject(hoveredEntity).getZ(), 0.2f);
+							AnimationManager.animateValue(camera, AnimationValue.X, ResourceManager.getObject(hoveredEntity).getX(), 200);
+							AnimationManager.animateValue(camera, AnimationValue.Z, ResourceManager.getObject(hoveredEntity).getZ(), 200);
 						} catch (Exception e) {}
 						break;
 					
@@ -569,9 +570,17 @@ public class Main {
 				camera.setLastroty();
 			}
 			//Control the zoom with the mouse wheel
-			camera.setZoom((float) (camera.getZoom()-0.001*camera.getZoom()*Mouse.getEventDWheel()));
-			if(camera.getZoom()<7)camera.setZoom(7);
-			if(camera.getZoom()>1000)camera.setZoom(1000);
+			//camera.setZoom((float) (camera.getZoom()-0.001*camera.getZoom()*Mouse.getEventDWheel()));
+			AnimationManager.animateValue(camera, new CustomAnimationValue(){
+				@Override
+				public double getValue() {
+					return camera.getZoom();
+				}
+				@Override
+				public void setValue(double input) {
+					camera.setZoom((float) ((input)<7?7:((input>1000)?1000:input)));
+				}
+			}, camera.getZoom()-0.002*camera.getZoom()*Mouse.getEventDWheel(), 200);
 		}
 	}
 	
