@@ -12,4 +12,9 @@ public class CustomAnimationValue {
 		return 0;
 	}
 	
+	public void finishedAction()
+	{
+		
+	}
+	
 }

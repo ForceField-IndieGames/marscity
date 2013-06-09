@@ -316,6 +316,9 @@ public class AnimationManager {
 				animateValue(animation.object, animation.value, animation.startvalue, animation.speed);
 			}
 		}
+		if(animation.value==AnimationValue.custom){
+			animation.customvalue.finishedAction();
+		}
 		animations.remove(animation);
 	}
 	
