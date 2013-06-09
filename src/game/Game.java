@@ -11,8 +11,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
@@ -24,8 +22,6 @@ import objects.Building;
 
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
-import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.opengl.TextureLoader;
 
 /**
  * This class provides static methods for pausing, resuming, saving and loading the game or
@@ -60,7 +56,7 @@ public class Game {
 				o.writeFloat(b.getX());
 				o.writeFloat(b.getY());
 				o.writeFloat(b.getZ());
-				o.writeInt(b.getBuidlingType());
+				o.writeInt(b.getBuildingType());
 			}
 			o.close();
 			

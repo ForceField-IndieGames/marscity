@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,7 @@ import objects.BuildingType;
 import objects.Drawable;
 import objects.ObjectLoader;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
@@ -179,9 +181,9 @@ public class ResourceManager {
 		}
 		
 		//Building Types
-		buildingTypes.add(BUILDINGTYPE_HOUSE,new BuildingType("BUILDINGTYPE_HOUSE",OBJECT_HOUSE,TEXTURE_HOUSE,500,2,2,0.25f));
-		buildingTypes.add(BUILDINGTYPE_BIGHOUSE,new BuildingType("BUILDINGTYPE_BIGHOUSE",OBJECT_BIGHOUSE,TEXTURE_BIGHOUSE,1500,4,4,4f));
-		buildingTypes.add(BUILDINGTYPE_STREET,new BuildingType("BUILDINGTYPE_STREET",OBJECT_STREET,TEXTURE_STREET,5,1,1,0f));
+		buildingTypes.add(BUILDINGTYPE_HOUSE,new BuildingType("BUILDINGTYPE_HOUSE",OBJECT_HOUSE,TEXTURE_HOUSE, TEXTURE_GUITHUMBHOUSE,500,2,2,0.25f));
+		buildingTypes.add(BUILDINGTYPE_BIGHOUSE,new BuildingType("BUILDINGTYPE_BIGHOUSE",OBJECT_BIGHOUSE,TEXTURE_BIGHOUSE, TEXTURE_GUITHUMBBIGHOUSE,1500,4,4,4f));
+		buildingTypes.add(BUILDINGTYPE_STREET,new BuildingType("BUILDINGTYPE_STREET",OBJECT_STREET,TEXTURE_STREET, TEXTURE_GUITHUMBSTREET,5,1,1,0f));
 		
 		//create necessary folders and extract files
 		if(!(new File("res")).exists()||Main.debugMode){
@@ -465,6 +467,7 @@ public class ResourceManager {
 	 */
 	public static Building getObject(int index)
 	{
+		if(index==-1)return new Building(-1);
 		return objects.get(index);
 	}
 	
@@ -507,6 +510,7 @@ public class ResourceManager {
 	 */
 	public static BuildingType getBuildingType(int index)
 	{
+		if(index==-1)return null;
 		return buildingTypes.get(index);
 	}
 	
@@ -566,5 +570,17 @@ public class ResourceManager {
 		return null;
 	}
 	
+	public static int getHoveredBuildingtype(int hoveredEntity)
+	{
+		if(hoveredEntity==-1)return -1;
+		return getObject(hoveredEntity).getBuildingType();
+	}
+
+	public static FloatBuffer toFlippedFloatBuffer(float... floats) {
+	    FloatBuffer b = BufferUtils.createFloatBuffer(floats.length);
+	    b.put(floats);
+	    b.flip();
+	    return b;
+	}
 	
 }

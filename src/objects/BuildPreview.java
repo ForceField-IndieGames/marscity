@@ -53,11 +53,40 @@ public class BuildPreview extends Entity {
 	
 	@Override
 	public void draw() {
+		
+		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_DEPTH_TEST);
+		glDisable(GL_LIGHTING);
+		
+		//Draw street delete preview, if needed
+		try {
+			if(Main.selectedTool==Main.TOOL_DELETE&&Mouse.isButtonDown(0)&&ResourceManager.getObject(Main.hoveredEntity).getBuildingType()==ResourceManager.BUILDINGTYPE_STREET){
+				Streets.updatePreview(Math.round(Main.mousepos3d[0]), Math.round(Main.mousepos3d[2]));
+				if(Streets.isVertical()){
+					for(int y=Streets.getY1();y<Streets.getY2();y++){
+						if(Grid.getCell(Streets.getX1(), y).getBuildingType()==ResourceManager.BUILDINGTYPE_STREET){
+							glTranslatef(Streets.getX1(), 0.002f, y);
+							glColor3f(1f, 0f, 0f);
+							glCallList(ResourceManager.OBJECT_GRIDCELL);
+							glTranslatef(-Streets.getX1(), -0.002f, -y);
+						}	
+					}
+				}else{
+					for(int x=Streets.getX1();x<Streets.getX2();x++){
+						if(Grid.getCell(x, Streets.getY1()).getBuildingType()==ResourceManager.BUILDINGTYPE_STREET){
+							glTranslatef(x, 0.002f, Streets.getY1());
+							glColor3f(1f, 0f, 0f);
+							glCallList(ResourceManager.OBJECT_GRIDCELL);
+							glTranslatef(-x, -0.002f, -Streets.getY1());
+						}
+					}
+				}
+			}
+		} catch (Exception e) {}
+			
+		
 		if(!isVisible()||!show)return;
 		glPushMatrix();
-			glDisable(GL_LIGHTING);
-			
-			
 			//Draw grid
 			glDisable(GL_TEXTURE_2D);
 			glDisable(GL_DEPTH_TEST);
@@ -78,7 +107,7 @@ public class BuildPreview extends Entity {
 						if(Grid.getCell(x, z)==null)break;
 						float alpha = (radius-((float) Math.sqrt((getX()-x)*(getX()-x)+(getZ()-z)*(getZ()-z))))/radius;
 						if(Grid.getCell(x, z).getBuilding()!=null){
-							if(Grid.getCell(x, z).getBuilding().getBuidlingType()==ResourceManager.BUILDINGTYPE_STREET)glColor4f(0.8f, 0.8f, 0.8f,alpha);
+							if(Grid.getCell(x, z).getBuilding().getBuildingType()==ResourceManager.BUILDINGTYPE_STREET)glColor4f(0.8f, 0.8f, 0.8f,alpha);
 							else glColor4f(0.5f, 0.5f, 0f,alpha);
 						}else glColor4f(1f, 1f, 1f,alpha-((x%2==0^z%2==0)?0.1f:0f));
 					}
@@ -88,9 +117,9 @@ public class BuildPreview extends Entity {
 				}
 			}
 			
-			//Draw street prewiev, if needed
+			//Draw street preview, if needed
 			if(Main.selectedTool==Main.TOOL_ADD &&Main.currentBuildingType==ResourceManager.BUILDINGTYPE_STREET&&Mouse.isButtonDown(0)){
-				Streets.updateBuilding(Math.round(Main.mousepos3d[0]), Math.round(Main.mousepos3d[2]));
+				Streets.updatePreview(Math.round(Main.mousepos3d[0]), Math.round(Main.mousepos3d[2]));
 				if(Streets.isVertical()){
 					for(int y=Streets.getY1();y<Streets.getY2();y++){
 						glTranslatef(Streets.getX1(), 0.002f, y);
@@ -108,7 +137,6 @@ public class BuildPreview extends Entity {
 						glTranslatef(-x, -0.002f, -Streets.getY1());
 					}
 				}
-				
 			}
 			
 			//Draw building

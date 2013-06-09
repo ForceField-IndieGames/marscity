@@ -41,7 +41,7 @@ public class GuiEvents {
 			Main.buildpreview.setBuilding(-1);
 			Main.currentBuildingType = -1;
 			Main.gui.deleteBorder.setVisible(true);
-			AnimationManager.animateValue(Main.gui.buildingsPanel, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
+			AnimationManager.animateValue(Main.gui.buildingPanels, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
 			break;
 	case Mouseover:
 			break;
@@ -245,68 +245,6 @@ public class GuiEvents {
 	case Mouseover:
 			break;
 	default:break;}}};
-
-
-	public static GuiEvent building = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype, GuiElement e) {
-	switch (eventtype) {
-	case Click:
-			Main.selectedTool = Main.TOOL_ADD;
-			AnimationManager.animateValue(Main.gui.buildingsPanel, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
-			if(e==Main.gui.buildingStreet){
-				Main.currentBuildingType = ResourceManager.BUILDINGTYPE_STREET;
-				Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_STREET);
-			}else if(e==Main.gui.buildingHouse){
-				Main.currentBuildingType = ResourceManager.BUILDINGTYPE_HOUSE;
-				Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_HOUSE);
-			}else if(e==Main.gui.buildingBighouse){
-				Main.currentBuildingType = ResourceManager.BUILDINGTYPE_BIGHOUSE;
-				Main.buildpreview.setBuilding(ResourceManager.BUILDINGTYPE_BIGHOUSE);
-			}
-			break;
-	case Mouseover:
-			Main.gui.buildingTooltip.setVisible(true);
-			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.opacity, 1f, 0.005f);
-			Main.gui.buildingTooltip.setY(e.getScreenY()+e.getHeight()-10);
-			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.Y, Main.gui.buildingTooltip.getY()+10, 0.05f);
-			if(Main.gui.buildingTooltip.getOpacity()>0)
-			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.X, e.getScreenX()+e.getWidth()/2-Main.gui.buildingTooltip.getWidth()/2, 0.5f);
-			else Main.gui.buildingTooltip.setX(e.getScreenX()+e.getWidth()/2-Main.gui.buildingTooltip.getWidth()/2);
-			if(e==Main.gui.buildingStreet)Main.gui.buildingTooltip.setBuilding(ResourceManager.BUILDINGTYPE_STREET);
-			else if(e==Main.gui.buildingHouse)Main.gui.buildingTooltip.setBuilding(ResourceManager.BUILDINGTYPE_HOUSE);
-			else if(e==Main.gui.buildingBighouse)Main.gui.buildingTooltip.setBuilding(ResourceManager.BUILDINGTYPE_BIGHOUSE);
-			break;
-	case Mouseout:
-		AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.opacity, 0f, 0.005f,AnimationManager.ACTION_HIDE);
-		AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.Y, Main.gui.buildingTooltip.getY()-10, 0.05f);
-		break;
-	default:break;}}};
-	
-	
-	public static GuiEvent buildingCategorys = new GuiEvent(){
-	@Override public void run(GuiEventType eventtype, GuiElement e) {
-	switch (eventtype) {
-	case Click:
-			Main.gui.buildingsPanel.setElementsVisible(false);
-			Main.gui.buildingsPanell.setVisible(true);
-			Main.gui.buildingsPanel.setVisible(true);
-			Main.selectedTool = Main.TOOL_SELECT;
-			Main.buildpreview.setBuilding(-1);
-			Main.currentBuildingType = -1;
-			Main.gui.deleteBorder.setVisible(false);
-			Main.gui.toolDelete.setColor(Color.white);
-			AnimationManager.animateValue(Main.gui.buildingsPanel, AnimationValue.Y, 68f, 0.5f);
-		if(e==Main.gui.categoryStreets){
-			Main.gui.buildingsStreet.setVisible(true);
-		}
-		if(e==Main.gui.categoryResidential){
-			Main.gui.buildingsResidential.setVisible(true);
-		}
-			break;
-	case Mouseover:
-			break;
-	default:break;}}};
-	
 	
 	public static GuiEvent MenuPlay = new GuiEvent(){
 	@Override public void run(GuiEventType eventtype) {
