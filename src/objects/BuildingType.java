@@ -17,6 +17,7 @@ public class BuildingType {
 	private int buidlingcost;
 	private int width, depth;
 	private float preferredY;
+	private Texture thumb;
 	
 	
 /**
@@ -31,6 +32,7 @@ public class BuildingType {
 		public BuildingType(String name, 
 							int displaylist, 
 							Texture texture, 
+							Texture thumb,
 							int buidlingcost, 
 							int width, 
 							int depth,
@@ -38,6 +40,7 @@ public class BuildingType {
 			this.name = name;
 			this.displaylist = displaylist;
 			this.texture = texture;
+			this.setThumb(thumb);
 			this.buidlingcost = buidlingcost;
 			this.width = width;
 			this.depth = depth;
@@ -66,6 +69,14 @@ public String getName() {
 	}
 	public int getDepth() {
 		return depth;
+	}
+
+	public Texture getThumb() {
+		return thumb;
+	}
+
+	public void setThumb(Texture thumb) {
+		this.thumb = thumb;
 	}
 	
 }

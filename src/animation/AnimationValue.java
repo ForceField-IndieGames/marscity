@@ -6,5 +6,5 @@ package animation;
  */
 
 public enum AnimationValue {
-	X,Y,Z,rotX,rotY,rotZ,opacity
+	X,Y,Z,rotX,rotY,rotZ,opacity,custom
 }

@@ -22,7 +22,7 @@ public class Entity implements Drawable, Animatable {
 	private Texture texture;
 	private int displayList;
 	
-	private Model model;
+	private Mesh model;
 	private float destY;
 	private float preferredY;
 	private boolean visible = true;

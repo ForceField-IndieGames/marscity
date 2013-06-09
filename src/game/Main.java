@@ -38,6 +38,7 @@ import org.lwjgl.opengl.DisplayMode;
 
 import animation.AnimationManager;
 import animation.AnimationValue;
+import animation.CustomAnimationValue;
 
 
 /**
@@ -115,7 +116,7 @@ public class Main {
 	public final static int TOOL_ADD = 1;
 	public final static int TOOL_DELETE = 2;
 	
-	//The game states (intro is currently not used)
+	//The game states
 	public final static int STATE_INTRO = 0;
 	public final static int STATE_MENU = 1;
 	public final static int STATE_GAME = 2;
@@ -163,9 +164,8 @@ public class Main {
 
 	/**
 	 * Starts the main game loop
-	 * @throws FileNotFoundException Why? idk.
 	 */
-	public void start() throws FileNotFoundException {
+	public void start(){
 		
 		
 		try {
@@ -459,14 +459,15 @@ public class Main {
 				camera.setRotX(camera.getRotX()+0.1f*MY);
 				if(camera.getRotX()<-89)camera.setRotX(-89);
 				if(camera.getRotX()>-1)camera.setRotX(-1);
-				gui.cameraRotate.setVisible(true);
-			}else gui.cameraRotate.setVisible(false);
+				if(camera.wasRotated()){
+					gui.cameraRotate.setVisible(true);
+				}
+			}
 			//Move the camera with middle mouse button
 			if(Mouse.isButtonDown(2)){
 				camera.setX((float) (camera.getX()+delta*(0.00008f*camera.getZoom()+0.0004f)*MY*Math.sin(Math.toRadians(camera.getRotY()))-delta*(0.00008f*camera.getZoom()+0.0004f)*MX*Math.cos(Math.toRadians(camera.getRotY()))));
 				camera.setZ((float) (camera.getZ()+delta*(0.00008f*camera.getZoom()+0.0004f)*MY*Math.cos(Math.toRadians(camera.getRotY()))+delta*(0.00008f*camera.getZoom()+0.0004f)*MX*Math.sin(Math.toRadians(camera.getRotY()))));
-				gui.cameraMove.setVisible(true);
-			}else gui.cameraMove.setVisible(false);
+			}
 		}
 		
 		//Fire Mouseover and Mouseout events
@@ -482,6 +483,21 @@ public class Main {
 			{
 				Mouse.setGrabbed(false);
 			}
+			//Set mouse grabbed when pressing middl or righte mouse button
+			if((Mouse.getEventButton()==2||Mouse.getEventButton()==1)&&Mouse.getEventButtonState()){
+					Mouse.setGrabbed(true);
+			}
+			
+			if(Mouse.getEventButton()==2&&Mouse.getEventButtonState()){
+				gui.cameraMove.setVisible(true);
+			}
+			if(Mouse.getEventButton()==2&&!Mouse.getEventButtonState()){
+				gui.cameraMove.setVisible(false);
+			}
+			
+			if(Mouse.getEventButton()==1){
+				gui.cameraRotate.setVisible(false);
+			}
 			
 			//Start gui click event
 			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()){
@@ -491,67 +507,80 @@ public class Main {
 			//Only do things when the mouse is not over the gui
 			if(guihit!=null)return;
 				
-				if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&currentBuildingType==ResourceManager.BUILDINGTYPE_STREET&&selectedTool==TOOL_ADD){
-					Streets.endBuilding(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
-				}
-				//Do some action with the left mouse button based on the selected tool
-				if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
-					switch(selectedTool)
-					{
-						case(TOOL_SELECT): //Zoom to a house
-							try {
-								AnimationManager.animateValue(camera, AnimationValue.X, ResourceManager.getObject(hoveredEntity).getX(), 0.2f);
-								AnimationManager.animateValue(camera, AnimationValue.Z, ResourceManager.getObject(hoveredEntity).getZ(), 0.2f);
-							} catch (Exception e) {}
+			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&currentBuildingType==ResourceManager.BUILDINGTYPE_STREET&&selectedTool==TOOL_ADD){
+				Streets.buildStreet(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
+			}
+			
+			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&selectedTool==TOOL_DELETE&&ResourceManager.getHoveredBuildingtype(hoveredEntity)==ResourceManager.BUILDINGTYPE_STREET){
+				Streets.deleteStreet(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
+			}
+			
+			//Do some action with the left mouse button based on the selected tool
+			if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
+				switch(selectedTool)
+				{
+					case(TOOL_SELECT): //Zoom to a house
+						try {
+							AnimationManager.animateValue(camera, AnimationValue.X, ResourceManager.getObject(hoveredEntity).getX(), 200);
+							AnimationManager.animateValue(camera, AnimationValue.Z, ResourceManager.getObject(hoveredEntity).getZ(), 200);
+						} catch (Exception e) {}
+						break;
+					
+					case(TOOL_ADD): // Create a new Building at mouse position
+						if(currentBuildingType==-1)break;
+						if(currentBuildingType==ResourceManager.BUILDINGTYPE_STREET){
+							Streets.setStartPos(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
 							break;
+						}
+						if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), ResourceManager.getBuildingType(currentBuildingType).getWidth(), ResourceManager.getBuildingType(currentBuildingType).getDepth())||money<ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost())break;
+							ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
+							Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBuildingType);
+							money -= ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost();
+							ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
+							AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
+							AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
+						break;
 						
-						case(TOOL_ADD): // Create a new Building at mouse position
-							if(currentBuildingType==-1)break;
-							if(currentBuildingType==ResourceManager.BUILDINGTYPE_STREET){
-								Streets.startBuilding(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
-								break;
-							}
-							if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), ResourceManager.getBuildingType(currentBuildingType).getWidth(), ResourceManager.getBuildingType(currentBuildingType).getDepth())||money<ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost())break;
-								ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
-								Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBuildingType);
-								money -= ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost();
-								ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
-								AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
-								AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
+					case(TOOL_DELETE): // Delete the hovered Building
+						if(hoveredEntity==-1)break;
+						if(ResourceManager.getObject(hoveredEntity).getBuildingType()==ResourceManager.BUILDINGTYPE_STREET){
+							Streets.setStartPos(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
 							break;
-							
-						case(TOOL_DELETE): // Delete the hovered Building
-							if(hoveredEntity==-1)break;
-							try {
-								ResourceManager.playSoundRandom(ResourceManager.SOUND_DESTROY);
-								Grid.clearsCells((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuidlingType()).getWidth(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuidlingType()).getDepth());
-								ParticleEffects.dustEffect(ResourceManager.getObject(hoveredEntity).getX(),ResourceManager.getObject(hoveredEntity).getY(),ResourceManager.getObject(hoveredEntity).getZ());
-								ResourceManager.getObject(hoveredEntity).delete();
-							} catch (Exception e) {e.printStackTrace();}
-							break;
-					}
+						}
+						try {
+							ResourceManager.playSoundRandom(ResourceManager.SOUND_DESTROY);
+							Grid.clearsCells((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuildingType()).getWidth(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuildingType()).getDepth());
+							ParticleEffects.dustEffect(ResourceManager.getObject(hoveredEntity).getX(),ResourceManager.getObject(hoveredEntity).getY(),ResourceManager.getObject(hoveredEntity).getZ());
+							ResourceManager.getObject(hoveredEntity).delete();
+						} catch (Exception e) {e.printStackTrace();}
+						break;
 				}
-				//Select the select tool with right mouse button
-				if(Mouse.getEventButton()==1&&!Mouse.getEventButtonState()&&!camera.wasRotated()){
-					selectedTool = TOOL_SELECT;
-					gui.toolDelete.setColor(Color.white);
-					buildpreview.setBuilding(-1);
-					currentBuildingType = -1;
-					gui.deleteBorder.setVisible(false);
-					AnimationManager.animateValue(Main.gui.buildingsPanel, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
+			}
+			//Select the select tool with right mouse button
+			if(Mouse.getEventButton()==1&&!Mouse.getEventButtonState()&&!camera.wasRotated()){
+				selectedTool = TOOL_SELECT;
+				gui.toolDelete.setColor(Color.white);
+				buildpreview.setBuilding(-1);
+				currentBuildingType = -1;
+				gui.deleteBorder.setVisible(false);
+				AnimationManager.animateValue(Main.gui.buildingPanels, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
+			}
+			if(Mouse.getEventButton()==1&&Mouse.getEventButtonState()){
+				camera.setLastrotx();
+				camera.setLastroty();
+			}
+			//Control the zoom with the mouse wheel
+			//camera.setZoom((float) (camera.getZoom()-0.001*camera.getZoom()*Mouse.getEventDWheel()));
+			AnimationManager.animateValue(camera, new CustomAnimationValue(){
+				@Override
+				public double getValue() {
+					return camera.getZoom();
 				}
-				if(Mouse.getEventButton()==1&&Mouse.getEventButtonState()){
-					camera.setLastrotx();
-					camera.setLastroty();
+				@Override
+				public void setValue(double input) {
+					camera.setZoom((float) ((input)<7?7:((input>1000)?1000:input)));
 				}
-				//Set mouse grabbed when pressing right or middle mouse button
-				if((Mouse.getEventButton()==2||Mouse.getEventButton()==1)&&Mouse.getEventButtonState()){
-						Mouse.setGrabbed(true);
-				}
-				//Control the zoom with the mouse wheel
-				camera.setZoom((float) (camera.getZoom()-0.001*camera.getZoom()*Mouse.getEventDWheel()));
-				if(camera.getZoom()<7)camera.setZoom(7);
-				if(camera.getZoom()>1000)camera.setZoom(1000);
+			}, camera.getZoom()-0.002*camera.getZoom()*Mouse.getEventDWheel(), 200);
 		}
 	}
 	
@@ -595,7 +624,7 @@ public class Main {
 		String bt = "-";
 		try {
 			if(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding()!=null){
-			bt = ""+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuidlingType()+" ("+ResourceManager.getBuildingTypeName(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuidlingType())+")";
+			bt = ""+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType()+" ("+ResourceManager.getBuildingTypeName(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType())+")";
 		}
 		} catch (Exception e) {
 		}
@@ -646,9 +675,9 @@ public class Main {
 		glShadeModel(GL_SMOOTH);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
-		glLight(GL_LIGHT0, GL_POSITION, BufferTools.asFlippedFloatBuffer(new float[]{-30f,50,100f,0f}));
-		glLight(GL_LIGHT0, GL_DIFFUSE, BufferTools.asFlippedFloatBuffer(new float[]{1f,1f,0.9f,1f}));
-		glLightModel(GL_LIGHT_MODEL_AMBIENT, BufferTools.asFlippedFloatBuffer(new float[] {0.9f,0.9f,0.9f,1f}));
+		glLight(GL_LIGHT0, GL_POSITION, ResourceManager.toFlippedFloatBuffer(new float[]{-30f,50,100f,0f}));
+		glLight(GL_LIGHT0, GL_DIFFUSE, ResourceManager.toFlippedFloatBuffer(new float[]{1f,1f,0.9f,1f}));
+		glLightModel(GL_LIGHT_MODEL_AMBIENT, ResourceManager.toFlippedFloatBuffer(new float[] {0.9f,0.9f,0.9f,1f}));
 		
 		glEnable(GL_MAP_COLOR);
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
@@ -656,7 +685,7 @@ public class Main {
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		glEnable(GL_FOG);
-		glFog(GL_FOG_COLOR, BufferTools.asFlippedFloatBuffer(new float[]{0f,0f,0f,1f}));
+		glFog(GL_FOG_COLOR, ResourceManager.toFlippedFloatBuffer(new float[]{0f,0f,0f,1f}));
 		glFogi(GL_FOG_MODE, GL_LINEAR);
 		glHint(GL_FOG_HINT, GL_NICEST);
 		glFogf(GL_FOG_START, 4000);
@@ -685,7 +714,7 @@ public class Main {
 		camera.applyTransform();
 		
 		//Set the light positions
-		glLight(GL_LIGHT0, GL_POSITION, BufferTools.asFlippedFloatBuffer(new float[]{-30f,50,100f,0f}));
+		glLight(GL_LIGHT0, GL_POSITION, ResourceManager.toFlippedFloatBuffer(new float[]{-30f,50,100f,0f}));
         
 		if(gui.getMouseover()==null)
 		{

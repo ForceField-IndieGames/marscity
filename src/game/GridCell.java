@@ -25,4 +25,10 @@ public class GridCell {
 	{
 		this.building = building;
 	}
+	
+	public int getBuildingType()
+	{
+		if(building==null)return -1;
+		return building.getBuildingType();
+	}
 }

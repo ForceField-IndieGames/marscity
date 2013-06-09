@@ -16,7 +16,7 @@ public class Terrain extends Entity {
 	private float scaleX=1,scaleY=1,scaleZ=1;
 	private Texture texture;
 	private int displayList;
-	private Model model;
+	private Mesh model;
 	public float getX() {
 		return x;
 	}
@@ -83,10 +83,10 @@ public class Terrain extends Entity {
 	public void setDisplayList(int displayList) {
 		this.displayList = displayList;
 	}
-	public Model getModel() {
+	public Mesh getModel() {
 		return model;
 	}
-	public void setModel(Model model) {
+	public void setModel(Mesh model) {
 		this.model = model;
 	}
 	public Terrain()

@@ -35,8 +35,8 @@ public class Grid {
 	
 	public static void setBuilding(int x, int y, Building building)
 	{
-		int width = ResourceManager.getBuildingType(building.getBuidlingType()).getWidth();
-		int height = ResourceManager.getBuildingType(building.getBuidlingType()).getDepth();
+		int width = ResourceManager.getBuildingType(building.getBuildingType()).getWidth();
+		int height = ResourceManager.getBuildingType(building.getBuildingType()).getDepth();
 		int x1;
 		int y1;
 		int x2;
@@ -169,7 +169,7 @@ public class Grid {
 			}
 			for(int j=ypos;j<=yposdest;j++){
 				try {
-					if(cells.get(posToIndex(xpos, j)).getBuilding()!=null&&cells.get(posToIndex(xpos, j)).getBuilding().getBuidlingType()!=ignore)return false;
+					if(cells.get(posToIndex(xpos, j)).getBuilding()!=null&&cells.get(posToIndex(xpos, j)).getBuilding().getBuildingType()!=ignore)return false;
 				} catch (Exception e) {
 					return false;
 				}
@@ -184,7 +184,7 @@ public class Grid {
 			}
 			for(int j=xpos;j<=xposdest;j++){
 				try {
-					if(cells.get(posToIndex(j, ypos)).getBuilding()!=null&&cells.get(posToIndex(j, ypos)).getBuilding().getBuidlingType()!=ignore)return false;
+					if(cells.get(posToIndex(j, ypos)).getBuilding()!=null&&cells.get(posToIndex(j, ypos)).getBuilding().getBuildingType()!=ignore)return false;
 				} catch (Exception e) {
 					return false;
 				}
@@ -192,5 +192,6 @@ public class Grid {
 		}
 		return true;
 	}
+	
 	
 }
