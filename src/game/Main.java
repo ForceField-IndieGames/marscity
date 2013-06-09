@@ -1,5 +1,6 @@
 package game;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.util.glu.GLU.*;
 
 import effects.ParticleEffects;
@@ -580,7 +581,7 @@ public class Main {
 				public void setValue(double input) {
 					camera.setZoom((float) ((input)<7?7:((input>1000)?1000:input)));
 				}
-			}, camera.getZoom()-0.002*camera.getZoom()*Mouse.getEventDWheel(), 200);
+			}, camera.getZoom()-0.004*camera.getZoom()*Mouse.getEventDWheel()-((Mouse.getEventDWheel()>0)?0.2:0)*Mouse.getEventDWheel(), 200);
 		}
 	}
 	
@@ -707,7 +708,7 @@ public class Main {
 		gluPerspective(30f, 1337 / 768f, 0.3f, 5000f);
 		glMatrixMode(GL_MODELVIEW);
 		
-		//glUseProgram(shaderProgram);
+		
 //		
 		
 		//Apply the camera transformations
@@ -740,6 +741,8 @@ public class Main {
         
         //Draw the terrain
         terrain.draw();
+        
+       // glUseProgram(ResourceManager.shaderProgram);
        
         //Draw the buidings
         for(int i=0;i<ResourceManager.objects.size();i++){
@@ -754,13 +757,15 @@ public class Main {
 			glEnable(GL_LIGHTING);
 		}
         
+        //glUseProgram(0);
+        
         //Draw the building preview
         buildpreview.draw();
         
         //Draw the particle effects
         ParticleEffects.draw();
 
-//		glUseProgram(0);
+		
 		
 		glPopMatrix();
 		

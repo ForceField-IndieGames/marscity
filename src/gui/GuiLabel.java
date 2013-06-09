@@ -93,6 +93,9 @@ public class GuiLabel extends AbstractGuiElement {
 		wrapText();
 	}
 	
+	/**
+	 * Wraps the Text automatically to fit in the Label
+	 */
 	public void wrapText()
 	{
 		//Automatically wrap the text
