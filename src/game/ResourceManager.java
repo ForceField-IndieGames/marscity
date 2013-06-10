@@ -57,6 +57,8 @@ public class ResourceManager {
 	public final static UnicodeFont Arial15B = new UnicodeFont(new Font("Arial",Font.BOLD,15));
 	public final static UnicodeFont Arial30B = new UnicodeFont(new Font("Arial",Font.BOLD,30));
 	
+	public final static String PLACEHOLDER1 = "%1%";
+	
 	//The shaders, currently not used
 	public static int shaderProgram, vertexShader, fragmentShader;
 	
@@ -581,6 +583,11 @@ public class ResourceManager {
 	    b.put(floats);
 	    b.flip();
 	    return b;
+	}
+	
+	public static String pathToCityname(String path)
+	{
+		return ((new File(path)).getName()).substring(0, ((new File(path)).getName()).length()-5);
 	}
 	
 }

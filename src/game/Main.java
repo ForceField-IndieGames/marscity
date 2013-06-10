@@ -572,16 +572,18 @@ public class Main {
 			}
 			//Control the zoom with the mouse wheel
 			//camera.setZoom((float) (camera.getZoom()-0.001*camera.getZoom()*Mouse.getEventDWheel()));
-			AnimationManager.animateValue(camera, new CustomAnimationValue(){
-				@Override
-				public double getValue() {
-					return camera.getZoom();
-				}
-				@Override
-				public void setValue(double input) {
-					camera.setZoom((float) ((input)<7?7:((input>1000)?1000:input)));
-				}
-			}, camera.getZoom()-0.004*camera.getZoom()*Mouse.getEventDWheel()-((Mouse.getEventDWheel()>0)?0.2:0)*Mouse.getEventDWheel(), 200);
+			if(Mouse.getEventDWheel()!=0){
+				AnimationManager.animateValue(camera, new CustomAnimationValue(){
+					@Override
+					public double getValue() {
+						return camera.getZoom();
+					}
+					@Override
+					public void setValue(double input) {
+						camera.setZoom((float) ((input)<7?7:((input>1000)?1000:input)));
+					}
+				}, camera.getZoom()-0.004*camera.getZoom()*Mouse.getEventDWheel()-((Mouse.getEventDWheel()<0)?0.1:0.01)*Mouse.getEventDWheel(), 200);
+			}
 		}
 	}
 	
