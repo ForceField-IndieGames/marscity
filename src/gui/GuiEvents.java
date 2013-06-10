@@ -287,7 +287,7 @@ public class GuiEvents {
 	@Override public void run(GuiEventType eventtype, GuiElement e) {
 	switch (eventtype) {
 	case Keypress:
-			if(Keyboard.getEventKey()==Keyboard.KEY_RETURN&&Keyboard.getEventKeyState()){
+			if((Keyboard.getEventKey()==Keyboard.KEY_RETURN||Keyboard.getEventKey()==Keyboard.KEY_ESCAPE)&&Keyboard.getEventKeyState()){
 				Main.cityname = ((GuiTextbox)e).getText();
 			}
 			break;
