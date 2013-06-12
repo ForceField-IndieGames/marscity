@@ -178,7 +178,7 @@ public class GUI {
 		setCentered(true);
 		setFont(ResourceManager.Arial30B);
 	}};
-	public GuiLabel settingsVsync = new GuiLabel(30,440,190,20,(Color)null){{
+	public GuiLabel settingsVsync = new GuiLabel(30,440,452,20,(Color)null){{
 		setText(ResourceManager.getString("SETTINGSMENU_LABEL_VSYNC"));
 		setFont(ResourceManager.Arial15B);
 	}};
@@ -192,7 +192,7 @@ public class GUI {
 		setEvent(GuiEvents.settingsVsyncoff);
 		if (!ResourceManager.getSetting("vsync").equals("enabled"))setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 	}};
-	public GuiLabel settingsParticles = new GuiLabel(30,380,190,20,(Color)null){{
+	public GuiLabel settingsParticles = new GuiLabel(30,380,452,20,(Color)null){{
 		setText(ResourceManager.getString("SETTINGSMENU_LABEL_PARTICLES"));
 		setFont(ResourceManager.Arial15B);                                 
 	}};
