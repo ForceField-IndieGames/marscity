@@ -24,9 +24,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import objects.BigHouse;
 import objects.Building;
 import objects.BuildingType;
 import objects.Drawable;
+import objects.House;
 import objects.ObjectLoader;
 
 import org.lwjgl.BufferUtils;
@@ -58,6 +60,7 @@ public class ResourceManager {
 	public final static UnicodeFont Arial30B = new UnicodeFont(new Font("Arial",Font.BOLD,30));
 	
 	public final static String PLACEHOLDER1 = "%1%";
+	public final static String PLACEHOLDER2 = "%2%";
 	
 	//The shaders, currently not used
 	public static int shaderProgram, vertexShader, fragmentShader;
@@ -76,9 +79,9 @@ public class ResourceManager {
 	public static final String shaderpath = "/res/shader/";
 	
 	//The building types (used when placing buildings, also saving and loading)
-	public final static int BUILDINGTYPE_HOUSE = 0;
-	public final static int BUILDINGTYPE_BIGHOUSE = 1;
-	public final static int BUILDINGTYPE_STREET = 2;
+	public final static short BUILDINGTYPE_HOUSE = 0;
+	public final static short BUILDINGTYPE_BIGHOUSE = 1;
+	public final static short BUILDINGTYPE_STREET = 2;
 	
 	//The objects (Actually loads and pares a file and generates a displaylist)
 	public final static int OBJECT_HOUSE = addObject("house.obj");
@@ -229,6 +232,36 @@ public class ResourceManager {
 		//make XML files available for the static methods
 		settingsFile = addXML("res/settings/settings.xml");
 		langFile = addXML("res/lang/"+getSetting("lang")+".xml");
+	}
+
+	/**
+	 * Build a building (Adds it to the grid and to the object list)
+	 * @param x X Position
+	 * @param y Y Position
+	 * @param z Z Position
+	 * @param bt Building type
+	 */
+	public static Building buildBuilding(float x, float y, float z, int bt)
+	{
+		x = Grid.cellSize*Math.round(x/Grid.cellSize);
+		y = Grid.cellSize*Math.round(y/Grid.cellSize);
+		z = Grid.cellSize*Math.round(z/Grid.cellSize);
+		Building building = null;
+		switch(bt)
+		{
+			case BUILDINGTYPE_HOUSE:
+				building = new House(bt,x,y,z);
+				break;
+			case BUILDINGTYPE_BIGHOUSE:
+				building = new BigHouse(bt,x,y,z);
+				break;
+			default: 
+				building = new Building(bt,x,y,z);
+				break;
+		}
+		Grid.setBuilding(Math.round(x),Math.round(z), building);
+		ResourceManager.objects.add(building);
+		return building;
 	}
 
 	/**
@@ -524,24 +557,6 @@ public class ResourceManager {
 	public static String getBuildingTypeName(int buildingtype)
 	{
 		return ResourceManager.getString(ResourceManager.getBuildingType(buildingtype).getName());
-	}
-	
-	/**
-	 * Build a building (Adds it to the grid and to the object list)
-	 * @param x X Position
-	 * @param y Y Position
-	 * @param z Z Position
-	 * @param bt Building type
-	 */
-	public static Building buildBuilding(float x, float y, float z, int bt)
-	{
-		x = Grid.cellSize*Math.round(x/Grid.cellSize);
-		y = Grid.cellSize*Math.round(y/Grid.cellSize);
-		z = Grid.cellSize*Math.round(z/Grid.cellSize);
-		Building building = new Building(bt,x,y,z);
-		Grid.setBuilding(Math.round(x),Math.round(z), building);
-		ResourceManager.objects.add(building);
-		return building;
 	}
 	
 	/**

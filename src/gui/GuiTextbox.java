@@ -86,7 +86,7 @@ public class GuiTextbox extends GuiLabel {
 					if(Keyboard.getEventKey()==Keyboard.KEY_LSHIFT
 							||Keyboard.getEventKey()==Keyboard.KEY_RSHIFT
 							||Keyboard.getEventKey()==Keyboard.KEY_LCONTROL
-							||Keyboard.getEventKey()==Keyboard.KEY_RCONTROL)return;
+							||Keyboard.getEventKey()==Keyboard.KEY_RCONTROL)break;
 					if(Keyboard.getEventKey()==Keyboard.KEY_BACK&&Keyboard.getEventKeyState()){
 						t.setText(t.getText().substring(0, t.getCaretPos()-1)+t.getText().substring(t.getCaretPos()));
 						if(t.getCaretPos()>0)t.setCaretPos(t.getCaretPos()-1);

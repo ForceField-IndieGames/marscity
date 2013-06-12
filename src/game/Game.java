@@ -51,12 +51,13 @@ public class Game {
 			/////////////////////
 			ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(new File(path)));
 			o.writeInt(Main.money);
+			o.writeInt(Main.citizens);
 			o.writeInt(ResourceManager.objects.size());
 			for(Building b:ResourceManager.objects){
-				o.writeFloat(b.getX());
-				o.writeFloat(b.getY());
-				o.writeFloat(b.getZ());
-				o.writeInt(b.getBuildingType());
+				o.writeShort((short) b.getX());
+				o.writeShort((short) b.getY());
+				o.writeShort((short) b.getZ());
+				o.writeShort(b.getBuildingType());
 			}
 			o.close();
 			
@@ -83,9 +84,10 @@ public class Game {
 			
 			ObjectInputStream i = new ObjectInputStream(new FileInputStream(new File(path)));
 			Main.money=i.readInt();
+			Main.citizens = i.readInt();
 			int count = i.readInt();
 			for(int j=0;j<count;j++){
-				ResourceManager.buildBuilding(i.readFloat(), i.readFloat(), i.readFloat(), i.readInt());
+				ResourceManager.buildBuilding(i.readShort(), i.readShort(), i.readShort(), i.readShort());
 			}
 			i.close();
 			

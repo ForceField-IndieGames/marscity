@@ -1,7 +1,5 @@
 package objects;
 
-import java.io.Serializable;
-
 import game.ResourceManager;
 import animation.AnimationManager;
 import animation.AnimationValue;
@@ -13,12 +11,9 @@ import animation.AnimationValue;
  * @author Benedikt Ringlein
  */
 
-public class Building extends Entity implements Serializable {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4734264162688241861L;
-	private float preferredY = 0;
+public class Building extends Entity {
+	
+	private float height = 0;
 	private int buidlingType;
 	
 	public int getBuildingType() {
@@ -26,22 +21,22 @@ public class Building extends Entity implements Serializable {
 	}
 
 	@Override
-	public float getPreferredY()
-	{return preferredY;}
+	public float getHeight()
+	{return height;}
 	
 	public Building(){}
 	
 	public Building(int bt)
 	{
 		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture());
-		preferredY = ResourceManager.getBuildingType(bt).getPreferredY();
+		height = ResourceManager.getBuildingType(bt).getPreferredY();
 		this.buidlingType = bt;
 	}
 	
 	public Building(int bt, float x, float y, float z)
 	{
 		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture(),x,y,z);
-		preferredY = ResourceManager.getBuildingType(bt).getPreferredY();
+		height = ResourceManager.getBuildingType(bt).getPreferredY();
 		this.buidlingType = bt;
 	}
 	
@@ -52,9 +47,15 @@ public class Building extends Entity implements Serializable {
 	}
 	
 	@Override
+	public void click()
+	{
+		
+	}
+	
+	@Override
 	public void delete()
 	{
-		AnimationManager.animateValue(this, AnimationValue.Y, getY()-getPreferredY()*5, 1000, AnimationManager.ACTION_DELETE);
+		AnimationManager.animateValue(this, AnimationValue.Y, getY()-getHeight()*5, 1000, AnimationManager.ACTION_DELETE);
 		AnimationManager.animateValue(this, AnimationValue.rotX, (float) (getRotX()-10+Math.random()*20), 1000);
 		AnimationManager.animateValue(this, AnimationValue.rotY, (float) (getRotY()-10+Math.random()*20), 1000);
 		AnimationManager.animateValue(this, AnimationValue.rotZ, (float) (getRotZ()-10+Math.random()*20), 1000);

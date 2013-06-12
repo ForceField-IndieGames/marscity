@@ -24,6 +24,7 @@ public class MsgBox extends GuiPanel {
 		setHeight(256);
 		setX(Display.getWidth()/2-256);
 		setY(Display.getHeight()/2-128);
+		setOpacity(0f);
 		titlelabel = new GuiLabel(0,200,512,40,(Color)null);
 		titlelabel.setText(title);
 		titlelabel.setFont(ResourceManager.Arial30B);
@@ -38,15 +39,15 @@ public class MsgBox extends GuiPanel {
 			@Override public void run(GuiEventType eventtype, GuiElement element) {
 				switch (eventtype) {
 				case Click:
-						AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.opacity, 0f, 0.005f, AnimationManager.ACTION_REMOVEGUI);
-						AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.Y, element.getParent().getY()-20, 0.1f);
-						break;
-				case Mouseover:
+						AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.opacity, 0f, 100, AnimationManager.ACTION_REMOVEGUI);
+						AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.Y, element.getParent().getY()-20, 100);
 						break;
 				default:break;}}});
 		button.setText(ResourceManager.getString("MSGBOX_BUTTON_OK"));
 		button.setColor(color);
 		add(button);
+		AnimationManager.animateValue(this, AnimationValue.opacity, 1f, 100);
+		AnimationManager.animateValue(this, AnimationValue.Y, getY()+10, 100, AnimationManager.ACTION_REVERSE);
 	}
 	
 }

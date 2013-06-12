@@ -1,6 +1,5 @@
 package game;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.util.glu.GLU.*;
 
 import effects.ParticleEffects;
@@ -59,7 +58,7 @@ class splashScreen extends JFrame implements Runnable{
 	public Thread thread;
 	
 	/**
-	 * The splash screen that is displayed while the resources are sill loaded
+	 * The splash screen that is displayed while the resources are still loading
 	 */
 	public splashScreen()
 	{
@@ -113,14 +112,14 @@ class splashScreen extends JFrame implements Runnable{
 public class Main {
 	
 	//The tools
-	public final static int TOOL_SELECT = 0;
-	public final static int TOOL_ADD = 1;
-	public final static int TOOL_DELETE = 2;
+	public final static byte TOOL_SELECT = 0;
+	public final static byte TOOL_ADD = 1;
+	public final static byte TOOL_DELETE = 2;
 	
 	//The game states
-	public final static int STATE_INTRO = 0;
-	public final static int STATE_MENU = 1;
-	public final static int STATE_GAME = 2;
+	public final static byte STATE_INTRO = 0;
+	public final static byte STATE_MENU = 1;
+	public final static byte STATE_GAME = 2;
 
 	//Variables that are used for calculating the delta and fps
 	long lastFrame;
@@ -132,22 +131,23 @@ public class Main {
 	public static boolean debugMode = true;//////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////
 	
-	public static int hoveredEntity = -1; //The index of the object that is hovered with the mouse
-	public static int selectedTool = 0; //The selected tool, SELECT,ADD or DELETE
-	public static int money = Game.INITIALMONEY; //The players money
-	public static String cityname = "Meine Stadt"; //The city's name
-	public static int currentBuildingType = -1; //The currently selected building type
-	public static float[] mousepos3d=new float[3]; //The mouse position in 3d space
-	public static int gameState = debugMode?STATE_GAME:STATE_INTRO; //The current game state
-	public static String clipboard=""; //A local text clipboard
+	public static int     hoveredEntity = -1; //The index of the object that is hovered with the mouse
+	public static byte     selectedTool  = 0; //The selected tool, SELECT,ADD or DELETE
+	public static int     money         = Game.INITIALMONEY; //The players money
+	public static int     citizens      = 0; //The citizens that live in the city
+	public static String  cityname      = "Meine Stadt"; //The city's name
+	public static int     currentBT     = -1; //The currently selected building type
+	public static float[] mousepos3d    = new float[3]; //The mouse position in 3d space
+	public static byte     gameState     = debugMode?STATE_GAME:STATE_INTRO; //The current game state
+	public static String  clipboard="";   //A local text clipboard
 	
 	//Some more objects
-	public static Camera camera = new Camera();
-	static Terrain terrain; 
-	static Entity skybox;
-	public static GUI gui;
+	public static Camera       camera       = new Camera();
+	       static Terrain      terrain; 
+	       static Entity       skybox;
+	public static GUI          gui;
 	public static BuildPreview buildpreview;
-	static splashScreen splashscreen;
+	       static splashScreen splashscreen;
 	
 	/**
 	 * Writes a string into the log file
@@ -500,15 +500,18 @@ public class Main {
 				gui.cameraRotate.setVisible(false);
 			}
 			
-			//Start gui click event
+			//Start gui click event & Building click event
 			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()){
 				gui.callGuiEvents(GuiEventType.Click);
+				if(hoveredEntity!=-1&&selectedTool==TOOL_SELECT){
+					ResourceManager.getObject(hoveredEntity).click();
+				}
 			}
 			
 			//Only do things when the mouse is not over the gui
 			if(guihit!=null)return;
 				
-			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&currentBuildingType==ResourceManager.BUILDINGTYPE_STREET&&selectedTool==TOOL_ADD){
+			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&currentBT==ResourceManager.BUILDINGTYPE_STREET&&selectedTool==TOOL_ADD){
 				Streets.buildStreet(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
 			}
 			
@@ -517,10 +520,11 @@ public class Main {
 			}
 			
 			//Do some action with the left mouse button based on the selected tool
-			if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
+			if(Mouse.getEventButton()==0){
 				switch(selectedTool)
 				{
 					case(TOOL_SELECT): //Zoom to a house
+						if(Mouse.getEventButtonState())break;
 						try {
 							AnimationManager.animateValue(camera, AnimationValue.X, ResourceManager.getObject(hoveredEntity).getX(), 200);
 							AnimationManager.animateValue(camera, AnimationValue.Z, ResourceManager.getObject(hoveredEntity).getZ(), 200);
@@ -528,21 +532,23 @@ public class Main {
 						break;
 					
 					case(TOOL_ADD): // Create a new Building at mouse position
-						if(currentBuildingType==-1)break;
-						if(currentBuildingType==ResourceManager.BUILDINGTYPE_STREET){
+						if(!Mouse.getEventButtonState())break;
+						if(currentBT==-1)break;
+						if(currentBT==ResourceManager.BUILDINGTYPE_STREET){
 							Streets.setStartPos(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
 							break;
 						}
-						if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), ResourceManager.getBuildingType(currentBuildingType).getWidth(), ResourceManager.getBuildingType(currentBuildingType).getDepth())||money<ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost())break;
+						if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), ResourceManager.getBuildingType(currentBT).getWidth(), ResourceManager.getBuildingType(currentBT).getDepth())||money<ResourceManager.getBuildingType(currentBT).getBuidlingcost())break;
 							ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
-							Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBuildingType);
-							money -= ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost();
+							Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBT);
+							money -= ResourceManager.getBuildingType(currentBT).getBuidlingcost();
 							ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
 							AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
 							AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
 						break;
 						
 					case(TOOL_DELETE): // Delete the hovered Building
+						if(!Mouse.getEventButtonState())break;
 						if(hoveredEntity==-1)break;
 						if(ResourceManager.getObject(hoveredEntity).getBuildingType()==ResourceManager.BUILDINGTYPE_STREET){
 							Streets.setStartPos(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
@@ -562,7 +568,7 @@ public class Main {
 				selectedTool = TOOL_SELECT;
 				gui.toolDelete.setColor(Color.white);
 				buildpreview.setBuilding(-1);
-				currentBuildingType = -1;
+				currentBT = -1;
 				gui.deleteBorder.setVisible(false);
 				AnimationManager.animateValue(Main.gui.buildingPanels, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
 			}
@@ -588,74 +594,6 @@ public class Main {
 	}
 	
 	
-	/**
-	 * The Gamelogic
-	 * @param delta The delta for timing
-	 */
-	public void update(int delta) {
-		
-		//Mouse input
-		inputMouse(delta);
-		
-		//Keyboard input
-		if(gui.getKeyboardfocus()==null)inputKeyboard(delta);
-		else{
-			while(Keyboard.next()){
-				gui.getKeyboardfocus().callGuiEvents(GuiEventType.Keypress);
-			}
-		}
-		
-		//Run the animations
-		AnimationManager.update(delta);
-		
-		//Move the BuildPreview
-		if(selectedTool==TOOL_ADD&&gui.getMouseover()==null&&!Mouse.isGrabbed()){
-			buildpreview.setX(Grid.cellSize*Math.round(mousepos3d[0]/Grid.cellSize));
-			buildpreview.setY(Grid.cellSize*Math.round(mousepos3d[1]/Grid.cellSize));
-			buildpreview.setZ(Grid.cellSize*Math.round(mousepos3d[2]/Grid.cellSize));
-			buildpreview.setVisible(true);
-		}else{
-			buildpreview.setVisible(false);
-		}
-		
-		for(int i=0;i<ResourceManager.objects.size();i++)
-		{
-			ResourceManager.objects.get(i).update(delta);
-		}
-		
-		//Show debug info
-		String bt = "-";
-		try {
-			if(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding()!=null){
-			bt = ""+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType()+" ("+ResourceManager.getBuildingTypeName(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType())+")";
-		}
-		} catch (Exception e) {
-		}
-		
-		gui.debugInfo.setText("debug mode | Objects: "+ResourceManager.objects.size()+
-				", FPS: "+fps+", ParticleEffects: "+ParticleEffects.getEffectCount()+", Mouse:("+Math.round(mousepos3d[0])+","+Math.round(mousepos3d[1])+","+Math.round(mousepos3d[2])+")"+
-				", GridIndex: "+Grid.posToIndex(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]))+
-				", BuildingType: "+bt);
-
-		//Update gui info labels
-		gui.infoMoney.setText(ResourceManager.getString("INFOBAR_LABEL_MONEY")+": "+money+"$");
-		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+0);
-		if(money<=2000){
-			if(money<=0)gui.infoMoney.setTextColor(Color.red);
-			else gui.infoMoney.setTextColor(new Color(200,100,0));
-		}else gui.infoMoney.setTextColor(Color.black);
-		
-		
-		//Update the paticle effects
-		ParticleEffects.update(delta);
-		
-		//Rotate the camera while in pause mode
-		if(Game.isPaused())camera.setRotY(camera.getRotY()+0.05f);
-		
-		// update FPS Counter
-		updateFPS(); 
-	}
-
 	/**
 	 * "initalize" OpenGL
 	 */
@@ -694,6 +632,14 @@ public class Main {
 		glFogf(GL_FOG_START, 4000);
 		glFogf(GL_FOG_END, 5000);
 		glFogf(GL_FOG_DENSITY, 0.0005f);
+	}
+
+	/**
+	 * Draw the Main menu
+	 */
+	public void renderMenu()
+	{
+		gui.drawMenu();
 	}
 
 	/**
@@ -776,15 +722,21 @@ public class Main {
 		
 	}
 	
-	/**
-	 * Draw the Main menu
-	 */
-	public void renderMenu()
-	{
-		gui.drawMenu();
-	}
-	
 	float i= (float) (0.5*Math.PI); //value for the menu animation
+	public void updateIntro(int delta)
+	{
+		gui.IntroFF.setOpacity(1f-(float)anim/1000);
+		gui.IntroFF.setX(gui.IntroFF.getX()-0.2f*delta);
+		gui.IntroFF.setY(gui.IntroFF.getY()-0.1f*delta);
+		gui.IntroFF.setWidth(gui.IntroFF.getWidth()+0.4f*delta);
+		gui.IntroFF.setHeight(gui.IntroFF.getHeight()+0.2f*delta);
+		if(anim>=1000){
+			gameState = STATE_MENU;
+			gui.IntroFF.setVisible(false);
+		}
+		anim+=delta;
+	}
+
 	/**
 	 * Update the Main menu
 	 * @param delta
@@ -812,20 +764,74 @@ public class Main {
 	}
 	
 	int anim = 0;
-	public void updateIntro(int delta)
-	{
-		gui.IntroFF.setOpacity(1f-(float)anim/1000);
-		gui.IntroFF.setX(gui.IntroFF.getX()-0.2f*delta);
-		gui.IntroFF.setY(gui.IntroFF.getY()-0.1f*delta);
-		gui.IntroFF.setWidth(gui.IntroFF.getWidth()+0.4f*delta);
-		gui.IntroFF.setHeight(gui.IntroFF.getHeight()+0.2f*delta);
-		if(anim>=1000){
-			gameState = STATE_MENU;
-			gui.IntroFF.setVisible(false);
+	/**
+	 * The Gamelogic
+	 * @param delta The delta for timing
+	 */
+	public void update(int delta) {
+		
+		//Mouse input
+		inputMouse(delta);
+		
+		//Keyboard input
+		if(gui.getKeyboardfocus()==null)inputKeyboard(delta);
+		else{
+			while(Keyboard.next()){
+				gui.getKeyboardfocus().callGuiEvents(GuiEventType.Keypress);
+			}
 		}
-		anim+=delta;
-	}
+		
+		//Run the animations
+		AnimationManager.update(delta);
+		
+		//Move the BuildPreview
+		if(selectedTool==TOOL_ADD&&gui.getMouseover()==null&&!Mouse.isGrabbed()){
+			buildpreview.setX(Grid.cellSize*Math.round(mousepos3d[0]/Grid.cellSize));
+			buildpreview.setY(Grid.cellSize*Math.round(mousepos3d[1]/Grid.cellSize));
+			buildpreview.setZ(Grid.cellSize*Math.round(mousepos3d[2]/Grid.cellSize));
+			buildpreview.setVisible(true);
+		}else{
+			buildpreview.setVisible(false);
+		}
+		
+		for(int i=0;i<ResourceManager.objects.size();i++)
+		{
+			ResourceManager.objects.get(i).update(delta);
+		}
+		
+		//Show debug info
+		String bt = "-";
+		try {
+			if(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding()!=null){
+			bt = ""+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType()+" ("+ResourceManager.getBuildingTypeName(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType())+")";
+		}
+		} catch (Exception e) {
+		}
+		
+		gui.debugInfo.setText("debug mode | Objects: "+ResourceManager.objects.size()+
+				", FPS: "+fps+", ParticleEffects: "+ParticleEffects.getEffectCount()+", Mouse:("+Math.round(mousepos3d[0])+","+Math.round(mousepos3d[1])+","+Math.round(mousepos3d[2])+")"+
+				", GridIndex: "+Grid.posToIndex(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]))+
+				", BuildingType: "+bt);
 	
+		//Update gui info labels
+		gui.infoMoney.setText(ResourceManager.getString("INFOBAR_LABEL_MONEY")+": "+money+"$");
+		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+citizens);
+		if(money<=2000){
+			if(money<=0)gui.infoMoney.setTextColor(Color.red);
+			else gui.infoMoney.setTextColor(new Color(200,100,0));
+		}else gui.infoMoney.setTextColor(Color.black);
+		
+		
+		//Update the paticle effects
+		ParticleEffects.update(delta);
+		
+		//Rotate the camera while in pause mode
+		if(Game.isPaused())camera.setRotY(camera.getRotY()+0.05f);
+		
+		// update FPS Counter
+		updateFPS(); 
+	}
+
 	public static void main(String[] argv) throws FileNotFoundException {
 		Main LwjglTest = new Main();
 		splashscreen = new splashScreen();

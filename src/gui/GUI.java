@@ -12,9 +12,6 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
-import animation.AnimationManager;
-import animation.AnimationValue;
-
 /**
  * This class generates and displays the gui.
  * @author Benedikt Ringlein
@@ -292,11 +289,7 @@ public class GUI {
 	
 	public void MsgBox(String title, String text, Color color)
 	{
-		MsgBox msgbox = new MsgBox(title, text, color);
-		msgbox.setOpacity(0f);
-		AnimationManager.animateValue(msgbox, AnimationValue.opacity, 1f, 0.005f);
-		AnimationManager.animateValue(msgbox, AnimationValue.Y, msgbox.getY()+10, 0.1f, AnimationManager.ACTION_REVERSE);
-		add(msgbox);
+		add(new MsgBox(title, text, color));
 	}
 	
 	/**

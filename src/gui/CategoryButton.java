@@ -29,7 +29,7 @@ public class CategoryButton extends GuiButton {
 						Main.gui.buildingPanels.setVisible(true);
 						Main.selectedTool = Main.TOOL_SELECT;
 						Main.buildpreview.setBuilding(-1);
-						Main.currentBuildingType = -1;
+						Main.currentBT = -1;
 						Main.gui.deleteBorder.setVisible(false);
 						Main.gui.toolDelete.setColor(Color.white);
 						AnimationManager.animateValue(Main.gui.buildingPanels, AnimationValue.Y, 68f, 0.5f);
