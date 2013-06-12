@@ -22,7 +22,6 @@ public class Entity implements Drawable, Animatable {
 	private Texture texture;
 	private int displayList;
 	
-	private Mesh model;
 	private float destY;
 	private float preferredY;
 	private boolean visible = true;
@@ -32,31 +31,6 @@ public class Entity implements Drawable, Animatable {
 		
 	}
 	
-	public Entity(String modelpath, Texture texture)
-	{
-		try {
-			model = ObjectLoader.loadModel(modelpath);
-			this.displayList = ObjectLoader.createDisplayList(model);
-			this.texture = texture;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Entity(String modelpath, Texture texture, int x, int y, int z)
-	{
-		try {
-			model = ObjectLoader.loadModel(modelpath);
-			this.displayList = ObjectLoader.createDisplayList(model);
-			this.texture = texture;
-			this.x=x;
-			this.y=y;
-			this.z=z;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public Entity(int displaylist, Texture texture, float x, float y, float z)
 	{
 			this.displayList = displaylist;
@@ -80,29 +54,6 @@ public class Entity implements Drawable, Animatable {
 			this.z=z;
 	}
 
-	public Entity(String modelpath)
-	{
-		try {
-			model = ObjectLoader.loadModel(modelpath);
-			this.displayList = ObjectLoader.createDisplayList(model);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Entity(String modelpath, int x, int y, int z)
-	{
-		try {
-			model = ObjectLoader.loadModel(modelpath);
-			this.displayList = ObjectLoader.createDisplayList(model);
-			this.x=x;
-			this.y=y;
-			this.z=z;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public int getDisplayList() {
 		return displayList;
 	}
@@ -111,7 +62,7 @@ public class Entity implements Drawable, Animatable {
 		this.displayList = displayList;
 	}
 
-	public float getPreferredY() {
+	public float getHeight() {
 		return preferredY;
 	}
 
@@ -224,6 +175,11 @@ public class Entity implements Drawable, Animatable {
 
 	@Override
 	public void update(int delta) {
+		
+	}
+	
+	public void click()
+	{
 		
 	}
 

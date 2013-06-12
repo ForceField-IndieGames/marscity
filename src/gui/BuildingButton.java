@@ -29,7 +29,7 @@ public class BuildingButton extends GuiPanel {
 	case Click:
 			Main.selectedTool = Main.TOOL_ADD;
 			AnimationManager.animateValue(Main.gui.buildingPanels, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
-			Main.currentBuildingType = getBt();
+			Main.currentBT = getBt();
 			Main.buildpreview.setBuilding(getBt());
 			break;
 	case Mouseover:

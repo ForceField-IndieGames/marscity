@@ -102,10 +102,9 @@ public class ParticleEffect {
 			glDisable(GL_CULL_FACE);
 			glPushMatrix();
 			glTranslatef(p.getX(), p.getY(), p.getZ());
-			glRotatef(Main.camera.getRotX(), 1, 0, 0);
 			glRotatef(Main.camera.getRotY(), 0, 1, 0);
+			glRotatef(Main.camera.getRotX(), 1, 0, 0);
 			glTranslatef(-p.getX(), -p.getY(), -p.getZ());
-			
 			glBegin(GL_QUADS);
 					glTexCoord2d(0, 1f);
 					glVertex3f(-p.getSize()/2+p.getX(), -p.getSize()/2+p.getY(),p.getZ());

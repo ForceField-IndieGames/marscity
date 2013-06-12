@@ -118,7 +118,7 @@ public class BuildPreview extends Entity {
 			}
 			
 			//Draw street preview, if needed
-			if(Main.selectedTool==Main.TOOL_ADD &&Main.currentBuildingType==ResourceManager.BUILDINGTYPE_STREET&&Mouse.isButtonDown(0)){
+			if(Main.selectedTool==Main.TOOL_ADD &&Main.currentBT==ResourceManager.BUILDINGTYPE_STREET&&Mouse.isButtonDown(0)){
 				Streets.updatePreview(Math.round(Main.mousepos3d[0]), Math.round(Main.mousepos3d[2]));
 				if(Streets.isVertical()){
 					for(int y=Streets.getY1();y<Streets.getY2();y++){
