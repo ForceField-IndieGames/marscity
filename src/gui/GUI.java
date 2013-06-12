@@ -23,9 +23,7 @@ public class GUI {
 	private static boolean visible = true;
 	
 	public GuiPanel MenuBG = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_MAINMENUBG);
-	public GuiPanel MenuFF = new GuiPanel(Display.getWidth()-512,0,512,128,ResourceManager.TEXTURE_MAINMENUFF){{
-		setVisible(false);
-	}};
+	public GuiPanel MenuFF = new GuiPanel(Display.getWidth()-512,0,512,128,ResourceManager.TEXTURE_MAINMENUFF);
 	public GuiButton MenuPlay = new GuiButton(0, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2){{
 		setText(ResourceManager.getString("MAINMENU_BUTTON_PLAY"));
 	    setFont(ResourceManager.Arial15B);
@@ -40,7 +38,6 @@ public class GUI {
 		setText(ResourceManager.getString("MAINMENU_BUTTON_SETTINGS"));
 	    setFont(ResourceManager.Arial15B);
 	    setEvent(GuiEvents.MenuSettings);
-	    setColor(Color.red);
 	}};
 	public GuiButton MenuExit = new GuiButton(660, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2){{
 		setText(ResourceManager.getString("MAINMENU_BUTTON_EXIT"));
@@ -48,7 +45,7 @@ public class GUI {
 	    setEvent(GuiEvents.MenuExit);
 	}};
 	public GuiLabel MenuVersion = new GuiLabel(0,0,180,20,(Color)null){{setText("Mars City [Alpha]");}};
-	public GuiPanel MenuIcon = new GuiPanel(Display.getWidth()/2-64,20,128,128,ResourceManager.TEXTURE_ICON256){{
+	public GuiPanel MenuIcon = new GuiPanel(Display.getWidth()/2-64,20,64,64,ResourceManager.TEXTURE_ICON256){{
 		setOpacity(0.9f);
 	}};
 	public GuiPanel IntroFF = new GuiPanel(Display.getWidth()/2-960,Display.getHeight()/2-540,1920,1080,ResourceManager.TEXTURE_FORCEFIELDBG){{
@@ -62,17 +59,19 @@ public class GUI {
 	}};
 	public LoadingScreen loadingscreen = new LoadingScreen();
 	
-	public BuildingToolTip buildingTooltip = new BuildingToolTip(){{setVisible(false);}};
+	public BuildingToolTip buildingTooltip = new BuildingToolTip(){{
+		setVisible(false);
+	}};
 	
 	public GuiPanel deleteBorder = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_GUIDELETEBORDER){{
 		setClickThrough(true);
 		setVisible(false);
 	}};
 	
-	public GuiPanel menuButton = new GuiPanel(0, 64, 32, 32, ResourceManager.TEXTURE_GUIMENUBUTTON){{
+	public GuiButton menuButton = new GuiButton(0, 64, 32, 32, ResourceManager.TEXTURE_GUIMENUBUTTON){{
 		setEvent(GuiEvents.menuButton);
 	}};
-	public GuiPanel toolDelete = new GuiPanel(0, 0, 64, 64, ResourceManager.TEXTURE_GUIDELETE){{
+	public GuiButton toolDelete = new GuiButton(0, 0, 64, 64, ResourceManager.TEXTURE_GUIDELETE){{
 		setEvent(GuiEvents.toolDelete);
 	}};
 	public GuiPanel guiTools = new GuiPanel(0,0,69,100,ResourceManager.TEXTURE_GUITOOLSBG){{
@@ -259,6 +258,8 @@ public class GUI {
 		menuElements.add(MenuVersion);
 		menuElements.add(MenuPanel);
 		menuElements.add(IntroFF);
+		menuElements.add(loadingscreen);
+		menuElements.add(settingsMenu);
 		
 		//GUI
 		add(deleteBorder);

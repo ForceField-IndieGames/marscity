@@ -18,9 +18,11 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 
 import objects.BuildPreview;
 import objects.Building;
@@ -52,9 +54,11 @@ class splashScreen extends JFrame implements Runnable{
 	
 	private static final long serialVersionUID = 1L;
 	
+	short loadeditems=0;
 	JLabel label;
 	JLabel label2;
 	JLabel background;
+	JProgressBar progress;
 	public Thread thread;
 	
 	/**
@@ -73,11 +77,17 @@ class splashScreen extends JFrame implements Runnable{
 		label.setForeground(Color.white);
 		label.setFont(new Font("comicsans",Font.BOLD,40));
 		add(label);
-		label.setBounds(10, getHeight()-50, 50, 50);
+		label.setBounds(5, getHeight()-50, 50, 50);
 		label2 = new JLabel("");
 		add(label2);
 		label2.setForeground(Color.white);
-		label2.setBounds(0, 0, 500, 20);
+		label2.setBounds(2, 0, 500, 20);
+		progress = new JProgressBar();
+		progress.setBounds(0, 0, Toolkit.getDefaultToolkit().getScreenSize().width , 3);
+		progress.setBackground(Color.black);
+		progress.setForeground(new Color(56,130,185));
+		progress.setBorderPainted(false);
+		add(progress);
 		background = new JLabel(new ImageIcon(Main.class.getResource(ResourceManager.texturespath+"forcefieldbackground.png")));
 		add(background);
 		background.setBounds(0, 0, getWidth(), getHeight());
@@ -86,6 +96,13 @@ class splashScreen extends JFrame implements Runnable{
 		thread.start();
 	}
 
+	public void setInfo(String text)
+	{
+		label2.setText(Math.round(loadeditems/61f*100)+"% "+text);
+		progress.setValue(Math.round(loadeditems/61f*100));
+		loadeditems++;
+	}
+	
 	@Override
 	public void run() {
 		//Animate the dots
@@ -128,7 +145,7 @@ public class Main {
 	
 	//////////////////////////////////////////////////////////////////////////
 	//The debugmode enables cheats and displays additional debug information//
-	public static boolean debugMode = true;//////////////////////////////////
+	public static boolean debugMode = false;//////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////
 	
 	public static int     hoveredEntity = -1; //The index of the object that is hovered with the mouse
@@ -198,6 +215,7 @@ public class Main {
 		
 		ResourceManager.init();//Initialize the resources
 		
+		System.out.println("Loaded "+splashscreen.loadeditems+" resources");
 		log("Finished loading resources.");
 		
 		gui = new GUI(); //Create the GUI

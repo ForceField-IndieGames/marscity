@@ -166,9 +166,19 @@ public class GuiEvents {
 	@Override public void run(GuiEventType eventtype) {
 	switch (eventtype) {
 	case Click:
+		switch (Main.gameState) {
+		case Main.STATE_MENU:
+			Main.gui.settingsMenu.setVisible(false);
+			break;
+		case Main.STATE_GAME:
 			Game.Resume();
 			Main.gui.blur.setVisible(false);
 			AnimationManager.animateValue(Main.gui.settingsMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
+			break;
+		default:
+			break;
+		}
+			
 			break;
 	case Mouseover:
 			break;
@@ -268,9 +278,7 @@ public class GuiEvents {
 	@Override public void run(GuiEventType eventtype) {
 	switch (eventtype) {
 	case Click:
-			Game.Load("res/cities/Meine Stadt.city");
-			Game.Resume();
-			Main.gameState = Main.STATE_GAME;
+			Main.gui.loadingscreen.show();
 			break;
 	default:break;}}};
 	
@@ -279,6 +287,7 @@ public class GuiEvents {
 	@Override public void run(GuiEventType eventtype) {
 	switch (eventtype) {
 	case Click:
+			Main.gui.settingsMenu.setVisible(true);
 			break;
 	default:break;}}};
 	

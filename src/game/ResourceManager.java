@@ -162,22 +162,21 @@ public class ResourceManager {
 		Arial15B.addAsciiGlyphs();
 		Arial30B.addAsciiGlyphs();
 		try {
-			Main.splashscreen.label2.setText("Loading Font: Arial15");
+			Main.splashscreen.setInfo("Loading Font: Arial15");
 			Arial15.loadGlyphs();
-			Main.splashscreen.label2.setText("Loading Font: Arial15B");
+			Main.splashscreen.setInfo("Loading Font: Arial15B");
 			Arial15B.loadGlyphs();
-			Main.splashscreen.label2.setText("Loading Font: Arial30B");
+			Main.splashscreen.setInfo("Loading Font: Arial30B");
 			Arial30B.loadGlyphs();
 		} catch (SlickException e) {
 			e.printStackTrace();
 		}
 		
 		//Set up the shader
-		Main.splashscreen.label2.setText("Loading shader...");
+		Main.splashscreen.setInfo("Loading shader...");
 		setupShader("shader.v","shader.f");
 		
 		//Load and parse the Language file
-		Main.splashscreen.label2.setText("Loading xml files...");
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		try {
 			builder = factory.newDocumentBuilder();
@@ -191,6 +190,7 @@ public class ResourceManager {
 		buildingTypes.add(BUILDINGTYPE_STREET,new BuildingType("BUILDINGTYPE_STREET",OBJECT_STREET,TEXTURE_STREET, TEXTURE_GUITHUMBSTREET,5,1,1,0f));
 		
 		//create necessary folders and extract files
+		Main.splashscreen.setInfo("Creating folders...");
 		if(!(new File("res")).exists()||Main.debugMode){
 			(new File("res")).mkdir();
 			(new File("res/lang")).mkdir();
@@ -230,6 +230,7 @@ public class ResourceManager {
 		
 		
 		//make XML files available for the static methods
+		Main.splashscreen.setInfo("Loading xml files...");
 		settingsFile = addXML("res/settings/settings.xml");
 		langFile = addXML("res/lang/"+getSetting("lang")+".xml");
 	}
@@ -324,7 +325,7 @@ public class ResourceManager {
 		System.out.println(path);
 		try {
 			Main.log("Loading object: "+path);
-			Main.splashscreen.label2.setText("Loading object: "+path);
+			Main.splashscreen.setInfo("Loading object: "+path);
 			return ObjectLoader.createDisplayList(ObjectLoader.loadModel(path));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -344,12 +345,12 @@ public class ResourceManager {
 	{
 		path = soundspath + path;
 		Main.log("Loading sound: "+path);
-		Main.splashscreen.label2.setText("Loading sound: "+path);
+		Main.splashscreen.setInfo("Loading sound: "+path);
 		try {
 			return AudioLoader.getAudio(format, new BufferedInputStream(ResourceManager.class.getResourceAsStream(path)));
 		} catch (Exception e) {
 			e.printStackTrace();
-			Main.splashscreen.label2.setText("Error! Failed to load sound: "+path);
+			Main.splashscreen.setInfo("Error! Failed to load sound: "+path);
 			Main.log("Failed to load sound: "+path);
 		}
 		return null;
@@ -364,7 +365,7 @@ public class ResourceManager {
 	{
 		path = texturespath + path;
 		Main.log("Loading texture: "+path);
-		Main.splashscreen.label2.setText("Loading texture: "+path);
+		Main.splashscreen.setInfo("Loading texture: "+path);
 		try {
 			return LoadTexture(ResourceManager.class.getResourceAsStream(path));
 		} catch (Exception e) {
@@ -373,11 +374,6 @@ public class ResourceManager {
 			Main.log("Failed to load texture: "+path);
 		}
 		return null;
-	}
-	
-	public ResourceManager()
-	{
-			
 	}
 	
 	/**
