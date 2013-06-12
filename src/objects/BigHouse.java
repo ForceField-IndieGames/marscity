@@ -27,12 +27,10 @@ public class BigHouse extends Building {
 		super(bt,x,y,z);
 		tCitizens.scheduleAtFixedRate(new BuildingTask(this) {
 			@Override
-			public void run() {
-				if(((BigHouse) getBuilding()).getCitizens()<BigHouse.getCitizensmax()&&Main.gameState==Main.STATE_GAME){
-					if(!Game.isPaused()){
-						Main.citizens++;
-						((BigHouse) getBuilding()).setCitizens(((BigHouse) getBuilding()).getCitizens()+1);
-					}
+			public void task() {
+				if(((BigHouse) getBuilding()).getCitizens()<BigHouse.getCitizensmax()){
+					Main.citizens++;
+					((BigHouse) getBuilding()).setCitizens(((BigHouse) getBuilding()).getCitizens()+1);
 				}
 				else cancel();
 			}

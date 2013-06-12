@@ -28,12 +28,10 @@ public class House extends Building {
 		super(bt,x,y,z);
 		tCitizens.scheduleAtFixedRate(new BuildingTask(this) {
 			@Override
-			public void run() {
-				if(((House) getBuilding()).getCitizens()<House.getCitizensmax()&&Main.gameState==Main.STATE_GAME){
-					if(!Game.isPaused()){
-						Main.citizens++;
-						((House) getBuilding()).setCitizens((byte) (((House) getBuilding()).getCitizens()+1));
-					}
+			public void task() {
+				if(((House) getBuilding()).getCitizens()<House.getCitizensmax()){
+					Main.citizens++;
+					((House) getBuilding()).setCitizens((byte) (((House) getBuilding()).getCitizens()+1));
 				}
 				else cancel();
 			}
@@ -66,7 +64,7 @@ public class House extends Building {
 		super.delete();
 	}
 
-	public int getCitizens() {
+	public byte getCitizens() {
 		return citizens;
 	}
 

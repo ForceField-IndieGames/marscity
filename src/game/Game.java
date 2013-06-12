@@ -109,6 +109,9 @@ public class Game {
 		Grid.init();
 		ResourceManager.objects = new ArrayList<Building>();
 		Main.gameState = Main.STATE_GAME;
+		Main.currentBT = -1;
+		Main.buildpreview.setVisible(false);
+		Main.selectedTool=Main.TOOL_SELECT;
 		Main.gui = null;
 		Main.gui = new GUI();
 		Game.Resume();
