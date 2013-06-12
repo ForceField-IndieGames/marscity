@@ -28,6 +28,7 @@ public class BuildingType {
 	 * @param buidlingcost Costs for building this building.
 	 * @param width The buildings width, in grid cells
 	 * @param depth The buildings depth, in grid cells
+	 * @param height The buildings height
 	 */
 		public BuildingType(String name, 
 							int displaylist, 
@@ -36,7 +37,7 @@ public class BuildingType {
 							int buidlingcost, 
 							int width, 
 							int depth,
-							float preferredY) {
+							float height) {
 			this.name = name;
 			this.displaylist = displaylist;
 			this.texture = texture;
@@ -44,7 +45,7 @@ public class BuildingType {
 			this.buidlingcost = buidlingcost;
 			this.width = width;
 			this.depth = depth;
-			this.preferredY = preferredY;
+			this.preferredY = height;
 		}
 
 public float getPreferredY() {

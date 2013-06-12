@@ -39,7 +39,7 @@ public class GuiEvents {
 			Main.selectedTool = Main.TOOL_DELETE;
 			Main.gui.toolDelete.setColor(Color.gray);
 			Main.buildpreview.setBuilding(-1);
-			Main.currentBuildingType = -1;
+			Main.currentBT = -1;
 			Main.gui.deleteBorder.setVisible(true);
 			AnimationManager.animateValue(Main.gui.buildingPanels, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
 			break;
@@ -287,7 +287,7 @@ public class GuiEvents {
 	@Override public void run(GuiEventType eventtype, GuiElement e) {
 	switch (eventtype) {
 	case Keypress:
-			if(Keyboard.getEventKey()==Keyboard.KEY_RETURN&&Keyboard.getEventKeyState()){
+			if((Keyboard.getEventKey()==Keyboard.KEY_RETURN||Keyboard.getEventKey()==Keyboard.KEY_ESCAPE)&&Keyboard.getEventKeyState()){
 				Main.cityname = ((GuiTextbox)e).getText();
 			}
 			break;

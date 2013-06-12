@@ -12,9 +12,6 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
-import animation.AnimationManager;
-import animation.AnimationValue;
-
 /**
  * This class generates and displays the gui.
  * @author Benedikt Ringlein
@@ -181,7 +178,7 @@ public class GUI {
 		setCentered(true);
 		setFont(ResourceManager.Arial30B);
 	}};
-	public GuiLabel settingsVsync = new GuiLabel(30,440,190,20,(Color)null){{
+	public GuiLabel settingsVsync = new GuiLabel(30,440,452,20,(Color)null){{
 		setText(ResourceManager.getString("SETTINGSMENU_LABEL_VSYNC"));
 		setFont(ResourceManager.Arial15B);
 	}};
@@ -195,7 +192,7 @@ public class GUI {
 		setEvent(GuiEvents.settingsVsyncoff);
 		if (!ResourceManager.getSetting("vsync").equals("enabled"))setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 	}};
-	public GuiLabel settingsParticles = new GuiLabel(30,380,190,20,(Color)null){{
+	public GuiLabel settingsParticles = new GuiLabel(30,380,452,20,(Color)null){{
 		setText(ResourceManager.getString("SETTINGSMENU_LABEL_PARTICLES"));
 		setFont(ResourceManager.Arial15B);                                 
 	}};
@@ -292,11 +289,7 @@ public class GUI {
 	
 	public void MsgBox(String title, String text, Color color)
 	{
-		MsgBox msgbox = new MsgBox(title, text, color);
-		msgbox.setOpacity(0f);
-		AnimationManager.animateValue(msgbox, AnimationValue.opacity, 1f, 0.005f);
-		AnimationManager.animateValue(msgbox, AnimationValue.Y, msgbox.getY()+10, 0.1f, AnimationManager.ACTION_REVERSE);
-		add(msgbox);
+		add(new MsgBox(title, text, color));
 	}
 	
 	/**

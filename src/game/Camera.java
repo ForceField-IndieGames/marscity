@@ -33,16 +33,6 @@ public class Camera implements Animatable {
 
 	public void applyTransform()
 	{
-		
-		
-//		float cx = (float)(getX()+2*getZoom()*Math.sin(Math.toRadians(getRotY())));
-//		float cy = y+zoom*zoom*0.2f;
-//		float cz = (float)(getZ()+2*getZoom()*Math.cos(Math.toRadians(getRotY())));
-//		
-//		cx = getX()+dcos(getRotY())*dcos(getRotZ())*zoom+dcos(getRotY())*(-dsin(getRotZ()))*zoom+dsin(getRotY())*zoom;
-//		cy = getY()+((-dsin(getRotX()))*(-dsin(getRotY()))*dcos(getRotZ())+dcos(getRotX())*dsin(getRotZ()))*zoom+((-dsin(getRotX()))*(-dsin(getRotY()))*(-dsin(getRotZ()))+dcos(getRotX())*dcos(getRotZ()))*zoom+(-dsin(getRotX()))*dcos(getRotY())*zoom;
-//		cz = getZ()+(dcos(getRotX())*(-dsin(getRotY()))*dcos(getRotZ())+dsin(getRotX())*dsin(getRotZ()))*zoom+(dcos(getRotX())*(-dsin(getRotY()))*(-dsin(getRotZ()))+dsin(getRotX())*dcos(getRotZ()))*zoom+dcos(getRotX())*dcos(getRotY())*zoom;
-		
 		float cx = getX() + dsin(getRotY()) * dcos(getRotX()) * zoom;
 		float cy = getY() - dsin(getRotX()) * zoom;
 		float cz = getZ() + dcos(getRotX()) * dcos(getRotY()) * zoom;

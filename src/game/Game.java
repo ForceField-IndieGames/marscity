@@ -51,25 +51,26 @@ public class Game {
 			/////////////////////
 			ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(new File(path)));
 			o.writeInt(Main.money);
+			o.writeInt(Main.citizens);
 			o.writeInt(ResourceManager.objects.size());
 			for(Building b:ResourceManager.objects){
-				o.writeFloat(b.getX());
-				o.writeFloat(b.getY());
-				o.writeFloat(b.getZ());
-				o.writeInt(b.getBuildingType());
+				o.writeShort((short) b.getX());
+				o.writeShort((short) b.getY());
+				o.writeShort((short) b.getZ());
+				o.writeShort(b.getBuildingType());
 			}
 			o.close();
 			
 			//Save a screenshot
-			saveThumbnail(new File("res/cities/"+((new File(path)).getName()).substring(0, ((new File(path)).getName()).length()-5)+".png"));
+			saveThumbnail(new File("res/cities/"+ResourceManager.pathToCityname(path)+".png"));
 			/////////////////////
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_SAVINGERROR"), ResourceManager.getString("MSGBOX_TEXT_SAVINGERROR"));
+			Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_SAVINGERROR"), ResourceManager.getString("MSGBOX_TEXT_SAVINGERROR").replaceAll(ResourceManager.PLACEHOLDER1, ResourceManager.pathToCityname(path)));
 			return;
 		}
-		Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_CITYSAVED"), ResourceManager.getString("MSGBOX_TEXT_CITYSAVED"));
+		Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_CITYSAVED"), ResourceManager.getString("MSGBOX_TEXT_CITYSAVED").replaceAll(ResourceManager.PLACEHOLDER1, ResourceManager.pathToCityname(path)));
 	}
 	
 	public static void Load(String path)
@@ -77,26 +78,27 @@ public class Game {
 		newGame();
 		try {
 			if(!(new File(path)).exists()){
-				Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_LOADINGFILENOTFOUND"), ResourceManager.getString("MSGBOX_TEXT_LOADINGFILENOTFOUND"),new Color(200,0,0));
+				Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_LOADINGFILENOTFOUND"), ResourceManager.getString("MSGBOX_TEXT_LOADINGFILENOTFOUND").replaceAll(ResourceManager.PLACEHOLDER1, ResourceManager.pathToCityname(path)),new Color(200,0,0));
 				return;
 			}
 			
 			ObjectInputStream i = new ObjectInputStream(new FileInputStream(new File(path)));
 			Main.money=i.readInt();
+			Main.citizens = i.readInt();
 			int count = i.readInt();
 			for(int j=0;j<count;j++){
-				ResourceManager.buildBuilding(i.readFloat(), i.readFloat(), i.readFloat(), i.readInt());
+				ResourceManager.buildBuilding(i.readShort(), i.readShort(), i.readShort(), i.readShort());
 			}
 			i.close();
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_LOADINGERROR"), ResourceManager.getString("MSGBOX_TEXT_LOADINGERROR"));
+			Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_LOADINGERROR"), ResourceManager.getString("MSGBOX_TEXT_LOADINGERROR").replaceAll(ResourceManager.PLACEHOLDER1, ResourceManager.pathToCityname(path)));
 			return;
 		}
 		Main.cityname = (new File(path)).getName().substring(0, (new File(path)).getName().length()-5);
 		Main.gui.cityName.setText(Main.cityname);
-		Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_CITYLOADED"), ResourceManager.getString("MSGBOX_TEXT_CITYLOADED"));
+		Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_CITYLOADED"), ResourceManager.getString("MSGBOX_TEXT_CITYLOADED").replaceAll(ResourceManager.PLACEHOLDER1, ResourceManager.pathToCityname(path)));
 	}
 	
 	public static void newGame()

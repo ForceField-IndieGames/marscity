@@ -18,7 +18,7 @@ public class Sprite implements Drawable {
 	private float destY;
 	private float preferredY;
 	
-	public float getPreferredY() {
+	public float getHeight() {
 		return preferredY;
 	}
 

@@ -81,45 +81,45 @@ public class GuiTextbox extends GuiLabel {
 						t.setColor(Color.white);
 						t.setTextColor(Color.black);
 						t.setCaret(false);
-						return;
+						break;
 					}
 					if(Keyboard.getEventKey()==Keyboard.KEY_LSHIFT
 							||Keyboard.getEventKey()==Keyboard.KEY_RSHIFT
 							||Keyboard.getEventKey()==Keyboard.KEY_LCONTROL
-							||Keyboard.getEventKey()==Keyboard.KEY_RCONTROL)return;
+							||Keyboard.getEventKey()==Keyboard.KEY_RCONTROL)break;
 					if(Keyboard.getEventKey()==Keyboard.KEY_BACK&&Keyboard.getEventKeyState()){
 						t.setText(t.getText().substring(0, t.getCaretPos()-1)+t.getText().substring(t.getCaretPos()));
 						if(t.getCaretPos()>0)t.setCaretPos(t.getCaretPos()-1);
-						return;
+						break;
 					}
 					if(Keyboard.getEventKey()==Keyboard.KEY_END&&Keyboard.getEventKeyState()){
 						t.setCaretPos(t.getText().length());
-						return;
+						break;
 					}
 					if(Keyboard.getEventKey()==Keyboard.KEY_HOME&&Keyboard.getEventKeyState()){
 						t.setCaretPos(0);
-						return;
+						break;
 					}
 					if(Keyboard.getEventKey()==Keyboard.KEY_LEFT&&Keyboard.getEventKeyState()){
 						if(t.getCaretPos()>0)t.setCaretPos(t.getCaretPos()-1);
-						return;
+						break;
 					}
 					if(Keyboard.getEventKey()==Keyboard.KEY_RIGHT&&Keyboard.getEventKeyState()){
 						if(t.getCaretPos()<t.getText().length())t.setCaretPos(t.getCaretPos()+1);
-						return;
+						break;
 					}
 					if(Keyboard.getEventKey()==Keyboard.KEY_DELETE&&Keyboard.getEventKeyState()){
 						t.setText(t.getText().substring(0, t.getCaretPos())+t.getText().substring(t.getCaretPos()+1));
-						return;
+						break;
 					}
 					if((Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)||Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))&&Keyboard.getEventKey()==Keyboard.KEY_C&&Keyboard.getEventKeyState()){
 						Main.clipboard = t.getText();
-						return;
+						break;
 					}
 					if((Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)||Keyboard.isKeyDown(Keyboard.KEY_RCONTROL))&&Keyboard.getEventKey()==Keyboard.KEY_V&&Keyboard.getEventKeyState()){
 						t.setText(Main.clipboard);
 						if(t.getCaretPos()>t.getText().length())t.setCaretPos(t.getText().length());
-						return;
+						break;
 					}
 					if(Keyboard.getEventKeyState()&&(t.getText().length()<t.getCharlimit()||t.getCharlimit()==0)){
 						t.setText(t.getText().substring(0, t.getCaretPos())+Keyboard.getEventCharacter()+t.getText().substring(t.getCaretPos()));
