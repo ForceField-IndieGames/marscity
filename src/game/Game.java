@@ -58,6 +58,7 @@ public class Game {
 				o.writeShort((short) b.getY());
 				o.writeShort((short) b.getZ());
 				o.writeShort(b.getBuildingType());
+				b.saveToStream(o);
 			}
 			o.close();
 			
@@ -87,7 +88,7 @@ public class Game {
 			Main.citizens = i.readInt();
 			int count = i.readInt();
 			for(int j=0;j<count;j++){
-				ResourceManager.buildBuilding(i.readShort(), i.readShort(), i.readShort(), i.readShort());
+				(ResourceManager.buildBuilding(i.readShort(), i.readShort(), i.readShort(), i.readShort())).loadFromStream(i);
 			}
 			i.close();
 			
@@ -104,6 +105,7 @@ public class Game {
 	public static void newGame()
 	{
 		Main.money = INITIALMONEY;
+		Main.citizens = 0;
 		Grid.init();
 		ResourceManager.objects = new ArrayList<Building>();
 		Main.gameState = Main.STATE_GAME;
