@@ -1,7 +1,6 @@
 package objects;
 
 import game.BuildingTask;
-import game.Game;
 import game.Main;
 
 import java.io.IOException;
@@ -39,11 +38,6 @@ public class BigHouse extends Building {
 	
 	@Override
 	public void update(int delta) {
-	}
-	
-	@Override
-	public void click() {
-		
 	}
 	
 	@Override

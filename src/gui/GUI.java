@@ -245,6 +245,8 @@ public class GUI {
 		setVisible(false);
 	}};
 	
+	public BuildingInfo buildinginfo = new BuildingInfo();
+	
 	List<GuiElement> elements = new ArrayList<GuiElement>();
 	List<GuiElement> menuElements = new ArrayList<GuiElement>();
 	public GuiElement lastHovered;
@@ -268,6 +270,7 @@ public class GUI {
 		add(buildingPanels);
 		add(toolBar);
 		add(guiTools);
+		add(buildinginfo);
 		add(buildingTooltip);
 		add(blur);
 		add(pauseMenu);

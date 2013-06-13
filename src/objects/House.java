@@ -1,7 +1,6 @@
 package objects;
 
 import game.BuildingTask;
-import game.Game;
 import game.Main;
 
 import java.io.IOException;
@@ -51,11 +50,7 @@ public class House extends Building {
 	public void loadFromStream(ObjectInputStream i) throws IOException {
 		citizens = i.readByte();
 	}
-	
-	@Override
-	public void click() {
-		
-	}
+
 	
 	@Override
 	public void delete() {

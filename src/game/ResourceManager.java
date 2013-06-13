@@ -30,6 +30,7 @@ import objects.BuildingType;
 import objects.Drawable;
 import objects.House;
 import objects.ObjectLoader;
+import objects.Street;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Display;
@@ -143,6 +144,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_SCROLLDOWN = addTexture("scrolldown.png");
 	public final static Texture TEXTURE_LOADABORT = addTexture("loadabort.png");
 	public final static Texture TEXTURE_CPSPEC = addTexture("cpspec.png");
+	public final static Texture TEXTURE_BUILDINGINFO = addTexture("buildinginfo.png");
 	
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	
@@ -250,6 +252,9 @@ public class ResourceManager {
 		Building building = null;
 		switch(bt)
 		{
+			case BUILDINGTYPE_STREET:
+				building = new Street(bt,x,y,z);
+				break;
 			case BUILDINGTYPE_HOUSE:
 				building = new House(bt,x,y,z);
 				break;
@@ -599,6 +604,16 @@ public class ResourceManager {
 	public static String pathToCityname(String path)
 	{
 		return ((new File(path)).getName()).substring(0, ((new File(path)).getName()).length()-5);
+	}
+	
+	public static String getBtDescription(int bt)
+	{
+		return ResourceManager.getString("DESCRIPTION_"+ResourceManager.getBuildingType(bt).getName());
+	}
+	
+	public static String getBtDescription2(int bt)
+	{
+		return ResourceManager.getString("DESCRIPTION2_"+ResourceManager.getBuildingType(bt).getName());
 	}
 	
 }

@@ -18,7 +18,6 @@ import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -145,7 +144,7 @@ public class Main {
 	
 	//////////////////////////////////////////////////////////////////////////
 	//The debugmode enables cheats and displays additional debug information//
-	public static boolean debugMode = false;//////////////////////////////////
+	public static boolean debugMode = true;//////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////
 	
 	public static int     hoveredEntity = -1; //The index of the object that is hovered with the mouse
@@ -501,6 +500,7 @@ public class Main {
 			if((Mouse.getEventButton()==1||Mouse.getEventButton()==2)&&!Mouse.getEventButtonState())
 			{
 				Mouse.setGrabbed(false);
+				gui.buildinginfo.hide();
 			}
 			//Set mouse grabbed when pressing middl or righte mouse button
 			if((Mouse.getEventButton()==2||Mouse.getEventButton()==1)&&Mouse.getEventButtonState()){
@@ -518,9 +518,10 @@ public class Main {
 				gui.cameraRotate.setVisible(false);
 			}
 			
-			//Start gui click event & Building click event
+			//Start gui click event & Building click event & hide the building info
 			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()){
 				gui.callGuiEvents(GuiEventType.Click);
+				gui.buildinginfo.hide();
 				if(hoveredEntity!=-1&&selectedTool==TOOL_SELECT){
 					ResourceManager.getObject(hoveredEntity).click();
 				}
@@ -839,6 +840,8 @@ public class Main {
 			else gui.infoMoney.setTextColor(new Color(200,100,0));
 		}else gui.infoMoney.setTextColor(Color.black);
 		
+		//Update the building info
+		gui.buildinginfo.update();
 		
 		//Update the paticle effects
 		ParticleEffects.update(delta);

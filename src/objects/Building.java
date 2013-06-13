@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import game.Main;
 import game.ResourceManager;
 import animation.AnimationManager;
 import animation.AnimationValue;
@@ -59,7 +60,7 @@ public class Building extends Entity {
 	@Override
 	public void click()
 	{
-		
+		Main.gui.buildinginfo.show(this);
 	}
 	
 	/**
