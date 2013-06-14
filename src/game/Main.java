@@ -97,8 +97,8 @@ class splashScreen extends JFrame implements Runnable{
 
 	public void setInfo(String text)
 	{
-		label2.setText(Math.round(loadeditems/61f*100)+"% "+text);
-		progress.setValue(Math.round(loadeditems/61f*100));
+		label2.setText(Math.round(loadeditems/62f*100)+"% "+text);
+		progress.setValue(Math.round(loadeditems/62f*100));
 		loadeditems++;
 	}
 	
@@ -551,8 +551,7 @@ public class Main {
 						break;
 					
 					case(TOOL_ADD): // Create a new Building at mouse position
-						if(!Mouse.getEventButtonState())break;
-						if(currentBT==-1)break;
+						if(!Mouse.getEventButtonState()||currentBT==-1)break;
 						if(currentBT==ResourceManager.BUILDINGTYPE_STREET){
 							Streets.setStartPos(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
 							break;
@@ -562,13 +561,13 @@ public class Main {
 							Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBT);
 							money -= ResourceManager.getBuildingType(currentBT).getBuidlingcost();
 							ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
+							camera.setY(0);
 							AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
 							AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
 						break;
 						
 					case(TOOL_DELETE): // Delete the hovered Building
-						if(!Mouse.getEventButtonState())break;
-						if(hoveredEntity==-1)break;
+						if(!Mouse.getEventButtonState()||hoveredEntity==-1)break;
 						if(ResourceManager.getObject(hoveredEntity).getBuildingType()==ResourceManager.BUILDINGTYPE_STREET){
 							Streets.setStartPos(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
 							break;
