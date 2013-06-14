@@ -18,6 +18,7 @@ public class BuildingInfo extends GuiPanel {
 	private GuiLabel title;
 	private GuiLabel description;
 	private Building building;
+	private String text="";
 	
 	public BuildingInfo()
 	{
@@ -45,20 +46,24 @@ public class BuildingInfo extends GuiPanel {
 		setVisible(true);
 		AnimationManager.animateValue(this, AnimationValue.opacity, 1, 200);
 		title.setText(ResourceManager.getBuildingTypeName(building.getBuildingType()));
+		text = ResourceManager.getBtDescription(building.getBuildingType())+System.lineSeparator()+System.lineSeparator()+
+				ResourceManager.getBtDescription2(building.getBuildingType());
+		description.setText(text);
+		description.wrapText();
+		text = description.getText();
 	}
 	
 	public void update()
 	{
 		if(isVisible())
 		{
-			description.setText(ResourceManager.getBtDescription(building.getBuildingType())+System.lineSeparator()+System.lineSeparator()+
-					ResourceManager.getBtDescription2(building.getBuildingType()));
+			description.setText(text);
 			switch(building.getBuildingType()){
 			case ResourceManager.BUILDINGTYPE_HOUSE:
-				description.setText(description.getText().replaceAll(ResourceManager.PLACEHOLDER1, ""+((House)building).getCitizens()).replaceAll(ResourceManager.PLACEHOLDER2, ""+House.getCitizensmax()));
+				description.setText(description.getText().replaceFirst(ResourceManager.PLACEHOLDER1, ""+((House)building).getCitizens()).replaceFirst(ResourceManager.PLACEHOLDER2, ""+House.getCitizensmax()));
 				break;
 			case ResourceManager.BUILDINGTYPE_BIGHOUSE:
-				description.setText(description.getText().replaceAll(ResourceManager.PLACEHOLDER1, ""+((BigHouse)building).getCitizens()).replaceAll(ResourceManager.PLACEHOLDER2, ""+BigHouse.getCitizensmax()));
+				description.setText(description.getText().replaceFirst(ResourceManager.PLACEHOLDER1, ""+((BigHouse)building).getCitizens()).replaceFirst(ResourceManager.PLACEHOLDER2, ""+BigHouse.getCitizensmax()));
 				break;
 			default: break;
 			}

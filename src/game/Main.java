@@ -595,7 +595,6 @@ public class Main {
 				camera.setLastroty();
 			}
 			//Control the zoom with the mouse wheel
-			//camera.setZoom((float) (camera.getZoom()-0.001*camera.getZoom()*Mouse.getEventDWheel()));
 			if(Mouse.getEventDWheel()!=0){
 				AnimationManager.animateValue(camera, new CustomAnimationValue(){
 					@Override
@@ -834,10 +833,11 @@ public class Main {
 		//Update gui info labels
 		gui.infoMoney.setText(ResourceManager.getString("INFOBAR_LABEL_MONEY")+": "+money+"$");
 		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+citizens);
-		if(money<=2000){
-			if(money<=0)gui.infoMoney.setTextColor(Color.red);
-			else gui.infoMoney.setTextColor(new Color(200,100,0));
-		}else gui.infoMoney.setTextColor(Color.black);
+		if(selectedTool==TOOL_ADD&&money<ResourceManager.getBuildingType(currentBT).getBuidlingcost()){
+			gui.infoMoney.setTextColor(Color.red);
+		}else {
+			gui.infoMoney.setTextColor(Color.black);
+		}
 		
 		//Update the building info
 		gui.buildinginfo.update();

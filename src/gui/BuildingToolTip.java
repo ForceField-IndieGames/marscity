@@ -35,6 +35,7 @@ public class BuildingToolTip extends GuiPanel {
 	{
 		title.setText(ResourceManager.getBuildingTypeName(bt));
 		description.setText(ResourceManager.getBtDescription(bt));
+		description.wrapText();
 		price.setText(ResourceManager.getBuildingType(bt).getBuidlingcost()+"$");
 		if(Main.money<ResourceManager.getBuildingType(bt).getBuidlingcost()){
 			price.setTextColor(Color.red);

@@ -33,6 +33,7 @@ public class MsgBox extends GuiPanel {
 		textlabel = new GuiLabel(15,50,482,160,(Color)null);
 		textlabel.setText(text);
 		textlabel.setCentered(true);
+		textlabel.wrapText();
 		add(textlabel);
 		button = new GuiButton(156,20,200,30,ResourceManager.TEXTURE_GUIBUTTON);
 		button.setEvent(new GuiEvent(){

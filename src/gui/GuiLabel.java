@@ -90,7 +90,6 @@ public class GuiLabel extends AbstractGuiElement {
 	 */
 	public void setText(String text) {
 		this.text = text;
-		wrapText();
 	}
 	
 	/**
