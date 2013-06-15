@@ -12,6 +12,9 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
+import animation.AnimationManager;
+import animation.AnimationValue;
+
 /**
  * This class generates and displays the gui.
  * @author Benedikt Ringlein
@@ -84,12 +87,25 @@ public class GUI {
 		setCharlimit(25);
 		setEvent(GuiEvents.cityName);
 	}};
+	public GuiLabel infoBuildingCosts = new GuiLabel(0,23,50,20,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
+		setText("0$");
+		setFont(ResourceManager.Arial12);
+		AutoSize();
+		setVisible(false);
+	}
+		@Override
+		public void setText(String text)
+		{
+			super.setText("-"+text+"$");
+		}
+	};
 	public GuiLabel infoMoney = new GuiLabel(350,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
-		setText("Geld: 0$");
+		add(infoBuildingCosts);
+		setText("Money: 0$");
 		setFont(ResourceManager.Arial15B);
 	}};
 	public GuiLabel infoCitizens = new GuiLabel(600,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
-		setText("Einwohner: 0");
+		setText("Citizens: 0");
 		setFont(ResourceManager.Arial15B);
 	}};
 	public GuiPanel infoBar = new GuiPanel(0,30,Display.getWidth(),40,ResourceManager.TEXTURE_GUITOOLBAR){{
@@ -105,11 +121,7 @@ public class GUI {
 		addBuildingButton(ResourceManager.BUILDINGTYPE_HOUSE);
 		addBuildingButton(ResourceManager.BUILDINGTYPE_BIGHOUSE);
 	}};
-	public GuiPanel buildingPanelsl = new GuiPanel(-50,0,50,100,ResourceManager.TEXTURE_GUIBUILDINGSPANELL);
-	public GuiPanel buildingPanels = new GuiPanel(150,20,Display.getWidth(),100,ResourceManager.TEXTURE_GUIBUILDINGSPANEL,(Color)null){{
-		setVisible(false);
-		add(buildingPanelsl);
-		
+	public BuildingPanels buildingPanels = new BuildingPanels(150,20,Display.getWidth(),100){{
 		add(buildingPanelStreet);
 		add(buildingPanelResidential);
 	}};

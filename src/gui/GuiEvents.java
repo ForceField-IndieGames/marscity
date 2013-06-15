@@ -41,7 +41,8 @@ public class GuiEvents {
 			Main.buildpreview.setBuilding(-1);
 			Main.currentBT = -1;
 			Main.gui.deleteBorder.setVisible(true);
-			AnimationManager.animateValue(Main.gui.buildingPanels, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
+			Main.gui.buildingPanels.hide();
+			Main.gui.infoBuildingCosts.setVisible(false);
 			break;
 	case Mouseover:
 			break;

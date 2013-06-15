@@ -92,40 +92,46 @@ public class GuiLabel extends AbstractGuiElement {
 		this.text = text;
 	}
 	
+	public void AutoSize()
+	{
+		setWidth(getFont().getWidth(getText())+2);
+		setHeight(getFont().getHeight(getText())+2);
+	}
+	
 	/**
 	 * Wraps the Text automatically to fit in the Label
 	 */
 	public void wrapText()
 	{
 		//Automatically wrap the text
-				float lineheight = getFont().getHeight("lg");
-				int maxlines = (int) Math.floor(getHeight()/lineheight);
-				if(maxlines<=1)return;
-				int currentlinestart = 0;
-				for(int i=0;i<getText().length();i++){
-					if(getWidth()<getFont().getWidth(getText().substring(currentlinestart, i))){
-						if(getText().substring(i-3, i-2).equals(" ")){
-							this.text=getText().substring(0,i-2)+System.lineSeparator()+getText().substring(i-2);
-							currentlinestart=i+1;
-						}else{
-							boolean found=false;
-							for(int j=i;j>i-6;j--){
-								if(getText().substring(j-3,j-2).equals(" ")){
-									this.text=getText().substring(0,j-2)+System.lineSeparator()+getText().substring(j-2);
-									found=true;
-									currentlinestart=j+1;
-									break;
-								}
-							}
-							if(!found){
-							this.text=getText().substring(0,i-3)+"-"+System.lineSeparator()+getText().substring(i-3);
-							currentlinestart=i+1;}
+		float lineheight = getFont().getHeight("lg");
+		int maxlines = (int) Math.floor(getHeight()/lineheight);
+		if(maxlines<=1)return;
+		int currentlinestart = 0;
+		for(int i=0;i<getText().length();i++){
+			if(getWidth()<getFont().getWidth(getText().substring(currentlinestart, i))){
+				if(getText().substring(i-3, i-2).equals(" ")){
+					this.text=getText().substring(0,i-2)+System.lineSeparator()+getText().substring(i-2);
+					currentlinestart=i+1;
+				}else{
+					boolean found=false;
+					for(int j=i;j>i-6;j--){
+						if(getText().substring(j-3,j-2).equals(" ")){
+							this.text=getText().substring(0,j-2)+System.lineSeparator()+getText().substring(j-2);
+							found=true;
+							currentlinestart=j+1;
+							break;
 						}
 					}
-					if(getHeight()<getFont().getHeight(getText())+lineheight){
-						return;
-					}
+					if(!found){
+					this.text=getText().substring(0,i-3)+"-"+System.lineSeparator()+getText().substring(i-3);
+					currentlinestart=i+1;}
 				}
+			}
+			if(getHeight()<getFont().getHeight(getText())+lineheight){
+				return;
+			}
+		}
 	}
 
 	@Override

@@ -56,9 +56,10 @@ public class ResourceManager {
 	/**
 	 * This font is used by buttons and labels in the gui
 	 */
-	public final static UnicodeFont Arial15 = new UnicodeFont(new Font("Arial",0,15));
-	public final static UnicodeFont Arial15B = new UnicodeFont(new Font("Arial",Font.BOLD,15));
-	public final static UnicodeFont Arial30B = new UnicodeFont(new Font("Arial",Font.BOLD,30));
+	public final static UnicodeFont Arial12 = addFont(new Font("Arial",0,12));
+	public final static UnicodeFont Arial15 = addFont(new Font("Arial",0,15));
+	public final static UnicodeFont Arial15B = addFont(new Font("Arial",Font.BOLD,15));
+	public final static UnicodeFont Arial30B = addFont(new Font("Arial",Font.BOLD,30));
 	
 	public final static String PLACEHOLDER1 = "%1%";
 	public final static String PLACEHOLDER2 = "%2%";
@@ -156,23 +157,6 @@ public class ResourceManager {
 	@SuppressWarnings("unchecked")
 	public static void init()
 	{
-		//Set up the font
-		Arial15.getEffects().add(new ColorEffect());
-		Arial15B.getEffects().add(new ColorEffect());
-		Arial30B.getEffects().add(new ColorEffect());
-		Arial15.addAsciiGlyphs();
-		Arial15B.addAsciiGlyphs();
-		Arial30B.addAsciiGlyphs();
-		try {
-			Main.splashscreen.setInfo("Loading Font: Arial15");
-			Arial15.loadGlyphs();
-			Main.splashscreen.setInfo("Loading Font: Arial15B");
-			Arial15B.loadGlyphs();
-			Main.splashscreen.setInfo("Loading Font: Arial30B");
-			Arial30B.loadGlyphs();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
 		
 		//Set up the shader
 		Main.splashscreen.setInfo("Loading shader...");
@@ -269,13 +253,34 @@ public class ResourceManager {
 		ResourceManager.objects.add(building);
 		return building;
 	}
+	
+	/**
+	 * Loads a unicode font
+	 * @param font Font to load
+	 * @return The unicode font ocject
+	 */
+	@SuppressWarnings("unchecked")
+	public static UnicodeFont addFont(Font font)
+	{
+		UnicodeFont ufont = new UnicodeFont(font);
+		ufont.getEffects().add(new ColorEffect());
+		ufont.addAsciiGlyphs();
+		try {
+			Main.splashscreen.setInfo("Loading Font: "+font.getFontName()+" "+font.getSize());
+			ufont.loadGlyphs();
+			return ufont;
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	/**
 	 * Loads a texture from the specified input stream
 	 * @param stream The imput stream
 	 * @return The loaded texture
 	 */
-	public static Texture LoadTexture(InputStream stream)
+ 	public static Texture LoadTexture(InputStream stream)
 	{
 		try {
 			return TextureLoader.getTexture("PNG", new BufferedInputStream(stream));
