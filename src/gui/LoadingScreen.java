@@ -13,6 +13,11 @@ import game.Game;
 import game.Main;
 import game.ResourceManager;
 
+/**
+ * The loading screen displays all available saved citys. The list can be scrolled.
+ * @author Benedikt Ringlein
+ */
+
 public class LoadingScreen extends GuiPanel {
 
 	private int scrolling=0;

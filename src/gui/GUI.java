@@ -2,6 +2,7 @@ package gui;
 import static org.lwjgl.opengl.GL11.*;
 
 import effects.ParticleEffects;
+import game.Game;
 import game.Main;
 import game.ResourceManager;
 
@@ -9,6 +10,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
@@ -30,22 +32,46 @@ public class GUI {
 	public GuiButton MenuPlay = new GuiButton(0, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2){{
 		setText(ResourceManager.getString("MAINMENU_BUTTON_PLAY"));
 	    setFont(ResourceManager.Arial15B);
-	    setEvent(GuiEvents.MenuPlay);
+	    setEvent(new GuiEvent(){
+	    	@Override public void run(GuiEventType eventtype) {
+	    		switch (eventtype) {
+	    		case Click:
+	    				Game.newGame();
+	    				break;
+	    		default:break;}}});
 	}};
 	public GuiButton MenuLoad = new GuiButton(220, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2){{
 		setText(ResourceManager.getString("MAINMENU_BUTTON_LOAD"));
 	    setFont(ResourceManager.Arial15B);
-	    setEvent(GuiEvents.MenuLoad);
+	    setEvent(new GuiEvent(){
+	    	@Override public void run(GuiEventType eventtype) {
+	    		switch (eventtype) {
+	    		case Click:
+	    				Main.gui.loadingscreen.show();
+	    				break;
+	    		default:break;}}});
 	}};
 	public GuiButton MenuSettings = new GuiButton(440, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2){{
 		setText(ResourceManager.getString("MAINMENU_BUTTON_SETTINGS"));
 	    setFont(ResourceManager.Arial15B);
-	    setEvent(GuiEvents.MenuSettings);
+	    setEvent(new GuiEvent(){
+	    	@Override public void run(GuiEventType eventtype) {
+	    		switch (eventtype) {
+	    		case Click:
+	    				Main.gui.settingsMenu.setVisible(true);
+	    				break;
+	    		default:break;}}});
 	}};
 	public GuiButton MenuExit = new GuiButton(660, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2){{
 		setText(ResourceManager.getString("MAINMENU_BUTTON_EXIT"));
 	    setFont(ResourceManager.Arial15B);
-	    setEvent(GuiEvents.MenuExit);
+	    setEvent(new GuiEvent(){
+	    	@Override public void run(GuiEventType eventtype) {
+	    		switch (eventtype) {
+	    		case Click:
+	    				Game.exit();
+	    				break;
+	    		default:break;}}});
 	}};
 	public GuiLabel MenuVersion = new GuiLabel(0,0,180,20,(Color)null){{setText("Mars City [Alpha]");}};
 	public GuiPanel MenuIcon = new GuiPanel(Display.getWidth()/2-64,20,64,64,ResourceManager.TEXTURE_ICON256){{
@@ -72,10 +98,35 @@ public class GUI {
 	}};
 	
 	public GuiButton menuButton = new GuiButton(0, 64, 32, 32, ResourceManager.TEXTURE_GUIMENUBUTTON){{
-		setEvent(GuiEvents.menuButton);
+		setEvent(new GuiEvent(){
+			@Override public void run(GuiEventType eventtype) {
+				switch (eventtype) {
+				case Click:
+						Game.Pause();
+						Main.gui.blur.setVisible(true);
+						Main.gui.pauseMenu.setVisible(true);
+						AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.opacity, 1, 0.005f);
+						break;
+				case Mouseover:
+						break;
+				default:break;}}});
 	}};
 	public GuiButton toolDelete = new GuiButton(0, 0, 64, 64, ResourceManager.TEXTURE_GUIDELETE){{
-		setEvent(GuiEvents.toolDelete);
+		setEvent(new GuiEvent(){
+			@Override public void run(GuiEventType eventtype) {
+				switch (eventtype) {
+				case Click:
+						Main.selectedTool = Main.TOOL_DELETE;
+						Main.gui.toolDelete.setColor(Color.gray);
+						Main.buildpreview.setBuilding(-1);
+						Main.currentBT = -1;
+						Main.gui.deleteBorder.setVisible(true);
+						Main.gui.buildingPanels.hide();
+						Main.gui.infoBuildingCosts.setVisible(false);
+						break;
+				case Mouseover:
+						break;
+				default:break;}}});
 	}};
 	public GuiPanel guiTools = new GuiPanel(0,0,69,100,ResourceManager.TEXTURE_GUITOOLSBG){{
 		add(menuButton);
@@ -85,7 +136,15 @@ public class GUI {
 	public GuiTextbox cityName = new GuiTextbox(100,5,200,30){{
 		setText(Main.cityname);
 		setCharlimit(25);
-		setEvent(GuiEvents.cityName);
+		setEvent(new GuiEvent(){
+			@Override public void run(GuiEventType eventtype, GuiElement e) {
+				switch (eventtype) {
+				case Keypress:
+						if((Keyboard.getEventKey()==Keyboard.KEY_RETURN||Keyboard.getEventKey()==Keyboard.KEY_ESCAPE)&&Keyboard.getEventKeyState()){
+							Main.cityname = ((GuiTextbox)e).getText();
+						}
+						break;
+				default:break;}}});
 	}};
 	public GuiLabel infoBuildingCosts = new GuiLabel(0,23,50,20,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
 		setText("0$");
@@ -142,27 +201,81 @@ public class GUI {
 	
 	public GuiButton pauseMainmenu = new GuiButton(28, 200, 200, 30, ResourceManager.TEXTURE_GUIBUTTON){{
 		setText(ResourceManager.getString("PAUSEMENU_BUTTON_MAINMENU"));
-	    setEvent(GuiEvents.pauseMainmenu);
+	    setEvent(new GuiEvent(){
+	    	@Override public void run(GuiEventType eventtype) {
+	    		switch (eventtype) {
+	    		case Click:
+	    				Main.gameState = Main.STATE_MENU;
+	    				Main.gui = new GUI();
+	    				break;
+	    		case Mouseover:
+	    				break;
+	    		default:break;}}});
 	}};
 	public GuiButton pauseLoad = new GuiButton(28, 170, 200, 30, ResourceManager.TEXTURE_GUIBUTTON){{
 		setText(ResourceManager.getString("PAUSEMENU_BUTTON_LOAD"));
-	    setEvent(GuiEvents.pauseLoad);
+	    setEvent(new GuiEvent(){
+	    	@Override public void run(GuiEventType eventtype) {
+	    		switch (eventtype) {
+	    		case Click:
+	    				Main.gui.loadingscreen.show();
+	    				break;
+	    		default:break;}}});
 	}};
 	public GuiButton pauseSave = new GuiButton(28, 140, 200, 30, ResourceManager.TEXTURE_GUIBUTTON){{
 		setText(ResourceManager.getString("PAUSEMENU_BUTTON_SAVE"));
-	    setEvent(GuiEvents.pauseSave);
+	    setEvent(new GuiEvent(){
+	    	@Override public void run(GuiEventType eventtype) {
+	    		switch (eventtype) {
+	    		case Click:
+	    				Game.Save("res/cities/"+Main.cityname+".city");
+	    				Game.Resume();
+	    				Main.gui.blur.setVisible(false);
+	    				AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.opacity, 1, 0.005f, AnimationManager.ACTION_HIDE);
+	    				break;
+	    		case Mouseover:
+	    				break;
+	    		default:break;}}});
 	}};
 	public GuiButton pauseSettings = new GuiButton(28, 110, 200, 30, ResourceManager.TEXTURE_GUIBUTTON){{
 		setText(ResourceManager.getString("PAUSEMENU_BUTTON_SETTINGS"));
-	    setEvent(GuiEvents.pauseSettings);
+	    setEvent(new GuiEvent(){
+	    	@Override public void run(GuiEventType eventtype) {
+	    		switch (eventtype) {
+	    		case Click:
+	    				Main.gui.pauseMenu.setVisible(false);
+	    				Main.gui.settingsMenu.setVisible(true);
+	    				AnimationManager.animateValue(Main.gui.settingsMenu, AnimationValue.opacity, 1, 0.005f);
+	    				break;
+	    		case Mouseover:
+	    				break;
+	    		default:break;}}});
 	}};
 	public GuiButton pauseExit = new GuiButton(28, 80, 200, 30, ResourceManager.TEXTURE_GUIBUTTON){{
 		setText(ResourceManager.getString("PAUSEMENU_BUTTON_EXIT"));
-	    setEvent(GuiEvents.pauseExit);
+	    setEvent(new GuiEvent(){
+	    	@Override public void run(GuiEventType eventtype) {
+	    		switch (eventtype) {
+	    		case Click:
+	    				Game.exit();
+	    				break;
+	    		case Mouseover:
+	    				break;
+	    		default:break;}}});
 	}};
 	public GuiButton pauseResume = new GuiButton(28, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON){{
 		setText(ResourceManager.getString("PAUSEMENU_BUTTON_RESUME"));
-		setEvent(GuiEvents.pauseResume);
+		setEvent(new GuiEvent(){
+			@Override public void run(GuiEventType eventtype) {
+				switch (eventtype) {
+				case Click:
+						Main.gui.blur.setVisible(false);
+						Game.Resume();
+						AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
+						break;
+				case Mouseover:
+						break;
+				default:break;}}});
 	}};
 	public GuiPanel pauseLogo = new GuiPanel(-128,256,512,128,ResourceManager.TEXTURE_MARSCITYLOGO);
 	public GuiPanel pauseMenu = new GuiPanel(Display.getWidth()/2-128,Display.getHeight()/2-128,256,256,ResourceManager.TEXTURE_GUIMENU){{
@@ -182,7 +295,26 @@ public class GUI {
 	
 	public GuiButton settingsResume = new GuiButton(156, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON){{
 		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_RESUME"));
-		setEvent(GuiEvents.settingsResume);
+		setEvent(new GuiEvent(){
+			@Override public void run(GuiEventType eventtype) {
+				switch (eventtype) {
+				case Click:
+					switch (Main.gameState) {
+					case Main.STATE_MENU:
+						Main.gui.settingsMenu.setVisible(false);
+						break;
+					case Main.STATE_GAME:
+						Game.Resume();
+						Main.gui.blur.setVisible(false);
+						AnimationManager.animateValue(Main.gui.settingsMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
+						break;
+					default:
+						break;
+					}
+						break;
+				case Mouseover:
+						break;
+				default:break;}}});
 	}};
 	public GuiLabel settingsTitle = new GuiLabel(0, 460, 512,40, (Color)null){{
 		setText(ResourceManager.getString("SETTINGSMENU_LABEL_TITLE"));
@@ -195,12 +327,40 @@ public class GUI {
 	}};
 	public GuiButton settingsVsyncon = new GuiButton(30,410,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
 		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCON"));
-		setEvent(GuiEvents.settingsVsyncon);
+		setEvent(new GuiEvent(){
+			@Override public void run(GuiEventType eventtype) {
+				switch (eventtype) {
+				case Click:
+						try {
+							Main.gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+							Main.gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+							ResourceManager.setSetting("vsync", "enabled");
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						break;
+				case Mouseover:
+						break;
+				default:break;}}});
 		if (ResourceManager.getSetting("vsync").equals("enabled"))setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 	}};
 	public GuiButton settingsVsyncoff = new GuiButton(130,410,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
 		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCOFF"));
-		setEvent(GuiEvents.settingsVsyncoff);
+		setEvent(new GuiEvent(){
+			@Override public void run(GuiEventType eventtype) {
+				switch (eventtype) {
+				case Click:
+						try {
+				 			Main.gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+							Main.gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+				 			ResourceManager.setSetting("vsync", "disabled");
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						break;
+				case Mouseover:
+						break;
+				default:break;}}});
 		if (!ResourceManager.getSetting("vsync").equals("enabled"))setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 	}};
 	public GuiLabel settingsParticles = new GuiLabel(30,380,452,20,(Color)null){{
@@ -209,19 +369,87 @@ public class GUI {
 	}};
 	public GuiButton settingsParticlesoff = new GuiButton(30,350,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
 		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESOFF"));
-		setEvent(GuiEvents.settingsParticlesoff);                              
+		setEvent(new GuiEvent(){
+			@Override public void run(GuiEventType eventtype) {
+				switch (eventtype) {
+				case Click:
+						try {
+							Main.gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+							Main.gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+							Main.gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+							Main.gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+				 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESOFF;
+				 			ResourceManager.setSetting("particlequality", "off");
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						break;
+				case Mouseover:
+						break;
+				default:break;}}});                              
 	}};
 	public GuiButton settingsParticleslow = new GuiButton(130,350,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
 		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESLOW"));
-		setEvent(GuiEvents.settingsParticleslow);                              
+		setEvent(new GuiEvent(){
+			@Override public void run(GuiEventType eventtype) {
+				switch (eventtype) {
+				case Click:
+						try {
+							Main.gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+				 			Main.gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+				 			Main.gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+				 			Main.gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+				 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESLOW;
+				 			ResourceManager.setSetting("particlequality", "low");
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						break;
+				case Mouseover:
+						break;
+				default:break;}}});                              
 	}};
 	public GuiButton settingsParticlesmiddle = new GuiButton(230,350,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
 		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESMIDDLE"));
-		setEvent(GuiEvents.settingsParticlesmiddle);
+		setEvent(new GuiEvent(){
+			@Override public void run(GuiEventType eventtype) {
+				switch (eventtype) {
+				case Click:
+						try {
+							Main.gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+							Main.gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+							Main.gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+							Main.gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+				 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESMIDDLE;
+				 			ResourceManager.setSetting("particlequality", "middle");
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						break;
+				case Mouseover:
+						break;
+				default:break;}}});
 	}};
 	public GuiButton settingsParticleshigh = new GuiButton(330,350,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
 		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESHIGH"));
-		setEvent(GuiEvents.settingsParticleshigh);
+		setEvent(new GuiEvent(){
+			@Override public void run(GuiEventType eventtype) {
+				switch (eventtype) {
+				case Click:
+						try {
+							Main.gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+							Main.gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+							Main.gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
+							Main.gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+							ParticleEffects.particleQuality = ParticleEffects.PARTICLESHIGH;
+							ResourceManager.setSetting("particlequality", "high");
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						break;
+				case Mouseover:
+						break;
+				default:break;}}});
 	}};
 	public GuiPanel settingsMenu = new GuiPanel(Display.getWidth()/2-256,Display.getHeight()/2-256,512,512,ResourceManager.TEXTURE_GUIMENU){{
 		setVisible(false);

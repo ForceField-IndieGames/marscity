@@ -1,11 +1,14 @@
 package gui;
 
-import java.awt.Color;
-
 import animation.AnimationManager;
 import animation.AnimationValue;
-import game.Main;
 import game.ResourceManager;
+
+/**
+ * This panel contains the building panels. When its shown/hidden, it
+ * automatically animates itsself.
+ * @author Benedikt Ringlein
+ */
 
 public class BuildingPanels extends GuiPanel {
 

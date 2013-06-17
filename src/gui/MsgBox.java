@@ -10,6 +10,12 @@ import animation.Animatable;
 import animation.AnimationManager;
 import animation.AnimationValue;
 
+/**
+ * This is a basic messagebox. It can display text and a title and
+ * contains a button to close the messagebox.
+ * @author Benedikt Ringlein
+ */
+
 public class MsgBox extends GuiPanel {
 
 	private GuiLabel titlelabel;

@@ -8,6 +8,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Timer;
 
+/**
+ * This is a big house.
+ * @author Benedikt Ringlein
+ */
+
 public class BigHouse extends Building {
 
 	private int citizens = 0;

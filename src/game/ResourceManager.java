@@ -154,7 +154,6 @@ public class ResourceManager {
 	/**
 	 * Initializes the Resources that need to be initialized
 	 */
-	@SuppressWarnings("unchecked")
 	public static void init()
 	{
 		

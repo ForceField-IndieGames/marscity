@@ -8,6 +8,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Timer;
 
+/**
+ * This is a house.
+ * @author Benedikt Ringlein
+ */
 
 public class House extends Building {
 	

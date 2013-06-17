@@ -4,6 +4,12 @@ import java.util.TimerTask;
 
 import objects.Building;
 
+/**
+ * This is a timer task that can access building information.
+ * It is used to update building specific things, like inhabitants.
+ * @author Benedikt Ringlein
+ */
+
 public class BuildingTask extends TimerTask {
 	
 	private Building building;

@@ -8,6 +8,12 @@ import game.Game;
 import game.Main;
 import game.ResourceManager;
 
+/**
+ * The city previews are used in the loading panel. They display
+ * a screenshot of a cit along with its name and a shiny effect.
+ * @author Benedikt Ringlein
+ */
+
 public class CityPreview extends GuiPanel {
 
 	private String cityname="";

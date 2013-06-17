@@ -5,6 +5,13 @@ import java.awt.Color;
 import game.Main;
 import game.ResourceManager;
 
+/**
+ * This is a tooltip that displays information about a building type, like
+ * name, description and building costs.
+ * It is displayed when hovering over a building button.
+ * @author Benedikt Ringlein
+ */
+
 public class BuildingToolTip extends GuiPanel {
 
 	private GuiLabel title;
