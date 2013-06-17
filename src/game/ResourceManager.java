@@ -30,6 +30,7 @@ import objects.BuildingType;
 import objects.Drawable;
 import objects.House;
 import objects.ObjectLoader;
+import objects.Street;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Display;
@@ -55,9 +56,10 @@ public class ResourceManager {
 	/**
 	 * This font is used by buttons and labels in the gui
 	 */
-	public final static UnicodeFont Arial15 = new UnicodeFont(new Font("Arial",0,15));
-	public final static UnicodeFont Arial15B = new UnicodeFont(new Font("Arial",Font.BOLD,15));
-	public final static UnicodeFont Arial30B = new UnicodeFont(new Font("Arial",Font.BOLD,30));
+	public final static UnicodeFont Arial12 = addFont(new Font("Arial",0,12));
+	public final static UnicodeFont Arial15 = addFont(new Font("Arial",0,15));
+	public final static UnicodeFont Arial15B = addFont(new Font("Arial",Font.BOLD,15));
+	public final static UnicodeFont Arial30B = addFont(new Font("Arial",Font.BOLD,30));
 	
 	public final static String PLACEHOLDER1 = "%1%";
 	public final static String PLACEHOLDER2 = "%2%";
@@ -143,6 +145,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_SCROLLDOWN = addTexture("scrolldown.png");
 	public final static Texture TEXTURE_LOADABORT = addTexture("loadabort.png");
 	public final static Texture TEXTURE_CPSPEC = addTexture("cpspec.png");
+	public final static Texture TEXTURE_BUILDINGINFO = addTexture("buildinginfo.png");
 	
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	
@@ -154,30 +157,12 @@ public class ResourceManager {
 	@SuppressWarnings("unchecked")
 	public static void init()
 	{
-		//Set up the font
-		Arial15.getEffects().add(new ColorEffect());
-		Arial15B.getEffects().add(new ColorEffect());
-		Arial30B.getEffects().add(new ColorEffect());
-		Arial15.addAsciiGlyphs();
-		Arial15B.addAsciiGlyphs();
-		Arial30B.addAsciiGlyphs();
-		try {
-			Main.splashscreen.label2.setText("Loading Font: Arial15");
-			Arial15.loadGlyphs();
-			Main.splashscreen.label2.setText("Loading Font: Arial15B");
-			Arial15B.loadGlyphs();
-			Main.splashscreen.label2.setText("Loading Font: Arial30B");
-			Arial30B.loadGlyphs();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
 		
 		//Set up the shader
-		Main.splashscreen.label2.setText("Loading shader...");
+		Main.splashscreen.setInfo("Loading shader...");
 		setupShader("shader.v","shader.f");
 		
 		//Load and parse the Language file
-		Main.splashscreen.label2.setText("Loading xml files...");
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		try {
 			builder = factory.newDocumentBuilder();
@@ -191,6 +176,7 @@ public class ResourceManager {
 		buildingTypes.add(BUILDINGTYPE_STREET,new BuildingType("BUILDINGTYPE_STREET",OBJECT_STREET,TEXTURE_STREET, TEXTURE_GUITHUMBSTREET,5,1,1,0f));
 		
 		//create necessary folders and extract files
+		Main.splashscreen.setInfo("Creating folders...");
 		if(!(new File("res")).exists()||Main.debugMode){
 			(new File("res")).mkdir();
 			(new File("res/lang")).mkdir();
@@ -230,6 +216,7 @@ public class ResourceManager {
 		
 		
 		//make XML files available for the static methods
+		Main.splashscreen.setInfo("Loading xml files...");
 		settingsFile = addXML("res/settings/settings.xml");
 		langFile = addXML("res/lang/"+getSetting("lang")+".xml");
 	}
@@ -249,6 +236,9 @@ public class ResourceManager {
 		Building building = null;
 		switch(bt)
 		{
+			case BUILDINGTYPE_STREET:
+				building = new Street(bt,x,y,z);
+				break;
 			case BUILDINGTYPE_HOUSE:
 				building = new House(bt,x,y,z);
 				break;
@@ -263,13 +253,34 @@ public class ResourceManager {
 		ResourceManager.objects.add(building);
 		return building;
 	}
+	
+	/**
+	 * Loads a unicode font
+	 * @param font Font to load
+	 * @return The unicode font ocject
+	 */
+	@SuppressWarnings("unchecked")
+	public static UnicodeFont addFont(Font font)
+	{
+		UnicodeFont ufont = new UnicodeFont(font);
+		ufont.getEffects().add(new ColorEffect());
+		ufont.addAsciiGlyphs();
+		try {
+			Main.splashscreen.setInfo("Loading Font: "+font.getFontName()+" "+font.getSize());
+			ufont.loadGlyphs();
+			return ufont;
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	/**
 	 * Loads a texture from the specified input stream
 	 * @param stream The imput stream
 	 * @return The loaded texture
 	 */
-	public static Texture LoadTexture(InputStream stream)
+ 	public static Texture LoadTexture(InputStream stream)
 	{
 		try {
 			return TextureLoader.getTexture("PNG", new BufferedInputStream(stream));
@@ -324,7 +335,7 @@ public class ResourceManager {
 		System.out.println(path);
 		try {
 			Main.log("Loading object: "+path);
-			Main.splashscreen.label2.setText("Loading object: "+path);
+			Main.splashscreen.setInfo("Loading object: "+path);
 			return ObjectLoader.createDisplayList(ObjectLoader.loadModel(path));
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -344,12 +355,12 @@ public class ResourceManager {
 	{
 		path = soundspath + path;
 		Main.log("Loading sound: "+path);
-		Main.splashscreen.label2.setText("Loading sound: "+path);
+		Main.splashscreen.setInfo("Loading sound: "+path);
 		try {
 			return AudioLoader.getAudio(format, new BufferedInputStream(ResourceManager.class.getResourceAsStream(path)));
 		} catch (Exception e) {
 			e.printStackTrace();
-			Main.splashscreen.label2.setText("Error! Failed to load sound: "+path);
+			Main.splashscreen.setInfo("Error! Failed to load sound: "+path);
 			Main.log("Failed to load sound: "+path);
 		}
 		return null;
@@ -364,7 +375,7 @@ public class ResourceManager {
 	{
 		path = texturespath + path;
 		Main.log("Loading texture: "+path);
-		Main.splashscreen.label2.setText("Loading texture: "+path);
+		Main.splashscreen.setInfo("Loading texture: "+path);
 		try {
 			return LoadTexture(ResourceManager.class.getResourceAsStream(path));
 		} catch (Exception e) {
@@ -373,11 +384,6 @@ public class ResourceManager {
 			Main.log("Failed to load texture: "+path);
 		}
 		return null;
-	}
-	
-	public ResourceManager()
-	{
-			
 	}
 	
 	/**
@@ -603,6 +609,16 @@ public class ResourceManager {
 	public static String pathToCityname(String path)
 	{
 		return ((new File(path)).getName()).substring(0, ((new File(path)).getName()).length()-5);
+	}
+	
+	public static String getBtDescription(int bt)
+	{
+		return ResourceManager.getString("DESCRIPTION_"+ResourceManager.getBuildingType(bt).getName());
+	}
+	
+	public static String getBtDescription2(int bt)
+	{
+		return ResourceManager.getString("DESCRIPTION2_"+ResourceManager.getBuildingType(bt).getName());
 	}
 	
 }

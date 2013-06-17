@@ -15,6 +15,15 @@ public class BuildingTask extends TimerTask {
 
 	@Override
 	public void run() {
+		if(Main.gameState==Main.STATE_GAME){
+			if(!Game.isPaused())task();
+		}else cancel();
+		
+	}
+	
+	public void task()
+	{
+		
 	}
 
 	public Building getBuilding() {

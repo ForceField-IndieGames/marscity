@@ -156,7 +156,7 @@ public abstract class AbstractGuiElement implements GuiElement, Animatable {
 	
 	@Override
 	public float getScreenOpacity() {
-		if(getParent()!=null)return getOpacity()*getParent().getOpacity();
+		if(getParent()!=null)return getOpacity()*getParent().getScreenOpacity();
 		return getOpacity();
 	}
 

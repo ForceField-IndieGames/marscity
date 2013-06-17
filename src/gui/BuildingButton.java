@@ -28,9 +28,12 @@ public class BuildingButton extends GuiPanel {
 	switch (eventtype) {
 	case Click:
 			Main.selectedTool = Main.TOOL_ADD;
-			AnimationManager.animateValue(Main.gui.buildingPanels, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
+			Main.gui.buildingPanels.hide();
 			Main.currentBT = getBt();
 			Main.buildpreview.setBuilding(getBt());
+			Main.gui.infoBuildingCosts.setVisible(true);
+			Main.gui.infoBuildingCosts.setText(""+ResourceManager.getBuildingType(Main.currentBT).getBuidlingcost());
+			Main.gui.infoBuildingCosts.AutoSize();
 			break;
 	case Mouseover:
 			Main.gui.buildingTooltip.setVisible(true);

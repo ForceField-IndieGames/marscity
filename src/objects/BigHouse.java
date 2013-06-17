@@ -3,6 +3,9 @@ package objects;
 import game.BuildingTask;
 import game.Main;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Timer;
 
 public class BigHouse extends Building {
@@ -23,7 +26,7 @@ public class BigHouse extends Building {
 		super(bt,x,y,z);
 		tCitizens.scheduleAtFixedRate(new BuildingTask(this) {
 			@Override
-			public void run() {
+			public void task() {
 				if(((BigHouse) getBuilding()).getCitizens()<BigHouse.getCitizensmax()){
 					Main.citizens++;
 					((BigHouse) getBuilding()).setCitizens(((BigHouse) getBuilding()).getCitizens()+1);
@@ -38,8 +41,13 @@ public class BigHouse extends Building {
 	}
 	
 	@Override
-	public void click() {
-		
+	public void saveToStream(ObjectOutputStream o) throws IOException {
+		o.writeByte(citizens);
+	}
+	
+	@Override
+	public void loadFromStream(ObjectInputStream i) throws IOException {
+		citizens = i.readByte();
 	}
 	
 	@Override

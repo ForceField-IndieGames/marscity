@@ -3,12 +3,15 @@ package objects;
 import game.BuildingTask;
 import game.Main;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Timer;
 
 
 public class House extends Building {
 	
-	private int citizens = 0;
+	private byte citizens = 0;
 	private static final byte citizensMax = 15;
 	private Timer tCitizens = new Timer();
 
@@ -24,10 +27,10 @@ public class House extends Building {
 		super(bt,x,y,z);
 		tCitizens.scheduleAtFixedRate(new BuildingTask(this) {
 			@Override
-			public void run() {
+			public void task() {
 				if(((House) getBuilding()).getCitizens()<House.getCitizensmax()){
 					Main.citizens++;
-					((House) getBuilding()).setCitizens(((House) getBuilding()).getCitizens()+1);
+					((House) getBuilding()).setCitizens((byte) (((House) getBuilding()).getCitizens()+1));
 				}
 				else cancel();
 			}
@@ -39,9 +42,15 @@ public class House extends Building {
 	}
 	
 	@Override
-	public void click() {
-		
+	public void saveToStream(ObjectOutputStream o) throws IOException {
+		o.writeByte(citizens);
 	}
+	
+	@Override
+	public void loadFromStream(ObjectInputStream i) throws IOException {
+		citizens = i.readByte();
+	}
+
 	
 	@Override
 	public void delete() {
@@ -50,11 +59,11 @@ public class House extends Building {
 		super.delete();
 	}
 
-	public int getCitizens() {
+	public byte getCitizens() {
 		return citizens;
 	}
 
-	public void setCitizens(int citizens) {
+	public void setCitizens(byte citizens) {
 		this.citizens = citizens;
 	}
 
