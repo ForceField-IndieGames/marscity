@@ -12,6 +12,9 @@ import java.util.List;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 
+import animation.AnimationManager;
+import animation.AnimationValue;
+
 /**
  * This class generates and displays the gui.
  * @author Benedikt Ringlein
@@ -23,9 +26,7 @@ public class GUI {
 	private static boolean visible = true;
 	
 	public GuiPanel MenuBG = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_MAINMENUBG);
-	public GuiPanel MenuFF = new GuiPanel(Display.getWidth()-512,0,512,128,ResourceManager.TEXTURE_MAINMENUFF){{
-		setVisible(false);
-	}};
+	public GuiPanel MenuFF = new GuiPanel(Display.getWidth()-512,0,512,128,ResourceManager.TEXTURE_MAINMENUFF);
 	public GuiButton MenuPlay = new GuiButton(0, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2){{
 		setText(ResourceManager.getString("MAINMENU_BUTTON_PLAY"));
 	    setFont(ResourceManager.Arial15B);
@@ -40,7 +41,6 @@ public class GUI {
 		setText(ResourceManager.getString("MAINMENU_BUTTON_SETTINGS"));
 	    setFont(ResourceManager.Arial15B);
 	    setEvent(GuiEvents.MenuSettings);
-	    setColor(Color.red);
 	}};
 	public GuiButton MenuExit = new GuiButton(660, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2){{
 		setText(ResourceManager.getString("MAINMENU_BUTTON_EXIT"));
@@ -48,7 +48,7 @@ public class GUI {
 	    setEvent(GuiEvents.MenuExit);
 	}};
 	public GuiLabel MenuVersion = new GuiLabel(0,0,180,20,(Color)null){{setText("Mars City [Alpha]");}};
-	public GuiPanel MenuIcon = new GuiPanel(Display.getWidth()/2-64,20,128,128,ResourceManager.TEXTURE_ICON256){{
+	public GuiPanel MenuIcon = new GuiPanel(Display.getWidth()/2-64,20,64,64,ResourceManager.TEXTURE_ICON256){{
 		setOpacity(0.9f);
 	}};
 	public GuiPanel IntroFF = new GuiPanel(Display.getWidth()/2-960,Display.getHeight()/2-540,1920,1080,ResourceManager.TEXTURE_FORCEFIELDBG){{
@@ -62,17 +62,19 @@ public class GUI {
 	}};
 	public LoadingScreen loadingscreen = new LoadingScreen();
 	
-	public BuildingToolTip buildingTooltip = new BuildingToolTip(){{setVisible(false);}};
+	public BuildingToolTip buildingTooltip = new BuildingToolTip(){{
+		setVisible(false);
+	}};
 	
 	public GuiPanel deleteBorder = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),ResourceManager.TEXTURE_GUIDELETEBORDER){{
 		setClickThrough(true);
 		setVisible(false);
 	}};
 	
-	public GuiPanel menuButton = new GuiPanel(0, 64, 32, 32, ResourceManager.TEXTURE_GUIMENUBUTTON){{
+	public GuiButton menuButton = new GuiButton(0, 64, 32, 32, ResourceManager.TEXTURE_GUIMENUBUTTON){{
 		setEvent(GuiEvents.menuButton);
 	}};
-	public GuiPanel toolDelete = new GuiPanel(0, 0, 64, 64, ResourceManager.TEXTURE_GUIDELETE){{
+	public GuiButton toolDelete = new GuiButton(0, 0, 64, 64, ResourceManager.TEXTURE_GUIDELETE){{
 		setEvent(GuiEvents.toolDelete);
 	}};
 	public GuiPanel guiTools = new GuiPanel(0,0,69,100,ResourceManager.TEXTURE_GUITOOLSBG){{
@@ -85,12 +87,25 @@ public class GUI {
 		setCharlimit(25);
 		setEvent(GuiEvents.cityName);
 	}};
+	public GuiLabel infoBuildingCosts = new GuiLabel(0,23,50,20,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
+		setText("0$");
+		setFont(ResourceManager.Arial12);
+		AutoSize();
+		setVisible(false);
+	}
+		@Override
+		public void setText(String text)
+		{
+			super.setText("-"+text+"$");
+		}
+	};
 	public GuiLabel infoMoney = new GuiLabel(350,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
-		setText("Geld: 0$");
+		add(infoBuildingCosts);
+		setText("Money: 0$");
 		setFont(ResourceManager.Arial15B);
 	}};
 	public GuiLabel infoCitizens = new GuiLabel(600,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
-		setText("Einwohner: 0");
+		setText("Citizens: 0");
 		setFont(ResourceManager.Arial15B);
 	}};
 	public GuiPanel infoBar = new GuiPanel(0,30,Display.getWidth(),40,ResourceManager.TEXTURE_GUITOOLBAR){{
@@ -106,11 +121,7 @@ public class GUI {
 		addBuildingButton(ResourceManager.BUILDINGTYPE_HOUSE);
 		addBuildingButton(ResourceManager.BUILDINGTYPE_BIGHOUSE);
 	}};
-	public GuiPanel buildingPanelsl = new GuiPanel(-50,0,50,100,ResourceManager.TEXTURE_GUIBUILDINGSPANELL);
-	public GuiPanel buildingPanels = new GuiPanel(150,20,Display.getWidth(),100,ResourceManager.TEXTURE_GUIBUILDINGSPANEL,(Color)null){{
-		setVisible(false);
-		add(buildingPanelsl);
-		
+	public BuildingPanels buildingPanels = new BuildingPanels(150,20,Display.getWidth(),100){{
 		add(buildingPanelStreet);
 		add(buildingPanelResidential);
 	}};
@@ -246,6 +257,8 @@ public class GUI {
 		setVisible(false);
 	}};
 	
+	public BuildingInfo buildinginfo = new BuildingInfo();
+	
 	List<GuiElement> elements = new ArrayList<GuiElement>();
 	List<GuiElement> menuElements = new ArrayList<GuiElement>();
 	public GuiElement lastHovered;
@@ -259,6 +272,8 @@ public class GUI {
 		menuElements.add(MenuVersion);
 		menuElements.add(MenuPanel);
 		menuElements.add(IntroFF);
+		menuElements.add(loadingscreen);
+		menuElements.add(settingsMenu);
 		
 		//GUI
 		add(deleteBorder);
@@ -267,6 +282,7 @@ public class GUI {
 		add(buildingPanels);
 		add(toolBar);
 		add(guiTools);
+		add(buildinginfo);
 		add(buildingTooltip);
 		add(blur);
 		add(pauseMenu);

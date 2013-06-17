@@ -74,7 +74,13 @@ public class Streets {
 				y2 = tmp;
 			}
 			y2+=1;
-			length = Math.abs(endposy-startposy)+1;
+			length = Math.abs(y2-y1)+1;
+			int segments=0;
+			for(int y=y1;y<y2;y++){
+				if(Grid.isAreaFree(x1,y,1,1))segments++;
+			}
+			Main.gui.infoBuildingCosts.setText(""+ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost()*segments);
+			Main.gui.infoBuildingCosts.AutoSize();
 		}else{
 			// horizontal
 			vertical = false;
@@ -88,7 +94,13 @@ public class Streets {
 				x2 = tmp;
 			}
 			x2+=1;
-			length = Math.abs(endposx-startposx)+1;
+			length = Math.abs(x2-x1)+1;
+			int segments=0;
+			for(int x=x1;x<x2;x++){
+				if(Grid.isAreaFree(x,y1,1,1))segments++;
+			}
+			Main.gui.infoBuildingCosts.setText(""+ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost()*segments);
+			Main.gui.infoBuildingCosts.AutoSize();
 		}
 	}
 	
@@ -145,6 +157,8 @@ public class Streets {
 			}
 		}
 		ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
+		Main.gui.infoBuildingCosts.setText(""+ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost());
+		Main.gui.infoBuildingCosts.AutoSize();
 	}
 	
 	/**

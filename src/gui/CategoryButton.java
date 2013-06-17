@@ -24,15 +24,12 @@ public class CategoryButton extends GuiButton {
 			@Override public void run(GuiEventType eventtype, GuiElement e) {
 				switch (eventtype) {
 				case Click:
-						Main.gui.buildingPanels.setElementsVisible(false);
-						Main.gui.buildingPanelsl.setVisible(true);
-						Main.gui.buildingPanels.setVisible(true);
+						Main.gui.buildingPanels.show();
 						Main.selectedTool = Main.TOOL_SELECT;
 						Main.buildpreview.setBuilding(-1);
 						Main.currentBT = -1;
 						Main.gui.deleteBorder.setVisible(false);
 						Main.gui.toolDelete.setColor(Color.white);
-						AnimationManager.animateValue(Main.gui.buildingPanels, AnimationValue.Y, 68f, 0.5f);
 						((CategoryButton) e).getPanel().setVisible(true);
 						break;
 				case Mouseover:

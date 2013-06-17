@@ -3,8 +3,6 @@ import static org.lwjgl.opengl.GL11.*;
 
 import game.ResourceManager;
 
-import java.io.IOException;
-
 import org.newdawn.slick.opengl.Texture;
 
 import animation.Animatable;

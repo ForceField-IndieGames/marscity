@@ -21,6 +21,7 @@ import java.nio.IntBuffer;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 
 import objects.BuildPreview;
 import objects.Building;
@@ -52,9 +53,11 @@ class splashScreen extends JFrame implements Runnable{
 	
 	private static final long serialVersionUID = 1L;
 	
+	short loadeditems=0;
 	JLabel label;
 	JLabel label2;
 	JLabel background;
+	JProgressBar progress;
 	public Thread thread;
 	
 	/**
@@ -73,11 +76,17 @@ class splashScreen extends JFrame implements Runnable{
 		label.setForeground(Color.white);
 		label.setFont(new Font("comicsans",Font.BOLD,40));
 		add(label);
-		label.setBounds(10, getHeight()-50, 50, 50);
+		label.setBounds(5, getHeight()-50, 50, 50);
 		label2 = new JLabel("");
 		add(label2);
 		label2.setForeground(Color.white);
-		label2.setBounds(0, 0, 500, 20);
+		label2.setBounds(2, 0, 500, 20);
+		progress = new JProgressBar();
+		progress.setBounds(0, 0, Toolkit.getDefaultToolkit().getScreenSize().width , 3);
+		progress.setBackground(Color.black);
+		progress.setForeground(new Color(56,130,185));
+		progress.setBorderPainted(false);
+		add(progress);
 		background = new JLabel(new ImageIcon(Main.class.getResource(ResourceManager.texturespath+"forcefieldbackground.png")));
 		add(background);
 		background.setBounds(0, 0, getWidth(), getHeight());
@@ -86,6 +95,13 @@ class splashScreen extends JFrame implements Runnable{
 		thread.start();
 	}
 
+	public void setInfo(String text)
+	{
+		label2.setText(Math.round(loadeditems/62f*100)+"% "+text);
+		progress.setValue(Math.round(loadeditems/62f*100));
+		loadeditems++;
+	}
+	
 	@Override
 	public void run() {
 		//Animate the dots
@@ -198,6 +214,7 @@ public class Main {
 		
 		ResourceManager.init();//Initialize the resources
 		
+		System.out.println("Loaded "+splashscreen.loadeditems+" resources");
 		log("Finished loading resources.");
 		
 		gui = new GUI(); //Create the GUI
@@ -483,6 +500,7 @@ public class Main {
 			if((Mouse.getEventButton()==1||Mouse.getEventButton()==2)&&!Mouse.getEventButtonState())
 			{
 				Mouse.setGrabbed(false);
+				gui.buildinginfo.hide();
 			}
 			//Set mouse grabbed when pressing middl or righte mouse button
 			if((Mouse.getEventButton()==2||Mouse.getEventButton()==1)&&Mouse.getEventButtonState()){
@@ -500,9 +518,10 @@ public class Main {
 				gui.cameraRotate.setVisible(false);
 			}
 			
-			//Start gui click event & Building click event
+			//Start gui click event & Building click event & hide the building info
 			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()){
 				gui.callGuiEvents(GuiEventType.Click);
+				gui.buildinginfo.hide();
 				if(hoveredEntity!=-1&&selectedTool==TOOL_SELECT){
 					ResourceManager.getObject(hoveredEntity).click();
 				}
@@ -532,8 +551,7 @@ public class Main {
 						break;
 					
 					case(TOOL_ADD): // Create a new Building at mouse position
-						if(!Mouse.getEventButtonState())break;
-						if(currentBT==-1)break;
+						if(!Mouse.getEventButtonState()||currentBT==-1)break;
 						if(currentBT==ResourceManager.BUILDINGTYPE_STREET){
 							Streets.setStartPos(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
 							break;
@@ -543,13 +561,13 @@ public class Main {
 							Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBT);
 							money -= ResourceManager.getBuildingType(currentBT).getBuidlingcost();
 							ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
+							camera.setY(0);
 							AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
 							AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
 						break;
 						
 					case(TOOL_DELETE): // Delete the hovered Building
-						if(!Mouse.getEventButtonState())break;
-						if(hoveredEntity==-1)break;
+						if(!Mouse.getEventButtonState()||hoveredEntity==-1)break;
 						if(ResourceManager.getObject(hoveredEntity).getBuildingType()==ResourceManager.BUILDINGTYPE_STREET){
 							Streets.setStartPos(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
 							break;
@@ -570,14 +588,14 @@ public class Main {
 				buildpreview.setBuilding(-1);
 				currentBT = -1;
 				gui.deleteBorder.setVisible(false);
-				AnimationManager.animateValue(Main.gui.buildingPanels, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
+				gui.buildingPanels.hide();
+				gui.infoBuildingCosts.setVisible(false);
 			}
 			if(Mouse.getEventButton()==1&&Mouse.getEventButtonState()){
 				camera.setLastrotx();
 				camera.setLastroty();
 			}
 			//Control the zoom with the mouse wheel
-			//camera.setZoom((float) (camera.getZoom()-0.001*camera.getZoom()*Mouse.getEventDWheel()));
 			if(Mouse.getEventDWheel()!=0){
 				AnimationManager.animateValue(camera, new CustomAnimationValue(){
 					@Override
@@ -816,11 +834,14 @@ public class Main {
 		//Update gui info labels
 		gui.infoMoney.setText(ResourceManager.getString("INFOBAR_LABEL_MONEY")+": "+money+"$");
 		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+citizens);
-		if(money<=2000){
-			if(money<=0)gui.infoMoney.setTextColor(Color.red);
-			else gui.infoMoney.setTextColor(new Color(200,100,0));
-		}else gui.infoMoney.setTextColor(Color.black);
+		if(selectedTool==TOOL_ADD&&money<ResourceManager.getBuildingType(currentBT).getBuidlingcost()){
+			gui.infoMoney.setTextColor(Color.red);
+		}else {
+			gui.infoMoney.setTextColor(Color.black);
+		}
 		
+		//Update the building info
+		gui.buildinginfo.update();
 		
 		//Update the paticle effects
 		ParticleEffects.update(delta);
