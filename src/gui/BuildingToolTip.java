@@ -27,10 +27,10 @@ public class BuildingToolTip extends GuiPanel {
 		title = new GuiLabel(0,85,256,30,(Color)null);
 		title.setFont(ResourceManager.Arial15B);
 		title.setCentered(true);
-		title.setText("Geb‰udename");
+		title.setText("Geb√§udename");
 		add(title);
 		description = new GuiLabel(20,40,216,50,(Color)null);
-		description.setText("Kurze Beschreibung des\r\nGeb‰udes. Maximal 3 Zeilen.");
+		description.setText("Kurze Beschreibung des\r\nGeb√§udes. Maximal 3 Zeilen.");
 		description.setCentered(true);
 		add(description);
 		price = new GuiLabel(20,15,100,30,(Color)null);

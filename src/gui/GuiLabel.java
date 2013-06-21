@@ -20,12 +20,13 @@ import org.newdawn.slick.opengl.TextureImpl;
 
 public class GuiLabel extends AbstractGuiElement {
 	
-	private String text;
+	private String text="";
 	
 	private org.newdawn.slick.Color textColor = new org.newdawn.slick.Color(0,0,0);
 	private Texture texturel;
 	private Texture texturer;
 	private boolean centered = false;
+	private boolean rightaligned = false;
 	private UnicodeFont font = ResourceManager.Arial15;
 
 	public GuiLabel()
@@ -207,7 +208,13 @@ public class GuiLabel extends AbstractGuiElement {
 				float xpos;
 				if(isCentered()){
 					xpos = getScreenX()+getWidth()/2-font.getWidth(getText())/2;
-				}else xpos = getScreenX();
+				}else {
+					if(isRightaligned()){
+						xpos = getScreenX()+getWidth()-getFont().getWidth(getText());
+					}else{
+						xpos = getScreenX();
+					}
+				}
 				float ypos = (Display.getHeight()-getScreenY())-getHeight()/2-font.getHeight(getText())/2;
 				font.drawString(xpos, ypos, getText(),new org.newdawn.slick.Color(getTextColor().getRed(), getTextColor().getGreen(), getTextColor().getBlue(),getScreenOpacity()));
 				glDisable(GL_SCISSOR_TEST);
@@ -240,6 +247,7 @@ public class GuiLabel extends AbstractGuiElement {
 
 	public void setTextColor(Color textColor) {
 		this.textColor = new org.newdawn.slick.Color(textColor.getRed(), textColor.getGreen(), textColor.getBlue());
+		System.out.println(getText()+" R:"+getTextColor().getRed()+" G:"+getTextColor().getGreen()+" B:"+getTextColor().getBlue());
 	}
 	
 	public Texture getTexturel()
@@ -260,6 +268,14 @@ public class GuiLabel extends AbstractGuiElement {
 	public void setTexturer(Texture r)
 	{
 		this.texturer = r;
+	}
+
+	public boolean isRightaligned() {
+		return rightaligned;
+	}
+
+	public void setRightaligned(boolean rightaligned) {
+		this.rightaligned = rightaligned;
 	}
 	
 }

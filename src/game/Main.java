@@ -17,7 +17,10 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import javax.swing.DebugGraphics;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -49,16 +52,15 @@ import animation.CustomAnimationValue;
  **/
 
 class splashScreen extends JFrame implements Runnable{
-
 	
 	private static final long serialVersionUID = 1L;
 	
-	short loadeditems=0;
-	JLabel label;
-	JLabel label2;
-	JLabel background;
-	JProgressBar progress;
-	public Thread thread;
+	       short        loadeditems=0;
+	       JLabel       label;
+	       JLabel       label2;
+	       JLabel       background;
+	       JProgressBar progress;
+	public Thread       thread;
 	
 	/**
 	 * The splash screen that is displayed while the resources are still loading
@@ -127,6 +129,11 @@ class splashScreen extends JFrame implements Runnable{
 
 public class Main {
 	
+	//////////////////////////////////////////////////////////////////////////
+	//The debugmode enables cheats and displays additional debug information//
+	public static boolean debugMode = true;//////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////
+	
 	//The tools
 	public final static byte TOOL_SELECT = 0;
 	public final static byte TOOL_ADD = 1;
@@ -136,26 +143,25 @@ public class Main {
 	public final static byte STATE_INTRO = 0;
 	public final static byte STATE_MENU = 1;
 	public final static byte STATE_GAME = 2;
+	
+	//other constants
+	public final static int MONTH_MILLIS = debugMode?1000:1000*60*5;
 
 	//Variables that are used for calculating the delta and fps
-	long lastFrame;
-	int fpsnow, fps;
-	long lastTime;
+	long lastFrame,lastTime;
+	int  fpsnow, fps;
 	
-	//////////////////////////////////////////////////////////////////////////
-	//The debugmode enables cheats and displays additional debug information//
-	public static boolean debugMode = true;//////////////////////////////////
-	//////////////////////////////////////////////////////////////////////////
-	
-	public static int     hoveredEntity = -1; //The index of the object that is hovered with the mouse
-	public static byte     selectedTool  = 0; //The selected tool, SELECT,ADD or DELETE
-	public static int     money         = Game.INITIALMONEY; //The players money
-	public static int     citizens      = 0; //The citizens that live in the city
-	public static String  cityname      = "Meine Stadt"; //The city's name
-	public static int     currentBT     = -1; //The currently selected building type
-	public static float[] mousepos3d    = new float[3]; //The mouse position in 3d space
-	public static byte     gameState     = debugMode?STATE_GAME:STATE_INTRO; //The current game state
-	public static String  clipboard="";   //A local text clipboard
+	public static int     hoveredEntity = -1;                               //The index of the object that is hovered with the mouse
+	public static byte    selectedTool  = TOOL_SELECT;                      //The selected tool, SELECT,ADD or DELETE
+	public static int     money         = Game.INITIALMONEY;                //The players money
+	public static int     citizens      = 0;                                //The citizens that live in the city
+	public static byte    taxes         = 20;                               //Taxes for citizens in %
+	public static String  cityname      = "Meine Stadt";                    //The city's name
+	public static int     currentBT     = -1;                               //The currently selected building type
+	public static float[] mousepos3d    = new float[3];                     //The mouse position in 3d space
+	public static byte    gameState     = STATE_INTRO;                      //The current game state
+	public static String  clipboard     = "";                               //A local text clipboard
+	public static Timer   MonthlyTimer  = new Timer();                      //A timer for sheduling monthly acitons
 	
 	//Some more objects
 	public static Camera       camera       = new Camera();
@@ -183,8 +189,6 @@ public class Main {
 	 * Starts the main game loop
 	 */
 	public void start(){
-		
-		
 		try {
 			//Setup the display
 			if(debugMode){
@@ -262,30 +266,22 @@ public class Main {
 		Game.exit();
 	}
 	
-	
-	
-	
-	
-	
 	/** 
 	 * Calculate how many milliseconds have passed 
 	 * since last frame.
 	 * 
 	 * @return milliseconds passed since last frame 
 	 */
-	private int getDelta() {
-		
-		
+	private int getDelta()
+	{
 	    long time = getTime();
 	    int delta = (int) (time - lastFrame);
 	    lastFrame = time;
-	 
 	    return delta;
 	}
 	
 	/**
-	 * Get the accurate system time
-	 * 
+	 * Get the time in ms
 	 * @return The system time in milliseconds
 	 */
 	private long getTime() {
@@ -317,11 +313,9 @@ public class Main {
 			glColor3ub((byte) ((i >> 0) & 0xff), (byte) ((i >> 8) & 0xff), (byte) ((i >> 16) & 0xff));
 			ResourceManager.getObject(i).draw();
 		}
-		new BufferUtils();
 		ByteBuffer color = BufferUtils.createByteBuffer(4);
 		glReadPixels(Mouse.getX(), Mouse.getY(), 1, 1, GL_RGB, GL_UNSIGNED_BYTE, color);
-        hoveredEntity = color.getInt(0);
-        if(hoveredEntity>16000000)hoveredEntity=-1;
+        hoveredEntity=(hoveredEntity>16000000)?-1:color.getInt(0);
         glDisable(GL_SCISSOR_TEST);
         glEnable(GL_LIGHTING);
         glEnable(GL_TEXTURE_2D);
@@ -417,7 +411,7 @@ public class Main {
 						if(debugMode)Game.exit();
 					}
 					if(debugMode&&Keyboard.getEventKey()==Keyboard.KEY_M&&Keyboard.getEventKeyState()){
-						gui.MsgBox("Text", "Sie haben auf die M Taste gedrückt und eine Messagebox aufgerufen. Der Text hier sollte automatisch gewrapt werden. Das funktioniert bei allen Labels, man braucht also nicht mehr über Zeilenumbrüche nachzudenken");
+						gui.MsgBox("Text", "Sie haben auf die M Taste gedrÃ¼ckt und eine Messagebox aufgerufen. Der Text hier sollte automatisch gewrapt werden. Das funktioniert bei allen Labels, man braucht also nicht mehr Ã¼ber ZeilenumbrÃ¼che nachzudenken");
 					}
 					//Pause and resume game with p
 					if(Keyboard.getEventKey()==Keyboard.KEY_P && Keyboard.getEventKeyState())
@@ -506,14 +500,15 @@ public class Main {
 			if((Mouse.getEventButton()==2||Mouse.getEventButton()==1)&&Mouse.getEventButtonState()){
 					Mouse.setGrabbed(true);
 			}
-			
+			//Show move icon when moving camera
 			if(Mouse.getEventButton()==2&&Mouse.getEventButtonState()){
 				gui.cameraMove.setVisible(true);
 			}
+			//hide move icon
 			if(Mouse.getEventButton()==2&&!Mouse.getEventButtonState()){
 				gui.cameraMove.setVisible(false);
 			}
-			
+			//Hide rotation icon
 			if(Mouse.getEventButton()==1){
 				gui.cameraRotate.setVisible(false);
 			}
@@ -523,17 +518,22 @@ public class Main {
 				gui.callGuiEvents(GuiEventType.Click);
 				gui.buildinginfo.hide();
 				if(hoveredEntity!=-1&&selectedTool==TOOL_SELECT){
-					ResourceManager.getObject(hoveredEntity).click();
+					try {
+						ResourceManager.getObject(hoveredEntity).click();
+					} catch (Exception e) {
+					}
 				}
 			}
 			
 			//Only do things when the mouse is not over the gui
 			if(guihit!=null)return;
 				
+			//Build a street to the mouse position
 			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&currentBT==ResourceManager.BUILDINGTYPE_STREET&&selectedTool==TOOL_ADD){
 				Streets.buildStreet(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
 			}
 			
+			//Delete a street
 			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&selectedTool==TOOL_DELETE&&ResourceManager.getHoveredBuildingtype(hoveredEntity)==ResourceManager.BUILDINGTYPE_STREET){
 				Streets.deleteStreet(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
 			}
@@ -550,12 +550,14 @@ public class Main {
 						} catch (Exception e) {}
 						break;
 					
-					case(TOOL_ADD): // Create a new Building at mouse position
+					case(TOOL_ADD): // Create a new building/street at mouse position
 						if(!Mouse.getEventButtonState()||currentBT==-1)break;
+						//Start street building
 						if(currentBT==ResourceManager.BUILDINGTYPE_STREET){
 							Streets.setStartPos(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
 							break;
 						}
+						//Build a building
 						if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), ResourceManager.getBuildingType(currentBT).getWidth(), ResourceManager.getBuildingType(currentBT).getDepth())||money<ResourceManager.getBuildingType(currentBT).getBuidlingcost())break;
 							ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
 							Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBT);
@@ -591,6 +593,7 @@ public class Main {
 				gui.buildingPanels.hide();
 				gui.infoBuildingCosts.setVisible(false);
 			}
+			//Set the last rotation of the camera, for checkign if the camera was moved
 			if(Mouse.getEventButton()==1&&Mouse.getEventButtonState()){
 				camera.setLastrotx();
 				camera.setLastroty();
@@ -854,8 +857,8 @@ public class Main {
 	}
 
 	public static void main(String[] argv) throws FileNotFoundException {
-		Main LwjglTest = new Main();
+		Main MarsCity = new Main();
 		splashscreen = new splashScreen();
-		LwjglTest.start();
+		MarsCity.start();
 	}
 }

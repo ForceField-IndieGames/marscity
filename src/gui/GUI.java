@@ -158,11 +158,18 @@ public class GUI {
 			super.setText("-"+text+"$");
 		}
 	};
+	public GuiLabel infoMonthly = new GuiLabel(150,0,50,30,(Color)null){{
+		setText("0$");
+		setFont(ResourceManager.Arial12);
+		setRightaligned(true);
+	}};
 	public GuiLabel infoMoney = new GuiLabel(350,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
 		add(infoBuildingCosts);
+		add(infoMonthly);
 		setText("Money: 0$");
 		setFont(ResourceManager.Arial15B);
 	}};
+	
 	public GuiLabel infoCitizens = new GuiLabel(600,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
 		setText("Citizens: 0");
 		setFont(ResourceManager.Arial15B);

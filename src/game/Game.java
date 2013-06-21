@@ -15,6 +15,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.TimerTask;
 
 import javax.imageio.ImageIO;
 
@@ -51,6 +52,7 @@ public class Game {
 			/////////////////////
 			ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(new File(path)));
 			o.writeInt(Main.money);
+			o.writeByte(Main.taxes);
 			o.writeInt(Main.citizens);
 			o.writeShort((short) Main.camera.getX());
 			o.writeShort((short) Main.camera.getZ());
@@ -87,7 +89,8 @@ public class Game {
 			}
 			
 			ObjectInputStream i = new ObjectInputStream(new FileInputStream(new File(path)));
-			Main.money=i.readInt();
+			Main.money = i.readInt();
+			Main.taxes = i.readByte();
 			Main.citizens = i.readInt();
 			Main.camera.setX(i.readShort());
 			Main.camera.setZ(i.readShort());
@@ -122,6 +125,7 @@ public class Game {
 		Main.gui = null;
 		Main.gui = new GUI();
 		Game.Resume();
+		Main.MonthlyTimer.scheduleAtFixedRate(MonthlyTransactions.ExecuteTransactions, Main.MONTH_MILLIS, Main.MONTH_MILLIS);
 	}
 	
 	/**

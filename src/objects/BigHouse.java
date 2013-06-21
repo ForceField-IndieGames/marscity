@@ -2,6 +2,7 @@ package objects;
 
 import game.BuildingTask;
 import game.Main;
+import game.MonthlyTransactions;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -43,6 +44,11 @@ public class BigHouse extends Building {
 	
 	@Override
 	public void update(int delta) {
+	}
+	
+	@Override
+	public void MonthlyTransaction() {
+		MonthlyTransactions.addTransaction((int) (citizens*((float)Main.taxes/100)), MonthlyTransactions.CATEGORY_TAXES);
 	}
 	
 	@Override
