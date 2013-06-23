@@ -7,9 +7,7 @@ import objects.Building;
 
 public class MonthlyTransactions {
 	
-	public final static byte CATEGORY_TAXES = 0;
-	
-	public static int[] TransactionList = new int[5];
+	public static int[] TransactionList = new int[TransactionCategory.values().length];
 
 	public static TimerTask ExecuteTransactions = new TimerTask(){
 		@Override
@@ -39,10 +37,10 @@ public class MonthlyTransactions {
 		}
 	};
 	
-	public static void addTransaction(int value, byte category)
+	public static void addTransaction(int value, TransactionCategory category)
 	{
 		try {
-			TransactionList[category]+=value;
+			TransactionList[category.ordinal()]+=value;
 		} catch (IndexOutOfBoundsException e) {
 			System.err.println("Transactioncategory "+category+" does not exist.");
 			e.printStackTrace();

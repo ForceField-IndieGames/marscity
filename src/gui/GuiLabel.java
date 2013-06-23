@@ -149,7 +149,9 @@ public class GuiLabel extends AbstractGuiElement {
 				glLoadIdentity();
 				glOrtho(0, Display.getWidth(), 0, Display.getHeight(), 1, -1);
 				glMatrixMode(GL_MODELVIEW);
-				glTranslated(getScreenX(), getScreenY(), 0);
+				//Prevent weird artifacts, when needed
+				if(isIntegerPosition())glTranslatef((int)getScreenX(), (int)getScreenY(), 0);
+				else glTranslatef(getScreenX(), getScreenY(), 0);
 					glBegin(GL_QUADS);
 						if(getColor()!=null)glColor4ub((byte) getColor().getRed(), 
 									(byte) getColor().getGreen(),

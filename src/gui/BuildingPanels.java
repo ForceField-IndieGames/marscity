@@ -23,8 +23,10 @@ public class BuildingPanels extends GuiPanel {
 		setVisible(false);
 		setOpacity(0f);
 		setColor(null);
+		setIntegerPosition(true);
 		setTexture(ResourceManager.TEXTURE_GUIBUILDINGSPANEL);
 		add(left);
+		left.setIntegerPosition(true);
 	}
 	
 	public void show()
