@@ -23,8 +23,11 @@ public class GuiProgressbar extends GuiPanel {
 		setHeight(height);
 		setColor(null);
 		bg = new GuiLabel(0,0,width,height,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
+		bg.setClickThrough(true);
 		bar = new GuiLabel(0,0,width,height,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR);
+		bar.setClickThrough(true);
 		label = new GuiLabel(0,0,width,height,(Color)null);
+		label.setClickThrough(true);
 		add(bg);
 		add(bar);
 		add(label);

@@ -249,7 +249,6 @@ public class GuiLabel extends AbstractGuiElement {
 
 	public void setTextColor(Color textColor) {
 		this.textColor = new org.newdawn.slick.Color(textColor.getRed(), textColor.getGreen(), textColor.getBlue());
-		System.out.println(getText()+" R:"+getTextColor().getRed()+" G:"+getTextColor().getGreen()+" B:"+getTextColor().getBlue());
 	}
 	
 	public Texture getTexturel()

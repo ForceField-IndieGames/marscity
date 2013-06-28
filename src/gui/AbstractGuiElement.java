@@ -244,5 +244,15 @@ public abstract class AbstractGuiElement implements GuiElement, Animatable {
 	public void setIntegerPosition(boolean integerPosition) {
 		IntegerPosition = integerPosition;
 	}
+	
+	public void show()
+	{
+		setVisible(true);
+	}
+	
+	public void hide()
+	{
+		setVisible(false);
+	}
 
 }

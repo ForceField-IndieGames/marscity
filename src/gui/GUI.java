@@ -168,6 +168,17 @@ public class GUI {
 		add(infoMonthly);
 		setText("Money: 0$");
 		setFont(ResourceManager.Arial15B);
+		setEvent(new GuiEvent(){
+			public void run(GuiEventType eventtype) {
+				switch (eventtype) {
+				case Click:
+					moneypanel.show();
+					break;
+				default:
+					break;
+				}
+			};
+		});
 	}};
 	
 	public GuiLabel infoCitizens = new GuiLabel(600,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
@@ -494,6 +505,40 @@ public class GUI {
 	
 	public BuildingInfo buildinginfo = new BuildingInfo();
 	
+	public GuiPanel moneypanel = new GuiPanel(infoMoney.getScreenX()+infoMoney.getWidth()/2-256,infoMoney.getScreenY()+infoMoney.getHeight(),512,512,ResourceManager.TEXTURE_MONEYBG){{
+		setVisible(false);
+		setOpacity(0f);
+		GuiLabel taxeslabel = new GuiLabel(30,452,482,30,(Color)null);
+		taxeslabel.setText(ResourceManager.getString("MONEYPANEL_LABEL_TAXES"));
+		taxeslabel.setFont(ResourceManager.Arial15B);
+		add(taxeslabel);
+		GuiNumberbox taxes = new GuiNumberbox(382, 457, 100, 20);
+		taxes.setSuffix("%");
+		taxes.setValue(Main.taxes);
+		taxes.setMax(100);
+		taxes.setEvent(new GuiEvent(){
+			public void run(GuiEventType eventtype, GuiElement e) {
+				switch (eventtype) {
+				case Valuechange:
+					Main.taxes = (byte) ((GuiNumberbox)e).getValue();
+					break;
+				default:
+					break;
+				}
+			};
+		});
+		add(taxes);
+	}
+		@Override public void show() {
+			setVisible(true);
+			AnimationManager.animateValue(this, AnimationValue.opacity, 1f, 200);
+		};
+		
+		@Override public void hide() {
+			AnimationManager.animateValue(this, AnimationValue.opacity, 0f, 200,AnimationManager.ACTION_HIDE);
+		};
+	};
+	
 	List<GuiElement> elements = new ArrayList<GuiElement>();
 	List<GuiElement> menuElements = new ArrayList<GuiElement>();
 	public GuiElement lastHovered;
@@ -518,6 +563,7 @@ public class GUI {
 		add(toolBar);
 		add(guiTools);
 		add(buildinginfo);
+		add(moneypanel);
 		add(buildingTooltip);
 		add(blur);
 		add(pauseMenu);

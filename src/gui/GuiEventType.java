@@ -6,5 +6,5 @@ package gui;
  */
 
 public enum GuiEventType {
-	Click,Mouseover,Mouseout,Keypress
+	Click,Mouseover,Mouseout,Keypress,Valuechange
 }

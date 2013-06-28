@@ -96,8 +96,8 @@ class splashScreen extends JFrame implements Runnable{
 
 	public void setInfo(String text)
 	{
-		label2.setText(Math.round(loadeditems/62f*100)+"% "+text);
-		progress.setValue(Math.round(loadeditems/62f*100));
+		label2.setText(Math.round(loadeditems/64f*100)+"% "+text);
+		progress.setValue(Math.round(loadeditems/64f*100));
 		loadeditems++;
 	}
 	
@@ -142,7 +142,7 @@ public class Main {
 	public final static byte STATE_GAME = 2;
 	
 	//other constants
-	public final static int MONTH_MILLIS = debugMode?1000:1000*60*5;
+	public final static int MONTH_MILLIS = debugMode?1000:60000;
 
 	//Variables that are used for calculating the delta and fps
 	long lastFrame,lastTime;
@@ -312,7 +312,7 @@ public class Main {
 		}
 		ByteBuffer color = BufferUtils.createByteBuffer(4);
 		glReadPixels(Mouse.getX(), Mouse.getY(), 1, 1, GL_RGB, GL_UNSIGNED_BYTE, color);
-        hoveredEntity=(hoveredEntity>16000000)?-1:color.getInt(0);
+        hoveredEntity=(color.getInt(0)>16000000)?-1:color.getInt(0);
         glDisable(GL_SCISSOR_TEST);
         glEnable(GL_LIGHTING);
         glEnable(GL_TEXTURE_2D);
@@ -456,7 +456,6 @@ public class Main {
 		//Is the mouse over a gui item?
 		GuiElement guihit = gui.getMouseover();
 		
-		
 		if(guihit==null || Mouse.isGrabbed())
 		{
 			int MX = Mouse.getDX();
@@ -512,6 +511,12 @@ public class Main {
 			
 			//Start gui click event & Building click event & hide the building info
 			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()){
+				if(Mouse.getX()<gui.moneypanel.getScreenX()
+						||Mouse.getX()>gui.moneypanel.getScreenX()+gui.moneypanel.getWidth()
+						||Mouse.getY()<gui.moneypanel.getScreenY()
+						||Mouse.getY()>gui.moneypanel.getScreenY()+gui.moneypanel.getHeight()){
+					gui.moneypanel.hide();
+				}
 				gui.callGuiEvents(GuiEventType.Click);
 				gui.buildinginfo.hide();
 				if(hoveredEntity!=-1&&selectedTool==TOOL_SELECT){

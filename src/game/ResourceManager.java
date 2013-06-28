@@ -146,6 +146,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_LOADABORT = addTexture("loadabort.png");
 	public final static Texture TEXTURE_CPSPEC = addTexture("cpspec.png");
 	public final static Texture TEXTURE_BUILDINGINFO = addTexture("buildinginfo.png");
+	public final static Texture TEXTURE_MONEYBG = addTexture("moneybg.png");
 	
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	
