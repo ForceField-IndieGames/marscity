@@ -12,7 +12,8 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureImpl;
 
 /**
- * A simpla button with background image.
+ * A simple button with background image and Text. When the background color
+ * is white, it automatically gets darker when hovered.
  * @author Benedikt Ringlein
  */
 

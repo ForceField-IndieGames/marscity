@@ -13,6 +13,13 @@ import animation.AnimationValue;
 
 import game.ResourceManager;
 
+/**
+ * This is a panel that contains information for a building.
+ * It shows up, when a building is clicked. The buildings information is
+ * updated in realtime.
+ * @author Benedikt Ringlein
+ */
+
 public class BuildingInfo extends GuiPanel {
 
 	private GuiLabel title;

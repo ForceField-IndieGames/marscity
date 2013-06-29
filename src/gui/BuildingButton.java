@@ -8,6 +8,13 @@ import java.awt.Color;
 import animation.AnimationManager;
 import animation.AnimationValue;
 
+/**
+ * This is a button that selects a buildingtpe to build.
+ * It contains a thumbnail of the building and its name. Also,
+ * it shows a tooltip when hovered.
+ * @author Benedikt Ringlein
+ */
+
 public class BuildingButton extends GuiPanel {
 
 	private GuiLabel name;

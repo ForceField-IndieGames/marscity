@@ -26,6 +26,7 @@ public abstract class AbstractGuiElement implements GuiElement, Animatable {
 	private float opacity = 1f;
 	private boolean clickThrough = false;
 	public List<GuiElement> elements = new ArrayList<GuiElement>();
+	private boolean IntegerPosition = false;
 	
 	public void add(GuiElement guielement)
 	{
@@ -234,6 +235,24 @@ public abstract class AbstractGuiElement implements GuiElement, Animatable {
 	@Override
 	public void setClickThrough(boolean clickthrough) {
 		this.clickThrough = clickthrough;
+	}
+
+	public boolean isIntegerPosition() {
+		return IntegerPosition;
+	}
+
+	public void setIntegerPosition(boolean integerPosition) {
+		IntegerPosition = integerPosition;
+	}
+	
+	public void show()
+	{
+		setVisible(true);
+	}
+	
+	public void hide()
+	{
+		setVisible(false);
 	}
 
 }

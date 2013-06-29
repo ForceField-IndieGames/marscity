@@ -1,5 +1,10 @@
 package objects;
 
+/**
+ * This is a street segment.
+ * @author Benedikt Ringlein
+ */
+
 public class Street extends Building {
 
 	public Street(int bt, float x, float y, float z)

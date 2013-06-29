@@ -146,6 +146,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_LOADABORT = addTexture("loadabort.png");
 	public final static Texture TEXTURE_CPSPEC = addTexture("cpspec.png");
 	public final static Texture TEXTURE_BUILDINGINFO = addTexture("buildinginfo.png");
+	public final static Texture TEXTURE_MONEYBG = addTexture("moneybg.png");
 	
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	
@@ -154,7 +155,6 @@ public class ResourceManager {
 	/**
 	 * Initializes the Resources that need to be initialized
 	 */
-	@SuppressWarnings("unchecked")
 	public static void init()
 	{
 		
@@ -174,7 +174,7 @@ public class ResourceManager {
 		buildingTypes.add(BUILDINGTYPE_HOUSE,new BuildingType("BUILDINGTYPE_HOUSE",OBJECT_HOUSE,TEXTURE_HOUSE, TEXTURE_GUITHUMBHOUSE,250,2,2,1.5f));
 		buildingTypes.add(BUILDINGTYPE_BIGHOUSE,new BuildingType("BUILDINGTYPE_BIGHOUSE",OBJECT_BIGHOUSE,TEXTURE_BIGHOUSE, TEXTURE_GUITHUMBBIGHOUSE,1500,4,4,8f));
 		buildingTypes.add(BUILDINGTYPE_STREET,new BuildingType("BUILDINGTYPE_STREET",OBJECT_STREET,TEXTURE_STREET, TEXTURE_GUITHUMBSTREET,5,1,1,0f));
-		
+
 		//create necessary folders and extract files
 		Main.splashscreen.setInfo("Creating folders...");
 		if(!(new File("res")).exists()||Main.debugMode){

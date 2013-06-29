@@ -2,12 +2,18 @@ package objects;
 
 import game.BuildingTask;
 import game.Main;
+import game.MonthlyTransactions;
+import game.TransactionCategory;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Timer;
 
+/**
+ * This is a house.
+ * @author Benedikt Ringlein
+ */
 
 public class House extends Building {
 	
@@ -39,6 +45,11 @@ public class House extends Building {
 	
 	@Override
 	public void update(int delta) {
+	}
+	
+	@Override
+	public void MonthlyTransaction() {
+		MonthlyTransactions.addTransaction((int) (citizens*((float)Main.taxes/100)), TransactionCategory.Taxes);
 	}
 	
 	@Override
