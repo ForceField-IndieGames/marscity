@@ -8,6 +8,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * The mesh is a structure that contains the 3d data of an object.
+ * It is used to create displaylists.
+ * @author Benedikt Ringlein
+ */
+
 public class Mesh {
 
     private final List<Vector3f> vertices = new ArrayList<Vector3f>();

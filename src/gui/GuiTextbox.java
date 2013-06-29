@@ -7,6 +7,14 @@ import org.lwjgl.input.Mouse;
 import game.Main;
 import game.ResourceManager;
 
+/**
+ * A simple textbox. It gets keyboard focus when clicked and looses it,
+ * when the enter or ecs keys are pressed. Text can be entered and deleted and
+ * there is also a caret which can be positioned using the mouse or the arrow keys.
+ * With ctrl+c the text can be copied in the local clipboar and pasted with ctrl+v.
+ * @author Benedikt Ringlein
+ */
+
 public class GuiTextbox extends GuiLabel {
 	
 	private int charlimit = 0;

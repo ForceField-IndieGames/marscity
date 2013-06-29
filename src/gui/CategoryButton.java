@@ -2,10 +2,15 @@ package gui;
 
 import java.awt.Color;
 
-import animation.AnimationManager;
-import animation.AnimationValue;
 import game.Main;
 import game.ResourceManager;
+
+/**
+ * Those buttons represent categorys. When clicked, they show the assigned
+ * building panel.
+ * Also, the button label is set automatically according to the panels name.
+ * @author Benedikt Ringlein
+ */
 
 public class CategoryButton extends GuiButton {
 
@@ -43,6 +48,7 @@ public class CategoryButton extends GuiButton {
 
 	public void setPanel(BuildingPanel panel) {
 		this.panel = panel;
+		setText(panel.getName());
 	}
 	
 }

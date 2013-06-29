@@ -54,6 +54,11 @@ public class Building extends Entity {
 		
 	}
 	
+	public void MonthlyTransaction()
+	{
+		
+	}
+	
 	/**
 	 * Is called when the building is clicked
 	 */

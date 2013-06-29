@@ -130,8 +130,8 @@ public class GuiPanel extends AbstractGuiElement {
 				glLoadIdentity();
 				glOrtho(0, Display.getWidth(), 0, Display.getHeight(), 1, -1);
 				glMatrixMode(GL_MODELVIEW);
-					//Prevent weird artifacts when a texture is assigned (interpolation errors in openGL?)
-					if(getTexture()!=null)glTranslatef((int)getScreenX(), (int)getScreenY(), 0);
+					//Prevent weird artifacts, when needed
+					if(isIntegerPosition())glTranslatef((int)getScreenX(), (int)getScreenY(), 0);
 					else glTranslatef(getScreenX(), getScreenY(), 0);
 					glBegin(GL_QUADS);
 						if(getColor()!=null)glColor4ub((byte) getColor().getRed(), 
