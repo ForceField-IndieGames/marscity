@@ -5,6 +5,7 @@ import effects.ParticleEffects;
 import game.Game;
 import game.Main;
 import game.ResourceManager;
+import game.TransactionCategory;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -505,6 +506,7 @@ public class GUI {
 	
 	public BuildingInfo buildinginfo = new BuildingInfo();
 	
+	public GuiPanel moneycategories = new GuiPanel(30,30,452,412,(Color)null);
 	public GuiPanel moneypanel = new GuiPanel(infoMoney.getScreenX()+infoMoney.getWidth()/2-256,infoMoney.getScreenY()+infoMoney.getHeight(),512,512,ResourceManager.TEXTURE_MONEYBG){{
 		setVisible(false);
 		setOpacity(0f);
@@ -512,7 +514,7 @@ public class GUI {
 		taxeslabel.setText(ResourceManager.getString("MONEYPANEL_LABEL_TAXES"));
 		taxeslabel.setFont(ResourceManager.Arial15B);
 		add(taxeslabel);
-		GuiNumberbox taxes = new GuiNumberbox(382, 457, 100, 20);
+		GuiNumberbox taxes = new GuiNumberbox(372, 450, 110, 32);
 		taxes.setSuffix("%");
 		taxes.setValue(Main.taxes);
 		taxes.setMax(100);
@@ -528,6 +530,14 @@ public class GUI {
 			};
 		});
 		add(taxes);
+		add(moneycategories);
+		for(TransactionCategory t:TransactionCategory.values())
+		{
+			GuiProgressbar p = new GuiProgressbar(10, moneycategories.getHeight()-t.ordinal()*40-32, moneycategories.getWidth()-20, 32);
+			p.setBarColor(Color.green);
+			p.setText(t.getName());
+			moneycategories.add(p);
+		}
 	}
 		@Override public void show() {
 			setVisible(true);

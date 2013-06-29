@@ -509,7 +509,7 @@ public class Main {
 				gui.cameraRotate.setVisible(false);
 			}
 			
-			//Start gui click event & Building click event & hide the building info
+			//Fire gui click event & Building click event & hide the building info
 			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()){
 				if(Mouse.getX()<gui.moneypanel.getScreenX()
 						||Mouse.getX()>gui.moneypanel.getScreenX()+gui.moneypanel.getWidth()
@@ -526,6 +526,10 @@ public class Main {
 					}
 				}
 			}
+			
+			//Fire scroll events
+			if(Mouse.getEventDWheel()>0)gui.callGuiEvents(GuiEventType.Scrollup);
+			if(Mouse.getEventDWheel()<0)gui.callGuiEvents(GuiEventType.Scrolldown);
 			
 			//Only do things when the mouse is not over the gui
 			if(guihit!=null)return;

@@ -70,4 +70,14 @@ public class GuiProgressbar extends GuiPanel {
 	public void setValue(float value) {
 		this.value = value;
 	}
+	
+	public void setRightaligned(boolean align)
+	{
+		label.setRightaligned(align);
+	}
+	
+	public void setCentered(boolean centered)
+	{
+		label.setCentered(centered);
+	}
 }
