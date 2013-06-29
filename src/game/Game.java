@@ -15,6 +15,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Timer;
+
 import javax.imageio.ImageIO;
 
 import objects.Building;
@@ -31,6 +33,7 @@ import org.lwjgl.opengl.Display;
 public class Game {
 	private static boolean pause = false;
 	public static final int INITIALMONEY = 5000;
+	public static final int INITIALTAXES = 20;
 	
 	public static void Pause()
 	{
@@ -80,6 +83,7 @@ public class Game {
 	public static void Load(String path)
 	{
 		newGame();
+		System.out.println("Lädt");
 		try {
 			if(!(new File(path)).exists()){
 				Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_LOADINGFILENOTFOUND"), ResourceManager.getString("MSGBOX_TEXT_LOADINGFILENOTFOUND").replaceAll(ResourceManager.PLACEHOLDER1, ResourceManager.pathToCityname(path)),new Color(200,0,0));
@@ -89,6 +93,7 @@ public class Game {
 			ObjectInputStream i = new ObjectInputStream(new FileInputStream(new File(path)));
 			Main.money = i.readInt();
 			Main.taxes = i.readByte();
+			Main.gui.taxes.setValue(Main.taxes);
 			Main.citizens = i.readInt();
 			Main.camera.setX(i.readShort());
 			Main.camera.setZ(i.readShort());
@@ -113,6 +118,7 @@ public class Game {
 	public static void newGame()
 	{
 		Main.money = INITIALMONEY;
+		Main.taxes = INITIALTAXES;
 		Main.citizens = 0;
 		Grid.init();
 		ResourceManager.objects = new ArrayList<Building>();
@@ -123,7 +129,11 @@ public class Game {
 		Main.gui = null;
 		Main.gui = new GUI();
 		Game.Resume();
-		Main.MonthlyTimer.scheduleAtFixedRate(MonthlyTransactions.ExecuteTransactions, Main.MONTH_MILLIS, Main.MONTH_MILLIS);
+		try {
+			Main.MonthlyTimer.scheduleAtFixedRate(MonthlyTransactions.ExecuteTransactions, Main.MONTH_MILLIS, Main.MONTH_MILLIS);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**

@@ -507,6 +507,7 @@ public class GUI {
 	public BuildingInfo buildinginfo = new BuildingInfo();
 	
 	public GuiPanel moneycategories = new GuiPanel(30,30,452,412,(Color)null);
+	public GuiNumberbox taxes = new GuiNumberbox(372, 450, 110, 32);
 	public GuiPanel moneypanel = new GuiPanel(infoMoney.getScreenX()+infoMoney.getWidth()/2-256,infoMoney.getScreenY()+infoMoney.getHeight(),512,512,ResourceManager.TEXTURE_MONEYBG){{
 		setVisible(false);
 		setOpacity(0f);
@@ -514,7 +515,6 @@ public class GUI {
 		taxeslabel.setText(ResourceManager.getString("MONEYPANEL_LABEL_TAXES"));
 		taxeslabel.setFont(ResourceManager.Arial15B);
 		add(taxeslabel);
-		GuiNumberbox taxes = new GuiNumberbox(372, 450, 110, 32);
 		taxes.setSuffix("%");
 		taxes.setValue(Main.taxes);
 		taxes.setMax(100);
