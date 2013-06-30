@@ -15,8 +15,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Timer;
-
 import javax.imageio.ImageIO;
 
 import objects.Building;
@@ -83,7 +81,6 @@ public class Game {
 	public static void Load(String path)
 	{
 		newGame();
-		System.out.println("Lädt");
 		try {
 			if(!(new File(path)).exists()){
 				Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_LOADINGFILENOTFOUND"), ResourceManager.getString("MSGBOX_TEXT_LOADINGFILENOTFOUND").replaceAll(ResourceManager.PLACEHOLDER1, ResourceManager.pathToCityname(path)),new Color(200,0,0));

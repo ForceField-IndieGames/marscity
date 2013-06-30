@@ -564,7 +564,13 @@ public class Main {
 							break;
 						}
 						//Build a building
-						if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), ResourceManager.getBuildingType(currentBT).getWidth(), ResourceManager.getBuildingType(currentBT).getDepth())||money<ResourceManager.getBuildingType(currentBT).getBuidlingcost())break;
+					if (!Grid.isAreaFree((int) Math.round(mousepos3d[0]),
+							(int) Math.round(mousepos3d[2]), 
+							ResourceManager.getBuildingType(currentBT).getWidth(),
+							ResourceManager.getBuildingType(currentBT).getDepth())
+							|| money < ResourceManager.getBuildingType(currentBT).getBuidlingcost()
+							|| !Grid.buildingSurroundedWith((int) Math.round(mousepos3d[0]), (int) Math.round(mousepos3d[2]), currentBT, ResourceManager.BUILDINGTYPE_STREET))
+						break;
 							ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
 							Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBT);
 							money -= ResourceManager.getBuildingType(currentBT).getBuidlingcost();

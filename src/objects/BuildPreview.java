@@ -149,7 +149,7 @@ public class BuildPreview extends Entity {
 			glEnable(GL_TEXTURE_2D);
 			if(getTexture()!=null)glBindTexture(GL_TEXTURE_2D, getTexture().getTextureID());
 			else glBindTexture(GL_TEXTURE_2D, 0);
-			if(Grid.isAreaFree((int)getX(), (int)getZ(), ResourceManager.getBuildingType(buildingType).getWidth(), ResourceManager.getBuildingType(buildingType).getDepth())){
+			if(Grid.isAreaFree((int)getX(), (int)getZ(), ResourceManager.getBuildingType(buildingType).getWidth(), ResourceManager.getBuildingType(buildingType).getDepth())&&(Grid.buildingSurroundedWith((int) Math.round(Main.mousepos3d[0]), (int) Math.round(Main.mousepos3d[2]), Main.currentBT, ResourceManager.BUILDINGTYPE_STREET))||Main.currentBT==ResourceManager.BUILDINGTYPE_STREET){
 				glColor4f(1f, 1f, 1f, 1f);
 				glCallList(getDisplayList());
 			}
