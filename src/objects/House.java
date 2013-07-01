@@ -2,7 +2,7 @@ package objects;
 
 import game.BuildingTask;
 import game.Main;
-import game.MonthlyTransactions;
+import game.MonthlyActions;
 import game.TransactionCategory;
 
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class House extends Building {
 	
 	@Override
 	public void MonthlyTransaction() {
-		MonthlyTransactions.addTransaction((int) (citizens*((float)Main.taxes/100)), TransactionCategory.Taxes);
+		MonthlyActions.addTransaction((int) (citizens*((float)Main.taxes/100)), TransactionCategory.Taxes);
 	}
 	
 	@Override

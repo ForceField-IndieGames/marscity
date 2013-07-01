@@ -509,13 +509,19 @@ public class Main {
 				gui.cameraRotate.setVisible(false);
 			}
 			
-			//Fire gui click event & Building click event & hide the building info
+			//Fire gui click event & Building click event & hide the building info 'n stuff
 			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()){
 				if(Mouse.getX()<gui.moneypanel.getScreenX()
 						||Mouse.getX()>gui.moneypanel.getScreenX()+gui.moneypanel.getWidth()
 						||Mouse.getY()<gui.moneypanel.getScreenY()
 						||Mouse.getY()>gui.moneypanel.getScreenY()+gui.moneypanel.getHeight()){
 					gui.moneypanel.hide();
+				}
+				if(Mouse.getX()<gui.citizenspanel.getScreenX()
+						||Mouse.getX()>gui.citizenspanel.getScreenX()+gui.citizenspanel.getWidth()
+						||Mouse.getY()<gui.citizenspanel.getScreenY()
+						||Mouse.getY()>gui.citizenspanel.getScreenY()+gui.citizenspanel.getHeight()){
+					gui.citizenspanel.hide();
 				}
 				gui.callGuiEvents(GuiEventType.Click);
 				gui.buildinginfo.hide();

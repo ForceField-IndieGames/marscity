@@ -127,7 +127,7 @@ public class Game {
 		Main.gui = new GUI();
 		Game.Resume();
 		try {
-			Main.MonthlyTimer.scheduleAtFixedRate(MonthlyTransactions.ExecuteTransactions, Main.MONTH_MILLIS, Main.MONTH_MILLIS);
+			Main.MonthlyTimer.scheduleAtFixedRate(MonthlyActions.ExecuteTransactions, Main.MONTH_MILLIS, Main.MONTH_MILLIS);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

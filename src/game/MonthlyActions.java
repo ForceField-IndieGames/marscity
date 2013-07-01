@@ -1,5 +1,6 @@
 package game;
 
+import gui.GuiLabel;
 import gui.GuiProgressbar;
 
 import java.awt.Color;
@@ -7,9 +8,15 @@ import java.util.TimerTask;
 
 import objects.Building;
 
-public class MonthlyTransactions {
+/**
+ * Recurring actions (e.g. taxes) are managed here
+ * @author Benedikt Ringlein
+ */
+
+public class MonthlyActions {
 	
 	public static int[] TransactionList = new int[TransactionCategory.values().length];
+	public static int[] PopulationStatistics = new int[10];
 
 	public static TimerTask ExecuteTransactions = new TimerTask(){
 		@Override
@@ -49,6 +56,15 @@ public class MonthlyTransactions {
 					Main.gui.infoMonthly.setText(total+"$");
 					Main.gui.infoMoney.setColor(Color.white);
 				}
+				
+				//update population statistics
+				for(int i=0; i<PopulationStatistics.length-1;i++)
+				{
+					PopulationStatistics[i]=PopulationStatistics[i+1];
+				}
+				PopulationStatistics[9] = Main.citizens;
+				Main.gui.populationGraph.setPoints(PopulationStatistics);
+				Main.gui.max.setText(""+(int)Main.gui.populationGraph.getMax());
 			}
 		}
 	};
