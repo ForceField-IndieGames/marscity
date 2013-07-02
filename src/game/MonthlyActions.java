@@ -1,6 +1,5 @@
 package game;
 
-import gui.GuiLabel;
 import gui.GuiProgressbar;
 
 import java.awt.Color;

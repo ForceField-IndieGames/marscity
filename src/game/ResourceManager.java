@@ -115,9 +115,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_MSGBOX = addTexture("msgbox.png");
 	public final static Texture TEXTURE_GUITOOLSBG = addTexture("guitoolsBG.png");
 	public final static Texture TEXTURE_GUITOOLTIP = addTexture("guitooltip.png");
-	public final static Texture TEXTURE_GUISELECT = addTexture("guiselect.png");
 	public final static Texture TEXTURE_GUIMENUBUTTON = addTexture("guimenubutton.png");
-	public final static Texture TEXTURE_GUIADD = addTexture("guiadd.png");
 	public final static Texture TEXTURE_GUIDELETE = addTexture("guidelete.png");
 	public final static Texture TEXTURE_GUITOOLBAR = addTexture("guitoolbar.png");
 	public final static Texture TEXTURE_GUIMENU = addTexture("guimenu.png");
