@@ -2,16 +2,19 @@ package gui;
 
 import java.awt.Color;
 
-import objects.BigHouse;
 import objects.Building;
-import objects.House;
 
 import org.lwjgl.opengl.Display;
+
+import buildings.BigHouse;
+import buildings.House;
 
 import animation.AnimationManager;
 import animation.AnimationValue;
 
 import game.ResourceManager;
+import guielements.GuiLabel;
+import guielements.GuiPanel;
 
 /**
  * This is a panel that contains information for a building.
@@ -24,10 +27,11 @@ public class BuildingInfo extends GuiPanel {
 
 	private GuiLabel title;
 	private GuiLabel description;
+	private GuiLabel monthlycost;
 	private Building building;
 	private String text="";
 	
-	public BuildingInfo()
+ 	public BuildingInfo()
 	{
 		setX(Display.getWidth()/2-286);
 		setY(Display.getHeight()/2-128);
@@ -41,10 +45,15 @@ public class BuildingInfo extends GuiPanel {
 		title.setTextColor(Color.white);
 		title.setText("Title");
 		add(title);
-		description = new GuiLabel(10,10,232,194,(Color)null);
+		description = new GuiLabel(10,10,232,214,(Color)null);
 		description.setCentered(true);
 		description.setText("Description");
 		add(description);
+		monthlycost = new GuiLabel(126,10,100,30,(Color)null);
+		monthlycost.setRightaligned(true);
+		monthlycost.setTextColor(Color.red);
+		monthlycost.setText("-0$");
+		add(monthlycost);
 	}
 	
 	public void show(Building building)
@@ -58,6 +67,7 @@ public class BuildingInfo extends GuiPanel {
 		description.setText(text);
 		description.wrapText();
 		text = description.getText();
+		monthlycost.setText("-"+ResourceManager.getBuildingType(building.getBuildingType()).getMonthlycost()+"$");
 	}
 	
 	public void update()

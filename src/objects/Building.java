@@ -26,14 +26,14 @@ public class Building extends Entity {
 	public Building(int bt)
 	{
 		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture());
-		height = ResourceManager.getBuildingType(bt).getPreferredY();
+		height = ResourceManager.getBuildingType(bt).getHeight();
 		this.buidlingType = bt;
 	}
 
 	public Building(int bt, float x, float y, float z)
 	{
 		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture(),x,y,z);
-		height = ResourceManager.getBuildingType(bt).getPreferredY();
+		height = ResourceManager.getBuildingType(bt).getHeight();
 		this.buidlingType = bt;
 	}
 

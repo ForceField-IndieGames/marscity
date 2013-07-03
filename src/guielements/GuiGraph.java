@@ -1,4 +1,4 @@
-package gui;
+package guielements;
 
 import game.ResourceManager;
 
@@ -11,8 +11,8 @@ import java.awt.Color;
 
 public class GuiGraph extends GuiPanel {
 
-	private float max = 1000;
-	private int[] points = new int[100];
+	private float max        = 1000;
+	private int[] points     = new int[100];
 	private Color graphColor = Color.gray;
 	
 	public GuiGraph(float x, float y, float width, float height, int... points)

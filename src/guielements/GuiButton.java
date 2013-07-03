@@ -1,8 +1,11 @@
-package gui;
+package guielements;
 
 import static org.lwjgl.opengl.GL11.*;
 
 import game.ResourceManager;
+import gui.AbstractGuiElement;
+import gui.GuiElement;
+import gui.GuiEventType;
 
 import java.awt.Color;
 

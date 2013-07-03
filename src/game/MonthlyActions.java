@@ -1,6 +1,6 @@
 package game;
 
-import gui.GuiProgressbar;
+import guielements.GuiProgressbar;
 
 import java.awt.Color;
 import java.util.TimerTask;

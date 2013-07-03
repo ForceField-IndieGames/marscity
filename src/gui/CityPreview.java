@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 import game.Game;
 import game.Main;
 import game.ResourceManager;
+import guielements.GuiLabel;
+import guielements.GuiPanel;
 
 /**
  * The city previews are used in the loading panel. They display

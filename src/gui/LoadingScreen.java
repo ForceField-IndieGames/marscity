@@ -12,6 +12,9 @@ import animation.AnimationValue;
 import game.Game;
 import game.Main;
 import game.ResourceManager;
+import guielements.GuiButton;
+import guielements.GuiLabel;
+import guielements.GuiPanel;
 
 /**
  * The loading screen displays all available saved citys. The list can be scrolled.

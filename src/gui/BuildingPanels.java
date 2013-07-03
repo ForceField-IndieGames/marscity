@@ -3,6 +3,7 @@ package gui;
 import animation.AnimationManager;
 import animation.AnimationValue;
 import game.ResourceManager;
+import guielements.GuiPanel;
 
 /**
  * This panel contains the building panels. When its shown/hidden, it

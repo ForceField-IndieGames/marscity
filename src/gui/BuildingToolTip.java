@@ -4,6 +4,8 @@ import java.awt.Color;
 
 import game.Main;
 import game.ResourceManager;
+import guielements.GuiLabel;
+import guielements.GuiPanel;
 
 /**
  * This is a tooltip that displays information about a building type, like
@@ -17,6 +19,7 @@ public class BuildingToolTip extends GuiPanel {
 	private GuiLabel title;
 	private GuiLabel description;
 	private GuiLabel price;
+	private GuiLabel monthlycost;
 	
 	public BuildingToolTip()
 	{
@@ -24,18 +27,22 @@ public class BuildingToolTip extends GuiPanel {
 		setWidth(256);
 		setHeight(128);
 		setOpacity(0f);
+		setClickThrough(true);
 		title = new GuiLabel(0,85,256,30,(Color)null);
 		title.setFont(ResourceManager.Arial15B);
 		title.setCentered(true);
 		title.setText("Gebäudename");
 		add(title);
-		description = new GuiLabel(20,40,216,50,(Color)null);
+		description = new GuiLabel(20,35,216,60,(Color)null);
 		description.setText("Kurze Beschreibung des\r\nGebäudes. Maximal 3 Zeilen.");
-		description.setCentered(true);
 		add(description);
 		price = new GuiLabel(20,15,100,30,(Color)null);
-		price.setText("1500$");
+		price.setText("0$");
 		add(price);
+		monthlycost = new GuiLabel(136,15,100,30,(Color)null);
+		monthlycost.setRightaligned(true);
+		monthlycost.setText("0$");
+		add(monthlycost);
 	}
 	
 	public void setBuilding(int bt)
@@ -47,6 +54,7 @@ public class BuildingToolTip extends GuiPanel {
 		if(Main.money<ResourceManager.getBuildingType(bt).getBuidlingcost()){
 			price.setTextColor(Color.red);
 		}else price.setTextColor(Color.black);
+		monthlycost.setText(ResourceManager.getBuildingType(bt).getMonthlycost()+"$");
 	}
 	
 }

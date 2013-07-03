@@ -610,6 +610,7 @@ public class Main {
 				gui.deleteBorder.setVisible(false);
 				gui.buildingPanels.hide();
 				gui.infoBuildingCosts.setVisible(false);
+				gui.infoMonthlyCosts.setVisible(false);
 			}
 			//Set the last rotation of the camera, for checkign if the camera was moved
 			if(Mouse.getEventButton()==1&&Mouse.getEventButtonState()){

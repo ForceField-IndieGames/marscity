@@ -2,6 +2,8 @@ package gui;
 
 import game.Main;
 import game.ResourceManager;
+import guielements.GuiLabel;
+import guielements.GuiPanel;
 
 import java.awt.Color;
 
@@ -41,20 +43,23 @@ public class BuildingButton extends GuiPanel {
 			Main.gui.infoBuildingCosts.setVisible(true);
 			Main.gui.infoBuildingCosts.setText(""+ResourceManager.getBuildingType(Main.currentBT).getBuidlingcost());
 			Main.gui.infoBuildingCosts.AutoSize();
+			Main.gui.infoMonthlyCosts.setVisible(true);
+			Main.gui.infoMonthlyCosts.setText(""+ResourceManager.getBuildingType(Main.currentBT).getMonthlycost());
+			Main.gui.infoMonthlyCosts.AutoSize();
 			break;
 	case Mouseover:
 			Main.gui.buildingTooltip.setVisible(true);
-			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.opacity, 1f, 0.005f);
+			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.opacity, 1f, 200);
 			Main.gui.buildingTooltip.setY(e.getScreenY()+e.getHeight()-10);
-			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.Y, Main.gui.buildingTooltip.getY()+10, 0.05f);
+			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.Y, Main.gui.buildingTooltip.getY()+10, 200);
 			if(Main.gui.buildingTooltip.getOpacity()>0)
-			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.X, e.getScreenX()+e.getWidth()/2-Main.gui.buildingTooltip.getWidth()/2, 0.5f);
+			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.X, e.getScreenX()+e.getWidth()/2-Main.gui.buildingTooltip.getWidth()/2, 200);
 			else Main.gui.buildingTooltip.setX(e.getScreenX()+e.getWidth()/2-Main.gui.buildingTooltip.getWidth()/2);
 			Main.gui.buildingTooltip.setBuilding(getBt());
 			break;
 	case Mouseout:
-		AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.opacity, 0f, 0.005f,AnimationManager.ACTION_HIDE);
-		AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.Y, Main.gui.buildingTooltip.getY()-10, 0.05f);
+		AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.opacity, 0f, 200,AnimationManager.ACTION_HIDE);
+		AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.Y, Main.gui.buildingTooltip.getY()-10, 200);
 		break;
 	default:break;}}});
 		add(image);

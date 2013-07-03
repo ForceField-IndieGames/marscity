@@ -1,4 +1,4 @@
-package objects;
+package buildings;
 
 import game.BuildingTask;
 import game.Main;
@@ -10,15 +10,17 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Timer;
 
+import objects.Building;
+
 /**
- * This is a house.
+ * This is a big house.
  * @author Benedikt Ringlein
  */
 
-public class House extends Building {
-	
-	private byte citizens = 0;
-	private static final byte citizensMax = 15;
+public class BigHouse extends Building {
+
+	private int citizens = 0;
+	private static final byte citizensMax = 100;
 	private Timer tCitizens = new Timer();
 
 	public Timer gettCitizens() {
@@ -29,18 +31,18 @@ public class House extends Building {
 		this.tCitizens = tCitizens;
 	}
 
-	public House(int bt, float x, float y, float z) {
+	public BigHouse(int bt, float x, float y, float z) {
 		super(bt,x,y,z);
 		tCitizens.scheduleAtFixedRate(new BuildingTask(this) {
 			@Override
 			public void task() {
-				if(((House) getBuilding()).getCitizens()<House.getCitizensmax()){
+				if(((BigHouse) getBuilding()).getCitizens()<BigHouse.getCitizensmax()){
 					Main.citizens++;
-					((House) getBuilding()).setCitizens((byte) (((House) getBuilding()).getCitizens()+1));
+					((BigHouse) getBuilding()).setCitizens(((BigHouse) getBuilding()).getCitizens()+1);
 				}
 				else cancel();
 			}
-		}, 0, 500);
+		}, 0, 200);
 	}
 	
 	@Override
@@ -61,7 +63,6 @@ public class House extends Building {
 	public void loadFromStream(ObjectInputStream i) throws IOException {
 		citizens = i.readByte();
 	}
-
 	
 	@Override
 	public void delete() {
@@ -70,16 +71,16 @@ public class House extends Building {
 		super.delete();
 	}
 
-	public byte getCitizens() {
+	public int getCitizens() {
 		return citizens;
 	}
 
-	public void setCitizens(byte citizens) {
+	public void setCitizens(int citizens) {
 		this.citizens = citizens;
 	}
 
 	public static byte getCitizensmax() {
 		return citizensMax;
 	}
-
+	
 }

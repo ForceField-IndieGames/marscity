@@ -7,6 +7,14 @@ import game.Main;
 import game.MonthlyActions;
 import game.ResourceManager;
 import game.TransactionCategory;
+import guielements.GuiButton;
+import guielements.GuiGraph;
+import guielements.GuiLabel;
+import guielements.GuiNumberbox;
+import guielements.GuiPanel;
+import guielements.GuiProgressbar;
+import guielements.GuiQuad;
+import guielements.GuiTextbox;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -125,6 +133,7 @@ public class GUI {
 						Main.gui.deleteBorder.setVisible(true);
 						Main.gui.buildingPanels.hide();
 						Main.gui.infoBuildingCosts.setVisible(false);
+						Main.gui.infoMonthlyCosts.setVisible(false);
 						break;
 				case Mouseover:
 						break;
@@ -165,9 +174,22 @@ public class GUI {
 		setFont(ResourceManager.Arial12);
 		setRightaligned(true);
 	}};
+	public GuiLabel infoMonthlyCosts = new GuiLabel(infoMonthly.getScreenX(),23,50,20,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
+		setText("0$");
+		setFont(ResourceManager.Arial12);
+		AutoSize();
+		setVisible(false);
+	}
+		@Override
+		public void setText(String text)
+		{
+			super.setText("-"+text+"$");
+		}
+	};
 	public GuiLabel infoMoney = new GuiLabel(350,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
 		add(infoBuildingCosts);
 		add(infoMonthly);
+		add(infoMonthlyCosts);
 		setText("Money: 0$");
 		setFont(ResourceManager.Arial15B);
 		setEvent(new GuiEvent(){
@@ -211,13 +233,35 @@ public class GUI {
 		addBuildingButton(ResourceManager.BUILDINGTYPE_HOUSE);
 		addBuildingButton(ResourceManager.BUILDINGTYPE_BIGHOUSE);
 	}};
+	public BuildingPanel buildingPanelService = new BuildingPanel(ResourceManager.getString("BUILDINGCATEGORY_SERVICE")){{
+		addBuildingButton(ResourceManager.BUILDINGTYPE_MEDICALCENTER);
+		addBuildingButton(ResourceManager.BUILDINGTYPE_SERVERCENTER);
+		addBuildingButton(ResourceManager.BUILDINGTYPE_GARBAGEYARD);
+		addBuildingButton(ResourceManager.BUILDINGTYPE_POLICE);
+	}};
+	public BuildingPanel buildingPanelEnergy = new BuildingPanel(ResourceManager.getString("BUILDINGCATEGORY_ENERGY")){{
+		addBuildingButton(ResourceManager.BUILDINGTYPE_SOLARPOWER);
+		addBuildingButton(ResourceManager.BUILDINGTYPE_FUSIONPOWER);
+	}};
+	public BuildingPanel buildingPanelMiscellaneous = new BuildingPanel(ResourceManager.getString("BUILDINGCATEGORY_MISCELLANEOUS")){{
+		addBuildingButton(ResourceManager.BUILDINGTYPE_CITYCENTER);
+		addBuildingButton(ResourceManager.BUILDINGTYPE_RESEARCHSTATION);
+		addBuildingButton(ResourceManager.BUILDINGTYPE_HANGAR);
+		addBuildingButton(ResourceManager.BUILDINGTYPE_BANK);
+	}};
 	public BuildingPanels buildingPanels = new BuildingPanels(150,20,Display.getWidth(),100){{
 		add(buildingPanelStreet);
 		add(buildingPanelResidential);
+		add(buildingPanelService);
+		add(buildingPanelEnergy);
+		add(buildingPanelMiscellaneous);
 	}};
 	public BuildingCategories buildingCategories = new BuildingCategories(150,0,Display.getWidth(),50){{
 		addCategoryButton(buildingPanelStreet);
 		addCategoryButton(buildingPanelResidential);
+		addCategoryButton(buildingPanelService);
+		addCategoryButton(buildingPanelEnergy);
+		addCategoryButton(buildingPanelMiscellaneous);
 	}};
 	
 	public GuiPanel toolBar = new GuiPanel(0,0,Display.getWidth(),70, ResourceManager.TEXTURE_GUITOOLBAR){{

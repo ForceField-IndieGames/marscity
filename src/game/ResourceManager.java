@@ -24,13 +24,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import objects.BigHouse;
 import objects.Building;
 import objects.BuildingType;
 import objects.Drawable;
-import objects.House;
 import objects.ObjectLoader;
-import objects.Street;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Display;
@@ -42,6 +39,20 @@ import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.w3c.dom.*;
+
+import buildings.Bank;
+import buildings.BigHouse;
+import buildings.CityCenter;
+import buildings.FusionPower;
+import buildings.GarbageYard;
+import buildings.Hangar;
+import buildings.House;
+import buildings.MedicalCenter;
+import buildings.Police;
+import buildings.ResearchStation;
+import buildings.ServerCenter;
+import buildings.SolarPower;
+import buildings.Street;
 
 import animation.Animatable;
 
@@ -84,6 +95,16 @@ public class ResourceManager {
 	public final static short BUILDINGTYPE_HOUSE = 0;
 	public final static short BUILDINGTYPE_BIGHOUSE = 1;
 	public final static short BUILDINGTYPE_STREET = 2;
+	public final static short BUILDINGTYPE_CITYCENTER = 3;
+	public final static short BUILDINGTYPE_RESEARCHSTATION = 4;
+	public final static short BUILDINGTYPE_HANGAR = 5;
+	public final static short BUILDINGTYPE_BANK = 6;
+	public final static short BUILDINGTYPE_MEDICALCENTER = 7;
+	public final static short BUILDINGTYPE_SERVERCENTER = 8;
+	public final static short BUILDINGTYPE_GARBAGEYARD = 9;
+	public final static short BUILDINGTYPE_POLICE = 10;
+	public final static short BUILDINGTYPE_SOLARPOWER = 11;
+	public final static short BUILDINGTYPE_FUSIONPOWER = 12;
 	
 	//The objects (Actually loads and pares a file and generates a displaylist)
 	public final static int OBJECT_HOUSE = addObject("house.obj");
@@ -92,6 +113,7 @@ public class ResourceManager {
 	public final static int OBJECT_BIGHOUSE = addObject("bighouse.obj");
 	public final static int OBJECT_STREET = addObject("streetsegment.obj");
 	public final static int OBJECT_GRIDCELL = addObject("gridcell.obj");
+	public final static int OBJECT_PLACEHOLDER = addObject("placeholder.obj");
 	
 	//The audio files
 	public final static Audio SOUND_DROP = addSound("WAV", "drop.wav");
@@ -146,6 +168,8 @@ public class ResourceManager {
 	public final static Texture TEXTURE_BUILDINGINFO = addTexture("buildinginfo.png");
 	public final static Texture TEXTURE_MONEYBG = addTexture("moneybg.png");
 	public final static Texture TEXTURE_GRAPHTRANSITION = addTexture("graphtransition.png");
+	public final static Texture TEXTURE_PLACEHOLDER = addTexture("placeholder.png");
+	public final static Texture TEXTURE_GUITHUMBPLACEHOLDER = addTexture("placeholderthumb.png");
 	
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	
@@ -169,10 +193,20 @@ public class ResourceManager {
 			e.printStackTrace();
 		}
 		
-		//Building Types
-		buildingTypes.add(BUILDINGTYPE_HOUSE,new BuildingType("BUILDINGTYPE_HOUSE",OBJECT_HOUSE,TEXTURE_HOUSE, TEXTURE_GUITHUMBHOUSE,250,2,2,1.5f));
-		buildingTypes.add(BUILDINGTYPE_BIGHOUSE,new BuildingType("BUILDINGTYPE_BIGHOUSE",OBJECT_BIGHOUSE,TEXTURE_BIGHOUSE, TEXTURE_GUITHUMBBIGHOUSE,1500,4,4,8f));
-		buildingTypes.add(BUILDINGTYPE_STREET,new BuildingType("BUILDINGTYPE_STREET",OBJECT_STREET,TEXTURE_STREET, TEXTURE_GUITHUMBSTREET,5,1,1,0f));
+		//Building Types:   INDEX                                            NAME                            OBJECT              TEXTURE              THUMBNAIL                    BUILDINGCOST  MONTHLYCOST  WIDTH    DEPTH   HEIGHT                             
+		buildingTypes.add(  BUILDINGTYPE_HOUSE,           new BuildingType(  "BUILDINGTYPE_HOUSE",           OBJECT_HOUSE,       TEXTURE_HOUSE,       TEXTURE_GUITHUMBHOUSE,       250,          0,           2,       2,      1.5f  ));
+		buildingTypes.add(  BUILDINGTYPE_BIGHOUSE,        new BuildingType(  "BUILDINGTYPE_BIGHOUSE",        OBJECT_BIGHOUSE,    TEXTURE_BIGHOUSE,    TEXTURE_GUITHUMBBIGHOUSE,    1500,         0,           4,       4,      8     ));
+		buildingTypes.add(  BUILDINGTYPE_STREET,          new BuildingType(  "BUILDINGTYPE_STREET",          OBJECT_STREET,      TEXTURE_STREET,      TEXTURE_GUITHUMBSTREET,      5,            0,           1,       1,      0     ));
+		buildingTypes.add(  BUILDINGTYPE_CITYCENTER,      new BuildingType(  "BUILDINGTYPE_CITYCENTER",      OBJECT_PLACEHOLDER, TEXTURE_PLACEHOLDER, TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3     ));
+		buildingTypes.add(  BUILDINGTYPE_RESEARCHSTATION, new BuildingType(  "BUILDINGTYPE_RESEARCHSTATION", OBJECT_PLACEHOLDER, TEXTURE_PLACEHOLDER, TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3     ));
+		buildingTypes.add(  BUILDINGTYPE_HANGAR,          new BuildingType(  "BUILDINGTYPE_HANGAR",          OBJECT_PLACEHOLDER, TEXTURE_PLACEHOLDER, TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3     ));
+		buildingTypes.add(  BUILDINGTYPE_BANK,            new BuildingType(  "BUILDINGTYPE_BANK",            OBJECT_PLACEHOLDER, TEXTURE_PLACEHOLDER, TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3     ));
+		buildingTypes.add(  BUILDINGTYPE_MEDICALCENTER,   new BuildingType(  "BUILDINGTYPE_MEDICALCENTER",   OBJECT_PLACEHOLDER, TEXTURE_PLACEHOLDER, TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3     ));
+		buildingTypes.add(  BUILDINGTYPE_SERVERCENTER,    new BuildingType(  "BUILDINGTYPE_SERVERCENTER",    OBJECT_PLACEHOLDER, TEXTURE_PLACEHOLDER, TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3     ));
+		buildingTypes.add(  BUILDINGTYPE_GARBAGEYARD,     new BuildingType(  "BUILDINGTYPE_GARBAGEYARD",     OBJECT_PLACEHOLDER, TEXTURE_PLACEHOLDER, TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3     ));
+		buildingTypes.add(  BUILDINGTYPE_POLICE,          new BuildingType(  "BUILDINGTYPE_POLICE",          OBJECT_PLACEHOLDER, TEXTURE_PLACEHOLDER, TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3     ));
+		buildingTypes.add(  BUILDINGTYPE_SOLARPOWER,      new BuildingType(  "BUILDINGTYPE_SOLARPOWER",      OBJECT_PLACEHOLDER, TEXTURE_PLACEHOLDER, TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3     ));
+		buildingTypes.add(  BUILDINGTYPE_FUSIONPOWER,     new BuildingType(  "BUILDINGTYPE_FUSIONPOWER",     OBJECT_PLACEHOLDER, TEXTURE_PLACEHOLDER, TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3     ));
 
 		//create necessary folders and extract files
 		Main.splashscreen.setInfo("Creating folders...");
@@ -235,19 +269,21 @@ public class ResourceManager {
 		Building building = null;
 		switch(bt)
 		{
-			case BUILDINGTYPE_STREET:
-				building = new Street(bt,x,y,z);
-				break;
-			case BUILDINGTYPE_HOUSE:
-				building = new House(bt,x,y,z);
-				break;
-			case BUILDINGTYPE_BIGHOUSE:
-				building = new BigHouse(bt,x,y,z);
-				break;
-			default: 
-				building = new Building(bt,x,y,z);
-				break;
-		}
+			case BUILDINGTYPE_STREET:           building=new  Street(bt,x,y,z);          break;
+			case BUILDINGTYPE_HOUSE:            building=new  House(bt,x,y,z);           break;
+			case BUILDINGTYPE_BIGHOUSE:         building=new  BigHouse(bt,x,y,z);        break;
+			case BUILDINGTYPE_CITYCENTER:       building=new  CityCenter(bt,x,y,z);      break;
+			case BUILDINGTYPE_RESEARCHSTATION:  building=new  ResearchStation(bt,x,y,z); break;
+			case BUILDINGTYPE_HANGAR:           building=new  Hangar(bt,x,y,z);          break;
+			case BUILDINGTYPE_BANK:             building=new  Bank(bt,x,y,z);            break;
+			case BUILDINGTYPE_MEDICALCENTER:    building=new  MedicalCenter(bt,x,y,z);   break;
+			case BUILDINGTYPE_SERVERCENTER:     building=new  ServerCenter(bt,x,y,z);    break;
+			case BUILDINGTYPE_GARBAGEYARD:      building=new  GarbageYard(bt,x,y,z);     break;
+			case BUILDINGTYPE_POLICE:           building=new  Police(bt,x,y,z);          break;
+			case BUILDINGTYPE_SOLARPOWER:       building=new  SolarPower(bt,x,y,z);      break;
+			case BUILDINGTYPE_FUSIONPOWER:      building=new  FusionPower(bt,x,y,z);     break;
+			default:                            building=new  Building(bt,x,y,z);        break;
+		}                                                     
 		Grid.setBuilding(Math.round(x),Math.round(z), building);
 		ResourceManager.objects.add(building);
 		return building;
@@ -401,7 +437,7 @@ public class ResourceManager {
 		
 		if(output==null){
 			System.err.println("String not found: "+input);
-			return "String not found: "+input;
+			return input;
 		}
 		return output;
 	}

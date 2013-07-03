@@ -1,4 +1,7 @@
-package gui;
+package guielements;
+
+import gui.AbstractGuiElement;
+import gui.GuiElement;
 
 import java.awt.Color;
 import java.util.List;

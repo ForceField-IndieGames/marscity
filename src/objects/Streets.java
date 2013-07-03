@@ -81,6 +81,8 @@ public class Streets {
 			}
 			Main.gui.infoBuildingCosts.setText(""+ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost()*segments);
 			Main.gui.infoBuildingCosts.AutoSize();
+			Main.gui.infoMonthlyCosts.setText(""+ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getMonthlycost()*segments);
+			Main.gui.infoMonthlyCosts.AutoSize();
 		}else{
 			// horizontal
 			vertical = false;
@@ -101,6 +103,8 @@ public class Streets {
 			}
 			Main.gui.infoBuildingCosts.setText(""+ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost()*segments);
 			Main.gui.infoBuildingCosts.AutoSize();
+			Main.gui.infoMonthlyCosts.setText(""+ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getMonthlycost()*segments);
+			Main.gui.infoMonthlyCosts.AutoSize();
 		}
 	}
 	
@@ -159,6 +163,8 @@ public class Streets {
 		ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
 		Main.gui.infoBuildingCosts.setText(""+ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost());
 		Main.gui.infoBuildingCosts.AutoSize();
+		Main.gui.infoMonthlyCosts.setText(""+ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getMonthlycost());
+		Main.gui.infoMonthlyCosts.AutoSize();
 	}
 	
 	/**
