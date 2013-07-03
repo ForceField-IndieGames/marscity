@@ -32,6 +32,7 @@ public class Game {
 	private static boolean pause = false;
 	public static final int INITIALMONEY = 5000;
 	public static final int INITIALTAXES = 20;
+	public static final short FileFormatVersion = 1;
 	
 	public static void Pause()
 	{
@@ -50,6 +51,7 @@ public class Game {
 
 			/////////////////////
 			ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(new File(path)));
+			o.writeShort(FileFormatVersion);
 			o.writeInt(Main.money);
 			o.writeByte(Main.taxes);
 			o.writeInt(Main.citizens);
@@ -87,19 +89,32 @@ public class Game {
 				return;
 			}
 			
+			
 			ObjectInputStream i = new ObjectInputStream(new FileInputStream(new File(path)));
-			Main.money = i.readInt();
-			Main.taxes = i.readByte();
-			Main.gui.taxes.setValue(Main.taxes);
-			Main.citizens = i.readInt();
-			Main.camera.setX(i.readShort());
-			Main.camera.setZ(i.readShort());
-			Main.camera.setRotX(i.readByte());
-			Main.camera.setRotY(i.readShort());
-			int count = i.readInt();
-			for(int j=0;j<count;j++){
-				(ResourceManager.buildBuilding(i.readShort(), 0, i.readShort(), i.readShort())).loadFromStream(i);
+			short FFV = i.readShort();
+			
+			switch(FFV)
+			{
+				case 1:
+					Main.money = i.readInt();
+					Main.taxes = i.readByte();
+					Main.gui.taxes.setValue(Main.taxes);
+					Main.citizens = i.readInt();
+					Main.camera.setX(i.readShort());
+					Main.camera.setZ(i.readShort());
+					Main.camera.setRotX(i.readByte());
+					Main.camera.setRotY(i.readShort());
+					int count = i.readInt();
+					for(int j=0;j<count;j++){
+						(ResourceManager.buildBuilding(i.readShort(), 0, i.readShort(), i.readShort())).loadFromStream(i);
+					}
+					break;
+				default:
+					Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_UNKNOWNFFV"), ResourceManager.getString("MSGBOX_TEXT_UNKNOWNFFV").replaceFirst(ResourceManager.PLACEHOLDER1, ""+FFV).replaceFirst(ResourceManager.PLACEHOLDER2, ""+FileFormatVersion));
+					i.close();
+					return;
 			}
+			
 			i.close();
 			
 		} catch (Exception e) {

@@ -221,22 +221,25 @@ public class Grid {
 	 */
 	public static boolean areaSurroundedWith(int x, int y,int width, int height,int bt)
 	{
-		//bottom
-		for(int i=x;i<x+width;i++){
-			if(getCell(i, y+height).getBuildingType()==bt)return true;
-		}
-		//top
-		for(int i=x;i<x+width;i++){
-			if(getCell(i, y-1).getBuildingType()==bt)return true;
-		}
-		//left
-		for(int i=y;i<y+height;i++){
-			if(getCell(x-1, i).getBuildingType()==bt)return true;
-		}
-		//right
-		for(int i=y;i<y+height;i++){
-			if(getCell(x+width, i).getBuildingType()==bt)return true;
-		}
+		try {
+			//bottom
+			for(int i=x;i<x+width;i++){
+				if(getCell(i, y+height).getBuildingType()==bt)return true;
+			}
+			//top
+			for(int i=x;i<x+width;i++){
+				if(getCell(i, y-1).getBuildingType()==bt)return true;
+			}
+			//left
+			for(int i=y;i<y+height;i++){
+				if(getCell(x-1, i).getBuildingType()==bt)return true;
+			}
+			//right
+			for(int i=y;i<y+height;i++){
+				if(getCell(x+width, i).getBuildingType()==bt)return true;
+			}
+		} catch (Exception e) {}
+			
 		return false;
 	}
 	

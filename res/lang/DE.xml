@@ -97,5 +97,7 @@
 		<MSGBOX_TEXT_LOADINGERROR>Beim Laden der Stadt '%1%' ist ein Fehler aufgetreten.</MSGBOX_TEXT_LOADINGERROR>
 	<MSGBOX_TITLE_CITYLOADED>Stadt geladen</MSGBOX_TITLE_CITYLOADED>
 		<MSGBOX_TEXT_CITYLOADED>Die Stadt '%1%' wurde erfolgreich geladen. Viel Spaß beim Spielen!</MSGBOX_TEXT_CITYLOADED>
+	<MSGBOX_TITLE_UNKNOWNFFV>Fehler beim laden der Stadt</MSGBOX_TITLE_UNKNOWNFFV>
+		<MSGBOX_TEXT_UNKNOWNFFV>Die Formatversion der Datei(%1%) ist nicht kompatibel mit dieser Programmversion(%2%). Der Spielstand wurde von einer früheren oder späteren Programmversion erstellt oder ist beschädigt.</MSGBOX_TEXT_UNKNOWNFFV>
 	<MSGBOX_BUTTON_OK>OK</MSGBOX_BUTTON_OK>
 </de>

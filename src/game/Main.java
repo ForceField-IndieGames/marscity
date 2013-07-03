@@ -647,6 +647,8 @@ public class Main {
 		glClearColor(0.7f, 0.4f, 1f, 1f);
 		glClearDepth(1); 
 		
+		
+		
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 		
@@ -656,9 +658,9 @@ public class Main {
 		glShadeModel(GL_SMOOTH);
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
-		glLight(GL_LIGHT0, GL_POSITION, ResourceManager.toFlippedFloatBuffer(new float[]{-30f,50,100f,0f}));
-		glLight(GL_LIGHT0, GL_DIFFUSE, ResourceManager.toFlippedFloatBuffer(new float[]{1f,1f,0.9f,1f}));
-		glLightModel(GL_LIGHT_MODEL_AMBIENT, ResourceManager.toFlippedFloatBuffer(new float[] {0.9f,0.9f,0.9f,1f}));
+		glLightModel(GL_LIGHT_MODEL_AMBIENT, ResourceManager.toFlippedFloatBuffer(new float[] {0.5f,0.5f,0.5f,1f}));
+		glLight(GL_LIGHT0, GL_DIFFUSE, ResourceManager.toFlippedFloatBuffer(new float[]{2f,2f,2f,1f}));
+		glLight(GL_LIGHT0, GL_AMBIENT, ResourceManager.toFlippedFloatBuffer(new float[]{0.2f,0.2f,0.2f,0.2f}));
 		
 		glEnable(GL_MAP_COLOR);
 		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
@@ -693,10 +695,8 @@ public class Main {
 		
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		gluPerspective(30f, 1337 / 768f, 0.3f, 5000f);
+		gluPerspective(30f, 1337f / 768f, 0.3f, 5000f);
 		glMatrixMode(GL_MODELVIEW);
-		
-		
 //		
 		
 		//Apply the camera transformations
