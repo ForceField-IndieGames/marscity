@@ -1,10 +1,10 @@
 package buildings;
 
 import game.MonthlyActions;
-import game.ResourceManager;
 import game.Supply;
 import game.TransactionCategory;
 import objects.Building;
+import objects.Buildings;
 
 public class FusionPower extends Building {
 
@@ -16,7 +16,7 @@ public class FusionPower extends Building {
 
 	@Override
 	public void MonthlyTransaction() {
-		MonthlyActions.addTransaction(-ResourceManager.getBuildingType(getBuildingType()).getMonthlycost(), TransactionCategory.Energy);
+		MonthlyActions.addTransaction(-Buildings.getBuildingType(getBuildingType()).getMonthlycost(), TransactionCategory.Energy);
 	}
 	
 }

@@ -62,13 +62,13 @@ public class BuildingInfo extends GuiPanel {
 		this.building = building;
 		setVisible(true);
 		AnimationManager.animateValue(this, AnimationValue.opacity, 1, 200);
-		title.setText(ResourceManager.getBuildingTypeName(building.getBuildingType()));
+		title.setText(Buildings.getBuildingTypeName(building.getBuildingType()));
 		text = ResourceManager.getBtDescription(building.getBuildingType())+System.lineSeparator()+System.lineSeparator()+
 				ResourceManager.getBtDescription2(building.getBuildingType());
 		description.setText(text);
 		description.wrapText();
 		text = description.getText();
-		monthlycost.setText("-"+ResourceManager.getBuildingType(building.getBuildingType()).getMonthlycost()+"$");
+		monthlycost.setText("-"+Buildings.getBuildingType(building.getBuildingType()).getMonthlycost()+"$");
 	}
 	
 	public void update()

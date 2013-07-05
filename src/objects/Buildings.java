@@ -23,7 +23,7 @@ import buildings.ServerCenter;
 import buildings.SolarPower;
 import buildings.Street;
 
-public class Buildings {
+public class Buildings{
 
 	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
 	public static List<Building> buildings = new ArrayList<Building>();
@@ -43,11 +43,37 @@ public class Buildings {
 	public final static short BUILDINGTYPE_SOLARPOWER = 11;
 	public final static short BUILDINGTYPE_FUSIONPOWER = 12;
 	
+	public static boolean updateSupply = false;
+	
+	static Thread SupplyThread = new Thread(new Runnable() {
+		@Override
+		public void run() {
+			while(true)
+			{
+				if(updateSupply){
+					updateSupply = false;
+					for(Supply s:Supply.values())
+					{
+						SpreadSupply(s);
+					}
+				}
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	});
+	
 	public static void init()
 	{
+		SupplyThread.start();
+		SupplyThread.setName("Supply Thread");
+		
 		//Building Types:           INDEX                                            NAME                                            OBJECT                              TEXTURE                              THUMBNAIL                    BUILDINGCOST  MONTHLYCOST  WIDTH    DEPTH   HEIGHT  SUPPLY  NEEDED: ENERGY  HEALTH  GARBAGE  INTERNET  SECURITY                            
-				buildingTypes.add(  BUILDINGTYPE_HOUSE,           new BuildingType(  "BUILDINGTYPE_HOUSE",           ResourceManager.OBJECT_HOUSE,       ResourceManager.TEXTURE_HOUSE,       ResourceManager.TEXTURE_GUITHUMBHOUSE,       250,          0,           2,       2,      1.5f,   0,              10,     0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_BIGHOUSE,        new BuildingType(  "BUILDINGTYPE_BIGHOUSE",        ResourceManager.OBJECT_BIGHOUSE,    ResourceManager.TEXTURE_BIGHOUSE,    ResourceManager.TEXTURE_GUITHUMBBIGHOUSE,    1500,         0,           4,       4,      8,      0,              10,     0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_HOUSE,           new BuildingType(  "BUILDINGTYPE_HOUSE",           ResourceManager.OBJECT_HOUSE,       ResourceManager.TEXTURE_HOUSE,       ResourceManager.TEXTURE_GUITHUMBHOUSE,       250,          0,           2,       2,      1.5f,   0,              10,     10,     10,      10,       10       ));
+				buildingTypes.add(  BUILDINGTYPE_BIGHOUSE,        new BuildingType(  "BUILDINGTYPE_BIGHOUSE",        ResourceManager.OBJECT_BIGHOUSE,    ResourceManager.TEXTURE_BIGHOUSE,    ResourceManager.TEXTURE_GUITHUMBBIGHOUSE,    1500,         0,           4,       4,      8,      0,              50,     50,     50,      50,       50       ));
 				buildingTypes.add(  BUILDINGTYPE_STREET,          new BuildingType(  "BUILDINGTYPE_STREET",          ResourceManager.OBJECT_STREET,      ResourceManager.TEXTURE_STREET,      ResourceManager.TEXTURE_GUITHUMBSTREET,      5,            0,           1,       1,      0,      0,              0,      0,      0,       0,        0        ));
 				buildingTypes.add(  BUILDINGTYPE_CITYCENTER,      new BuildingType(  "BUILDINGTYPE_CITYCENTER",      ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      0,              10,     0,      0,       0,        0        ));
 				buildingTypes.add(  BUILDINGTYPE_RESEARCHSTATION, new BuildingType(  "BUILDINGTYPE_RESEARCHSTATION", ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      0,              10,     0,      0,       0,        0        ));
@@ -57,19 +83,16 @@ public class Buildings {
 				buildingTypes.add(  BUILDINGTYPE_SERVERCENTER,    new BuildingType(  "BUILDINGTYPE_SERVERCENTER",    ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      100,            0,      0,      0,       0,        0        ));
 				buildingTypes.add(  BUILDINGTYPE_GARBAGEYARD,     new BuildingType(  "BUILDINGTYPE_GARBAGEYARD",     ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      100,            0,      0,      0,       0,        0        ));
 				buildingTypes.add(  BUILDINGTYPE_POLICE,          new BuildingType(  "BUILDINGTYPE_POLICE",          ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      100,            0,      0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_SOLARPOWER,      new BuildingType(  "BUILDINGTYPE_SOLARPOWER",      ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      100,            0,      0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_FUSIONPOWER,     new BuildingType(  "BUILDINGTYPE_FUSIONPOWER",     ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      100,            0,      0,      0,       0,        0        ));
-	}                                                                                                                                                                                                                                                                                                                                                    
+				buildingTypes.add(  BUILDINGTYPE_SOLARPOWER,      new BuildingType(  "BUILDINGTYPE_SOLARPOWER",      ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      500,            0,      0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_FUSIONPOWER,     new BuildingType(  "BUILDINGTYPE_FUSIONPOWER",     ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      10000,          0,      0,      0,       0,        0        ));
+	}                                                                                                                                                                                                                                                                                                                                                 
 	
 	/**
 	 * Refreshes the distribution of supplies
 	 */
 	public static void refreshSupply()
 	{
-		for(Supply s:Supply.values())
-		{
-			SpreadSupply(s);
-		}
+		updateSupply = true;
 	}
 	
 	/**
@@ -85,8 +108,9 @@ public class Buildings {
 		{
 			b.setOwnedSupplyAmount(0, supply);
 		}
-		for(Building b:buildings)
+		for(int building=0;building<buildings.size();building++)
 		{
+			Building b = buildings.get(building);
 			if(b.getProducedSupply()==supply)
 			{
 				openlist.clear();
@@ -94,8 +118,8 @@ public class Buildings {
 				int supplyAmount = b.getProducedSupplyAmount();
 				int x = (int) b.getX();
 				int y = (int) b.getZ();
-				int width = ResourceManager.getBuildingType(b).getWidth();
-				int depth = ResourceManager.getBuildingType(b).getDepth();
+				int width = Buildings.getBuildingType(b).getWidth();
+				int depth = Buildings.getBuildingType(b).getDepth();
 				
 				//Initialize the openlist:
 				/*bottom*/
@@ -240,4 +264,46 @@ public class Buildings {
 		buildings.add(building);
 		return building;
 	}
+
+	/**
+	 * Deletes an object from the render list
+	 * @param obj The object to delete
+	 */
+	public static void deleteBuiding(Building obj)
+	{
+		buildings.remove(obj);
+	}
+
+	/**
+	 * Gets a BuildingType from its Index
+	 * @param index The index defined in the resourcemanager
+	 * @return The corresponding BuildingType
+	 */
+	public static BuildingType getBuildingType(int index)
+	{
+		if(index==-1)return null;
+		return buildingTypes.get(index);
+	}
+
+	/**
+	 * Gets a BuildingType from its Index
+	 * @param index The index defined in the resourcemanager
+	 * @return The corresponding BuildingType
+	 */
+	public static BuildingType getBuildingType(Building b)
+	{
+		return getBuildingType(b.getBuildingType());
+	}
+
+	/**
+	 * Gets the localized name of the building type
+	 * @param buildingtype
+	 * @return
+	 */
+	public static String getBuildingTypeName(int buildingtype)
+	{
+		return ResourceManager.getString(Buildings.getBuildingType(buildingtype).getName());
+	}
+
+	
 }

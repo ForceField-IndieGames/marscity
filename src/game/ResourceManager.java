@@ -23,7 +23,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import objects.Building;
-import objects.BuildingType;
 import objects.Buildings;
 import objects.Drawable;
 import objects.ObjectLoader;
@@ -247,15 +246,6 @@ public class ResourceManager {
 			System.exit(1);
 		}
 		return null;
-	}
-	
-	/**
-	 * Deletes an object from the render list
-	 * @param obj The object to delete
-	 */
-	public static void deleteBuiding(Building obj)
-	{
-		Buildings.buildings.remove(obj);
 	}
 	
 	/**
@@ -506,37 +496,6 @@ public class ResourceManager {
 	}
 	
 	/**
-	 * Gets a BuildingType from its Index
-	 * @param index The index defined in the resourcemanager
-	 * @return The corresponding BuildingType
-	 */
-	public static BuildingType getBuildingType(int index)
-	{
-		if(index==-1)return null;
-		return Buildings.buildingTypes.get(index);
-	}
-	
-	/**
-	 * Gets a BuildingType from its Index
-	 * @param index The index defined in the resourcemanager
-	 * @return The corresponding BuildingType
-	 */
-	public static BuildingType getBuildingType(Building b)
-	{
-		return getBuildingType(b.getBuildingType());
-	}
-	
-	/**
-	 * Gets the localized name of the building type
-	 * @param buildingtype
-	 * @return
-	 */
-	public static String getBuildingTypeName(int buildingtype)
-	{
-		return ResourceManager.getString(ResourceManager.getBuildingType(buildingtype).getName());
-	}
-	
-	/**
 	 * Loads a file into a StringBuilder
 	 * @param path The Path to the File
 	 * @return a StringBuilder conatining hte Filecontents
@@ -584,12 +543,12 @@ public class ResourceManager {
 	
 	public static String getBtDescription(int bt)
 	{
-		return ResourceManager.getString("DESCRIPTION_"+ResourceManager.getBuildingType(bt).getName());
+		return ResourceManager.getString("DESCRIPTION_"+Buildings.getBuildingType(bt).getName());
 	}
 	
 	public static String getBtDescription2(int bt)
 	{
-		return ResourceManager.getString("DESCRIPTION2_"+ResourceManager.getBuildingType(bt).getName());
+		return ResourceManager.getString("DESCRIPTION2_"+Buildings.getBuildingType(bt).getName());
 	}
 	
 }

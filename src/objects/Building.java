@@ -5,7 +5,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import game.Main;
-import game.ResourceManager;
 import game.Supply;
 import animation.AnimationManager;
 import animation.AnimationValue;
@@ -31,26 +30,26 @@ public class Building extends Entity {
 
 	public Building(int bt)
 	{
-		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture());
-		height = ResourceManager.getBuildingType(bt).getHeight();
+		super(Buildings.getBuildingType(bt).getDisplaylist(), Buildings.getBuildingType(bt).getTexture());
+		height = Buildings.getBuildingType(bt).getHeight();
 		this.buidlingType = bt;
 		for(Supply supply:Supply.values())
 		{
-			setNeededSupplyAmount(ResourceManager.getBuildingType(this).getNeededSupplies(supply), supply);
+			setNeededSupplyAmount(Buildings.getBuildingType(this).getNeededSupplies(supply), supply);
 		}	
-		setProducedSupplyAmount(ResourceManager.getBuildingType(this).getProducedSupplyAmount());
+		setProducedSupplyAmount(Buildings.getBuildingType(this).getProducedSupplyAmount());
 	}
 
 	public Building(int bt, float x, float y, float z)
 	{
-		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture(),x,y,z);
-		height = ResourceManager.getBuildingType(bt).getHeight();
+		super(Buildings.getBuildingType(bt).getDisplaylist(), Buildings.getBuildingType(bt).getTexture(),x,y,z);
+		height = Buildings.getBuildingType(bt).getHeight();
 		this.buidlingType = bt;
 		for(Supply supply:Supply.values())
 		{
-			setNeededSupplyAmount(ResourceManager.getBuildingType(this).getNeededSupplies(supply), supply);
+			setNeededSupplyAmount(Buildings.getBuildingType(this).getNeededSupplies(supply), supply);
 		}
-		setProducedSupplyAmount(ResourceManager.getBuildingType(this).getProducedSupplyAmount());
+		setProducedSupplyAmount(Buildings.getBuildingType(this).getProducedSupplyAmount());
 	}
 
 	public int getBuildingType() {

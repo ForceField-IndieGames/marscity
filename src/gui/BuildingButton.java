@@ -1,11 +1,12 @@
 package gui;
 
 import game.Main;
-import game.ResourceManager;
 import guielements.GuiLabel;
 import guielements.GuiPanel;
 
 import java.awt.Color;
+
+import objects.Buildings;
 
 import animation.AnimationManager;
 import animation.AnimationValue;
@@ -31,7 +32,7 @@ public class BuildingButton extends GuiPanel {
 		setWidth(100);
 		setHeight(100);
 		setColor(null);
-		image = new GuiPanel(10,25,80,80, ResourceManager.getBuildingType(bt).getThumb());
+		image = new GuiPanel(10,25,80,80, Buildings.getBuildingType(bt).getThumb());
 		image.setEvent(new GuiEvent(){
 	@Override public void run(GuiEventType eventtype, GuiElement e) {
 	switch (eventtype) {
@@ -41,10 +42,10 @@ public class BuildingButton extends GuiPanel {
 			Main.currentBT = getBt();
 			Main.buildpreview.setBuilding(getBt());
 			Main.gui.infoBuildingCosts.setVisible(true);
-			Main.gui.infoBuildingCosts.setText(""+ResourceManager.getBuildingType(Main.currentBT).getBuidlingcost());
+			Main.gui.infoBuildingCosts.setText(""+Buildings.getBuildingType(Main.currentBT).getBuidlingcost());
 			Main.gui.infoBuildingCosts.AutoSize();
 			Main.gui.infoMonthlyCosts.setVisible(true);
-			Main.gui.infoMonthlyCosts.setText(""+ResourceManager.getBuildingType(Main.currentBT).getMonthlycost());
+			Main.gui.infoMonthlyCosts.setText(""+Buildings.getBuildingType(Main.currentBT).getMonthlycost());
 			Main.gui.infoMonthlyCosts.AutoSize();
 			break;
 	case Mouseover:
@@ -64,7 +65,7 @@ public class BuildingButton extends GuiPanel {
 	default:break;}}});
 		add(image);
 		name = new GuiLabel(0,0,getWidth(),30,(Color)null);
-		name.setText(ResourceManager.getBuildingTypeName(bt));
+		name.setText(Buildings.getBuildingTypeName(bt));
 		name.setCentered(true);
 		add(name);
 	}

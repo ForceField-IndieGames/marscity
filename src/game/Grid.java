@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import objects.Building;
+import objects.Buildings;
 
 /**
  * This grid contain information about placed buildings. It is used when
@@ -42,8 +43,8 @@ public class Grid {
 	
 	public static void setBuilding(int x, int y, Building building)
 	{
-		int width = ResourceManager.getBuildingType(building.getBuildingType()).getWidth();
-		int height = ResourceManager.getBuildingType(building.getBuildingType()).getDepth();
+		int width = Buildings.getBuildingType(building.getBuildingType()).getWidth();
+		int height = Buildings.getBuildingType(building.getBuildingType()).getDepth();
 		int x1;
 		int y1;
 		int x2;
@@ -255,8 +256,8 @@ public class Grid {
 	 */
 	public static boolean buildingSurroundedWith(int x, int y, int btarea, int btsourround)
 	{
-		int width = ResourceManager.getBuildingType(btarea).getWidth();
-		int height = ResourceManager.getBuildingType(btarea).getDepth();
+		int width = Buildings.getBuildingType(btarea).getWidth();
+		int height = Buildings.getBuildingType(btarea).getDepth();
 		int x1;
 		int y1;
 		if(width==1) x1 = x; else x1 = x - (int) Math.ceil(width/2-1);

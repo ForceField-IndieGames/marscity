@@ -575,14 +575,14 @@ public class Main {
 						//Build a building
 					if (!Grid.isAreaFree((int) Math.round(mousepos3d[0]),
 							(int) Math.round(mousepos3d[2]), 
-							ResourceManager.getBuildingType(currentBT).getWidth(),
-							ResourceManager.getBuildingType(currentBT).getDepth())
-							|| money < ResourceManager.getBuildingType(currentBT).getBuidlingcost()
+							Buildings.getBuildingType(currentBT).getWidth(),
+							Buildings.getBuildingType(currentBT).getDepth())
+							|| money < Buildings.getBuildingType(currentBT).getBuidlingcost()
 							|| !Grid.buildingSurroundedWith((int) Math.round(mousepos3d[0]), (int) Math.round(mousepos3d[2]), currentBT, Buildings.BUILDINGTYPE_STREET))
 						break;
 							ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
 							Building b = Buildings.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBT);
-							money -= ResourceManager.getBuildingType(currentBT).getBuidlingcost();
+							money -= Buildings.getBuildingType(currentBT).getBuidlingcost();
 							ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
 							camera.setY(0);
 							AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
@@ -598,7 +598,7 @@ public class Main {
 						}
 						try {
 							ResourceManager.playSoundRandom(ResourceManager.SOUND_DESTROY);
-							Grid.clearsCells((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuildingType()).getWidth(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuildingType()).getDepth());
+							Grid.clearsCells((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ(), Buildings.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuildingType()).getWidth(), Buildings.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuildingType()).getDepth());
 							ParticleEffects.dustEffect(ResourceManager.getObject(hoveredEntity).getX(),ResourceManager.getObject(hoveredEntity).getY(),ResourceManager.getObject(hoveredEntity).getZ());
 							ResourceManager.getObject(hoveredEntity).delete();
 							Buildings.refreshSupply();
@@ -848,13 +848,13 @@ public class Main {
 		String bt = "-";
 		try {
 			if(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding()!=null){
-			bt = ""+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType()+" ("+ResourceManager.getBuildingTypeName(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType())+")";
+			bt = ""+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType()+" ("+Buildings.getBuildingTypeName(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType())+")";
 		}
 		} catch (Exception e) {
 		}
 		String energy = "-";
 		try {
-			energy = ""+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getOwnedSupplyAmount(Supply.Energy);
+			energy = (int)((Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getOwnedSupplyAmount(Supply.Energy)/(float)Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getNeededSupplyAmount(Supply.Energy))*100)+"% ("+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getOwnedSupplyAmount(Supply.Energy)+")";
 		} catch (Exception e) {}
 		gui.debugInfo.setText("debug mode | Objects: "+Buildings.buildings.size()+
 				", FPS: "+fps+", ParticleEffects: "+ParticleEffects.getEffectCount()+", Mouse:("+Math.round(mousepos3d[0])+","+Math.round(mousepos3d[1])+","+Math.round(mousepos3d[2])+")"+
@@ -865,7 +865,7 @@ public class Main {
 		//Update gui info labels
 		gui.infoMoney.setText(ResourceManager.getString("INFOBAR_LABEL_MONEY")+": "+money+"$");
 		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+citizens);
-		if(selectedTool==TOOL_ADD&&money<ResourceManager.getBuildingType(currentBT).getBuidlingcost()){
+		if(selectedTool==TOOL_ADD&&money<Buildings.getBuildingType(currentBT).getBuidlingcost()){
 			gui.infoMoney.setTextColor(Color.red);
 		}else {
 			gui.infoMoney.setTextColor(Color.black);

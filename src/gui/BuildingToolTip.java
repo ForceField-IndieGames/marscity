@@ -2,6 +2,8 @@ package gui;
 
 import java.awt.Color;
 
+import objects.Buildings;
+
 import game.Main;
 import game.ResourceManager;
 import guielements.GuiLabel;
@@ -47,14 +49,14 @@ public class BuildingToolTip extends GuiPanel {
 	
 	public void setBuilding(int bt)
 	{
-		title.setText(ResourceManager.getBuildingTypeName(bt));
+		title.setText(Buildings.getBuildingTypeName(bt));
 		description.setText(ResourceManager.getBtDescription(bt));
 		description.wrapText();
-		price.setText(ResourceManager.getBuildingType(bt).getBuidlingcost()+"$");
-		if(Main.money<ResourceManager.getBuildingType(bt).getBuidlingcost()){
+		price.setText(Buildings.getBuildingType(bt).getBuidlingcost()+"$");
+		if(Main.money<Buildings.getBuildingType(bt).getBuidlingcost()){
 			price.setTextColor(Color.red);
 		}else price.setTextColor(Color.black);
-		monthlycost.setText(ResourceManager.getBuildingType(bt).getMonthlycost()+"$");
+		monthlycost.setText(Buildings.getBuildingType(bt).getMonthlycost()+"$");
 	}
 	
 }
