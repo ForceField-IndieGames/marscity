@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import objects.Building;
+import objects.Buildings;
 
 /**
  * This grid contain information about placed buildings. It is used when
@@ -24,6 +25,13 @@ public class Grid {
 		cells = initCells();
 	}
 	
+	/**
+	 * Return the cell at the given position, with (0|0) beein the center of the map
+	 * @param x The x posiiton
+	 * @param y The y position
+	 * @return The cell at the given position
+	 * @throws IndexOutOfBoundsException
+	 */
 	public static GridCell getCell(int x, int y) throws IndexOutOfBoundsException
 	{
 		try {
@@ -35,8 +43,8 @@ public class Grid {
 	
 	public static void setBuilding(int x, int y, Building building)
 	{
-		int width = ResourceManager.getBuildingType(building.getBuildingType()).getWidth();
-		int height = ResourceManager.getBuildingType(building.getBuildingType()).getDepth();
+		int width = Buildings.getBuildingType(building.getBuildingType()).getWidth();
+		int height = Buildings.getBuildingType(building.getBuildingType()).getDepth();
 		int x1;
 		int y1;
 		int x2;
@@ -103,17 +111,26 @@ public class Grid {
 		}
 		return cells;
 	}
-	
-//	private static int[] indexToXY(int index)
-//	{
-//		return new int[]{index%cellsX,(index-(index%cellsX)/cellsX)};
-//	}
-	
+
+	/**
+	 * Returns the index of the cell at the given position
+	 * (0|0) it the bottom left corner of the grid
+	 * @param x
+	 * @param y
+	 * @return The cell
+	 */
 	private static int XYtoIndex(int x, int y)
 	{
 		return x+cellsX*y;
 	}
 	
+	/**
+	 * Returns the index of the cell at the given position
+	 * (0|0) it the center of the map
+	 * @param x
+	 * @param y
+	 * @return The cell
+	 */
 	public static int posToIndex(int x, int y)
 	{
 		return (x+cellsX/2)+cellsX*(y+cellsY/2);
@@ -193,5 +210,59 @@ public class Grid {
 		return true;
 	}
 	
+	/**
+	 * Checks if an area is surrounded by a building type (i.e. has at least one cell
+	 * with that building type next to it)
+	 * @param x Position of the area (Left edge)
+	 * @param y Position of the area (down edge)
+	 * @param width Width of the area
+	 * @param height Height of the area
+	 * @param bt Building type that it searched for
+	 * @return True, if the building type was found around the area
+	 */
+	public static boolean areaSurroundedWith(int x, int y,int width, int height,int bt)
+	{
+		try {
+			//bottom
+			for(int i=x;i<x+width;i++){
+				if(getCell(i, y+height).getBuildingType()==bt)return true;
+			}
+			//top
+			for(int i=x;i<x+width;i++){
+				if(getCell(i, y-1).getBuildingType()==bt)return true;
+			}
+			//left
+			for(int i=y;i<y+height;i++){
+				if(getCell(x-1, i).getBuildingType()==bt)return true;
+			}
+			//right
+			for(int i=y;i<y+height;i++){
+				if(getCell(x+width, i).getBuildingType()==bt)return true;
+			}
+		} catch (Exception e) {}
+			
+		return false;
+	}
+	
+	/**
+	 * Checks, if a building is sourrounded by a building type
+	 * (i.e. has at least one cell with that building type next to it)
+	 * >Convenience method for calling areaSurroundedWith() more easily
+	 * @param x The x position of the building's center
+	 * @param y The y posiitno of the building's center
+	 * @param btarea The building type of the building
+	 * @param btsourround The buildingtype that is searched for
+	 * @return True, if the buildings type was found next to the building
+	 */
+	public static boolean buildingSurroundedWith(int x, int y, int btarea, int btsourround)
+	{
+		int width = Buildings.getBuildingType(btarea).getWidth();
+		int height = Buildings.getBuildingType(btarea).getDepth();
+		int x1;
+		int y1;
+		if(width==1) x1 = x; else x1 = x - (int) Math.ceil(width/2-1);
+		if(height==1) y1 = y; else y1 = y -(int) Math.ceil(height/2-1);
+		return areaSurroundedWith(x1, y1, width, height, btsourround);
+	}
 	
 }

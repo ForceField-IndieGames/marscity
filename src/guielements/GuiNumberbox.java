@@ -1,6 +1,9 @@
-package gui;
+package guielements;
 
 import game.ResourceManager;
+import gui.GuiElement;
+import gui.GuiEvent;
+import gui.GuiEventType;
 
 import org.newdawn.slick.UnicodeFont;
 

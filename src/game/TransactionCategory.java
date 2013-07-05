@@ -10,7 +10,7 @@ import java.util.Locale;
 
 public enum TransactionCategory {
 	
-	Taxes,Health,Energy,Garbage;
+	Taxes,Health,Energy,Garbage,Police,Other;
 	
 	
 	public String getName()

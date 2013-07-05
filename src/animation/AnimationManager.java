@@ -286,7 +286,7 @@ public class AnimationManager {
 				animation.object.setX((float) animation.startvalue);
 				break;
 			case Y: 
-				animation.object.setX((float) animation.startvalue);
+				animation.object.setY((float) animation.startvalue);
 				break;
 			case Z: 
 				animation.object.setZ((float) animation.startvalue);

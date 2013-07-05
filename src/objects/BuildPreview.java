@@ -30,12 +30,12 @@ public class BuildPreview extends Entity {
 	}
 	
 	public BuildPreview(int bt) {
-		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture());
+		super(Buildings.getBuildingType(bt).getDisplaylist(), Buildings.getBuildingType(bt).getTexture());
 		buildingType = bt;
 	}
 	
 	public BuildPreview() {
-		super(ResourceManager.getBuildingType(0).getDisplaylist(), ResourceManager.getBuildingType(0).getTexture());
+		super(Buildings.getBuildingType(0).getDisplaylist(), Buildings.getBuildingType(0).getTexture());
 	}
 	
 	public void setBuilding(int bt)
@@ -45,8 +45,8 @@ public class BuildPreview extends Entity {
 			buildingType = -1;
 			return;
 		}
-		setDisplayList(ResourceManager.getBuildingType(bt).getDisplaylist());
-		setTexture(ResourceManager.getBuildingType(bt).getTexture());
+		setDisplayList(Buildings.getBuildingType(bt).getDisplaylist());
+		setTexture(Buildings.getBuildingType(bt).getTexture());
 		show = true;
 		buildingType = bt;
 	}
@@ -60,11 +60,11 @@ public class BuildPreview extends Entity {
 		
 		//Draw street delete preview, if needed
 		try {
-			if(Main.selectedTool==Main.TOOL_DELETE&&Mouse.isButtonDown(0)&&ResourceManager.getObject(Main.hoveredEntity).getBuildingType()==ResourceManager.BUILDINGTYPE_STREET){
+			if(Main.selectedTool==Main.TOOL_DELETE&&Mouse.isButtonDown(0)&&ResourceManager.getObject(Main.hoveredEntity).getBuildingType()==Buildings.BUILDINGTYPE_STREET){
 				Streets.updatePreview(Math.round(Main.mousepos3d[0]), Math.round(Main.mousepos3d[2]));
 				if(Streets.isVertical()){
 					for(int y=Streets.getY1();y<Streets.getY2();y++){
-						if(Grid.getCell(Streets.getX1(), y).getBuildingType()==ResourceManager.BUILDINGTYPE_STREET){
+						if(Grid.getCell(Streets.getX1(), y).getBuildingType()==Buildings.BUILDINGTYPE_STREET){
 							glTranslatef(Streets.getX1(), 0.002f, y);
 							glColor3f(1f, 0f, 0f);
 							glCallList(ResourceManager.OBJECT_GRIDCELL);
@@ -73,7 +73,7 @@ public class BuildPreview extends Entity {
 					}
 				}else{
 					for(int x=Streets.getX1();x<Streets.getX2();x++){
-						if(Grid.getCell(x, Streets.getY1()).getBuildingType()==ResourceManager.BUILDINGTYPE_STREET){
+						if(Grid.getCell(x, Streets.getY1()).getBuildingType()==Buildings.BUILDINGTYPE_STREET){
 							glTranslatef(x, 0.002f, Streets.getY1());
 							glColor3f(1f, 0f, 0f);
 							glCallList(ResourceManager.OBJECT_GRIDCELL);
@@ -90,10 +90,10 @@ public class BuildPreview extends Entity {
 			//Draw grid
 			glDisable(GL_TEXTURE_2D);
 			glDisable(GL_DEPTH_TEST);
-			int x1 = (int) (getX() - (int) Math.ceil(ResourceManager.getBuildingType(getBuildingType()).getWidth()/2-1));
-			int x2 = (int) (getX() + (int) Math.floor(ResourceManager.getBuildingType(getBuildingType()).getWidth()/2));
-			int z1 = (int) (getZ() -(int) Math.ceil(ResourceManager.getBuildingType(getBuildingType()).getDepth()/2-1));
-			int z2 = (int) (getZ() +(int) Math.floor(ResourceManager.getBuildingType(getBuildingType()).getDepth()/2));
+			int x1 = (int) (getX() - (int) Math.ceil(Buildings.getBuildingType(getBuildingType()).getWidth()/2-1));
+			int x2 = (int) (getX() + (int) Math.floor(Buildings.getBuildingType(getBuildingType()).getWidth()/2));
+			int z1 = (int) (getZ() -(int) Math.ceil(Buildings.getBuildingType(getBuildingType()).getDepth()/2-1));
+			int z2 = (int) (getZ() +(int) Math.floor(Buildings.getBuildingType(getBuildingType()).getDepth()/2));
 			int radius = 30;
 			for(int z=z1-radius;z<=z2+radius;z++){
 				for(int x=x1-radius;x<=x2+radius;x++){
@@ -107,7 +107,7 @@ public class BuildPreview extends Entity {
 						if(Grid.getCell(x, z)==null)break;
 						float alpha = (radius-((float) Math.sqrt((getX()-x)*(getX()-x)+(getZ()-z)*(getZ()-z))))/radius;
 						if(Grid.getCell(x, z).getBuilding()!=null){
-							if(Grid.getCell(x, z).getBuilding().getBuildingType()==ResourceManager.BUILDINGTYPE_STREET)glColor4f(0.8f, 0.8f, 0.8f,alpha);
+							if(Grid.getCell(x, z).getBuilding().getBuildingType()==Buildings.BUILDINGTYPE_STREET)glColor4f(0.2f, 0.2f, 0.2f,alpha);
 							else glColor4f(0.5f, 0.5f, 0f,alpha);
 						}else glColor4f(1f, 1f, 1f,alpha-((x%2==0^z%2==0)?0.1f:0f));
 					}
@@ -118,7 +118,7 @@ public class BuildPreview extends Entity {
 			}
 			
 			//Draw street preview, if needed
-			if(Main.selectedTool==Main.TOOL_ADD &&Main.currentBT==ResourceManager.BUILDINGTYPE_STREET&&Mouse.isButtonDown(0)){
+			if(Main.selectedTool==Main.TOOL_ADD &&Main.currentBT==Buildings.BUILDINGTYPE_STREET&&Mouse.isButtonDown(0)){
 				Streets.updatePreview(Math.round(Main.mousepos3d[0]), Math.round(Main.mousepos3d[2]));
 				if(Streets.isVertical()){
 					for(int y=Streets.getY1();y<Streets.getY2();y++){
@@ -149,7 +149,7 @@ public class BuildPreview extends Entity {
 			glEnable(GL_TEXTURE_2D);
 			if(getTexture()!=null)glBindTexture(GL_TEXTURE_2D, getTexture().getTextureID());
 			else glBindTexture(GL_TEXTURE_2D, 0);
-			if(Grid.isAreaFree((int)getX(), (int)getZ(), ResourceManager.getBuildingType(buildingType).getWidth(), ResourceManager.getBuildingType(buildingType).getDepth())){
+			if(Grid.isAreaFree((int)getX(), (int)getZ(), Buildings.getBuildingType(buildingType).getWidth(), Buildings.getBuildingType(buildingType).getDepth())&&(Grid.buildingSurroundedWith((int) Math.round(Main.mousepos3d[0]), (int) Math.round(Main.mousepos3d[2]), Main.currentBT, Buildings.BUILDINGTYPE_STREET))||Main.currentBT==Buildings.BUILDINGTYPE_STREET){
 				glColor4f(1f, 1f, 1f, 1f);
 				glCallList(getDisplayList());
 			}

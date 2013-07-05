@@ -1,4 +1,4 @@
-package gui;
+package guielements;
 
 import java.awt.Color;
 
@@ -6,6 +6,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import game.Main;
 import game.ResourceManager;
+import gui.GuiEventType;
 
 /**
  * A simple textbox. It gets keyboard focus when clicked and looses it,

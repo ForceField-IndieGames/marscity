@@ -1,5 +1,7 @@
 package gui;
 
+import guielements.GuiPanel;
+
 import org.lwjgl.opengl.Display;
 
 /**
