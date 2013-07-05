@@ -25,6 +25,7 @@ import javax.swing.JProgressBar;
 
 import objects.BuildPreview;
 import objects.Building;
+import objects.Buildings;
 import objects.Entity;
 import objects.Streets;
 import objects.Terrain;
@@ -96,8 +97,8 @@ class splashScreen extends JFrame implements Runnable{
 
 	public void setInfo(String text)
 	{
-		label2.setText(Math.round(loadeditems/64f*100)+"% "+text);
-		progress.setValue(Math.round(loadeditems/64f*100));
+		label2.setText(Math.round(loadeditems/66f*100)+"% "+text);
+		progress.setValue(Math.round(loadeditems/66f*100));
 		loadeditems++;
 	}
 	
@@ -306,7 +307,7 @@ public class Main {
 		glScissor(Mouse.getX(), Mouse.getY(), 1, 1);
 		glDisable(GL_LIGHTING);
 		glDisable(GL_TEXTURE_2D);
-		for(int i=0;i<ResourceManager.objects.size();i++){
+		for(int i=0;i<Buildings.buildings.size();i++){
 			glColor3ub((byte) ((i >> 0) & 0xff), (byte) ((i >> 8) & 0xff), (byte) ((i >> 16) & 0xff));
 			ResourceManager.getObject(i).draw();
 		}
@@ -356,12 +357,12 @@ public class Main {
 	{
 		//Movable object
 		try {
-			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) ResourceManager.objects.get(1).setX(ResourceManager.objects.get(1).getX() - 0.05f * delta);
-				if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) ResourceManager.objects.get(1).setX(ResourceManager.objects.get(1).getX() + 0.05f * delta);
-				if (Keyboard.isKeyDown(Keyboard.KEY_UP)) ResourceManager.objects.get(1).setY(ResourceManager.objects.get(1).getY() + 0.05f * delta);
-				if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) ResourceManager.objects.get(1).setY(ResourceManager.objects.get(1).getY() - 0.05f * delta);
-				if (Keyboard.isKeyDown(Keyboard.KEY_ADD)) ResourceManager.objects.get(1).setZ(ResourceManager.objects.get(1).getZ() + 0.05f * delta);
-				if (Keyboard.isKeyDown(Keyboard.KEY_SUBTRACT)) ResourceManager.objects.get(1).setZ(ResourceManager.objects.get(1).getZ() - 0.05f * delta);
+			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) Buildings.buildings.get(1).setX(Buildings.buildings.get(1).getX() - 0.05f * delta);
+				if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) Buildings.buildings.get(1).setX(Buildings.buildings.get(1).getX() + 0.05f * delta);
+				if (Keyboard.isKeyDown(Keyboard.KEY_UP)) Buildings.buildings.get(1).setY(Buildings.buildings.get(1).getY() + 0.05f * delta);
+				if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) Buildings.buildings.get(1).setY(Buildings.buildings.get(1).getY() - 0.05f * delta);
+				if (Keyboard.isKeyDown(Keyboard.KEY_ADD)) Buildings.buildings.get(1).setZ(Buildings.buildings.get(1).getZ() + 0.05f * delta);
+				if (Keyboard.isKeyDown(Keyboard.KEY_SUBTRACT)) Buildings.buildings.get(1).setZ(Buildings.buildings.get(1).getZ() - 0.05f * delta);
 		} catch (Exception e) {
 		}
 				
@@ -541,13 +542,15 @@ public class Main {
 			if(guihit!=null)return;
 				
 			//Build a street to the mouse position
-			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&currentBT==ResourceManager.BUILDINGTYPE_STREET&&selectedTool==TOOL_ADD){
+			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&currentBT==Buildings.BUILDINGTYPE_STREET&&selectedTool==TOOL_ADD){
 				Streets.buildStreet(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
+				Buildings.refreshSupply();
 			}
 			
 			//Delete a street
-			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&selectedTool==TOOL_DELETE&&ResourceManager.getHoveredBuildingtype(hoveredEntity)==ResourceManager.BUILDINGTYPE_STREET){
+			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&selectedTool==TOOL_DELETE&&ResourceManager.getHoveredBuildingtype(hoveredEntity)==Buildings.BUILDINGTYPE_STREET){
 				Streets.deleteStreet(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
+				Buildings.refreshSupply();
 			}
 			
 			//Do some action with the left mouse button based on the selected tool
@@ -565,7 +568,7 @@ public class Main {
 					case(TOOL_ADD): // Create a new building/street at mouse position
 						if(!Mouse.getEventButtonState()||currentBT==-1)break;
 						//Start street building
-						if(currentBT==ResourceManager.BUILDINGTYPE_STREET){
+						if(currentBT==Buildings.BUILDINGTYPE_STREET){
 							Streets.setStartPos(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
 							break;
 						}
@@ -575,20 +578,21 @@ public class Main {
 							ResourceManager.getBuildingType(currentBT).getWidth(),
 							ResourceManager.getBuildingType(currentBT).getDepth())
 							|| money < ResourceManager.getBuildingType(currentBT).getBuidlingcost()
-							|| !Grid.buildingSurroundedWith((int) Math.round(mousepos3d[0]), (int) Math.round(mousepos3d[2]), currentBT, ResourceManager.BUILDINGTYPE_STREET))
+							|| !Grid.buildingSurroundedWith((int) Math.round(mousepos3d[0]), (int) Math.round(mousepos3d[2]), currentBT, Buildings.BUILDINGTYPE_STREET))
 						break;
 							ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
-							Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBT);
+							Building b = Buildings.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBT);
 							money -= ResourceManager.getBuildingType(currentBT).getBuidlingcost();
 							ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
 							camera.setY(0);
 							AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
 							AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
+							Buildings.refreshSupply();
 						break;
 						
 					case(TOOL_DELETE): // Delete the hovered Building
 						if(!Mouse.getEventButtonState()||hoveredEntity==-1)break;
-						if(ResourceManager.getObject(hoveredEntity).getBuildingType()==ResourceManager.BUILDINGTYPE_STREET){
+						if(ResourceManager.getObject(hoveredEntity).getBuildingType()==Buildings.BUILDINGTYPE_STREET){
 							Streets.setStartPos(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
 							break;
 						}
@@ -597,6 +601,7 @@ public class Main {
 							Grid.clearsCells((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuildingType()).getWidth(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuildingType()).getDepth());
 							ParticleEffects.dustEffect(ResourceManager.getObject(hoveredEntity).getX(),ResourceManager.getObject(hoveredEntity).getY(),ResourceManager.getObject(hoveredEntity).getZ());
 							ResourceManager.getObject(hoveredEntity).delete();
+							Buildings.refreshSupply();
 						} catch (Exception e) {e.printStackTrace();}
 						break;
 				}
@@ -733,7 +738,7 @@ public class Main {
        // glUseProgram(ResourceManager.shaderProgram);
        
         //Draw the buidings
-        for(int i=0;i<ResourceManager.objects.size();i++){
+        for(int i=0;i<Buildings.buildings.size();i++){
         	if(i==hoveredEntity&&!Mouse.isGrabbed()&&selectedTool!=TOOL_ADD){
         		if(selectedTool==TOOL_DELETE)glColor3f(1f, 0f, 0f);
         		if(selectedTool==TOOL_SELECT)glColor3f(1f, 1f, 1f);
@@ -741,7 +746,7 @@ public class Main {
         	}else {
         		glColor3f(1f, 1f, 1f);
         	}
-			ResourceManager.objects.get(i).draw();
+			Buildings.buildings.get(i).draw();
 			glEnable(GL_LIGHTING);
 		}
         
@@ -834,9 +839,9 @@ public class Main {
 			buildpreview.setVisible(false);
 		}
 		
-		for(int i=0;i<ResourceManager.objects.size();i++)
+		for(int i=0;i<Buildings.buildings.size();i++)
 		{
-			ResourceManager.objects.get(i).update(delta);
+			Buildings.buildings.get(i).update(delta);
 		}
 		
 		//Show debug info
@@ -847,12 +852,16 @@ public class Main {
 		}
 		} catch (Exception e) {
 		}
-		
-		gui.debugInfo.setText("debug mode | Objects: "+ResourceManager.objects.size()+
+		String energy = "-";
+		try {
+			energy = ""+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getOwnedSupplyAmount(Supply.Energy);
+		} catch (Exception e) {}
+		gui.debugInfo.setText("debug mode | Objects: "+Buildings.buildings.size()+
 				", FPS: "+fps+", ParticleEffects: "+ParticleEffects.getEffectCount()+", Mouse:("+Math.round(mousepos3d[0])+","+Math.round(mousepos3d[1])+","+Math.round(mousepos3d[2])+")"+
 				", GridIndex: "+Grid.posToIndex(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]))+
-				", BuildingType: "+bt);
+				", BuildingType: "+bt+", Energy supply:"+energy);
 	
+			
 		//Update gui info labels
 		gui.infoMoney.setText(ResourceManager.getString("INFOBAR_LABEL_MONEY")+": "+money+"$");
 		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+citizens);

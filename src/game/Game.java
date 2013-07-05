@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import objects.Building;
+import objects.Buildings;
 
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
@@ -59,8 +60,8 @@ public class Game {
 			o.writeShort((short) Main.camera.getZ());
 			o.writeByte((byte) Main.camera.getRotX());
 			o.writeShort((short) Main.camera.getRotY());
-			o.writeInt(ResourceManager.objects.size());
-			for(Building b:ResourceManager.objects){
+			o.writeInt(Buildings.buildings.size());
+			for(Building b:Buildings.buildings){
 				o.writeShort((short) b.getX());
 				o.writeShort((short) b.getZ());
 				o.writeShort(b.getBuildingType());
@@ -106,7 +107,7 @@ public class Game {
 					Main.camera.setRotY(i.readShort());
 					int count = i.readInt();
 					for(int j=0;j<count;j++){
-						(ResourceManager.buildBuilding(i.readShort(), 0, i.readShort(), i.readShort())).loadFromStream(i);
+						(Buildings.buildBuilding(i.readShort(), 0, i.readShort(), i.readShort())).loadFromStream(i);
 					}
 					break;
 				default:
@@ -133,7 +134,7 @@ public class Game {
 		Main.taxes = INITIALTAXES;
 		Main.citizens = 0;
 		Grid.init();
-		ResourceManager.objects = new ArrayList<Building>();
+		Buildings.buildings = new ArrayList<Building>();
 		Main.gameState = Main.STATE_GAME;
 		Main.currentBT = -1;
 		Main.buildpreview.setVisible(false);

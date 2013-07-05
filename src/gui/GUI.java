@@ -20,6 +20,8 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import objects.Buildings;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
@@ -227,27 +229,27 @@ public class GUI {
 	}};
 	
 	public BuildingPanel buildingPanelStreet = new BuildingPanel(ResourceManager.getString("BUILDINGCATEGORY_STREETS")){{
-		addBuildingButton(ResourceManager.BUILDINGTYPE_STREET);
+		addBuildingButton(Buildings.BUILDINGTYPE_STREET);
 	}};
 	public BuildingPanel buildingPanelResidential = new BuildingPanel(ResourceManager.getString("BUILDINGCATEGORY_RESIDENTIAL")){{
-		addBuildingButton(ResourceManager.BUILDINGTYPE_HOUSE);
-		addBuildingButton(ResourceManager.BUILDINGTYPE_BIGHOUSE);
+		addBuildingButton(Buildings.BUILDINGTYPE_HOUSE);
+		addBuildingButton(Buildings.BUILDINGTYPE_BIGHOUSE);
 	}};
 	public BuildingPanel buildingPanelService = new BuildingPanel(ResourceManager.getString("BUILDINGCATEGORY_SERVICE")){{
-		addBuildingButton(ResourceManager.BUILDINGTYPE_MEDICALCENTER);
-		addBuildingButton(ResourceManager.BUILDINGTYPE_SERVERCENTER);
-		addBuildingButton(ResourceManager.BUILDINGTYPE_GARBAGEYARD);
-		addBuildingButton(ResourceManager.BUILDINGTYPE_POLICE);
+		addBuildingButton(Buildings.BUILDINGTYPE_MEDICALCENTER);
+		addBuildingButton(Buildings.BUILDINGTYPE_SERVERCENTER);
+		addBuildingButton(Buildings.BUILDINGTYPE_GARBAGEYARD);
+		addBuildingButton(Buildings.BUILDINGTYPE_POLICE);
 	}};
 	public BuildingPanel buildingPanelEnergy = new BuildingPanel(ResourceManager.getString("BUILDINGCATEGORY_ENERGY")){{
-		addBuildingButton(ResourceManager.BUILDINGTYPE_SOLARPOWER);
-		addBuildingButton(ResourceManager.BUILDINGTYPE_FUSIONPOWER);
+		addBuildingButton(Buildings.BUILDINGTYPE_SOLARPOWER);
+		addBuildingButton(Buildings.BUILDINGTYPE_FUSIONPOWER);
 	}};
 	public BuildingPanel buildingPanelMiscellaneous = new BuildingPanel(ResourceManager.getString("BUILDINGCATEGORY_MISCELLANEOUS")){{
-		addBuildingButton(ResourceManager.BUILDINGTYPE_CITYCENTER);
-		addBuildingButton(ResourceManager.BUILDINGTYPE_RESEARCHSTATION);
-		addBuildingButton(ResourceManager.BUILDINGTYPE_HANGAR);
-		addBuildingButton(ResourceManager.BUILDINGTYPE_BANK);
+		addBuildingButton(Buildings.BUILDINGTYPE_CITYCENTER);
+		addBuildingButton(Buildings.BUILDINGTYPE_RESEARCHSTATION);
+		addBuildingButton(Buildings.BUILDINGTYPE_HANGAR);
+		addBuildingButton(Buildings.BUILDINGTYPE_BANK);
 	}};
 	public BuildingPanels buildingPanels = new BuildingPanels(150,20,Display.getWidth(),100){{
 		add(buildingPanelStreet);

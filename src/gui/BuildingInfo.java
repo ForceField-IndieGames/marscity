@@ -3,6 +3,7 @@ package gui;
 import java.awt.Color;
 
 import objects.Building;
+import objects.Buildings;
 
 import org.lwjgl.opengl.Display;
 
@@ -76,10 +77,10 @@ public class BuildingInfo extends GuiPanel {
 		{
 			description.setText(text);
 			switch(building.getBuildingType()){
-			case ResourceManager.BUILDINGTYPE_HOUSE:
+			case Buildings.BUILDINGTYPE_HOUSE:
 				description.setText(description.getText().replaceFirst(ResourceManager.PLACEHOLDER1, ""+((House)building).getCitizens()).replaceFirst(ResourceManager.PLACEHOLDER2, ""+House.getCitizensmax()));
 				break;
-			case ResourceManager.BUILDINGTYPE_BIGHOUSE:
+			case Buildings.BUILDINGTYPE_BIGHOUSE:
 				description.setText(description.getText().replaceFirst(ResourceManager.PLACEHOLDER1, ""+((BigHouse)building).getCitizens()).replaceFirst(ResourceManager.PLACEHOLDER2, ""+BigHouse.getCitizensmax()));
 				break;
 			default: break;

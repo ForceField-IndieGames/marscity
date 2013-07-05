@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 
 import game.Main;
 import game.ResourceManager;
+import game.Supply;
 import animation.AnimationManager;
 import animation.AnimationValue;
 
@@ -20,6 +21,11 @@ public class Building extends Entity {
 	
 	private float height = 0;
 	private int buidlingType;
+	private int[] supply = new int[Supply.values().length];
+	private Supply producedSupply = null;
+	private int producedSupplyAmount = 0;
+	private int[] neededSupplyAmount = new int[Supply.values().length];
+	private int[] ownedSupplyAmount = new int[Supply.values().length];
 	
 	public Building(){}
 
@@ -28,6 +34,11 @@ public class Building extends Entity {
 		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture());
 		height = ResourceManager.getBuildingType(bt).getHeight();
 		this.buidlingType = bt;
+		for(Supply supply:Supply.values())
+		{
+			setNeededSupplyAmount(ResourceManager.getBuildingType(this).getNeededSupplies(supply), supply);
+		}	
+		setProducedSupplyAmount(ResourceManager.getBuildingType(this).getProducedSupplyAmount());
 	}
 
 	public Building(int bt, float x, float y, float z)
@@ -35,6 +46,11 @@ public class Building extends Entity {
 		super(ResourceManager.getBuildingType(bt).getDisplaylist(), ResourceManager.getBuildingType(bt).getTexture(),x,y,z);
 		height = ResourceManager.getBuildingType(bt).getHeight();
 		this.buidlingType = bt;
+		for(Supply supply:Supply.values())
+		{
+			setNeededSupplyAmount(ResourceManager.getBuildingType(this).getNeededSupplies(supply), supply);
+		}
+		setProducedSupplyAmount(ResourceManager.getBuildingType(this).getProducedSupplyAmount());
 	}
 
 	public int getBuildingType() {
@@ -99,4 +115,47 @@ public class Building extends Entity {
 		AnimationManager.animateValue(this, AnimationValue.rotY, (float) (getRotY()-10+Math.random()*20), 1000);
 		AnimationManager.animateValue(this, AnimationValue.rotZ, (float) (getRotZ()-10+Math.random()*20), 1000);
 	}
+	
+	public void setSupply(int value, Supply supply)
+	{
+		this.supply[supply.ordinal()] = value;
+	}
+	
+	public int getSupply(Supply supply)
+	{
+		return this.supply[supply.ordinal()];
+	}
+
+	public Supply getProducedSupply() {
+		return producedSupply;
+	}
+
+	public void setProducedSupply(Supply producedSupply) {
+		this.producedSupply = producedSupply;
+	}
+
+	public int getProducedSupplyAmount() {
+		return producedSupplyAmount;
+	}
+
+	public void setProducedSupplyAmount(int producedSupplyAmount) {
+		this.producedSupplyAmount = producedSupplyAmount;
+	}
+
+	public int getNeededSupplyAmount(Supply supply) {
+		return neededSupplyAmount[supply.ordinal()];
+	}
+
+	public void setNeededSupplyAmount(int neededSupplyAmount, Supply supply) {
+		this.neededSupplyAmount[supply.ordinal()] = neededSupplyAmount;
+	}
+
+	public int getOwnedSupplyAmount(Supply supply) {
+		return ownedSupplyAmount[supply.ordinal()];
+	}
+
+	public void setOwnedSupplyAmount(int ownedSupplyAmount, Supply supply) {
+		this.ownedSupplyAmount[supply.ordinal()] = ownedSupplyAmount;
+	}
+	
 }

@@ -1,5 +1,7 @@
 package objects;
 
+import game.Supply;
+
 import org.newdawn.slick.opengl.Texture;
 
 /**
@@ -19,6 +21,8 @@ public class BuildingType {
 	private int width, depth;
 	private float height;
 	private Texture thumb;
+	private int producedSupplyAmount;
+	private int[] neededSupplies;
 	
 	
 /**
@@ -39,7 +43,9 @@ public class BuildingType {
 							int monthlycost,
 							int width, 
 							int depth,
-							float height) {
+							float height,
+							int producedSupplyAmount,
+							int... neededSupplies) {
 			this.name = name;
 			this.displaylist = displaylist;
 			this.texture = texture;
@@ -49,7 +55,17 @@ public class BuildingType {
 			this.width = width;
 			this.depth = depth;
 			this.height = height;
+			this.producedSupplyAmount = producedSupplyAmount;
+			this.neededSupplies = neededSupplies;
 		}
+
+public int getProducedSupplyAmount() {
+	return producedSupplyAmount;
+}
+
+public int getNeededSupplies(Supply supply) {
+	return neededSupplies[supply.ordinal()];
+}
 
 public float getHeight() {
 		return height;

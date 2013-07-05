@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.util.TimerTask;
 
 import objects.Building;
+import objects.Buildings;
 
 /**
  * Recurring actions (e.g. taxes) are managed here
@@ -21,7 +22,7 @@ public class MonthlyActions {
 		@Override
 		public void run() {
 			if(!Game.isPaused()&&Main.gameState==Main.STATE_GAME){
-				for(Building b:ResourceManager.objects){
+				for(Building b:Buildings.buildings){
 					b.MonthlyTransaction();
 				}
 				float max=0;

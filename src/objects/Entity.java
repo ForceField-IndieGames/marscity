@@ -1,6 +1,6 @@
 package objects;
-import static org.lwjgl.opengl.GL11.*;
 
+import static org.lwjgl.opengl.GL11.*;
 import game.ResourceManager;
 
 import org.newdawn.slick.opengl.Texture;
