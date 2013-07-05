@@ -1,4 +1,6 @@
-package objects;
+package buildings;
+
+import objects.Building;
 
 /**
  * This is a street segment.

@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import game.Main;
 import game.ResourceManager;
+import guielements.GuiButton;
 
 /**
  * Those buttons represent categorys. When clicked, they show the assigned

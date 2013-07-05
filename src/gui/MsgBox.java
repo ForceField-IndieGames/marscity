@@ -3,6 +3,9 @@ package gui;
 import java.awt.Color;
 
 import game.ResourceManager;
+import guielements.GuiButton;
+import guielements.GuiLabel;
+import guielements.GuiPanel;
 
 import org.lwjgl.opengl.Display;
 

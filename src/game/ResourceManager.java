@@ -15,8 +15,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.xml.parsers.*;
 import javax.xml.transform.Transformer;
@@ -24,13 +22,10 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import objects.BigHouse;
 import objects.Building;
-import objects.BuildingType;
+import objects.Buildings;
 import objects.Drawable;
-import objects.House;
 import objects.ObjectLoader;
-import objects.Street;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Display;
@@ -42,6 +37,7 @@ import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.w3c.dom.*;
+
 
 import animation.Animatable;
 
@@ -80,11 +76,6 @@ public class ResourceManager {
 	public static final String texturespath = "/res/textures/";
 	public static final String shaderpath = "/res/shader/";
 	
-	//The building types (used when placing buildings, also saving and loading)
-	public final static short BUILDINGTYPE_HOUSE = 0;
-	public final static short BUILDINGTYPE_BIGHOUSE = 1;
-	public final static short BUILDINGTYPE_STREET = 2;
-	
 	//The objects (Actually loads and pares a file and generates a displaylist)
 	public final static int OBJECT_HOUSE = addObject("house.obj");
 	public final static int OBJECT_TERRAIN = addObject("terrain.obj");
@@ -92,6 +83,7 @@ public class ResourceManager {
 	public final static int OBJECT_BIGHOUSE = addObject("bighouse.obj");
 	public final static int OBJECT_STREET = addObject("streetsegment.obj");
 	public final static int OBJECT_GRIDCELL = addObject("gridcell.obj");
+	public final static int OBJECT_PLACEHOLDER = addObject("placeholder.obj");
 	
 	//The audio files
 	public final static Audio SOUND_DROP = addSound("WAV", "drop.wav");
@@ -115,9 +107,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_MSGBOX = addTexture("msgbox.png");
 	public final static Texture TEXTURE_GUITOOLSBG = addTexture("guitoolsBG.png");
 	public final static Texture TEXTURE_GUITOOLTIP = addTexture("guitooltip.png");
-	public final static Texture TEXTURE_GUISELECT = addTexture("guiselect.png");
 	public final static Texture TEXTURE_GUIMENUBUTTON = addTexture("guimenubutton.png");
-	public final static Texture TEXTURE_GUIADD = addTexture("guiadd.png");
 	public final static Texture TEXTURE_GUIDELETE = addTexture("guidelete.png");
 	public final static Texture TEXTURE_GUITOOLBAR = addTexture("guitoolbar.png");
 	public final static Texture TEXTURE_GUIMENU = addTexture("guimenu.png");
@@ -147,10 +137,9 @@ public class ResourceManager {
 	public final static Texture TEXTURE_CPSPEC = addTexture("cpspec.png");
 	public final static Texture TEXTURE_BUILDINGINFO = addTexture("buildinginfo.png");
 	public final static Texture TEXTURE_MONEYBG = addTexture("moneybg.png");
-	
-	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
-	
-	public static List<Building> objects = new ArrayList<Building>();
+	public final static Texture TEXTURE_GRAPHTRANSITION = addTexture("graphtransition.png");
+	public final static Texture TEXTURE_PLACEHOLDER = addTexture("placeholder.png");
+	public final static Texture TEXTURE_GUITHUMBPLACEHOLDER = addTexture("placeholderthumb.png");
 	
 	/**
 	 * Initializes the Resources that need to be initialized
@@ -170,11 +159,8 @@ public class ResourceManager {
 			e.printStackTrace();
 		}
 		
-		//Building Types
-		buildingTypes.add(BUILDINGTYPE_HOUSE,new BuildingType("BUILDINGTYPE_HOUSE",OBJECT_HOUSE,TEXTURE_HOUSE, TEXTURE_GUITHUMBHOUSE,250,2,2,1.5f));
-		buildingTypes.add(BUILDINGTYPE_BIGHOUSE,new BuildingType("BUILDINGTYPE_BIGHOUSE",OBJECT_BIGHOUSE,TEXTURE_BIGHOUSE, TEXTURE_GUITHUMBBIGHOUSE,1500,4,4,8f));
-		buildingTypes.add(BUILDINGTYPE_STREET,new BuildingType("BUILDINGTYPE_STREET",OBJECT_STREET,TEXTURE_STREET, TEXTURE_GUITHUMBSTREET,5,1,1,0f));
-
+		Buildings.init();
+		
 		//create necessary folders and extract files
 		Main.splashscreen.setInfo("Creating folders...");
 		if(!(new File("res")).exists()||Main.debugMode){
@@ -212,8 +198,6 @@ public class ResourceManager {
 				e.printStackTrace();
 			}
 		}
-			
-		
 		
 		//make XML files available for the static methods
 		Main.splashscreen.setInfo("Loading xml files...");
@@ -221,39 +205,6 @@ public class ResourceManager {
 		langFile = addXML("res/lang/"+getSetting("lang")+".xml");
 	}
 
-	/**
-	 * Build a building (Adds it to the grid and to the object list)
-	 * @param x X Position
-	 * @param y Y Position
-	 * @param z Z Position
-	 * @param bt Building type
-	 */
-	public static Building buildBuilding(float x, float y, float z, int bt)
-	{
-		x = Grid.cellSize*Math.round(x/Grid.cellSize);
-		y = Grid.cellSize*Math.round(y/Grid.cellSize);
-		z = Grid.cellSize*Math.round(z/Grid.cellSize);
-		Building building = null;
-		switch(bt)
-		{
-			case BUILDINGTYPE_STREET:
-				building = new Street(bt,x,y,z);
-				break;
-			case BUILDINGTYPE_HOUSE:
-				building = new House(bt,x,y,z);
-				break;
-			case BUILDINGTYPE_BIGHOUSE:
-				building = new BigHouse(bt,x,y,z);
-				break;
-			default: 
-				building = new Building(bt,x,y,z);
-				break;
-		}
-		Grid.setBuilding(Math.round(x),Math.round(z), building);
-		ResourceManager.objects.add(building);
-		return building;
-	}
-	
 	/**
 	 * Loads a unicode font
 	 * @param font Font to load
@@ -298,21 +249,21 @@ public class ResourceManager {
 	}
 	
 	/**
-	 * Deletes an object from the render list
-	 * @param obj The object to delete
-	 */
-	public static void deleteObject(Drawable obj)
-	{
-		objects.remove(obj);
-	}
-	
-	/**
 	 * Deletes an animatable from the render list ()for compatibility
 	 * @param obj
 	 */
 	public static void deleteObject(Animatable obj)
 	{
-		objects.remove(obj);
+		Buildings.buildings.remove(obj);
+	}
+	
+	/**
+	 * Deletes an drawable from the render list ()for compatibility
+	 * @param obj
+	 */
+	public static void deleteObject(Drawable obj)
+	{
+		Buildings.buildings.remove(obj);
 	}
 	
 	/**
@@ -321,7 +272,7 @@ public class ResourceManager {
 	 */
 	public static void deleteObject(int obj)
 	{
-		objects.remove(obj);
+		Buildings.buildings.remove(obj);
 	}
 	
 	/**
@@ -402,7 +353,7 @@ public class ResourceManager {
 		
 		if(output==null){
 			System.err.println("String not found: "+input);
-			return "String not found: "+input;
+			return input;
 		}
 		return output;
 	}
@@ -509,7 +460,7 @@ public class ResourceManager {
 	public static Building getObject(int index)
 	{
 		if(index==-1)return new Building(-1);
-		return objects.get(index);
+		return Buildings.buildings.get(index);
 	}
 	
 	/**
@@ -542,27 +493,6 @@ public class ResourceManager {
 		glAttachShader(shaderProgram, fragmentShader);
 		glLinkProgram(shaderProgram);
 		glValidateProgram(shaderProgram);
-	}
-	
-	/**
-	 * Gets a BuildingType from its Index
-	 * @param index The index defined in the resourcemanager
-	 * @return The corresponding BuildingType
-	 */
-	public static BuildingType getBuildingType(int index)
-	{
-		if(index==-1)return null;
-		return buildingTypes.get(index);
-	}
-	
-	/**
-	 * Gets the localized name of the building type
-	 * @param buildingtype
-	 * @return
-	 */
-	public static String getBuildingTypeName(int buildingtype)
-	{
-		return ResourceManager.getString(ResourceManager.getBuildingType(buildingtype).getName());
 	}
 	
 	/**
@@ -613,12 +543,12 @@ public class ResourceManager {
 	
 	public static String getBtDescription(int bt)
 	{
-		return ResourceManager.getString("DESCRIPTION_"+ResourceManager.getBuildingType(bt).getName());
+		return ResourceManager.getString("DESCRIPTION_"+Buildings.getBuildingType(bt).getName());
 	}
 	
 	public static String getBtDescription2(int bt)
 	{
-		return ResourceManager.getString("DESCRIPTION2_"+ResourceManager.getBuildingType(bt).getName());
+		return ResourceManager.getString("DESCRIPTION2_"+Buildings.getBuildingType(bt).getName());
 	}
 	
 }

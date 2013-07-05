@@ -79,8 +79,10 @@ public class Streets {
 			for(int y=y1;y<y2;y++){
 				if(Grid.isAreaFree(x1,y,1,1))segments++;
 			}
-			Main.gui.infoBuildingCosts.setText(""+ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost()*segments);
+			Main.gui.infoBuildingCosts.setText(""+Buildings.getBuildingType(Buildings.BUILDINGTYPE_STREET).getBuidlingcost()*segments);
 			Main.gui.infoBuildingCosts.AutoSize();
+			Main.gui.infoMonthlyCosts.setText(""+Buildings.getBuildingType(Buildings.BUILDINGTYPE_STREET).getMonthlycost()*segments);
+			Main.gui.infoMonthlyCosts.AutoSize();
 		}else{
 			// horizontal
 			vertical = false;
@@ -99,8 +101,10 @@ public class Streets {
 			for(int x=x1;x<x2;x++){
 				if(Grid.isAreaFree(x,y1,1,1))segments++;
 			}
-			Main.gui.infoBuildingCosts.setText(""+ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost()*segments);
+			Main.gui.infoBuildingCosts.setText(""+Buildings.getBuildingType(Buildings.BUILDINGTYPE_STREET).getBuidlingcost()*segments);
 			Main.gui.infoBuildingCosts.AutoSize();
+			Main.gui.infoMonthlyCosts.setText(""+Buildings.getBuildingType(Buildings.BUILDINGTYPE_STREET).getMonthlycost()*segments);
+			Main.gui.infoMonthlyCosts.AutoSize();
 		}
 	}
 	
@@ -115,7 +119,7 @@ public class Streets {
 			// vertical
 			endposx = startposx;
 			endposy = posy;
-			if(!Grid.isStripFree(startposx, startposy, endposy-startposy, true, ResourceManager.BUILDINGTYPE_STREET))return;
+			if(!Grid.isStripFree(startposx, startposy, endposy-startposy, true, Buildings.BUILDINGTYPE_STREET))return;
 			int cost=0;
 			if(startposy>endposy){
 				int tmp = startposy;
@@ -124,20 +128,20 @@ public class Streets {
 			}
 			for(int i=startposy;i<=endposy;i++){
 				if(Grid.isAreaFree(startposx, i, 1, 1)){
-					cost+=ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost();
+					cost+=Buildings.getBuildingType(Buildings.BUILDINGTYPE_STREET).getBuidlingcost();
 				}
 			}
 			if(Main.money<cost)return; else Main.money-=cost;
 			for(int i=startposy;i<=endposy;i++){
 				if(Grid.isAreaFree(startposx, i, 1, 1)){
-					ResourceManager.buildBuilding(startposx, 0, i, ResourceManager.BUILDINGTYPE_STREET);
+					Buildings.buildBuilding(startposx, 0, i, Buildings.BUILDINGTYPE_STREET);
 				}
 			}
 		}else{
 			// horizontal
 			endposx = posx;
 			endposy = startposy;
-			if(!Grid.isStripFree(startposx, startposy, endposx-startposx, false, ResourceManager.BUILDINGTYPE_STREET))return;
+			if(!Grid.isStripFree(startposx, startposy, endposx-startposx, false, Buildings.BUILDINGTYPE_STREET))return;
 			int cost=0;
 			if(startposx>endposx){
 				int tmp = startposx;
@@ -146,19 +150,21 @@ public class Streets {
 			}
 			for(int i=startposx;i<=endposx;i++){
 				if(Grid.isAreaFree(i, startposy, 1, 1)){
-					cost+=ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost();
+					cost+=Buildings.getBuildingType(Buildings.BUILDINGTYPE_STREET).getBuidlingcost();
 				}
 			}
 			if(Main.money<cost)return; else Main.money-=cost;
 			for(int i=startposx;i<=endposx;i++){
 				if(Grid.isAreaFree(i, startposy, 1, 1)){
-					ResourceManager.buildBuilding(i, 0, startposy, ResourceManager.BUILDINGTYPE_STREET);
+					Buildings.buildBuilding(i, 0, startposy, Buildings.BUILDINGTYPE_STREET);
 				}
 			}
 		}
 		ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
-		Main.gui.infoBuildingCosts.setText(""+ResourceManager.getBuildingType(ResourceManager.BUILDINGTYPE_STREET).getBuidlingcost());
+		Main.gui.infoBuildingCosts.setText(""+Buildings.getBuildingType(Buildings.BUILDINGTYPE_STREET).getBuidlingcost());
 		Main.gui.infoBuildingCosts.AutoSize();
+		Main.gui.infoMonthlyCosts.setText(""+Buildings.getBuildingType(Buildings.BUILDINGTYPE_STREET).getMonthlycost());
+		Main.gui.infoMonthlyCosts.AutoSize();
 	}
 	
 	/**
@@ -179,8 +185,8 @@ public class Streets {
 			}
 			for(int i=startposy;i<=endposy;i++){
 				try {
-					if((Grid.getCell(startposx, i).getBuilding().getBuildingType()==ResourceManager.BUILDINGTYPE_STREET)){
-						ResourceManager.deleteObject((Drawable)Grid.getCell(startposx, i).getBuilding());
+					if((Grid.getCell(startposx, i).getBuilding().getBuildingType()==Buildings.BUILDINGTYPE_STREET)){
+						Buildings.deleteBuiding(Grid.getCell(startposx, i).getBuilding());
 						Grid.getCell(startposx, i).setBuilding(null);
 					}
 				} catch (Exception e) {}
@@ -196,8 +202,8 @@ public class Streets {
 			}
 			for(int i=startposx;i<=endposx;i++){
 				try {
-					if((Grid.getCell(i, startposy).getBuilding().getBuildingType()==ResourceManager.BUILDINGTYPE_STREET)){
-						ResourceManager.deleteObject((Drawable)Grid.getCell(i, startposy).getBuilding());
+					if((Grid.getCell(i, startposy).getBuilding().getBuildingType()==Buildings.BUILDINGTYPE_STREET)){
+						Buildings.deleteBuiding(Grid.getCell(i, startposy).getBuilding());
 						Grid.getCell(i, startposy).setBuilding(null);
 					}
 				} catch (Exception e) {}

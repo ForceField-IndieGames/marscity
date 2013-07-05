@@ -15,11 +15,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Timer;
-
 import javax.imageio.ImageIO;
 
 import objects.Building;
+import objects.Buildings;
 
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
@@ -34,6 +33,7 @@ public class Game {
 	private static boolean pause = false;
 	public static final int INITIALMONEY = 5000;
 	public static final int INITIALTAXES = 20;
+	public static final short FileFormatVersion = 1;
 	
 	public static void Pause()
 	{
@@ -52,6 +52,7 @@ public class Game {
 
 			/////////////////////
 			ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(new File(path)));
+			o.writeShort(FileFormatVersion);
 			o.writeInt(Main.money);
 			o.writeByte(Main.taxes);
 			o.writeInt(Main.citizens);
@@ -59,8 +60,8 @@ public class Game {
 			o.writeShort((short) Main.camera.getZ());
 			o.writeByte((byte) Main.camera.getRotX());
 			o.writeShort((short) Main.camera.getRotY());
-			o.writeInt(ResourceManager.objects.size());
-			for(Building b:ResourceManager.objects){
+			o.writeInt(Buildings.buildings.size());
+			for(Building b:Buildings.buildings){
 				o.writeShort((short) b.getX());
 				o.writeShort((short) b.getZ());
 				o.writeShort(b.getBuildingType());
@@ -83,26 +84,38 @@ public class Game {
 	public static void Load(String path)
 	{
 		newGame();
-		System.out.println("Lädt");
 		try {
 			if(!(new File(path)).exists()){
 				Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_LOADINGFILENOTFOUND"), ResourceManager.getString("MSGBOX_TEXT_LOADINGFILENOTFOUND").replaceAll(ResourceManager.PLACEHOLDER1, ResourceManager.pathToCityname(path)),new Color(200,0,0));
 				return;
 			}
 			
+			
 			ObjectInputStream i = new ObjectInputStream(new FileInputStream(new File(path)));
-			Main.money = i.readInt();
-			Main.taxes = i.readByte();
-			Main.gui.taxes.setValue(Main.taxes);
-			Main.citizens = i.readInt();
-			Main.camera.setX(i.readShort());
-			Main.camera.setZ(i.readShort());
-			Main.camera.setRotX(i.readByte());
-			Main.camera.setRotY(i.readShort());
-			int count = i.readInt();
-			for(int j=0;j<count;j++){
-				(ResourceManager.buildBuilding(i.readShort(), 0, i.readShort(), i.readShort())).loadFromStream(i);
+			short FFV = i.readShort();
+			
+			switch(FFV)
+			{
+				case 1:
+					Main.money = i.readInt();
+					Main.taxes = i.readByte();
+					Main.gui.taxes.setValue(Main.taxes);
+					Main.citizens = i.readInt();
+					Main.camera.setX(i.readShort());
+					Main.camera.setZ(i.readShort());
+					Main.camera.setRotX(i.readByte());
+					Main.camera.setRotY(i.readShort());
+					int count = i.readInt();
+					for(int j=0;j<count;j++){
+						(Buildings.buildBuilding(i.readShort(), 0, i.readShort(), i.readShort())).loadFromStream(i);
+					}
+					break;
+				default:
+					Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_UNKNOWNFFV"), ResourceManager.getString("MSGBOX_TEXT_UNKNOWNFFV").replaceFirst(ResourceManager.PLACEHOLDER1, ""+FFV).replaceFirst(ResourceManager.PLACEHOLDER2, ""+FileFormatVersion));
+					i.close();
+					return;
 			}
+			
 			i.close();
 			
 		} catch (Exception e) {
@@ -121,7 +134,7 @@ public class Game {
 		Main.taxes = INITIALTAXES;
 		Main.citizens = 0;
 		Grid.init();
-		ResourceManager.objects = new ArrayList<Building>();
+		Buildings.buildings = new ArrayList<Building>();
 		Main.gameState = Main.STATE_GAME;
 		Main.currentBT = -1;
 		Main.buildpreview.setVisible(false);
@@ -130,7 +143,7 @@ public class Game {
 		Main.gui = new GUI();
 		Game.Resume();
 		try {
-			Main.MonthlyTimer.scheduleAtFixedRate(MonthlyTransactions.ExecuteTransactions, Main.MONTH_MILLIS, Main.MONTH_MILLIS);
+			Main.MonthlyTimer.scheduleAtFixedRate(MonthlyActions.ExecuteTransactions, Main.MONTH_MILLIS, Main.MONTH_MILLIS);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

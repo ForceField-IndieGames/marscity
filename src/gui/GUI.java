@@ -4,12 +4,23 @@ import static org.lwjgl.opengl.GL11.*;
 import effects.ParticleEffects;
 import game.Game;
 import game.Main;
+import game.MonthlyActions;
 import game.ResourceManager;
 import game.TransactionCategory;
+import guielements.GuiButton;
+import guielements.GuiGraph;
+import guielements.GuiLabel;
+import guielements.GuiNumberbox;
+import guielements.GuiPanel;
+import guielements.GuiProgressbar;
+import guielements.GuiQuad;
+import guielements.GuiTextbox;
 
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
+
+import objects.Buildings;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -124,6 +135,7 @@ public class GUI {
 						Main.gui.deleteBorder.setVisible(true);
 						Main.gui.buildingPanels.hide();
 						Main.gui.infoBuildingCosts.setVisible(false);
+						Main.gui.infoMonthlyCosts.setVisible(false);
 						break;
 				case Mouseover:
 						break;
@@ -164,9 +176,22 @@ public class GUI {
 		setFont(ResourceManager.Arial12);
 		setRightaligned(true);
 	}};
+	public GuiLabel infoMonthlyCosts = new GuiLabel(infoMonthly.getScreenX(),23,50,20,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
+		setText("0$");
+		setFont(ResourceManager.Arial12);
+		AutoSize();
+		setVisible(false);
+	}
+		@Override
+		public void setText(String text)
+		{
+			super.setText("-"+text+"$");
+		}
+	};
 	public GuiLabel infoMoney = new GuiLabel(350,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
 		add(infoBuildingCosts);
 		add(infoMonthly);
+		add(infoMonthlyCosts);
 		setText("Money: 0$");
 		setFont(ResourceManager.Arial15B);
 		setEvent(new GuiEvent(){
@@ -185,6 +210,17 @@ public class GUI {
 	public GuiLabel infoCitizens = new GuiLabel(600,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
 		setText("Citizens: 0");
 		setFont(ResourceManager.Arial15B);
+		setEvent(new GuiEvent(){
+			public void run(GuiEventType eventtype) {
+				switch (eventtype) {
+				case Click:
+					citizenspanel.show();
+					break;
+				default:
+					break;
+				}
+			};
+		});
 	}};
 	public GuiPanel infoBar = new GuiPanel(0,30,Display.getWidth(),40,ResourceManager.TEXTURE_GUITOOLBAR){{
 		add(cityName);
@@ -193,19 +229,41 @@ public class GUI {
 	}};
 	
 	public BuildingPanel buildingPanelStreet = new BuildingPanel(ResourceManager.getString("BUILDINGCATEGORY_STREETS")){{
-		addBuildingButton(ResourceManager.BUILDINGTYPE_STREET);
+		addBuildingButton(Buildings.BUILDINGTYPE_STREET);
 	}};
 	public BuildingPanel buildingPanelResidential = new BuildingPanel(ResourceManager.getString("BUILDINGCATEGORY_RESIDENTIAL")){{
-		addBuildingButton(ResourceManager.BUILDINGTYPE_HOUSE);
-		addBuildingButton(ResourceManager.BUILDINGTYPE_BIGHOUSE);
+		addBuildingButton(Buildings.BUILDINGTYPE_HOUSE);
+		addBuildingButton(Buildings.BUILDINGTYPE_BIGHOUSE);
+	}};
+	public BuildingPanel buildingPanelService = new BuildingPanel(ResourceManager.getString("BUILDINGCATEGORY_SERVICE")){{
+		addBuildingButton(Buildings.BUILDINGTYPE_MEDICALCENTER);
+		addBuildingButton(Buildings.BUILDINGTYPE_SERVERCENTER);
+		addBuildingButton(Buildings.BUILDINGTYPE_GARBAGEYARD);
+		addBuildingButton(Buildings.BUILDINGTYPE_POLICE);
+	}};
+	public BuildingPanel buildingPanelEnergy = new BuildingPanel(ResourceManager.getString("BUILDINGCATEGORY_ENERGY")){{
+		addBuildingButton(Buildings.BUILDINGTYPE_SOLARPOWER);
+		addBuildingButton(Buildings.BUILDINGTYPE_FUSIONPOWER);
+	}};
+	public BuildingPanel buildingPanelMiscellaneous = new BuildingPanel(ResourceManager.getString("BUILDINGCATEGORY_MISCELLANEOUS")){{
+		addBuildingButton(Buildings.BUILDINGTYPE_CITYCENTER);
+		addBuildingButton(Buildings.BUILDINGTYPE_RESEARCHSTATION);
+		addBuildingButton(Buildings.BUILDINGTYPE_HANGAR);
+		addBuildingButton(Buildings.BUILDINGTYPE_BANK);
 	}};
 	public BuildingPanels buildingPanels = new BuildingPanels(150,20,Display.getWidth(),100){{
 		add(buildingPanelStreet);
 		add(buildingPanelResidential);
+		add(buildingPanelService);
+		add(buildingPanelEnergy);
+		add(buildingPanelMiscellaneous);
 	}};
 	public BuildingCategories buildingCategories = new BuildingCategories(150,0,Display.getWidth(),50){{
 		addCategoryButton(buildingPanelStreet);
 		addCategoryButton(buildingPanelResidential);
+		addCategoryButton(buildingPanelService);
+		addCategoryButton(buildingPanelEnergy);
+		addCategoryButton(buildingPanelMiscellaneous);
 	}};
 	
 	public GuiPanel toolBar = new GuiPanel(0,0,Display.getWidth(),70, ResourceManager.TEXTURE_GUITOOLBAR){{
@@ -508,7 +566,8 @@ public class GUI {
 	
 	public GuiPanel moneycategories = new GuiPanel(30,30,452,412,(Color)null);
 	public GuiNumberbox taxes = new GuiNumberbox(372, 450, 110, 32);
-	public GuiPanel moneypanel = new GuiPanel(infoMoney.getScreenX()+infoMoney.getWidth()/2-256,infoMoney.getScreenY()+infoMoney.getHeight(),512,512,ResourceManager.TEXTURE_MONEYBG){{
+	public GuiPanel moneypanel = new GuiPanel(infoMoney.getScreenX()+infoMoney.getWidth()/2-256,infoMoney.getScreenY()+infoMoney.getHeight(),512,512,ResourceManager.TEXTURE_MONEYBG){
+		{
 		setVisible(false);
 		setOpacity(0f);
 		GuiLabel taxeslabel = new GuiLabel(30,452,482,30,(Color)null);
@@ -541,11 +600,50 @@ public class GUI {
 	}
 		@Override public void show() {
 			setVisible(true);
-			AnimationManager.animateValue(this, AnimationValue.opacity, 1f, 200);
+			AnimationManager.animateValue(this, AnimationValue.opacity, 1f, 100);
+			AnimationManager.animateValue(this, AnimationValue.Y, getY()+10, 100, AnimationManager.ACTION_REVERSE);
 		};
 		
 		@Override public void hide() {
 			AnimationManager.animateValue(this, AnimationValue.opacity, 0f, 200,AnimationManager.ACTION_HIDE);
+			AnimationManager.animateValue(this, AnimationValue.Y, getY()-10, 200, AnimationManager.ACTION_RESET);
+		};
+	};
+	public GuiGraph populationGraph = new GuiGraph(30, 45, 452, 420, 0);
+	public GuiLabel max = new GuiLabel(280,444,200,30,(Color)null);
+	public GuiPanel citizenspanel = new GuiPanel(infoCitizens.getScreenX()+infoCitizens.getWidth()/2-256,infoCitizens.getScreenY()+infoCitizens.getHeight(),512,512,ResourceManager.TEXTURE_MONEYBG){
+		{
+			setVisible(false);
+			setOpacity(0);
+			populationGraph.setGraphColor(new Color(255,255,200));
+			add(populationGraph);
+			GuiLabel today = new GuiLabel(282,20,200,30,(Color)null);
+			today.setRightaligned(true);
+			today.setText(ResourceManager.getString("CITIZENSPANEL_LABEL_TODAY"));
+			add(today);
+			GuiLabel past = new GuiLabel(30,20,200,30,(Color)null);
+			past.setText(ResourceManager.getString("CITIZENSPANEL_LABEL_PAST").replaceFirst(ResourceManager.PLACEHOLDER1, ""+MonthlyActions.PopulationStatistics.length));
+			add(past);
+			GuiLabel min = new GuiLabel(470,40,10,30,(Color)null);
+			min.setRightaligned(true);
+			min.setText(""+0);
+			add(min);
+			max.setRightaligned(true);
+			max.setText(""+1000);
+			add(max);
+			GuiQuad line = new GuiQuad(482, 484, 484, 482, 45, 45, 464, 464);
+			line.setColor(Color.black);
+			add(line);
+		}
+		@Override public void show() {
+			setVisible(true);
+			AnimationManager.animateValue(this, AnimationValue.opacity, 1f, 200);
+			AnimationManager.animateValue(this, AnimationValue.Y, getY()+10, 100, AnimationManager.ACTION_REVERSE);
+		};
+		
+		@Override public void hide() {
+			AnimationManager.animateValue(this, AnimationValue.opacity, 0f, 200,AnimationManager.ACTION_HIDE);
+			AnimationManager.animateValue(this, AnimationValue.Y, getY()-10, 200, AnimationManager.ACTION_RESET);
 		};
 	};
 	
@@ -574,6 +672,7 @@ public class GUI {
 		add(guiTools);
 		add(buildinginfo);
 		add(moneypanel);
+		add(citizenspanel);
 		add(buildingTooltip);
 		add(blur);
 		add(pauseMenu);

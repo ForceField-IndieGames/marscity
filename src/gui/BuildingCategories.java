@@ -1,5 +1,7 @@
 package gui;
 
+import guielements.GuiPanel;
+
 /**
  * This is a panel that contains the category buttons.
  * It can automatically add category buttons when given a BuildingPanel
