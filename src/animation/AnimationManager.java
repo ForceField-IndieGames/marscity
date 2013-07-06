@@ -7,6 +7,8 @@ import gui.GuiElement;
 import java.util.ArrayList;
 import java.util.List;
 
+import objects.Buildings;
+
 /**
  * @author Benedikt Ringlein
  * This is the animation manager that provides methods for animating values
@@ -271,6 +273,7 @@ public class AnimationManager {
 		if(animation.finishedAction==ACTION_DELETE)
 		{
 			ResourceManager.deleteObject(animation.object);
+			Buildings.refreshSupply();
 		}else if(animation.finishedAction==ACTION_REMOVEGUI)
 		{
 			Main.gui.remove((GuiElement)animation.object);

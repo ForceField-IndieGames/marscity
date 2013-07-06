@@ -2,6 +2,7 @@ package gui;
 import static org.lwjgl.opengl.GL11.*;
 
 import effects.ParticleEffects;
+import game.DataView;
 import game.Game;
 import game.Main;
 import game.MonthlyActions;
@@ -270,6 +271,18 @@ public class GUI {
 		add(buildingCategories);
 		add(infoBar);
 	}};
+	
+	public GuiPanel DataViewButtons = new GuiPanel(Display.getWidth()-32,0,32,0,(Color)null)
+	{
+		{
+			setHeight(32*DataView.values().length);
+			setY(Display.getHeight()/2-getHeight()/2);
+			for(DataView d:DataView.values())
+			{
+				add(new DataViewButton(0,32*d.ordinal(),32,32,d.getButtonTexture(),d));
+			}
+		}
+	};
 	
 	public GuiPanel blur = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),(Color)null){{
 		setBlurBehind(true);
@@ -671,6 +684,7 @@ public class GUI {
 		add(toolBar);
 		add(guiTools);
 		add(buildinginfo);
+		add(DataViewButtons);
 		add(moneypanel);
 		add(citizenspanel);
 		add(buildingTooltip);

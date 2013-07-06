@@ -140,6 +140,11 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GRAPHTRANSITION = addTexture("graphtransition.png");
 	public final static Texture TEXTURE_PLACEHOLDER = addTexture("placeholder.png");
 	public final static Texture TEXTURE_GUITHUMBPLACEHOLDER = addTexture("placeholderthumb.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONENERGY = addTexture("dataviewenergy.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONSECUTIRY = addTexture("dataviewsecurity.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONHEALTH = addTexture("dataviewhealth.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONGARBAGE = addTexture("dataviewgarbagecollection.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONINTERNET = addTexture("dataviewinternet.png");
 	
 	/**
 	 * Initializes the Resources that need to be initialized

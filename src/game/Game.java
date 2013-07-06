@@ -133,6 +133,7 @@ public class Game {
 		Main.money = INITIALMONEY;
 		Main.taxes = INITIALTAXES;
 		Main.citizens = 0;
+		Main.currentDataView = null;
 		Grid.init();
 		Buildings.buildings = new ArrayList<Building>();
 		Main.gameState = Main.STATE_GAME;
