@@ -28,7 +28,6 @@ public class DataViewButton extends GuiButton {
 				case Click:
 					if(Main.currentDataView!=getDataview()){
 						Main.currentDataView = getDataview();
-						GuiPanel a;
 						((GuiPanel)getParent()).setElementsColor(Color.white);
 						setColor(Color.gray);
 					}

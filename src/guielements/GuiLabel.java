@@ -107,9 +107,20 @@ public class GuiLabel extends AbstractGuiElement {
 	public void wrapText()
 	{
 		//Automatically wrap the text
-		float lineheight = getFont().getHeight("lg");
+		float lineheight = getFont().getHeight("j");
 		int maxlines = (int) Math.floor(getHeight()/lineheight);
-		if(maxlines<=1)return;
+		if(maxlines<=1){
+			if(getFont().getWidth(getText())>getWidth())
+			{
+				for(int i=0;i<getText().length();i++){
+					if(getFont().getWidth(getText().substring(0, i))>getWidth()){
+						this.text = getText().substring(0, i-3)+"...";
+						break;
+					}
+				}
+			}
+			return;
+		}
 		int currentlinestart = 0;
 		for(int i=0;i<getText().length();i++){
 			if(getWidth()<getFont().getWidth(getText().substring(currentlinestart, i))){

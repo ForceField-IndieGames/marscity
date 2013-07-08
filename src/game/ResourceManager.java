@@ -145,6 +145,8 @@ public class ResourceManager {
 	public final static Texture TEXTURE_DATAVIEWBUTTONHEALTH = addTexture("dataviewhealth.png");
 	public final static Texture TEXTURE_DATAVIEWBUTTONGARBAGE = addTexture("dataviewgarbagecollection.png");
 	public final static Texture TEXTURE_DATAVIEWBUTTONINTERNET = addTexture("dataviewinternet.png");
+	public final static Texture TEXTURE_GUICHECKBOX = addTexture("guicheckbox.png");
+	public final static Texture TEXTURE_GUICHECKED = addTexture("guichecked.png");
 	
 	/**
 	 * Initializes the Resources that need to be initialized

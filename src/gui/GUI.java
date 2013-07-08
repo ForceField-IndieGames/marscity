@@ -9,6 +9,7 @@ import game.MonthlyActions;
 import game.ResourceManager;
 import game.TransactionCategory;
 import guielements.GuiButton;
+import guielements.GuiCheckbox;
 import guielements.GuiGraph;
 import guielements.GuiLabel;
 import guielements.GuiNumberbox;
@@ -411,49 +412,31 @@ public class GUI {
 		setCentered(true);
 		setFont(ResourceManager.Arial30B);
 	}};
-	public GuiLabel settingsVsync = new GuiLabel(30,440,452,20,(Color)null){{
-		setText(ResourceManager.getString("SETTINGSMENU_LABEL_VSYNC"));
+	public GuiLabel settingsVsyncLabel = new GuiLabel(30,440,452,20,(Color)null){{
+		setText(ResourceManager.getString("SETTINGSMENU_LABEL_VSYNCLABEL"));
 		setFont(ResourceManager.Arial15B);
 	}};
-	public GuiButton settingsVsyncon = new GuiButton(30,410,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
-		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCON"));
+	public GuiCheckbox settingsVsync = new GuiCheckbox(30,410,440){{
+		setText(ResourceManager.getString("SETTINGSMENU_CHECKBOX_VSYNC"));
 		setEvent(new GuiEvent(){
-			@Override public void run(GuiEventType eventtype) {
+			@Override public void run(GuiEventType eventtype, GuiElement element) {
 				switch (eventtype) {
 				case Click:
 						try {
-							Main.gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-							Main.gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							ResourceManager.setSetting("vsync", "enabled");
+							GuiCheckbox c = (GuiCheckbox) element;
+							if(c.isChecked()){
+								ResourceManager.setSetting("vsync", "enabled");
+							}else{
+								ResourceManager.setSetting("vsync", "disabled");
+							}
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 						break;
-				case Mouseover:
-						break;
 				default:break;}}});
-		if (ResourceManager.getSetting("vsync").equals("enabled"))setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+		if(ResourceManager.getSetting("vsync").equals("enabled"))setChecked(true);
 	}};
-	public GuiButton settingsVsyncoff = new GuiButton(130,410,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
-		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCOFF"));
-		setEvent(new GuiEvent(){
-			@Override public void run(GuiEventType eventtype) {
-				switch (eventtype) {
-				case Click:
-						try {
-				 			Main.gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							Main.gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-				 			ResourceManager.setSetting("vsync", "disabled");
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						break;
-				case Mouseover:
-						break;
-				default:break;}}});
-		if (!ResourceManager.getSetting("vsync").equals("enabled"))setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-	}};
-	public GuiLabel settingsParticles = new GuiLabel(30,380,452,20,(Color)null){{
+	public GuiLabel settingsParticlesLabel = new GuiLabel(30,380,452,20,(Color)null){{
 		setText(ResourceManager.getString("SETTINGSMENU_LABEL_PARTICLES"));
 		setFont(ResourceManager.Arial15B);                                 
 	}};
@@ -544,10 +527,9 @@ public class GUI {
 	public GuiPanel settingsMenu = new GuiPanel(Display.getWidth()/2-256,Display.getHeight()/2-256,512,512,ResourceManager.TEXTURE_GUIMENU){{
 		setVisible(false);
 		add(settingsTitle);
-		add(settingsVsyncon);
-		add(settingsVsyncoff);
 		add(settingsVsync);
-		add(settingsParticles);
+		add(settingsVsyncLabel);
+		add(settingsParticlesLabel);
 		add(settingsParticlesoff);
 		add(settingsParticleslow);
 		add(settingsParticlesmiddle);
