@@ -16,6 +16,7 @@ import guielements.GuiNumberbox;
 import guielements.GuiPanel;
 import guielements.GuiProgressbar;
 import guielements.GuiQuad;
+import guielements.GuiRadiobutton;
 import guielements.GuiTextbox;
 
 import java.awt.Color;
@@ -440,39 +441,29 @@ public class GUI {
 		setText(ResourceManager.getString("SETTINGSMENU_LABEL_PARTICLES"));
 		setFont(ResourceManager.Arial15B);                                 
 	}};
-	public GuiButton settingsParticlesoff = new GuiButton(30,350,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
+	public GuiRadiobutton settingsParticlesoff = new GuiRadiobutton(30,0,100){{
 		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESOFF"));
 		setEvent(new GuiEvent(){
 			@Override public void run(GuiEventType eventtype) {
 				switch (eventtype) {
 				case Click:
 						try {
-							Main.gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-							Main.gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							Main.gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							Main.gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-				 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESOFF;
+							ParticleEffects.particleQuality = ParticleEffects.PARTICLESOFF;
 				 			ResourceManager.setSetting("particlequality", "off");
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 						break;
-				case Mouseover:
-						break;
 				default:break;}}});                              
 	}};
-	public GuiButton settingsParticleslow = new GuiButton(130,350,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
+	public GuiRadiobutton settingsParticleslow = new GuiRadiobutton(130,0,100){{
 		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESLOW"));
 		setEvent(new GuiEvent(){
 			@Override public void run(GuiEventType eventtype) {
 				switch (eventtype) {
 				case Click:
 						try {
-							Main.gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-				 			Main.gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-				 			Main.gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-				 			Main.gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-				 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESLOW;
+							ParticleEffects.particleQuality = ParticleEffects.PARTICLESLOW;
 				 			ResourceManager.setSetting("particlequality", "low");
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -482,18 +473,14 @@ public class GUI {
 						break;
 				default:break;}}});                              
 	}};
-	public GuiButton settingsParticlesmiddle = new GuiButton(230,350,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
+	public GuiRadiobutton settingsParticlesmiddle = new GuiRadiobutton(230,0,100){{
 		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESMIDDLE"));
 		setEvent(new GuiEvent(){
 			@Override public void run(GuiEventType eventtype) {
 				switch (eventtype) {
 				case Click:
 						try {
-							Main.gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							Main.gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							Main.gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-							Main.gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-				 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESMIDDLE;
+							ParticleEffects.particleQuality = ParticleEffects.PARTICLESMIDDLE;
 				 			ResourceManager.setSetting("particlequality", "middle");
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -503,17 +490,13 @@ public class GUI {
 						break;
 				default:break;}}});
 	}};
-	public GuiButton settingsParticleshigh = new GuiButton(330,350,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
+	public GuiRadiobutton settingsParticleshigh = new GuiRadiobutton(330,0,100){{
 		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESHIGH"));
 		setEvent(new GuiEvent(){
 			@Override public void run(GuiEventType eventtype) {
 				switch (eventtype) {
 				case Click:
 						try {
-							Main.gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							Main.gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							Main.gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							Main.gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 							ParticleEffects.particleQuality = ParticleEffects.PARTICLESHIGH;
 							ResourceManager.setSetting("particlequality", "high");
 						} catch (Exception e) {
@@ -524,28 +507,33 @@ public class GUI {
 						break;
 				default:break;}}});
 	}};
+	public GuiPanel settingsParticlesRadiobuttons = new GuiPanel(0,350,400,32){{
+		setColor(null);
+		add(settingsParticlesoff);
+		add(settingsParticleslow);
+		setClickThrough(true);
+		add(settingsParticlesmiddle);
+		add(settingsParticleshigh);
+	}};
 	public GuiPanel settingsMenu = new GuiPanel(Display.getWidth()/2-256,Display.getHeight()/2-256,512,512,ResourceManager.TEXTURE_GUIMENU){{
 		setVisible(false);
 		add(settingsTitle);
 		add(settingsVsync);
 		add(settingsVsyncLabel);
 		add(settingsParticlesLabel);
-		add(settingsParticlesoff);
-		add(settingsParticleslow);
-		add(settingsParticlesmiddle);
-		add(settingsParticleshigh);
+		add(settingsParticlesRadiobuttons);
 		add(settingsResume);
 		if(ResourceManager.getSetting("particlequality").equals("off")){
-			settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+			settingsParticlesoff.setChecked(true);
 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESOFF;
 		}else if(ResourceManager.getSetting("particlequality").equals("low")){
-			settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+			settingsParticleslow.setChecked(true);
 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESLOW;
 		}else if(ResourceManager.getSetting("particlequality").equals("middle")){
-			settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+			settingsParticlesmiddle.setChecked(true);
 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESMIDDLE;
 		}else if(ResourceManager.getSetting("particlequality").equals("high")){
-			settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+			settingsParticleshigh.setChecked(true);
 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESHIGH;
 		}
 	}};

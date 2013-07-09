@@ -3,20 +3,21 @@ package guielements;
 import java.awt.Color;
 
 import game.ResourceManager;
+import gui.GuiElement;
 import gui.GuiEventType;
 
 /**
  * A checkbox with label
  * @author Benedikt Ringlein
  */
-public class GuiCheckbox extends GuiPanel {
+public class GuiRadiobutton extends GuiPanel {
 	
-	private GuiButton bg = new GuiButton(0,0,32,32,ResourceManager.TEXTURE_GUICHECKBOX);
-	private GuiPanel check = new GuiPanel(0,0,32,32,ResourceManager.TEXTURE_GUICHECKED);
+	private GuiButton bg = new GuiButton(0,0,32,32,ResourceManager.TEXTURE_GUIRADIOBUTTON);
+	private GuiPanel check = new GuiPanel(0,0,32,32,ResourceManager.TEXTURE_GUIRADIOCHECKED);
 	private GuiLabel label;
 	private boolean checked = false;
 
-	public GuiCheckbox(float x, float y, float width)
+	public GuiRadiobutton(float x, float y, float width)
 	{
 		setX(x);
 		setY(y);
@@ -50,14 +51,18 @@ public class GuiCheckbox extends GuiPanel {
 		else check.setVisible(false);
 	}
 	
-	public void toggleChecked()
-	{
-		setChecked(!isChecked());
-	}
-	
 	@Override
 	public void callGuiEvents(GuiEventType eventtype) {
-		if(eventtype==GuiEventType.Click)toggleChecked();
+		if(eventtype==GuiEventType.Click){
+			for(GuiElement g:getParent().getElements())
+			{
+				if(g instanceof GuiRadiobutton)
+				{
+					((GuiRadiobutton)g).setChecked(false);
+				}
+			}
+			setChecked(true);
+		}
 		if(eventtype==GuiEventType.Mouseover)bg.setColor(new Color(230,230,230));
 		if(eventtype==GuiEventType.Mouseout)bg.setColor(Color.white);
 		super.callGuiEvents(eventtype);

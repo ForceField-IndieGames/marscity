@@ -3,7 +3,7 @@ package guielements;
 import static org.lwjgl.opengl.GL11.*;
 
 import game.ResourceManager;
-import gui.AbstractGuiElement;
+import gui.BasicGuiElement;
 import gui.GuiElement;
 
 import java.awt.Color;
@@ -20,7 +20,7 @@ import org.newdawn.slick.opengl.TextureImpl;
  * @author Benedikt Ringlein
  */
 
-public class GuiLabel extends AbstractGuiElement {
+public class GuiLabel extends BasicGuiElement {
 	
 	private String text="";
 	

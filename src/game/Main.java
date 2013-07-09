@@ -97,7 +97,7 @@ class splashScreen extends JFrame implements Runnable{
 
 	public void setInfo(String text)
 	{
-		int percent = Math.round(loadeditems/66f*100);
+		int percent = Math.round(loadeditems/75f*100);
 		if(percent>100)percent=100;
 		label2.setText(percent+"% "+text);
 		progress.setValue(percent);
@@ -771,8 +771,6 @@ public class Main {
 			glDisable(GL_COLOR_MATERIAL);
 		}
         
-       
-        
         //glUseProgram(0);
         
         //Draw the building preview
@@ -780,8 +778,6 @@ public class Main {
         
         //Draw the particle effects
         ParticleEffects.draw();
-
-		
 		
 		glPopMatrix();
 		
