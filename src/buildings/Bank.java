@@ -13,7 +13,7 @@ public class Bank extends Building {
 	}
 	
 	@Override
-	public void MonthlyTransaction() {
+	public void monthlyAction() {
 		MonthlyActions.addTransaction(-Buildings.getBuildingType(getBuildingType()).getMonthlycost(), TransactionCategory.Other);
 	}
 	

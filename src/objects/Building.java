@@ -25,6 +25,7 @@ public class Building extends Entity {
 	private int producedSupplyAmount = 0;
 	private int[] neededSupplyAmount = new int[Supply.values().length];
 	private int[] ownedSupplyAmount = new int[Supply.values().length];
+	private byte happiness = 0;  
 	
 	public Building(){}
 
@@ -69,9 +70,20 @@ public class Building extends Entity {
 		
 	}
 	
-	public void MonthlyTransaction()
+	public void monthlyAction()
 	{
-		
+		//Calculate happiness value
+		int counter = 0;
+		int happiness = 0;
+		for(Supply s:Supply.values())
+		{
+			if(getNeededSupplyAmount(s)>0)
+			{
+				happiness += (((float)getOwnedSupplyAmount(s))/getNeededSupplyAmount(s))*100;
+				counter++;
+			}
+		}
+		setHappiness((byte) ((counter<=0)?0:(happiness/counter)));
 	}
 	
 	/**
@@ -155,6 +167,14 @@ public class Building extends Entity {
 
 	public void setOwnedSupplyAmount(int ownedSupplyAmount, Supply supply) {
 		this.ownedSupplyAmount[supply.ordinal()] = ownedSupplyAmount;
+	}
+
+	public byte getHappiness() {
+		return happiness;
+	}
+
+	public void setHappiness(byte happiness) {
+		this.happiness = happiness;
 	}
 	
 }

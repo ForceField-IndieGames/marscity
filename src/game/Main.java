@@ -875,10 +875,14 @@ public class Main {
 		try {
 			energy = (int)((Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getOwnedSupplyAmount(Supply.Energy)/(float)Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getNeededSupplyAmount(Supply.Energy))*100)+"% ("+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getOwnedSupplyAmount(Supply.Energy)+")";
 		} catch (Exception e) {}
+		String happiness = "-";
+		try {
+			happiness = ""+(int)((Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getHappiness()));
+		} catch (Exception e) {}
 		gui.debugInfo.setText("debug mode | Objects: "+Buildings.buildings.size()+
 				", FPS: "+fps+", ParticleEffects: "+ParticleEffects.getEffectCount()+", Mouse:("+Math.round(mousepos3d[0])+","+Math.round(mousepos3d[1])+","+Math.round(mousepos3d[2])+")"+
 				", GridIndex: "+Grid.posToIndex(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]))+
-				", BuildingType: "+bt+", Energy supply:"+energy);
+				", BuildingType: "+bt+", Energy supply: "+energy+", Happiness: "+happiness);
 	
 			
 		//Update gui info labels

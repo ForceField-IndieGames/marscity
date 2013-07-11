@@ -149,6 +149,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUICHECKED = addTexture("guichecked.png");
 	public final static Texture TEXTURE_GUIRADIOBUTTON = addTexture("guiradiobutton.png");
 	public final static Texture TEXTURE_GUIRADIOCHECKED = addTexture("guiradiochecked.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONHAPPINESS = addTexture("dataviewhappiness.png");
 	
 	/**
 	 * Initializes the Resources that need to be initialized

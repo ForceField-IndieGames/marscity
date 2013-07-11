@@ -23,7 +23,7 @@ public class MonthlyActions {
 		public void run() {
 			if(!Game.isPaused()&&Main.gameState==Main.STATE_GAME){
 				for(Building b:Buildings.buildings){
-					b.MonthlyTransaction();
+					b.monthlyAction();
 				}
 				float max=0;
 				for(int i=0;i<TransactionList.length;i++){
