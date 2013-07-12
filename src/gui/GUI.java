@@ -76,7 +76,12 @@ public class GUI {
 	    				Main.gui.settingsMenu.setVisible(true);
 	    				break;
 	    		default:break;}}});
-	}};
+	}
+		@Override
+		public void hide() {
+			AnimationManager.animateValue(this, AnimationValue.opacity, 0, 200, AnimationManager.ACTION_HIDE);
+		};
+	};
 	public GuiButton MenuExit = new GuiButton(660, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2){{
 		setText(ResourceManager.getString("MAINMENU_BUTTON_EXIT"));
 	    setFont(ResourceManager.Arial15B);
@@ -249,7 +254,6 @@ public class GUI {
 		addBuildingButton(Buildings.BUILDINGTYPE_FUSIONPOWER);
 	}};
 	public BuildingPanel buildingPanelMiscellaneous = new BuildingPanel(ResourceManager.getString("BUILDINGCATEGORY_MISCELLANEOUS")){{
-		addBuildingButton(Buildings.BUILDINGTYPE_CITYCENTER);
 		addBuildingButton(Buildings.BUILDINGTYPE_RESEARCHSTATION);
 		addBuildingButton(Buildings.BUILDINGTYPE_HANGAR);
 		addBuildingButton(Buildings.BUILDINGTYPE_BANK);
@@ -379,7 +383,12 @@ public class GUI {
 		add(pauseSettings);
 		add(pauseExit);
 		add(pauseResume);
-	}};
+	}
+		@Override
+		public void hide() {
+			AnimationManager.animateValue(this, AnimationValue.opacity, 0, 200, AnimationManager.ACTION_HIDE);
+		};
+	};
 	
 	public GuiLabel debugInfo = new GuiLabel(0,Display.getHeight()-20,Display.getWidth(),20,Color.white){{
 		setVisible(Main.debugMode);
@@ -536,7 +545,12 @@ public class GUI {
 			settingsParticleshigh.setChecked(true);
 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESHIGH;
 		}
-	}};
+	}
+		@Override
+		public void hide() {
+			AnimationManager.animateValue(this, AnimationValue.opacity, 0, 200, AnimationManager.ACTION_HIDE);
+		};
+	};
 	
 	public GuiPanel cameraMove = new GuiPanel(Display.getWidth()/2-16,Display.getHeight()/2-16,32,32,ResourceManager.TEXTURE_GUICAMERAMOVE){{
 		setVisible(false);

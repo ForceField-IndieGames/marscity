@@ -402,7 +402,8 @@ public class Main {
 						{
 							Game.Resume();
 							gui.blur.setVisible(false);
-							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
+							gui.pauseMenu.hide();
+							gui.settingsMenu.hide();
 						}else {
 							Game.Pause();
 							gui.blur.setVisible(true);

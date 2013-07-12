@@ -126,16 +126,18 @@ public class Game {
 		Main.cityname = (new File(path)).getName().substring(0, (new File(path)).getName().length()-5);
 		Main.gui.cityName.setText(Main.cityname);
 		Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_CITYLOADED"), ResourceManager.getString("MSGBOX_TEXT_CITYLOADED").replaceAll(ResourceManager.PLACEHOLDER1, ResourceManager.pathToCityname(path)));
+		Buildings.refreshSupply();
 	}
 	
 	public static void newGame()
 	{
+		Grid.init();
+		Buildings.buildings = new ArrayList<Building>();
+		Buildings.buildBuilding(0, 0, 0, Buildings.BUILDINGTYPE_CITYCENTER);
 		Main.money = INITIALMONEY;
 		Main.taxes = INITIALTAXES;
 		Main.citizens = 0;
 		Main.currentDataView = null;
-		Grid.init();
-		Buildings.buildings = new ArrayList<Building>();
 		Main.gameState = Main.STATE_GAME;
 		Main.currentBT = -1;
 		Main.buildpreview.setVisible(false);
@@ -145,9 +147,7 @@ public class Game {
 		Game.Resume();
 		try {
 			Main.MonthlyTimer.scheduleAtFixedRate(MonthlyActions.ExecuteTransactions, Main.MONTH_MILLIS, Main.MONTH_MILLIS);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (Exception e) {}
 	}
 	
 	/**
@@ -209,6 +209,8 @@ public static void saveThumbnail(File file){
 		 //Hide the gui
 		 boolean prevguiv = GUI.isVisible();
 		 GUI.setVisible(false);
+		 DataView dv = Main.currentDataView;
+		 Main.currentDataView = null;
 		 
 		 //render
 		 Main.renderGL();
@@ -220,7 +222,7 @@ public static void saveThumbnail(File file){
          ByteBuffer buf = ByteBuffer.allocateDirect(1024 * 512 * 3);
 
          // grab a copy of the current frame contents as RGB
-         glReadPixels(Display.getWidth()/2-512, Display.getHeight()/2-256, 1024, 512, GL_RGB, GL_UNSIGNED_BYTE, buf);
+         glReadPixels(Display.getWidth()/2-512, Display.getHeight()/2-206, 1024, 512, GL_RGB, GL_UNSIGNED_BYTE, buf);
 
          BufferedImage imageIn = new BufferedImage(1024, 512,BufferedImage.TYPE_INT_RGB);
          // convert RGB data in ByteBuffer to integer array
@@ -251,6 +253,7 @@ public static void saveThumbnail(File file){
          
        //restore gui visibility
 		 GUI.setVisible(prevguiv);
+		 Main.currentDataView = dv;
      }
 	
 	public static boolean isPaused()

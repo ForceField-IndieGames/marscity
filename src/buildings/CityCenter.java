@@ -17,4 +17,9 @@ public class CityCenter extends Building {
 		MonthlyActions.addTransaction(-Buildings.getBuildingType(getBuildingType()).getMonthlycost(), TransactionCategory.Other);
 	}
 	
+	@Override
+	public void delete() {
+		//This building can't be deleted
+	}
+	
 }
