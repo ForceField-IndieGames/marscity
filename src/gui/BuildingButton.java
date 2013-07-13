@@ -67,6 +67,7 @@ public class BuildingButton extends GuiPanel {
 		name = new GuiLabel(0,0,getWidth(),30,(Color)null);
 		name.setText(Buildings.getBuildingTypeName(bt));
 		name.setCentered(true);
+		name.wrapText();
 		add(name);
 	}
 

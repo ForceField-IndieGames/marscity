@@ -97,8 +97,10 @@ class splashScreen extends JFrame implements Runnable{
 
 	public void setInfo(String text)
 	{
-		label2.setText(Math.round(loadeditems/66f*100)+"% "+text);
-		progress.setValue(Math.round(loadeditems/66f*100));
+		int percent = Math.round(loadeditems/75f*100);
+		if(percent>100)percent=100;
+		label2.setText(percent+"% "+text);
+		progress.setValue(percent);
 		loadeditems++;
 	}
 	
@@ -144,22 +146,25 @@ public class Main {
 	
 	//other constants
 	public final static int MONTH_MILLIS = debugMode?1000:60000;
+	public final static int LOD1 = 50;
+	public final static int LOD2 = 150;
 
 	//Variables that are used for calculating the delta and fps
 	long lastFrame,lastTime;
 	int  fpsnow, fps;
 	
-	public static int     hoveredEntity = -1;                               //The index of the object that is hovered with the mouse
-	public static byte    selectedTool  = TOOL_SELECT;                      //The selected tool, SELECT,ADD or DELETE
-	public static int     money         = Game.INITIALMONEY;                //The players money
-	public static int     citizens      = 0;                                //The citizens that live in the city
-	public static byte    taxes         = 20;                               //Taxes for citizens in %
-	public static String  cityname      = "Meine Stadt";                    //The city's name
-	public static int     currentBT     = -1;                               //The currently selected building type
-	public static float[] mousepos3d    = new float[3];                     //The mouse position in 3d space
-	public static byte    gameState     = STATE_INTRO;                      //The current game state
-	public static String  clipboard     = "";                               //A local text clipboard
-	public static Timer   MonthlyTimer  = new Timer();                      //A timer for sheduling monthly acitons
+	public static int      hoveredEntity = -1;                               //The index of the object that is hovered with the mouse
+	public static byte     selectedTool  = TOOL_SELECT;                      //The selected tool, SELECT,ADD or DELETE
+	public static int      money         = Game.INITIALMONEY;                //The players money
+	public static int      citizens      = 0;                                //The citizens that live in the city
+	public static byte     taxes         = 20;                               //Taxes for citizens in %
+	public static String   cityname      = "Meine Stadt";                    //The city's name
+	public static int      currentBT     = -1;                               //The currently selected building type
+	public static float[]  mousepos3d    = new float[3];                     //The mouse position in 3d space
+	public static byte     gameState     = STATE_INTRO;                      //The current game state
+	public static String   clipboard     = "";                               //A local text clipboard
+	public static Timer    MonthlyTimer  = new Timer();                      //A timer for sheduling monthly acitons
+	public static DataView currentDataView = null;                           //The currently displayed DataView
 	
 	//Some more objects
 	public static Camera       camera       = new Camera();
@@ -399,7 +404,8 @@ public class Main {
 						{
 							Game.Resume();
 							gui.blur.setVisible(false);
-							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
+							gui.pauseMenu.hide();
+							gui.settingsMenu.hide();
 						}else {
 							Game.Pause();
 							gui.blur.setVisible(true);
@@ -601,7 +607,6 @@ public class Main {
 							Grid.clearsCells((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ(), Buildings.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuildingType()).getWidth(), Buildings.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuildingType()).getDepth());
 							ParticleEffects.dustEffect(ResourceManager.getObject(hoveredEntity).getX(),ResourceManager.getObject(hoveredEntity).getY(),ResourceManager.getObject(hoveredEntity).getZ());
 							ResourceManager.getObject(hoveredEntity).delete();
-							Buildings.refreshSupply();
 						} catch (Exception e) {e.printStackTrace();}
 						break;
 				}
@@ -664,7 +669,6 @@ public class Main {
 		glEnable(GL_LIGHTING);
 		glEnable(GL_LIGHT0);
 		glLightModel(GL_LIGHT_MODEL_AMBIENT, ResourceManager.toFlippedFloatBuffer(new float[] {0.5f,0.5f,0.5f,1f}));
-		glLight(GL_LIGHT0, GL_DIFFUSE, ResourceManager.toFlippedFloatBuffer(new float[]{2f,2f,2f,1f}));
 		glLight(GL_LIGHT0, GL_AMBIENT, ResourceManager.toFlippedFloatBuffer(new float[]{0.2f,0.2f,0.2f,0.2f}));
 		
 		glEnable(GL_MAP_COLOR);
@@ -709,6 +713,7 @@ public class Main {
 		
 		//Set the light positions
 		glLight(GL_LIGHT0, GL_POSITION, ResourceManager.toFlippedFloatBuffer(new float[]{-30f,50,100f,0f}));
+		glLight(GL_LIGHT0, GL_DIFFUSE, ResourceManager.toFlippedFloatBuffer(new float[]{2f,2f,2f,1f}));
         
 		if(gui.getMouseover()==null)
 		{
@@ -724,15 +729,22 @@ public class Main {
 		
         //Rendering
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glEnable(GL_TEXTURE_2D);
         
+        if(currentDataView!=null){
+        	glDisable(GL_TEXTURE_2D);
+        }else{
+        	glEnable(GL_TEXTURE_2D);
+        }
+       
         //Draw the skybox
         glDisable(GL_LIGHTING);
-        glColor3f(1f, 1f, 1f);
+        if(currentDataView!=null)glColor3f(0.5f, 0.5f, 0.5f);
+        else glColor3f(1f, 1f, 1f);
         skybox.draw();
         glEnable(GL_LIGHTING);
         
         //Draw the terrain
+        if(currentDataView!=null)glColor3f(0.5f, 0.5f, 0.5f);
         terrain.draw();
         
        // glUseProgram(ResourceManager.shaderProgram);
@@ -744,10 +756,22 @@ public class Main {
         		if(selectedTool==TOOL_SELECT)glColor3f(1f, 1f, 1f);
         		glDisable(GL_LIGHTING);
         	}else {
-        		glColor3f(1f, 1f, 1f);
+        		if(currentDataView==null)
+        		{
+        			glColor3f(1f, 1f, 1f);
+        			glLight(GL_LIGHT0, GL_DIFFUSE, ResourceManager.toFlippedFloatBuffer(new float[]{2f,2f,2f,1f}));
+        		}else{
+        			Color col = currentDataView.buildingColor(Buildings.buildings.get(i));
+        			glColor3f((float)col.getRed()/255f, (float)col.getGreen()/255f, (float)col.getBlue()/255f);
+        			glEnable(GL_COLOR_MATERIAL);
+        			glDisable(GL_TEXTURE_2D);
+        			glLight(GL_LIGHT0, GL_DIFFUSE, ResourceManager.toFlippedFloatBuffer(new float[]{0.5f,0.5f,0.5f,1f}));
+        		}
         	}
 			Buildings.buildings.get(i).draw();
 			glEnable(GL_LIGHTING);
+			glEnable(GL_TEXTURE_2D);
+			glDisable(GL_COLOR_MATERIAL);
 		}
         
         //glUseProgram(0);
@@ -757,8 +781,6 @@ public class Main {
         
         //Draw the particle effects
         ParticleEffects.draw();
-
-		
 		
 		glPopMatrix();
 		
@@ -856,10 +878,14 @@ public class Main {
 		try {
 			energy = (int)((Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getOwnedSupplyAmount(Supply.Energy)/(float)Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getNeededSupplyAmount(Supply.Energy))*100)+"% ("+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getOwnedSupplyAmount(Supply.Energy)+")";
 		} catch (Exception e) {}
+		String happiness = "-";
+		try {
+			happiness = ""+(int)((Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getHappiness()));
+		} catch (Exception e) {}
 		gui.debugInfo.setText("debug mode | Objects: "+Buildings.buildings.size()+
 				", FPS: "+fps+", ParticleEffects: "+ParticleEffects.getEffectCount()+", Mouse:("+Math.round(mousepos3d[0])+","+Math.round(mousepos3d[1])+","+Math.round(mousepos3d[2])+")"+
 				", GridIndex: "+Grid.posToIndex(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]))+
-				", BuildingType: "+bt+", Energy supply:"+energy);
+				", BuildingType: "+bt+", Energy supply: "+energy+", Happiness: "+happiness);
 	
 			
 		//Update gui info labels

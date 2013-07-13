@@ -75,16 +75,16 @@ public class Buildings{
 				buildingTypes.add(  BUILDINGTYPE_HOUSE,           new BuildingType(  "BUILDINGTYPE_HOUSE",           ResourceManager.OBJECT_HOUSE,       ResourceManager.TEXTURE_HOUSE,       ResourceManager.TEXTURE_GUITHUMBHOUSE,       250,          0,           2,       2,      1.5f,   0,              10,     10,     10,      10,       10       ));
 				buildingTypes.add(  BUILDINGTYPE_BIGHOUSE,        new BuildingType(  "BUILDINGTYPE_BIGHOUSE",        ResourceManager.OBJECT_BIGHOUSE,    ResourceManager.TEXTURE_BIGHOUSE,    ResourceManager.TEXTURE_GUITHUMBBIGHOUSE,    1500,         0,           4,       4,      8,      0,              50,     50,     50,      50,       50       ));
 				buildingTypes.add(  BUILDINGTYPE_STREET,          new BuildingType(  "BUILDINGTYPE_STREET",          ResourceManager.OBJECT_STREET,      ResourceManager.TEXTURE_STREET,      ResourceManager.TEXTURE_GUITHUMBSTREET,      5,            0,           1,       1,      0,      0,              0,      0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_CITYCENTER,      new BuildingType(  "BUILDINGTYPE_CITYCENTER",      ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      0,              10,     0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_CITYCENTER,      new BuildingType(  "BUILDINGTYPE_CITYCENTER",      ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            0,           2,       2,      3,      0,              10,     0,      0,       0,        0        ));
 				buildingTypes.add(  BUILDINGTYPE_RESEARCHSTATION, new BuildingType(  "BUILDINGTYPE_RESEARCHSTATION", ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      0,              10,     0,      0,       0,        0        ));
 				buildingTypes.add(  BUILDINGTYPE_HANGAR,          new BuildingType(  "BUILDINGTYPE_HANGAR",          ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      0,              10,     0,      0,       0,        0        ));
 				buildingTypes.add(  BUILDINGTYPE_BANK,            new BuildingType(  "BUILDINGTYPE_BANK",            ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      0,              10,     0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_MEDICALCENTER,   new BuildingType(  "BUILDINGTYPE_MEDICALCENTER",   ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      100,            0,      0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_SERVERCENTER,    new BuildingType(  "BUILDINGTYPE_SERVERCENTER",    ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      100,            0,      0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_GARBAGEYARD,     new BuildingType(  "BUILDINGTYPE_GARBAGEYARD",     ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      100,            0,      0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_POLICE,          new BuildingType(  "BUILDINGTYPE_POLICE",          ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      100,            0,      0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_SOLARPOWER,      new BuildingType(  "BUILDINGTYPE_SOLARPOWER",      ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      500,            0,      0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_FUSIONPOWER,     new BuildingType(  "BUILDINGTYPE_FUSIONPOWER",     ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      10000,          0,      0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_MEDICALCENTER,   new BuildingType(  "BUILDINGTYPE_MEDICALCENTER",   ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            15,          2,       2,      3,      500,            0,      0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_SERVERCENTER,    new BuildingType(  "BUILDINGTYPE_SERVERCENTER",    ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      1000,           0,      0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_GARBAGEYARD,     new BuildingType(  "BUILDINGTYPE_GARBAGEYARD",     ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      1000,           0,      0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_POLICE,          new BuildingType(  "BUILDINGTYPE_POLICE",          ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            15,          2,       2,      3,      500,            0,      0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_SOLARPOWER,      new BuildingType(  "BUILDINGTYPE_SOLARPOWER",      ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            10,          2,       2,      3,      1000,           0,      0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_FUSIONPOWER,     new BuildingType(  "BUILDINGTYPE_FUSIONPOWER",     ResourceManager.OBJECT_PLACEHOLDER, ResourceManager.TEXTURE_PLACEHOLDER, ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER, 0,            60,          2,       2,      3,      10000,          0,      0,      0,       0,        0        ));
 	}                                                                                                                                                                                                                                                                                                                                                 
 	
 	/**
@@ -104,10 +104,12 @@ public class Buildings{
 	{
 		List<Point> openlist = new ArrayList<Point>();
 		List<Point> closedlist = new ArrayList<Point>();
+		//Reset supplys
 		for(Building b:buildings)
 		{
 			b.setOwnedSupplyAmount(0, supply);
 		}
+		//Every building that provides the supply is used as a starting point
 		for(int building=0;building<buildings.size();building++)
 		{
 			Building b = buildings.get(building);
@@ -115,6 +117,7 @@ public class Buildings{
 			{
 				openlist.clear();
 				closedlist.clear();
+				//Get information about the building
 				int supplyAmount = b.getProducedSupplyAmount();
 				int x = (int) b.getX();
 				int y = (int) b.getZ();
@@ -122,10 +125,7 @@ public class Buildings{
 				int depth = Buildings.getBuildingType(b).getDepth();
 				
 				//Initialize the openlist:
-				/*bottom*/
-				for(int i=x;i<x+width;i++){
-					if(Grid.getCell(i,y+depth).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point(i,y+depth));
-				}
+				/*bottom*/for(int i=x;i<x+width;i++){if(Grid.getCell(i,y+depth).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point(i,y+depth));}
 				/*top*/   for(int i=x;i<x+width;i++){if(Grid.getCell(i,y-1).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point(i,y-1));}
 				/*left*/  for(int i=y;i<y+depth;i++){if(Grid.getCell(x-1,i).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point(x-1,i));}
 				/*right*/ for(int i=y;i<y+depth;i++){if(Grid.getCell(x+width,i).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point(x+width,i));}
@@ -133,9 +133,8 @@ public class Buildings{
 				//Main algorithm loop
 				while((!openlist.isEmpty())&&supplyAmount>0)
 				{
-					Point current = openlist.get(0);
-					
 					//Choose closest point in the openlist
+					Point current = openlist.get(0);
 					for(Point p:openlist)
 					{
 						if(Math.sqrt((p.getX()-x)*(p.getX()-x)+(p.getY()-y)*(p.getY()-y))<Math.sqrt((current.getX()-x)*(current.getX()-x)+(current.getY()-y)*(current.getY()-y)))current = p;
@@ -224,7 +223,6 @@ public class Buildings{
 					
 					//Remove point from openlist
 					openlist.remove(current);
-					System.out.println("Removed from openlist: "+current.getX()+"|"+current.getY());//TODO
 				}
 			}
 		}

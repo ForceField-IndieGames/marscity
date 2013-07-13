@@ -1,6 +1,5 @@
 package buildings;
 
-import game.BuildingTask;
 import game.Main;
 import game.MonthlyActions;
 import game.TransactionCategory;
@@ -8,8 +7,6 @@ import game.TransactionCategory;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.Timer;
-
 import objects.Building;
 
 /**
@@ -21,28 +18,11 @@ public class BigHouse extends Building {
 
 	private int citizens = 0;
 	private static final byte citizensMax = 100;
-	private Timer tCitizens = new Timer();
-
-	public Timer gettCitizens() {
-		return tCitizens;
-	}
-
-	public void settCitizens(Timer tCitizens) {
-		this.tCitizens = tCitizens;
-	}
+	
+	private static final int CITIZENSPERMONTH = 20;
 
 	public BigHouse(int bt, float x, float y, float z) {
 		super(bt,x,y,z);
-		tCitizens.scheduleAtFixedRate(new BuildingTask(this) {
-			@Override
-			public void task() {
-				if(((BigHouse) getBuilding()).getCitizens()<BigHouse.getCitizensmax()){
-					Main.citizens++;
-					((BigHouse) getBuilding()).setCitizens(((BigHouse) getBuilding()).getCitizens()+1);
-				}
-				else cancel();
-			}
-		}, 0, 200);
 	}
 	
 	@Override
@@ -50,8 +30,28 @@ public class BigHouse extends Building {
 	}
 	
 	@Override
-	public void MonthlyTransaction() {
+	public void monthlyAction() {
+		super.monthlyAction();
 		MonthlyActions.addTransaction((int) (citizens*((float)Main.taxes/100)), TransactionCategory.Taxes);
+		if(getCitizens()<getCitizensmax()*(getHappiness()/100f)){
+			if(getCitizens()+CITIZENSPERMONTH<=getCitizensmax()*(getHappiness()/100f)){
+				setCitizens(getCitizens()+CITIZENSPERMONTH);
+				Main.citizens += CITIZENSPERMONTH;
+			}
+			else {
+				Main.citizens += (getCitizensmax()*(getHappiness()/100f))-getCitizens();
+				setCitizens((int) (getCitizensmax()*(getHappiness()/100f)));
+			}
+		}else if(getCitizens()>getCitizensmax()*(getHappiness()/100f)){
+			if(getCitizens()-CITIZENSPERMONTH>=0){
+				setCitizens(getCitizens()-CITIZENSPERMONTH);
+				Main.citizens -= CITIZENSPERMONTH;
+			}
+			else {
+				Main.citizens -= getCitizens();
+				setCitizens(0);
+			}
+		}
 	}
 	
 	@Override
@@ -67,7 +67,6 @@ public class BigHouse extends Building {
 	@Override
 	public void delete() {
 		Main.citizens-=getCitizens();
-		tCitizens.cancel();
 		super.delete();
 	}
 

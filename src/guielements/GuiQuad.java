@@ -1,6 +1,6 @@
 package guielements;
 
-import gui.AbstractGuiElement;
+import gui.BasicGuiElement;
 import gui.GuiElement;
 
 import java.awt.Color;
@@ -15,7 +15,7 @@ import static org.lwjgl.opengl.GL11.*;
  * @author Benedikt Ringlein
  */
 
-public class GuiQuad extends AbstractGuiElement {
+public class GuiQuad extends BasicGuiElement {
 	
 	private float x1,x2,x3,x4,y1,y2,y3,y4;
 

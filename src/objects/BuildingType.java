@@ -14,7 +14,7 @@ import org.newdawn.slick.opengl.Texture;
 public class BuildingType {
 
 	private String name;
-	private int displaylist;
+	private int[] displaylist;
 	private Texture texture;
 	private int buidlingcost;
 	private int monthlycost;
@@ -36,7 +36,7 @@ public class BuildingType {
 	 * @param height The buildings height
 	 */
 		public BuildingType(String name, 
-							int displaylist, 
+							int[] displaylist, 
 							Texture texture, 
 							Texture thumb,
 							int buidlingcost, 
@@ -75,7 +75,7 @@ public String getName() {
 		return name;
 	}
 
-	public int getDisplaylist() {
+	public int[] getDisplaylist() {
 		return displaylist;
 	}
 	public Texture getTexture() {

@@ -68,8 +68,8 @@ public class ObjectLoader {
         return displayList;
     }
 
-    public static Mesh loadModel(String path) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(ObjectLoader.class.getResourceAsStream(path)));
+    public static Mesh loadModel(String path, int LoD) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(ObjectLoader.class.getResourceAsStream(ResourceManager.objectspath+path+"/"+path+LoD+".obj")));
         Mesh model = new Mesh();
         Mesh.Material currentMaterial = new Mesh.Material();
         String line;
@@ -79,7 +79,7 @@ public class ObjectLoader {
             }
             if (line.startsWith("mtllib ")) {
                 String materialFileName = line.split(" ")[1];
-                BufferedReader materialFileReader = new BufferedReader(new InputStreamReader(ObjectLoader.class.getResourceAsStream(ResourceManager.objectspath + materialFileName)));
+                BufferedReader materialFileReader = new BufferedReader(new InputStreamReader(ObjectLoader.class.getResourceAsStream(ResourceManager.objectspath+path+ "/" + materialFileName)));
                 String materialLine;
                 Mesh.Material parseMaterial = new Mesh.Material();
                 String parseMaterialName = "";

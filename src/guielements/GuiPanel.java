@@ -1,7 +1,7 @@
 package guielements;
 
 import game.ResourceManager;
-import gui.AbstractGuiElement;
+import gui.BasicGuiElement;
 import gui.GuiElement;
 
 import java.awt.Color;
@@ -20,7 +20,7 @@ import static org.lwjgl.opengl.GL11.*;
  * @author Benedikt Ringlein
  */
 
-public class GuiPanel extends AbstractGuiElement {
+public class GuiPanel extends BasicGuiElement {
 	
 	private boolean blurBehind = false;
 

@@ -2,18 +2,21 @@ package gui;
 import static org.lwjgl.opengl.GL11.*;
 
 import effects.ParticleEffects;
+import game.DataView;
 import game.Game;
 import game.Main;
 import game.MonthlyActions;
 import game.ResourceManager;
 import game.TransactionCategory;
 import guielements.GuiButton;
+import guielements.GuiCheckbox;
 import guielements.GuiGraph;
 import guielements.GuiLabel;
 import guielements.GuiNumberbox;
 import guielements.GuiPanel;
 import guielements.GuiProgressbar;
 import guielements.GuiQuad;
+import guielements.GuiRadiobutton;
 import guielements.GuiTextbox;
 
 import java.awt.Color;
@@ -73,7 +76,12 @@ public class GUI {
 	    				Main.gui.settingsMenu.setVisible(true);
 	    				break;
 	    		default:break;}}});
-	}};
+	}
+		@Override
+		public void hide() {
+			AnimationManager.animateValue(this, AnimationValue.opacity, 0, 200, AnimationManager.ACTION_HIDE);
+		};
+	};
 	public GuiButton MenuExit = new GuiButton(660, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2){{
 		setText(ResourceManager.getString("MAINMENU_BUTTON_EXIT"));
 	    setFont(ResourceManager.Arial15B);
@@ -246,7 +254,6 @@ public class GUI {
 		addBuildingButton(Buildings.BUILDINGTYPE_FUSIONPOWER);
 	}};
 	public BuildingPanel buildingPanelMiscellaneous = new BuildingPanel(ResourceManager.getString("BUILDINGCATEGORY_MISCELLANEOUS")){{
-		addBuildingButton(Buildings.BUILDINGTYPE_CITYCENTER);
 		addBuildingButton(Buildings.BUILDINGTYPE_RESEARCHSTATION);
 		addBuildingButton(Buildings.BUILDINGTYPE_HANGAR);
 		addBuildingButton(Buildings.BUILDINGTYPE_BANK);
@@ -270,6 +277,18 @@ public class GUI {
 		add(buildingCategories);
 		add(infoBar);
 	}};
+	
+	public GuiPanel DataViewButtons = new GuiPanel(Display.getWidth()-32,0,32,0,(Color)null)
+	{
+		{
+			setHeight(32*DataView.values().length);
+			setY(Display.getHeight()/2-getHeight()/2);
+			for(DataView d:DataView.values())
+			{
+				add(new DataViewButton(0,32*d.ordinal(),32,32,d.getButtonTexture(),d));
+			}
+		}
+	};
 	
 	public GuiPanel blur = new GuiPanel(0,0,Display.getWidth(),Display.getHeight(),(Color)null){{
 		setBlurBehind(true);
@@ -364,7 +383,12 @@ public class GUI {
 		add(pauseSettings);
 		add(pauseExit);
 		add(pauseResume);
-	}};
+	}
+		@Override
+		public void hide() {
+			AnimationManager.animateValue(this, AnimationValue.opacity, 0, 200, AnimationManager.ACTION_HIDE);
+		};
+	};
 	
 	public GuiLabel debugInfo = new GuiLabel(0,Display.getHeight()-20,Display.getWidth(),20,Color.white){{
 		setVisible(Main.debugMode);
@@ -398,85 +422,57 @@ public class GUI {
 		setCentered(true);
 		setFont(ResourceManager.Arial30B);
 	}};
-	public GuiLabel settingsVsync = new GuiLabel(30,440,452,20,(Color)null){{
-		setText(ResourceManager.getString("SETTINGSMENU_LABEL_VSYNC"));
+	public GuiLabel settingsVsyncLabel = new GuiLabel(30,440,452,20,(Color)null){{
+		setText(ResourceManager.getString("SETTINGSMENU_LABEL_VSYNCLABEL"));
 		setFont(ResourceManager.Arial15B);
 	}};
-	public GuiButton settingsVsyncon = new GuiButton(30,410,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
-		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCON"));
+	public GuiCheckbox settingsVsync = new GuiCheckbox(30,410,440){{
+		setText(ResourceManager.getString("SETTINGSMENU_CHECKBOX_VSYNC"));
 		setEvent(new GuiEvent(){
-			@Override public void run(GuiEventType eventtype) {
+			@Override public void run(GuiEventType eventtype, GuiElement element) {
 				switch (eventtype) {
 				case Click:
 						try {
-							Main.gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-							Main.gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							ResourceManager.setSetting("vsync", "enabled");
+							GuiCheckbox c = (GuiCheckbox) element;
+							if(c.isChecked()){
+								ResourceManager.setSetting("vsync", "enabled");
+							}else{
+								ResourceManager.setSetting("vsync", "disabled");
+							}
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 						break;
-				case Mouseover:
-						break;
 				default:break;}}});
-		if (ResourceManager.getSetting("vsync").equals("enabled"))setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+		if(ResourceManager.getSetting("vsync").equals("enabled"))setChecked(true);
 	}};
-	public GuiButton settingsVsyncoff = new GuiButton(130,410,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
-		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_VSYNCOFF"));
-		setEvent(new GuiEvent(){
-			@Override public void run(GuiEventType eventtype) {
-				switch (eventtype) {
-				case Click:
-						try {
-				 			Main.gui.settingsVsyncon.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							Main.gui.settingsVsyncoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-				 			ResourceManager.setSetting("vsync", "disabled");
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						break;
-				case Mouseover:
-						break;
-				default:break;}}});
-		if (!ResourceManager.getSetting("vsync").equals("enabled"))setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-	}};
-	public GuiLabel settingsParticles = new GuiLabel(30,380,452,20,(Color)null){{
+	public GuiLabel settingsParticlesLabel = new GuiLabel(30,380,452,20,(Color)null){{
 		setText(ResourceManager.getString("SETTINGSMENU_LABEL_PARTICLES"));
 		setFont(ResourceManager.Arial15B);                                 
 	}};
-	public GuiButton settingsParticlesoff = new GuiButton(30,350,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
+	public GuiRadiobutton settingsParticlesoff = new GuiRadiobutton(30,0,100){{
 		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESOFF"));
 		setEvent(new GuiEvent(){
 			@Override public void run(GuiEventType eventtype) {
 				switch (eventtype) {
 				case Click:
 						try {
-							Main.gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-							Main.gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							Main.gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							Main.gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-				 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESOFF;
+							ParticleEffects.particleQuality = ParticleEffects.PARTICLESOFF;
 				 			ResourceManager.setSetting("particlequality", "off");
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
 						break;
-				case Mouseover:
-						break;
 				default:break;}}});                              
 	}};
-	public GuiButton settingsParticleslow = new GuiButton(130,350,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
+	public GuiRadiobutton settingsParticleslow = new GuiRadiobutton(130,0,100){{
 		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESLOW"));
 		setEvent(new GuiEvent(){
 			@Override public void run(GuiEventType eventtype) {
 				switch (eventtype) {
 				case Click:
 						try {
-							Main.gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-				 			Main.gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-				 			Main.gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-				 			Main.gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-				 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESLOW;
+							ParticleEffects.particleQuality = ParticleEffects.PARTICLESLOW;
 				 			ResourceManager.setSetting("particlequality", "low");
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -486,18 +482,14 @@ public class GUI {
 						break;
 				default:break;}}});                              
 	}};
-	public GuiButton settingsParticlesmiddle = new GuiButton(230,350,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
+	public GuiRadiobutton settingsParticlesmiddle = new GuiRadiobutton(230,0,100){{
 		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESMIDDLE"));
 		setEvent(new GuiEvent(){
 			@Override public void run(GuiEventType eventtype) {
 				switch (eventtype) {
 				case Click:
 						try {
-							Main.gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							Main.gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							Main.gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
-							Main.gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-				 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESMIDDLE;
+							ParticleEffects.particleQuality = ParticleEffects.PARTICLESMIDDLE;
 				 			ResourceManager.setSetting("particlequality", "middle");
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -507,17 +499,13 @@ public class GUI {
 						break;
 				default:break;}}});
 	}};
-	public GuiButton settingsParticleshigh = new GuiButton(330,350,100,30,ResourceManager.TEXTURE_GUIBUTTON){{
+	public GuiRadiobutton settingsParticleshigh = new GuiRadiobutton(330,0,100){{
 		setText(ResourceManager.getString("SETTINGSMENU_BUTTON_PARTICLESHIGH"));
 		setEvent(new GuiEvent(){
 			@Override public void run(GuiEventType eventtype) {
 				switch (eventtype) {
 				case Click:
 						try {
-							Main.gui.settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							Main.gui.settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							Main.gui.settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTON);
-							Main.gui.settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
 							ParticleEffects.particleQuality = ParticleEffects.PARTICLESHIGH;
 							ResourceManager.setSetting("particlequality", "high");
 						} catch (Exception e) {
@@ -528,32 +516,41 @@ public class GUI {
 						break;
 				default:break;}}});
 	}};
+	public GuiPanel settingsParticlesRadiobuttons = new GuiPanel(0,350,400,32){{
+		setColor(null);
+		add(settingsParticlesoff);
+		add(settingsParticleslow);
+		setClickThrough(true);
+		add(settingsParticlesmiddle);
+		add(settingsParticleshigh);
+	}};
 	public GuiPanel settingsMenu = new GuiPanel(Display.getWidth()/2-256,Display.getHeight()/2-256,512,512,ResourceManager.TEXTURE_GUIMENU){{
 		setVisible(false);
 		add(settingsTitle);
-		add(settingsVsyncon);
-		add(settingsVsyncoff);
 		add(settingsVsync);
-		add(settingsParticles);
-		add(settingsParticlesoff);
-		add(settingsParticleslow);
-		add(settingsParticlesmiddle);
-		add(settingsParticleshigh);
+		add(settingsVsyncLabel);
+		add(settingsParticlesLabel);
+		add(settingsParticlesRadiobuttons);
 		add(settingsResume);
 		if(ResourceManager.getSetting("particlequality").equals("off")){
-			settingsParticlesoff.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+			settingsParticlesoff.setChecked(true);
 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESOFF;
 		}else if(ResourceManager.getSetting("particlequality").equals("low")){
-			settingsParticleslow.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+			settingsParticleslow.setChecked(true);
 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESLOW;
 		}else if(ResourceManager.getSetting("particlequality").equals("middle")){
-			settingsParticlesmiddle.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+			settingsParticlesmiddle.setChecked(true);
 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESMIDDLE;
 		}else if(ResourceManager.getSetting("particlequality").equals("high")){
-			settingsParticleshigh.setTexture(ResourceManager.TEXTURE_GUIBUTTONDOWN);
+			settingsParticleshigh.setChecked(true);
 			ParticleEffects.particleQuality = ParticleEffects.PARTICLESHIGH;
 		}
-	}};
+	}
+		@Override
+		public void hide() {
+			AnimationManager.animateValue(this, AnimationValue.opacity, 0, 200, AnimationManager.ACTION_HIDE);
+		};
+	};
 	
 	public GuiPanel cameraMove = new GuiPanel(Display.getWidth()/2-16,Display.getHeight()/2-16,32,32,ResourceManager.TEXTURE_GUICAMERAMOVE){{
 		setVisible(false);
@@ -671,6 +668,7 @@ public class GUI {
 		add(toolBar);
 		add(guiTools);
 		add(buildinginfo);
+		add(DataViewButtons);
 		add(moneypanel);
 		add(citizenspanel);
 		add(buildingTooltip);
