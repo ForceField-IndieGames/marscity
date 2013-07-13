@@ -15,7 +15,7 @@ public class MedicalCenter extends Building {
 	}
 
 	@Override
-	public void MonthlyTransaction() {
+	public void monthlyAction() {
 		MonthlyActions.addTransaction(-Buildings.getBuildingType(getBuildingType()).getMonthlycost(), TransactionCategory.Health);
 	}
 	

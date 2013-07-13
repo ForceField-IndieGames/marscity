@@ -16,6 +16,20 @@ public class Camera implements Animatable {
 	private float lastrotx=0, lastroty=0;
 	private float zoom = 50;
 	private boolean animate = false;
+	private float cx,cy,cz;
+	
+	public float getCx() {
+		return cx;
+	}
+
+	public float getCy() {
+		return cy;
+	}
+
+	public float getCz() {
+		return cz;
+	}
+
 	public boolean isAnimate() {
 		return animate;
 	}
@@ -33,9 +47,9 @@ public class Camera implements Animatable {
 
 	public void applyTransform()
 	{
-		float cx = getX() + dsin(getRotY()) * dcos(getRotX()) * zoom;
-		float cy = getY() - dsin(getRotX()) * zoom;
-		float cz = getZ() + dcos(getRotX()) * dcos(getRotY()) * zoom;
+		cx = getX() + dsin(getRotY()) * dcos(getRotX()) * zoom;
+		cy = getY() - dsin(getRotX()) * zoom;
+		cz = getZ() + dcos(getRotX()) * dcos(getRotY()) * zoom;
 		
 		gluLookAt(cx, cy, cz,getX(), getY(), getZ(), 0, 1, 0);
 	}

@@ -15,7 +15,7 @@ import animation.Animatable;
  * @author Benedikt Ringlein
  */
 
-public abstract class AbstractGuiElement implements GuiElement, Animatable {
+public class BasicGuiElement implements GuiElement, Animatable {
 
 	private GuiEvent event;
 	private float x=0,y=0,width=0,height=0;
@@ -25,9 +25,17 @@ public abstract class AbstractGuiElement implements GuiElement, Animatable {
 	private Color color = Color.white;
 	private float opacity = 1f;
 	private boolean clickThrough = false;
-	public List<GuiElement> elements = new ArrayList<GuiElement>();
 	private boolean IntegerPosition = false;
+	public List<GuiElement> elements = new ArrayList<GuiElement>();
 	
+	public List<GuiElement> getElements() {
+		return elements;
+	}
+
+	public void setElements(List<GuiElement> elements) {
+		this.elements = elements;
+	}
+
 	public void add(GuiElement guielement)
 	{
 		guielement.setParent(this);

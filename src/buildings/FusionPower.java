@@ -15,7 +15,7 @@ public class FusionPower extends Building {
 	}
 
 	@Override
-	public void MonthlyTransaction() {
+	public void monthlyAction() {
 		MonthlyActions.addTransaction(-Buildings.getBuildingType(getBuildingType()).getMonthlycost(), TransactionCategory.Energy);
 	}
 	

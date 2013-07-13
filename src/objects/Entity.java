@@ -1,6 +1,10 @@
 package objects;
 
 import static org.lwjgl.opengl.GL11.*;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import game.ResourceManager;
 
 import org.newdawn.slick.opengl.Texture;
@@ -18,18 +22,33 @@ public class Entity implements Drawable, Animatable {
 	private float rotX=0,rotY=0,rotZ=0;
 	private float scaleX=1,scaleY=1,scaleZ=1;
 	private Texture texture;
-	private int displayList;
-	
+	private int[] displayList;
 	private float destY;
-	private float preferredY;
+	private float height;
 	private boolean visible = true;
+	private Entity parent;
+	private List<Entity> children = new ArrayList<Entity>();
+
+	public List<Entity> getChildren() {
+		return children;
+	}
+
+	public void addChild(Entity child) {
+		child.setParent(this);
+		this.children.add(child);
+	}
+	
+	public void deleteChild(Entity child)
+	{
+		this.children.remove(child);
+	}
 
 	public Entity()
 	{
 		
 	}
 	
-	public Entity(int displaylist, Texture texture, float x, float y, float z)
+	public Entity(int[] displaylist, Texture texture, float x, float y, float z)
 	{
 			this.displayList = displaylist;
 			this.texture = texture;
@@ -38,13 +57,13 @@ public class Entity implements Drawable, Animatable {
 			this.z=z;
 	}
 
-	public Entity(int displaylist, Texture texture)
+	public Entity(int[] displaylist, Texture texture)
 	{
 			this.displayList = displaylist;
 			this.texture = texture;
 	}
 
-	public Entity(int displaylist, float x, float y, float z)
+	public Entity(int[] displaylist, float x, float y, float z)
 	{
 			this.displayList = displaylist;
 			this.x=x;
@@ -52,20 +71,20 @@ public class Entity implements Drawable, Animatable {
 			this.z=z;
 	}
 
-	public int getDisplayList() {
+	public int[] getDisplayList() {
 		return displayList;
 	}
 
-	public void setDisplayList(int displayList) {
+	public void setDisplayList(int[] displayList) {
 		this.displayList = displayList;
 	}
 
 	public float getHeight() {
-		return preferredY;
+		return height;
 	}
 
-	public void setPreferredZ(float preferredY) {
-		this.preferredY = preferredY;
+	public void setPreferredZ(float height) {
+		this.height = height;
 	}
 
 	public float getDestY() {
@@ -167,7 +186,11 @@ public class Entity implements Drawable, Animatable {
 			glRotatef(rotZ, 0, 0, 1);
 			if(texture!=null)glBindTexture(GL_TEXTURE_2D, texture.getTextureID());
 			else glBindTexture(GL_TEXTURE_2D, 0);
-			glCallList(displayList);
+			ResourceManager.callLODList(this);
+			for(Entity e:children)
+			{
+				e.draw();
+			}
 		glPopMatrix();
 	}
 
@@ -206,5 +229,13 @@ public class Entity implements Drawable, Animatable {
 	@Override
 	public boolean isVisible() {
 		return this.visible;
+	}
+
+	public Entity getParent() {
+		return parent;
+	}
+
+	public void setParent(Entity parent) {
+		this.parent = parent;
 	}
 }
