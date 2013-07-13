@@ -22,7 +22,7 @@ public class Entity implements Drawable, Animatable {
 	private float rotX=0,rotY=0,rotZ=0;
 	private float scaleX=1,scaleY=1,scaleZ=1;
 	private Texture texture;
-	private int displayList;
+	private int[] displayList;
 	private float destY;
 	private float height;
 	private boolean visible = true;
@@ -48,7 +48,7 @@ public class Entity implements Drawable, Animatable {
 		
 	}
 	
-	public Entity(int displaylist, Texture texture, float x, float y, float z)
+	public Entity(int[] displaylist, Texture texture, float x, float y, float z)
 	{
 			this.displayList = displaylist;
 			this.texture = texture;
@@ -57,13 +57,13 @@ public class Entity implements Drawable, Animatable {
 			this.z=z;
 	}
 
-	public Entity(int displaylist, Texture texture)
+	public Entity(int[] displaylist, Texture texture)
 	{
 			this.displayList = displaylist;
 			this.texture = texture;
 	}
 
-	public Entity(int displaylist, float x, float y, float z)
+	public Entity(int[] displaylist, float x, float y, float z)
 	{
 			this.displayList = displaylist;
 			this.x=x;
@@ -71,11 +71,11 @@ public class Entity implements Drawable, Animatable {
 			this.z=z;
 	}
 
-	public int getDisplayList() {
+	public int[] getDisplayList() {
 		return displayList;
 	}
 
-	public void setDisplayList(int displayList) {
+	public void setDisplayList(int[] displayList) {
 		this.displayList = displayList;
 	}
 
@@ -186,7 +186,7 @@ public class Entity implements Drawable, Animatable {
 			glRotatef(rotZ, 0, 0, 1);
 			if(texture!=null)glBindTexture(GL_TEXTURE_2D, texture.getTextureID());
 			else glBindTexture(GL_TEXTURE_2D, 0);
-			glCallList(displayList);
+			ResourceManager.callLODList(this);
 			for(Entity e:children)
 			{
 				e.draw();

@@ -22,5 +22,4 @@ public class CityCenter extends Building {
 	public void delete() {
 		//This building can't be deleted
 	}
-	
 }

@@ -38,6 +38,7 @@ import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.w3c.dom.*;
 
+import objects.Entity;
 
 import animation.Animatable;
 
@@ -77,13 +78,13 @@ public class ResourceManager {
 	public static final String shaderpath = "/res/shader/";
 	
 	//The objects (Actually loads and pares a file and generates a displaylist)
-	public final static int OBJECT_HOUSE = addObject("house.obj");
-	public final static int OBJECT_TERRAIN = addObject("terrain.obj");
-	public final static int OBJECT_SKYBOX = addObject("skybox.obj");
-	public final static int OBJECT_BIGHOUSE = addObject("bighouse.obj");
-	public final static int OBJECT_STREET = addObject("streetsegment.obj");
-	public final static int OBJECT_GRIDCELL = addObject("gridcell.obj");
-	public final static int OBJECT_PLACEHOLDER = addObject("placeholder.obj");
+	public final static int[] OBJECT_HOUSE = addObject("house");
+	public final static int[] OBJECT_TERRAIN = addObject("terrain");
+	public final static int[] OBJECT_SKYBOX = addObject("skybox");
+	public final static int[] OBJECT_BIGHOUSE = addObject("bighouse");
+	public final static int[] OBJECT_STREET = addObject("streetsegment");
+	public final static int[] OBJECT_GRIDCELL = addObject("gridcell");
+	public final static int[] OBJECT_PLACEHOLDER = addObject("placeholder");
 	
 	//The audio files
 	public final static Audio SOUND_DROP = addSound("WAV", "drop.wav");
@@ -290,20 +291,21 @@ public class ResourceManager {
 	 * @param path Path to the .obj file
 	 * @return An integer representing the displaylist
 	 */
-	public static int addObject(String path)
+	public static int[] addObject(String path)
 	{
-		path = objectspath + path;
 		System.out.println(path);
 		try {
 			Main.log("Loading object: "+path);
 			Main.splashscreen.setInfo("Loading object: "+path);
-			return ObjectLoader.createDisplayList(ObjectLoader.loadModel(path));
+			int[] i = new int[]{-1,-1,-1};
+			i[0]=ObjectLoader.createDisplayList(ObjectLoader.loadModel(path,0));
+			return i;
 		} catch (Exception e) {
 			e.printStackTrace();
 			Main.splashscreen.label2.setText("Error! Failed to load object: "+path);
 			Main.log("Failed to load object: "+path);
 		}
-		return -1;
+		return (new int[]{-1,-1,-1});
 	}
 	
 	/**
@@ -559,6 +561,35 @@ public class ResourceManager {
 	public static String getBtDescription2(int bt)
 	{
 		return ResourceManager.getString("DESCRIPTION2_"+Buildings.getBuildingType(bt).getName());
+	}
+	
+	/**
+	 * Chosses the correct LoD model of the entity and draws it
+	 * @param e The entity to draw
+	 */
+	public static void callLODList(Entity e)
+	{
+		int dist = (int) Math.sqrt((e.getX()-Main.camera.getCx())*(e.getX()-Main.camera.getCx())+(e.getY()-Main.camera.getCy())*(e.getY()-Main.camera.getCy())+(e.getZ()-Main.camera.getCz())*(e.getZ()-Main.camera.getCz()));
+		int lod;
+		if(dist<Main.LOD1){
+			lod = 0;
+		}else if(dist<Main.LOD2){
+			lod = 1;
+		}else{
+			lod = 2;
+		}
+		if(e.getDisplayList()[lod]!=-1){
+			glCallList(e.getDisplayList()[lod]);
+		}else{
+			//If correct LoD model is not available, try to use a lower LoD model, or else a higher one
+			for(int i=2;i>=0;i++)
+			{
+				if(e.getDisplayList()[i]!=-1){
+					glCallList(e.getDisplayList()[i]);
+					break;
+				}
+			}
+		}	
 	}
 	
 }

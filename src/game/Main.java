@@ -146,6 +146,8 @@ public class Main {
 	
 	//other constants
 	public final static int MONTH_MILLIS = debugMode?1000:60000;
+	public final static int LOD1 = 50;
+	public final static int LOD2 = 150;
 
 	//Variables that are used for calculating the delta and fps
 	long lastFrame,lastTime;
