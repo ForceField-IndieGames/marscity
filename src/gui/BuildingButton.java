@@ -50,7 +50,7 @@ public class BuildingButton extends GuiPanel {
 			break;
 	case Mouseover:
 			Main.gui.buildingTooltip.setVisible(true);
-			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.opacity, 1f, 200);
+			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.OPACITY, 1f, 200);
 			Main.gui.buildingTooltip.setY(e.getScreenY()+e.getHeight()-10);
 			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.Y, Main.gui.buildingTooltip.getY()+10, 200);
 			if(Main.gui.buildingTooltip.getOpacity()>0)
@@ -59,7 +59,7 @@ public class BuildingButton extends GuiPanel {
 			Main.gui.buildingTooltip.setBuilding(getBt());
 			break;
 	case Mouseout:
-		AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.opacity, 0f, 200,AnimationManager.ACTION_HIDE);
+		AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.OPACITY, 0f, 200,AnimationManager.ACTION_HIDE);
 		AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.Y, Main.gui.buildingTooltip.getY()-10, 200);
 		break;
 	default:break;}}});

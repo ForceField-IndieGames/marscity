@@ -9,6 +9,7 @@ import gui.GuiElement;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.RenderingHints.Key;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -410,9 +411,13 @@ public class Main {
 							Game.Pause();
 							gui.blur.setVisible(true);
 							gui.pauseMenu.setVisible(true);
-							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f);
+							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.OPACITY, 1, 0.005f);
 						}
 						if(debugMode)Game.exit();
+					}
+					if(debugMode&&Keyboard.getEventKey()==Keyboard.KEY_T)
+					{
+						gui.showToolTip("Das ist ein Test Tooltip");
 					}
 					if(debugMode&&Keyboard.getEventKey()==Keyboard.KEY_M&&Keyboard.getEventKeyState()){
 						gui.MsgBox("Text", "Sie haben auf die M Taste gedrückt und eine Messagebox aufgerufen. Der Text hier sollte automatisch gewrapt werden. Das funktioniert bei allen Labels, man braucht also nicht mehr über Zeilenumbrüche nachzudenken");
@@ -424,12 +429,12 @@ public class Main {
 						{
 							Game.Resume();
 							gui.blur.setVisible(false);
-							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
+							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.OPACITY, 0, 0.005f, AnimationManager.ACTION_HIDE);
 						}else {
 							Game.Pause();
 							gui.blur.setVisible(true);
 							gui.pauseMenu.setVisible(true);
-							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f);
+							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.OPACITY, 1, 0.005f);
 						}
 					}
 					//Activate and deactivate debug mode with TAB
@@ -864,6 +869,13 @@ public class Main {
 		for(int i=0;i<Buildings.buildings.size();i++)
 		{
 			Buildings.buildings.get(i).update(delta);
+		}
+		
+		//Update tooltip position
+		if(gui.tooltip.isVisible())
+		{
+			gui.tooltip.setX((Mouse.getX()+gui.tooltip.getWidth()<=Display.getWidth())?Mouse.getX():Display.getWidth()-gui.tooltip.getWidth());
+			gui.tooltip.setY((Mouse.getY()+gui.tooltip.getHeight()<=Display.getHeight())?Mouse.getY():Display.getHeight()-gui.tooltip.getHeight());
 		}
 		
 		//Show debug info

@@ -63,12 +63,12 @@ public class AnimationManager {
 	public static void animateValue(Animatable object, CustomAnimationValue customvalue, double destValue, double speed, int action)
 	{
 		for(int i=0;i<animations.size();i++){
-			if(animations.get(i).object==object&&animations.get(i).value==AnimationValue.custom){
+			if(animations.get(i).object==object&&animations.get(i).value==AnimationValue.CUSTOM){
 				animations.remove(i);
 				i--;
 			}
 		}
-		animations.add(new Animation(object, AnimationValue.custom, customvalue, customvalue.getValue(), destValue, speed, action));
+		animations.add(new Animation(object, AnimationValue.CUSTOM, customvalue, customvalue.getValue(), destValue, speed, action));
 	}
 	public static void animateValue(Animatable object, AnimationValue value, float destValue, int time){
 		animateValue(object, value, destValue, time, ACTION_NOTHING);
@@ -94,16 +94,16 @@ public class AnimationManager {
 		case Z:
 			speed = Math.abs(destValue-object.getZ())/time;
 			break;
-		case rotX:
+		case ROTX:
 			speed = Math.abs(destValue-object.getRotX())/time;
 			break;
-		case rotY:
+		case ROTY:
 			speed = Math.abs(destValue-object.getRotY())/time;
 			break;
-		case rotZ:
+		case ROTZ:
 			speed = Math.abs(destValue-object.getRotZ())/time;
 			break;
-		case opacity:
+		case OPACITY:
 			speed = Math.abs(destValue-object.getOpacity())/time;
 			break;
 		default:
@@ -135,16 +135,16 @@ public class AnimationManager {
 		case Z:
 			animations.add(new Animation(object, value, null, object.getZ() , destValue, speed, action));
 			break;
-		case rotX:
+		case ROTX:
 			animations.add(new Animation(object, value, null, object.getRotX() , destValue, speed, action));
 			break;
-		case rotY:
+		case ROTY:
 			animations.add(new Animation(object, value, null, object.getRotY() , destValue, speed, action));
 			break;
-		case rotZ:
+		case ROTZ:
 			animations.add(new Animation(object, value, null, object.getRotZ() , destValue, speed, action));
 			break;
-		case opacity:
+		case OPACITY:
 			animations.add(new Animation(object, value, null, object.getOpacity() , destValue, speed, action));
 			break;
 		default:
@@ -154,111 +154,111 @@ public class AnimationManager {
 	
 	public static void update(int delta)
 	{
-		for(Animation animation: animations)
+		for(int i=0;i<animations.size();i++)
 		{
-			switch(animation.value)
+			switch(animations.get(i).value)
 			{
 				case X: 
-					if(Math.abs(animation.object.getX()-animation.destValue)>=delta*animation.speed){
-						if(animation.object.getX()<animation.destValue){
-							animation.object.setX((float) (animation.object.getX()+delta*animation.speed));
+					if(Math.abs(animations.get(i).object.getX()-animations.get(i).destValue)>=delta*animations.get(i).speed){
+						if(animations.get(i).object.getX()<animations.get(i).destValue){
+							animations.get(i).object.setX((float) (animations.get(i).object.getX()+delta*animations.get(i).speed));
 						}else{
-							animation.object.setX((float) (animation.object.getX()-delta*animation.speed));
+							animations.get(i).object.setX((float) (animations.get(i).object.getX()-delta*animations.get(i).speed));
 						}
 					}else{
-						animation.object.setX((float) animation.destValue);
-						ExecuteFinishedAction(animation);
+						animations.get(i).object.setX((float) animations.get(i).destValue);
+						ExecuteFinishedAction(animations.get(i));
 						return;
 					}
 				break;
 				case Y: 
-					if(Math.abs(animation.object.getY()-animation.destValue)>=delta*animation.speed){
-						if(animation.object.getY()<animation.destValue){
-							animation.object.setY((float) (animation.object.getY()+delta*animation.speed));
+					if(Math.abs(animations.get(i).object.getY()-animations.get(i).destValue)>=delta*animations.get(i).speed){
+						if(animations.get(i).object.getY()<animations.get(i).destValue){
+							animations.get(i).object.setY((float) (animations.get(i).object.getY()+delta*animations.get(i).speed));
 						}else{
-							animation.object.setY((float) (animation.object.getY()-delta*animation.speed));
+							animations.get(i).object.setY((float) (animations.get(i).object.getY()-delta*animations.get(i).speed));
 						}
 					}else{
-						animation.object.setY((float) animation.destValue);
-						ExecuteFinishedAction(animation);
+						animations.get(i).object.setY((float) animations.get(i).destValue);
+						ExecuteFinishedAction(animations.get(i));
 						return;
 					}
 				break;
 				case Z: 
-					if(Math.abs(animation.object.getZ()-animation.destValue)>=delta*animation.speed){
-						if(animation.object.getZ()<animation.destValue){
-							animation.object.setZ((float) (animation.object.getZ()+delta*animation.speed));
+					if(Math.abs(animations.get(i).object.getZ()-animations.get(i).destValue)>=delta*animations.get(i).speed){
+						if(animations.get(i).object.getZ()<animations.get(i).destValue){
+							animations.get(i).object.setZ((float) (animations.get(i).object.getZ()+delta*animations.get(i).speed));
 						}else{
-							animation.object.setZ((float) (animation.object.getZ()-delta*animation.speed));
+							animations.get(i).object.setZ((float) (animations.get(i).object.getZ()-delta*animations.get(i).speed));
 						}
 					}else{
-						animation.object.setZ((float) animation.destValue);
-						ExecuteFinishedAction(animation);
+						animations.get(i).object.setZ((float) animations.get(i).destValue);
+						ExecuteFinishedAction(animations.get(i));
 						return;
 					}
 				break;
-				case rotX: 
-					if(Math.abs(animation.object.getRotX()-animation.destValue)>=delta*animation.speed){
-						if(animation.object.getRotX()<animation.destValue){
-							animation.object.setRotX((float) (animation.object.getRotX()+delta*animation.speed));
+				case ROTX: 
+					if(Math.abs(animations.get(i).object.getRotX()-animations.get(i).destValue)>=delta*animations.get(i).speed){
+						if(animations.get(i).object.getRotX()<animations.get(i).destValue){
+							animations.get(i).object.setRotX((float) (animations.get(i).object.getRotX()+delta*animations.get(i).speed));
 						}else{
-							animation.object.setRotX((float) (animation.object.getRotX()-delta*animation.speed));
+							animations.get(i).object.setRotX((float) (animations.get(i).object.getRotX()-delta*animations.get(i).speed));
 						}
 					}else{
-						animation.object.setRotX((float) animation.destValue);
-						ExecuteFinishedAction(animation);
+						animations.get(i).object.setRotX((float) animations.get(i).destValue);
+						ExecuteFinishedAction(animations.get(i));
 						return;
 					}
 				break;
-				case rotY: 
-					if(Math.abs(animation.object.getRotY()-animation.destValue)>=delta*animation.speed){
-						if(animation.object.getRotY()<animation.destValue){
-							animation.object.setRotY((float) (animation.object.getRotY()+delta*animation.speed));
+				case ROTY: 
+					if(Math.abs(animations.get(i).object.getRotY()-animations.get(i).destValue)>=delta*animations.get(i).speed){
+						if(animations.get(i).object.getRotY()<animations.get(i).destValue){
+							animations.get(i).object.setRotY((float) (animations.get(i).object.getRotY()+delta*animations.get(i).speed));
 						}else{
-							animation.object.setRotY((float) (animation.object.getRotY()-delta*animation.speed));
+							animations.get(i).object.setRotY((float) (animations.get(i).object.getRotY()-delta*animations.get(i).speed));
 						}
 					}else{
-						animation.object.setRotY((float) animation.destValue);
-						ExecuteFinishedAction(animation);
+						animations.get(i).object.setRotY((float) animations.get(i).destValue);
+						ExecuteFinishedAction(animations.get(i));
 						return;
 					}
 				break;
-				case rotZ: 
-					if(Math.abs(animation.object.getRotZ()-animation.destValue)>=delta*animation.speed){
-						if(animation.object.getRotZ()<animation.destValue){
-							animation.object.setRotZ((float) (animation.object.getRotZ()+delta*animation.speed));
+				case ROTZ: 
+					if(Math.abs(animations.get(i).object.getRotZ()-animations.get(i).destValue)>=delta*animations.get(i).speed){
+						if(animations.get(i).object.getRotZ()<animations.get(i).destValue){
+							animations.get(i).object.setRotZ((float) (animations.get(i).object.getRotZ()+delta*animations.get(i).speed));
 						}else{
-							animation.object.setRotZ((float) (animation.object.getRotZ()-delta*animation.speed));
+							animations.get(i).object.setRotZ((float) (animations.get(i).object.getRotZ()-delta*animations.get(i).speed));
 						}
 					}else{
-						animation.object.setRotZ((float) animation.destValue);
-						ExecuteFinishedAction(animation);
+						animations.get(i).object.setRotZ((float) animations.get(i).destValue);
+						ExecuteFinishedAction(animations.get(i));
 						return;
 					}
 				break;
-				case opacity:
-					if(Math.abs(animation.object.getOpacity()-animation.destValue)>=delta*animation.speed){
-						if(animation.object.getOpacity()<animation.destValue){
-							animation.object.setOpacity((float) (animation.object.getOpacity()+delta*animation.speed));
+				case OPACITY:
+					if(Math.abs(animations.get(i).object.getOpacity()-animations.get(i).destValue)>=delta*animations.get(i).speed){
+						if(animations.get(i).object.getOpacity()<animations.get(i).destValue){
+							animations.get(i).object.setOpacity((float) (animations.get(i).object.getOpacity()+delta*animations.get(i).speed));
 						}else{
-							animation.object.setOpacity((float) (animation.object.getOpacity()-delta*animation.speed));
+							animations.get(i).object.setOpacity((float) (animations.get(i).object.getOpacity()-delta*animations.get(i).speed));
 						}
 					}else{
-						animation.object.setOpacity((float) animation.destValue);
-						ExecuteFinishedAction(animation);
+						animations.get(i).object.setOpacity((float) animations.get(i).destValue);
+						ExecuteFinishedAction(animations.get(i));
 						return;
 					}
 					break;
-				case custom:
-					if(Math.abs(animation.customvalue.getValue()-animation.destValue)>=delta*animation.speed){
-						if(animation.customvalue.getValue()<animation.destValue){
-							animation.customvalue.setValue(animation.customvalue.getValue()+delta*animation.speed);
+				case CUSTOM:
+					if(Math.abs(animations.get(i).customvalue.getValue()-animations.get(i).destValue)>=delta*animations.get(i).speed){
+						if(animations.get(i).customvalue.getValue()<animations.get(i).destValue){
+							animations.get(i).customvalue.setValue(animations.get(i).customvalue.getValue()+delta*animations.get(i).speed);
 						}else{
-							animation.customvalue.setValue(animation.customvalue.getValue()-delta*animation.speed);
+							animations.get(i).customvalue.setValue(animations.get(i).customvalue.getValue()-delta*animations.get(i).speed);
 						}
 					}else{
-						animation.customvalue.setValue(animation.destValue);
-						ExecuteFinishedAction(animation);
+						animations.get(i).customvalue.setValue(animations.get(i).destValue);
+						ExecuteFinishedAction(animations.get(i));
 						return;
 					}
 					break;
@@ -294,32 +294,32 @@ public class AnimationManager {
 			case Z: 
 				animation.object.setZ((float) animation.startvalue);
 				break;
-			case rotX: 
+			case ROTX: 
 				animation.object.setRotX((float) animation.startvalue);
 				break;
-			case rotY: 
+			case ROTY: 
 				animation.object.setRotY((float) animation.startvalue);
 				break;
-			case rotZ: 
+			case ROTZ: 
 				animation.object.setRotZ((float) animation.startvalue);
 				break;
-			case opacity: 
+			case OPACITY: 
 				animation.object.setOpacity((float) animation.startvalue);
 				break;
-			case custom:
+			case CUSTOM:
 				animation.customvalue.setValue(animation.startvalue);
 				break;
 			default:
 				break;
 			}
 		}else if(animation.finishedAction==ACTION_REVERSE){
-			if(animation.value==AnimationValue.custom){
+			if(animation.value==AnimationValue.CUSTOM){
 				animateValue(animation.object, animation.customvalue, animation.startvalue, animation.speed, ACTION_NOTHING);
 			}else{
 				animateValue(animation.object, animation.value, animation.startvalue, animation.speed);
 			}
 		}
-		if(animation.value==AnimationValue.custom){
+		if(animation.value==AnimationValue.CUSTOM){
 			animation.customvalue.finishedAction();
 		}
 		animations.remove(animation);

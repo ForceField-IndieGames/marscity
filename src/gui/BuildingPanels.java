@@ -36,13 +36,13 @@ public class BuildingPanels extends GuiPanel {
 		setVisible(true);
 		left.setVisible(true);
 		AnimationManager.animateValue(this, AnimationValue.Y, 68f, 100);
-		AnimationManager.animateValue(this, AnimationValue.opacity, 1f, 100);
+		AnimationManager.animateValue(this, AnimationValue.OPACITY, 1f, 100);
 	}
 	
 	public void hide()
 	{
 		AnimationManager.animateValue(this, AnimationValue.Y, 20f, 100, AnimationManager.ACTION_HIDE);
-		AnimationManager.animateValue(this, AnimationValue.opacity, 0f, 100);
+		AnimationManager.animateValue(this, AnimationValue.OPACITY, 0f, 100);
 	}
 	
 }
