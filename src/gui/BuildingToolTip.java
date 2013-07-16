@@ -30,6 +30,7 @@ public class BuildingToolTip extends GuiPanel {
 		setHeight(128);
 		setOpacity(0f);
 		setClickThrough(true);
+		setVisible(false);
 		title = new GuiLabel(0,85,256,30,(Color)null);
 		title.setFont(ResourceManager.Arial15B);
 		title.setCentered(true);
