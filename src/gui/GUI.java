@@ -117,6 +117,7 @@ public class GUI {
 	}};
 	
 	public GuiButton menuButton = new GuiButton(0, 64, 32, 32, ResourceManager.TEXTURE_GUIMENUBUTTON){{
+		setTooltip(ResourceManager.getString("TOOLTIP_MENUBUTTON"));
 		setEvent(new GuiEvent(){
 			@Override public void run(GuiEventType eventtype) {
 				switch (eventtype) {
@@ -131,6 +132,7 @@ public class GUI {
 				default:break;}}});
 	}};
 	public GuiButton toolDelete = new GuiButton(0, 0, 64, 64, ResourceManager.TEXTURE_GUIDELETE){{
+		setTooltip(ResourceManager.getString("TOOLTIP_TOOLDELETE"));
 		setEvent(new GuiEvent(){
 			@Override public void run(GuiEventType eventtype) {
 				switch (eventtype) {
@@ -154,6 +156,7 @@ public class GUI {
 	}};
 	
 	public GuiTextbox cityName = new GuiTextbox(100,5,200,30){{
+		setTooltip(ResourceManager.getString("TOOLTIP_CITYNAME"));
 		setText(Main.cityname);
 		setCharlimit(25);
 		setEvent(new GuiEvent(){
@@ -179,6 +182,7 @@ public class GUI {
 		}
 	};
 	public GuiLabel infoMonthly = new GuiLabel(150,0,50,30,(Color)null){{
+		setTooltip(ResourceManager.getString("TOOLTIP_INFOMONTHLY"));
 		setText("0$");
 		setFont(ResourceManager.Arial12);
 		setRightaligned(true);
@@ -196,6 +200,7 @@ public class GUI {
 		}
 	};
 	public GuiLabel infoMoney = new GuiLabel(350,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
+		setTooltip(ResourceManager.getString("TOOLTIP_INFOMONEY"));
 		add(infoBuildingCosts);
 		add(infoMonthly);
 		add(infoMonthlyCosts);
@@ -215,6 +220,7 @@ public class GUI {
 	}};
 	
 	public GuiLabel infoCitizens = new GuiLabel(600,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
+		setTooltip(ResourceManager.getString("TOOLTIP_INFOCITIZENS"));
 		setText("Citizens: 0");
 		setFont(ResourceManager.Arial15B);
 		setEvent(new GuiEvent(){
@@ -699,6 +705,11 @@ public class GUI {
 	public void showToolTip(String text)
 	{
 		tooltip.show(text);
+	}
+	
+	public void hideToolTip()
+	{
+		tooltip.hide();
 	}
 	
 	/**

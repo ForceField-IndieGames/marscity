@@ -6,6 +6,7 @@ import org.newdawn.slick.opengl.Texture;
 
 import game.DataView;
 import game.Main;
+import game.ResourceManager;
 import guielements.GuiButton;
 import guielements.GuiPanel;
 
@@ -21,6 +22,7 @@ public class DataViewButton extends GuiButton {
 		setHeight(height);
 		setTexture(texture);
 		setDataview(dataview);
+		setTooltip(ResourceManager.getString("TOOLTIP_"+dataview.name().toUpperCase()));
 		setEvent(new GuiEvent(){
 			@Override
 			public void run(GuiEventType eventtype) {

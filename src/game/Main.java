@@ -9,7 +9,6 @@ import gui.GuiElement;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.awt.RenderingHints.Key;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileNotFoundException;
