@@ -1,5 +1,7 @@
 package gui;
 
+import game.Main;
+
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,7 @@ public class BasicGuiElement implements GuiElement, Animatable {
 	private boolean clickThrough = false;
 	private boolean IntegerPosition = false;
 	public List<GuiElement> elements = new ArrayList<GuiElement>();
+	private String tooltip = "";
 	
 	public List<GuiElement> getElements() {
 		return elements;
@@ -109,6 +112,20 @@ public class BasicGuiElement implements GuiElement, Animatable {
 	@Override
 	public void callGuiEvents(GuiEventType eventtype)
 	{
+		if(getTooltip()!="")
+		{
+			switch(eventtype){
+			case Mouseover:
+				Main.gui.showToolTip(getTooltip());
+				break;
+			case Mouseout:
+				Main.gui.hideToolTip();
+				break;
+			default:
+				break;
+			}
+		}
+		
 		try {
 			getEvent().run(eventtype, this);
 		} catch (Exception e) {
@@ -261,6 +278,14 @@ public class BasicGuiElement implements GuiElement, Animatable {
 	public void hide()
 	{
 		setVisible(false);
+	}
+
+	public String getTooltip() {
+		return tooltip;
+	}
+
+	public void setTooltip(String tooltip) {
+		this.tooltip = tooltip;
 	}
 
 }

@@ -151,6 +151,9 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUIRADIOBUTTON = addTexture("guiradiobutton.png");
 	public final static Texture TEXTURE_GUIRADIOCHECKED = addTexture("guiradiochecked.png");
 	public final static Texture TEXTURE_DATAVIEWBUTTONHAPPINESS = addTexture("dataviewhappiness.png");
+	public final static Texture TEXTURE_TOOLTIP = addTexture("tooltip.png");
+	public final static Texture TEXTURE_TOOLTIPL = addTexture("tooltipl.png");
+	public final static Texture TEXTURE_TOOLTIPR = addTexture("tooltipr.png");
 	
 	/**
 	 * Initializes the Resources that need to be initialized
@@ -298,7 +301,13 @@ public class ResourceManager {
 			Main.log("Loading object: "+path);
 			Main.splashscreen.setInfo("Loading object: "+path);
 			int[] i = new int[]{-1,-1,-1};
-			i[0]=ObjectLoader.createDisplayList(ObjectLoader.loadModel(path,0));
+			for(int j=0;j<=2;j++){
+				try {
+					i[j]=ObjectLoader.createDisplayList(ObjectLoader.loadModel(path,j));
+				} catch (Exception e) {
+					i[j]=-1;
+				}
+			}
 			return i;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -582,7 +591,7 @@ public class ResourceManager {
 			glCallList(e.getDisplayList()[lod]);
 		}else{
 			//If correct LoD model is not available, try to use a lower LoD model, or else a higher one
-			for(int i=2;i>=0;i++)
+			for(int i=2;i>=0;i--)
 			{
 				if(e.getDisplayList()[i]!=-1){
 					glCallList(e.getDisplayList()[i]);

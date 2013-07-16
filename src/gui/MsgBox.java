@@ -49,14 +49,14 @@ public class MsgBox extends GuiPanel {
 			@Override public void run(GuiEventType eventtype, GuiElement element) {
 				switch (eventtype) {
 				case Click:
-						AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.opacity, 0f, 100, AnimationManager.ACTION_REMOVEGUI);
+						AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.OPACITY, 0f, 100, AnimationManager.ACTION_REMOVEGUI);
 						AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.Y, element.getParent().getY()-20, 100);
 						break;
 				default:break;}}});
 		button.setText(ResourceManager.getString("MSGBOX_BUTTON_OK"));
 		button.setColor(color);
 		add(button);
-		AnimationManager.animateValue(this, AnimationValue.opacity, 1f, 100);
+		AnimationManager.animateValue(this, AnimationValue.OPACITY, 1f, 100);
 		AnimationManager.animateValue(this, AnimationValue.Y, getY()+10, 100, AnimationManager.ACTION_REVERSE);
 	}
 	

@@ -61,7 +61,7 @@ public class BuildingInfo extends GuiPanel {
 	{
 		this.building = building;
 		setVisible(true);
-		AnimationManager.animateValue(this, AnimationValue.opacity, 1, 200);
+		AnimationManager.animateValue(this, AnimationValue.OPACITY, 1, 200);
 		title.setText(Buildings.getBuildingTypeName(building.getBuildingType()));
 		text = ResourceManager.getBtDescription(building.getBuildingType())+System.lineSeparator()+System.lineSeparator()+
 				ResourceManager.getBtDescription2(building.getBuildingType());
@@ -90,7 +90,7 @@ public class BuildingInfo extends GuiPanel {
 	
 	public void hide()
 	{
-		AnimationManager.animateValue(this, AnimationValue.opacity, 0, 200,AnimationManager.ACTION_HIDE);
+		AnimationManager.animateValue(this, AnimationValue.OPACITY, 0, 200,AnimationManager.ACTION_HIDE);
 	}
 	
 }

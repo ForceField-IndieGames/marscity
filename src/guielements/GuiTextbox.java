@@ -137,7 +137,7 @@ public class GuiTextbox extends GuiLabel {
 					break;
 			default:break;
 			}
-			getEvent().run(eventtype, this);
+			super.callGuiEvents(eventtype);
 		} catch (Exception e) {
 		}
 	}

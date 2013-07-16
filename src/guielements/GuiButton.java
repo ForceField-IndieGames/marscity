@@ -44,7 +44,7 @@ public class GuiButton extends BasicGuiElement {
 						break;
 				default:break;
 			}
-			getEvent().run(eventtype, this);	
+			super.callGuiEvents(eventtype);	
 		} catch (Exception e) {}
 	}
 
