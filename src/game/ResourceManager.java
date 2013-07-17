@@ -10,11 +10,13 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.FloatBuffer;
+import java.util.HashMap;
 
 import javax.xml.parsers.*;
 import javax.xml.transform.Transformer;
@@ -65,9 +67,11 @@ public class ResourceManager {
 	public static int shaderProgram, vertexShader, fragmentShader;
 	
 	//Some xml stuff that is only used internally
-	static Document langFile = null;
 	static Document settingsFile = null;
 	static DocumentBuilder builder = null;
+	
+	//A hashmap that contains the localized strings
+	public static HashMap<String,String> strings = new HashMap<String,String>();
 	
 	//The path of the settings file
 	static final String FILE_SETTINGS = "res/settings/settings.xml";
@@ -185,7 +189,7 @@ public class ResourceManager {
 			(new File("res/cities")).mkdir();
 			Main.log("Created necessary folders.");
 			try {
-				(new File("res/lang/DE.xml")).createNewFile();
+				(new File("res/lang/DE.lang")).createNewFile();
 				(new File(FILE_SETTINGS)).createNewFile();
 				
 				//settings.xml
@@ -199,9 +203,9 @@ public class ResourceManager {
 				input.close();
 				output.close();
 				
-				//DE.xml
-				input = new BufferedReader(new InputStreamReader(ResourceManager.class.getResourceAsStream("/res/lang/DE.xml")));
-				output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("res/lang/DE.xml"))));
+				//DE.lang
+				input = new BufferedReader(new InputStreamReader(ResourceManager.class.getResourceAsStream("/res/lang/DE.lang")));
+				output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("res/lang/DE.lang"))));
 			
 				while((line=input.readLine())!=null){
 					output.write(line+System.lineSeparator());
@@ -213,10 +217,12 @@ public class ResourceManager {
 			}
 		}
 		
-		//make XML files available for the static methods
+		//load xml files
 		Main.splashscreen.setInfo("Loading xml files...");
 		settingsFile = addXML("res/settings/settings.xml");
-		langFile = addXML("res/lang/"+getSetting("lang")+".xml");
+		try {
+			strings = addLangFile("res/lang/DE.lang");
+		} catch (IOException e) {}
 	}
 
 	/**
@@ -262,6 +268,36 @@ public class ResourceManager {
 		return null;
 	}
 	
+ 	public static HashMap<String,String> addLangFile(String path) throws IOException
+ 	{
+ 		Main.splashscreen.setInfo("Loading language file: "+path);
+ 		HashMap<String,String> hm = new HashMap<String,String>();
+ 		BufferedReader reader=null;
+ 		try {
+			reader = new BufferedReader(new FileReader(new File(path)));
+		} catch (Exception e) {
+			e.printStackTrace();
+			Game.exit();
+		}
+ 		
+ 		String line;
+ 		while((line=reader.readLine()) != null)
+ 		{
+ 			if(line.startsWith("//"))continue;
+ 			int pos = line.indexOf("|");
+ 			if(pos!=-1){
+ 				try {
+					hm.put(line.substring(0,pos), line.substring(pos+1));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+ 			}
+ 		}
+ 		
+ 		reader.close();
+ 		return hm;
+ 	}
+ 	
 	/**
 	 * Deletes an animatable from the render list ()for compatibility
 	 * @param obj
@@ -361,21 +397,23 @@ public class ResourceManager {
 	/**
 	 * Returns a the localized String from the language file
 	 * @param input
-	 * @return The localized strong or "String not found: #"
+	 * @return The localized strong or the input, if not found
 	 */
 	public static String getString(String input)
 	{
 		String output =  null;
-		if(langFile==null)return "Unable to load language file for "+getSetting("lang");
-		try {
-			output =  langFile.getElementsByTagName(input).item(0).getTextContent();
-		} catch (Exception e) {
-		}
-		
-		if(output==null){
-			System.err.println("String not found: "+input);
-			return input;
-		}
+//		if(langFile==null)return "Unable to load language file for "+getSetting("lang");
+//		try {
+//			output =  langFile.getElementsByTagName(input).item(0).getTextContent();
+//		} catch (Exception e) {
+//		}
+//		
+//		if(output==null){
+//			System.err.println("String not found: "+input);
+//			return input;
+//		}
+		output = strings.get(input);
+		if(output==null)output=input;
 		return output;
 	}
 	
