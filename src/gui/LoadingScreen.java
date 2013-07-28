@@ -12,6 +12,14 @@ import animation.AnimationValue;
 import game.Game;
 import game.Main;
 import game.ResourceManager;
+import guielements.GuiButton;
+import guielements.GuiLabel;
+import guielements.GuiPanel;
+
+/**
+ * The loading screen displays all available saved citys. The list can be scrolled.
+ * @author Benedikt Ringlein
+ */
 
 public class LoadingScreen extends GuiPanel {
 
@@ -52,7 +60,7 @@ public class LoadingScreen extends GuiPanel {
 				case Click:
 						Main.gui.blur.setVisible(false);
 						Game.Resume();
-						AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
+						AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.OPACITY, 0, 0.005f, AnimationManager.ACTION_HIDE);
 						Main.gui.loadingscreen.setVisible(false);
 						break;
 				case Mouseover:
