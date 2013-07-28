@@ -8,7 +8,6 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
@@ -76,12 +75,13 @@ public class ResourceManager {
 	//The path of the settings file
 	static final String FILE_SETTINGS = "res/settings/settings.xml";
 	
+	//Resource paths
 	public static final String objectspath = "/res/objects/";
 	public static final String soundspath = "/res/sounds/";
 	public static final String texturespath = "/res/textures/";
 	public static final String shaderpath = "/res/shader/";
 	
-	//The objects (Actually loads and pares a file and generates a displaylist)
+	//The objects (Actually loads and pares a file and generates displaylists for each LOD model)
 	public final static int[] OBJECT_HOUSE = addObject("house");
 	public final static int[] OBJECT_TERRAIN = addObject("terrain");
 	public final static int[] OBJECT_SKYBOX = addObject("skybox");
@@ -96,68 +96,68 @@ public class ResourceManager {
 	public final static Audio SOUND_SELECT = addSound("WAV", "select.wav");
 	
 	//Loads the textures
-	public final static Texture TEXTURE_ICON16 = addTexture("icon16.png");
-	public final static Texture TEXTURE_ICON32 = addTexture("icon32.png");
-	public final static Texture TEXTURE_ICON256 = addTexture("icon256.png");
-	public final static Texture TEXTURE_SKYBOX = addTexture("skybox.png");
-	public final static Texture TEXTURE_TERRAIN = addTexture("mars.png");
-	public final static Texture TEXTURE_STREET = addTexture("street.png");
-	public final static Texture TEXTURE_HOUSE = addTexture("housetexture.png");
-	public final static Texture TEXTURE_BIGHOUSE = addTexture("bighousetexture.png");
-	public final static Texture TEXTURE_EMPTY = addTexture("empty.png");
-	public final static Texture TEXTURE_MAINMENUBG = addTexture("mainmenubg.png");
-	public final static Texture TEXTURE_MAINMENUFF = addTexture("ForceField.png");
-	public final static Texture TEXTURE_MARSCITYLOGO = addTexture("marscitylogo.png");
-	public final static Texture TEXTURE_FORCEFIELDBG = addTexture("forcefieldbackground2.png");
-	public final static Texture TEXTURE_MSGBOX = addTexture("msgbox.png");
-	public final static Texture TEXTURE_GUITOOLSBG = addTexture("guitoolsBG.png");
-	public final static Texture TEXTURE_GUITOOLTIP = addTexture("guitooltip.png");
-	public final static Texture TEXTURE_GUIMENUBUTTON = addTexture("guimenubutton.png");
-	public final static Texture TEXTURE_GUIDELETE = addTexture("guidelete.png");
-	public final static Texture TEXTURE_GUITOOLBAR = addTexture("guitoolbar.png");
-	public final static Texture TEXTURE_GUIMENU = addTexture("guimenu.png");
-	public final static Texture TEXTURE_GUIBUTTON = addTexture("guibutton.png");
-	public final static Texture TEXTURE_GUIBUTTONDOWN = addTexture("guibuttondown.png");
-	public final static Texture TEXTURE_GUIBUTTON2 = addTexture("guibutton2.png");
-	public final static Texture TEXTURE_GUIBUTTON2DOWN = addTexture("guibutton2down.png");
-	public final static Texture TEXTURE_GUILABELBG = addTexture("guilabelbg.png");
-	public final static Texture TEXTURE_GUILABELBGL = addTexture("guilabelbgl.png");
-	public final static Texture TEXTURE_GUILABELBGR = addTexture("guilabelbgr.png");
-	public final static Texture TEXTURE_PARTICLEFOG = addTexture("fogparticle.png");
-	public final static Texture TEXTURE_GUIDELETEBORDER = addTexture("guideleteborder.png");
-	public final static Texture TEXTURE_GUICAMERAMOVE = addTexture("cameramove.png");
-	public final static Texture TEXTURE_GUICAMERAROTATE = addTexture("camerarotate.png");
-	public final static Texture TEXTURE_GUIBUILDINGSPANEL = addTexture("buildingspanel.png");
-	public final static Texture TEXTURE_GUIBUILDINGSPANELL = addTexture("buildingspanell.png");
-	public final static Texture TEXTURE_GUITHUMBSTREET = addTexture("thumbstreet.png");
-	public final static Texture TEXTURE_GUITHUMBHOUSE = addTexture("thumbhouse.png");
-	public final static Texture TEXTURE_GUITHUMBBIGHOUSE = addTexture("thumbbighouse.png");
-	public final static Texture TEXTURE_GUITEXTFIELD = addTexture("guitextfield.png");
-	public final static Texture TEXTURE_GUITEXTFIELDL = addTexture("guitextfieldl.png");
-	public final static Texture TEXTURE_GUITEXTFIELDR = addTexture("guitextfieldr.png");
-	public final static Texture TEXTURE_CPSHADOW = addTexture("cpshadow.png");
-	public final static Texture TEXTURE_SCROLLUP = addTexture("scrollup.png");
-	public final static Texture TEXTURE_SCROLLDOWN = addTexture("scrolldown.png");
-	public final static Texture TEXTURE_LOADABORT = addTexture("loadabort.png");
-	public final static Texture TEXTURE_CPSPEC = addTexture("cpspec.png");
-	public final static Texture TEXTURE_BUILDINGINFO = addTexture("buildinginfo.png");
-	public final static Texture TEXTURE_MONEYBG = addTexture("moneybg.png");
-	public final static Texture TEXTURE_GRAPHTRANSITION = addTexture("graphtransition.png");
-	public final static Texture TEXTURE_PLACEHOLDER = addTexture("placeholder.png");
-	public final static Texture TEXTURE_GUITHUMBPLACEHOLDER = addTexture("placeholderthumb.png");
-	public final static Texture TEXTURE_DATAVIEWBUTTONENERGY = addTexture("dataviewenergy.png");
-	public final static Texture TEXTURE_DATAVIEWBUTTONSECUTIRY = addTexture("dataviewsecurity.png");
-	public final static Texture TEXTURE_DATAVIEWBUTTONHEALTH = addTexture("dataviewhealth.png");
-	public final static Texture TEXTURE_DATAVIEWBUTTONGARBAGE = addTexture("dataviewgarbagecollection.png");
-	public final static Texture TEXTURE_DATAVIEWBUTTONINTERNET = addTexture("dataviewinternet.png");
-	public final static Texture TEXTURE_GUICHECKBOX = addTexture("guicheckbox.png");
-	public final static Texture TEXTURE_GUICHECKED = addTexture("guichecked.png");
-	public final static Texture TEXTURE_GUIRADIOBUTTON = addTexture("guiradiobutton.png");
-	public final static Texture TEXTURE_GUIRADIOCHECKED = addTexture("guiradiochecked.png");
-	public final static Texture TEXTURE_DATAVIEWBUTTONHAPPINESS = addTexture("dataviewhappiness.png");
-	public final static Texture TEXTURE_TOOLTIP = addTexture("tooltip.png");
-	public final static Texture TEXTURE_TOOLTIPL = addTexture("tooltipl.png");
-	public final static Texture TEXTURE_TOOLTIPR = addTexture("tooltipr.png");
+	public final static Texture TEXTURE_ICON16                  = addTexture("gui/icon16.png");
+	public final static Texture TEXTURE_ICON32                  = addTexture("gui/icon32.png");
+	public final static Texture TEXTURE_ICON256                 = addTexture("gui/icon256.png");
+	public final static EntityTexture TEXTURE_SKYBOX            = addEntityTexture("skybox");
+	public final static EntityTexture TEXTURE_TERRAIN           = addEntityTexture("terrain");
+	public final static EntityTexture TEXTURE_STREET            = addEntityTexture("street");
+	public final static EntityTexture TEXTURE_HOUSE             = addEntityTexture("house");
+	public final static EntityTexture TEXTURE_BIGHOUSE          = addEntityTexture("bighouse");
+	public final static Texture TEXTURE_EMPTY                   = addTexture("empty.png");
+	public final static Texture TEXTURE_MAINMENUBG              = addTexture("gui/mainmenubg.png");
+	public final static Texture TEXTURE_MAINMENUFF              = addTexture("gui/ForceField.png");
+	public final static Texture TEXTURE_MARSCITYLOGO            = addTexture("gui/marscitylogo.png");
+	public final static Texture TEXTURE_FORCEFIELDBG            = addTexture("gui/forcefieldbackground2.png");
+	public final static Texture TEXTURE_MSGBOX                  = addTexture("gui/msgbox.png");
+	public final static Texture TEXTURE_GUITOOLSBG              = addTexture("gui/guitoolsBG.png");
+	public final static Texture TEXTURE_GUITOOLTIP              = addTexture("gui/guitooltip.png");
+	public final static Texture TEXTURE_GUIMENUBUTTON           = addTexture("gui/guimenubutton.png");
+	public final static Texture TEXTURE_GUIDELETE               = addTexture("gui/guidelete.png");
+	public final static Texture TEXTURE_GUITOOLBAR              = addTexture("gui/guitoolbar.png");
+	public final static Texture TEXTURE_GUIMENU                 = addTexture("gui/guimenu.png");
+	public final static Texture TEXTURE_GUIBUTTON               = addTexture("gui/guibutton.png");
+	public final static Texture TEXTURE_GUIBUTTONDOWN           = addTexture("gui/guibuttondown.png");
+	public final static Texture TEXTURE_GUIBUTTON2              = addTexture("gui/guibutton2.png");
+	public final static Texture TEXTURE_GUIBUTTON2DOWN          = addTexture("gui/guibutton2down.png");
+	public final static Texture TEXTURE_GUILABELBG              = addTexture("gui/guilabelbg.png");
+	public final static Texture TEXTURE_GUILABELBGL             = addTexture("gui/guilabelbgl.png");
+	public final static Texture TEXTURE_GUILABELBGR             = addTexture("gui/guilabelbgr.png");
+	public final static Texture TEXTURE_PARTICLEFOG             = addTexture("fogparticle.png");
+	public final static Texture TEXTURE_GUIDELETEBORDER         = addTexture("gui/guideleteborder.png");
+	public final static Texture TEXTURE_GUICAMERAMOVE           = addTexture("gui/cameramove.png");
+	public final static Texture TEXTURE_GUICAMERAROTATE         = addTexture("gui/camerarotate.png");
+	public final static Texture TEXTURE_GUIBUILDINGSPANEL       = addTexture("gui/buildingspanel.png");
+	public final static Texture TEXTURE_GUIBUILDINGSPANELL      = addTexture("gui/buildingspanell.png");
+	public final static Texture TEXTURE_GUITHUMBSTREET          = addTexture("gui/thumbstreet.png");
+	public final static Texture TEXTURE_GUITHUMBHOUSE           = addTexture("gui/thumbhouse.png");
+	public final static Texture TEXTURE_GUITHUMBBIGHOUSE        = addTexture("gui/thumbbighouse.png");
+	public final static Texture TEXTURE_GUITEXTFIELD            = addTexture("gui/guitextfield.png");
+	public final static Texture TEXTURE_GUITEXTFIELDL           = addTexture("gui/guitextfieldl.png");
+	public final static Texture TEXTURE_GUITEXTFIELDR           = addTexture("gui/guitextfieldr.png");
+	public final static Texture TEXTURE_CPSHADOW                = addTexture("gui/cpshadow.png");
+	public final static Texture TEXTURE_SCROLLUP                = addTexture("gui/scrollup.png");
+	public final static Texture TEXTURE_SCROLLDOWN              = addTexture("gui/scrolldown.png");
+	public final static Texture TEXTURE_LOADABORT               = addTexture("gui/loadabort.png");
+	public final static Texture TEXTURE_CPSPEC                  = addTexture("gui/cpspec.png");
+	public final static Texture TEXTURE_BUILDINGINFO            = addTexture("gui/buildinginfo.png");
+	public final static Texture TEXTURE_MONEYBG                 = addTexture("gui/moneybg.png");
+	public final static Texture TEXTURE_GRAPHTRANSITION         = addTexture("gui/graphtransition.png");
+	public final static EntityTexture TEXTURE_PLACEHOLDER       = addEntityTexture("placeholder");
+	public final static Texture TEXTURE_GUITHUMBPLACEHOLDER     = addTexture("gui/placeholderthumb.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONENERGY    = addTexture("gui/dataviewenergy.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONSECUTIRY  = addTexture("gui/dataviewsecurity.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONHEALTH    = addTexture("gui/dataviewhealth.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONGARBAGE   = addTexture("gui/dataviewgarbagecollection.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONINTERNET  = addTexture("gui/dataviewinternet.png");
+	public final static Texture TEXTURE_GUICHECKBOX             = addTexture("gui/guicheckbox.png");
+	public final static Texture TEXTURE_GUICHECKED              = addTexture("gui/guichecked.png");
+	public final static Texture TEXTURE_GUIRADIOBUTTON          = addTexture("gui/guiradiobutton.png");
+	public final static Texture TEXTURE_GUIRADIOCHECKED         = addTexture("gui/guiradiochecked.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONHAPPINESS = addTexture("gui/dataviewhappiness.png");
+	public final static Texture TEXTURE_TOOLTIP                 = addTexture("gui/tooltip.png");
+	public final static Texture TEXTURE_TOOLTIPL                = addTexture("gui/tooltipl.png");
+	public final static Texture TEXTURE_TOOLTIPR                = addTexture("gui/tooltipr.png");
 	
 	/**
 	 * Initializes the Resources that need to be initialized
@@ -255,16 +255,8 @@ public class ResourceManager {
 	{
 		try {
 			return TextureLoader.getTexture("PNG", new BufferedInputStream(stream));
-		} catch (FileNotFoundException e) {
-			System.err.println("Texture file not found.");
-			e.printStackTrace();
-			Display.destroy();
-			System.exit(1);
-		} catch (IOException e) {
-			e.printStackTrace();
-			Display.destroy();
-			System.exit(1);
-		}
+		} catch (Exception e) {
+		} 
 		return null;
 	}
 	
@@ -332,7 +324,6 @@ public class ResourceManager {
 	 */
 	public static int[] addObject(String path)
 	{
-		System.out.println(path);
 		try {
 			Main.log("Loading object: "+path);
 			Main.splashscreen.setInfo("Loading object: "+path);
@@ -386,6 +377,38 @@ public class ResourceManager {
 		Main.splashscreen.setInfo("Loading texture: "+path);
 		try {
 			return LoadTexture(ResourceManager.class.getResourceAsStream(path));
+		} catch (Exception e) {
+			e.printStackTrace();
+			Main.splashscreen.label2.setText("Error! Failed to load texture: "+path);
+			Main.log("Failed to load texture: "+path);
+		}
+		return null;
+	}
+	
+	/**
+	 * Loads LOD entity textures
+	 * A LOD texture set contains 3 PNG textures, named like this:
+	 * folder name: object
+	 * files: object0.png, object1.png, object2.png
+	 * @param path The name of the texture set (name of the folder)
+	 * @return The loaded texture
+	 */
+	public static EntityTexture addEntityTexture(String path)
+	{
+		path = texturespath + "/objects/"+ path + "/" + path;
+		Main.log("Loading texture: "+path);
+		Main.splashscreen.setInfo("Loading texture: "+path);
+		EntityTexture tex = new EntityTexture();
+		for(int i=0;i<=2;i++)
+		{
+			try {
+				tex.setTexture(i, LoadTexture(ResourceManager.class.getResourceAsStream(path+i+".png")));
+			} catch (Exception e) {
+				tex.setTexture(i, null);
+			}
+		}
+		try {
+			return tex;
 		} catch (Exception e) {
 			e.printStackTrace();
 			Main.splashscreen.label2.setText("Error! Failed to load texture: "+path);
@@ -614,7 +637,7 @@ public class ResourceManager {
 	 * Chosses the correct LoD model of the entity and draws it
 	 * @param e The entity to draw
 	 */
-	public static void callLODList(Entity e)
+	public static void drawEntity(Entity e)
 	{
 		int dist = (int) Math.sqrt((e.getX()-Main.camera.getCx())*(e.getX()-Main.camera.getCx())+(e.getY()-Main.camera.getCy())*(e.getY()-Main.camera.getCy())+(e.getZ()-Main.camera.getCz())*(e.getZ()-Main.camera.getCz()));
 		int lod;
@@ -625,6 +648,8 @@ public class ResourceManager {
 		}else{
 			lod = 2;
 		}
+		if(e.getTexture().getTexture(lod)!=null)glBindTexture(GL_TEXTURE_2D, e.getTexture().getTexture(lod).getTextureID());
+		else glBindTexture(GL_TEXTURE_2D, 0);
 		if(e.getDisplayList()[lod]!=-1){
 			glCallList(e.getDisplayList()[lod]);
 		}else{
