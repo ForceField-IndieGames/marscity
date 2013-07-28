@@ -1,13 +1,13 @@
 package objects;
 
 import static org.lwjgl.opengl.GL11.*;
+import game.EntityTexture;
 import game.Grid;
 import game.Main;
 import game.ResourceManager;
 
 
 import org.lwjgl.input.Mouse;
-import org.newdawn.slick.opengl.Texture;
 
 /**
  * This preview is visible when in building mode. It It shows what and where will be build
@@ -25,7 +25,7 @@ public class BuildPreview extends Entity {
 		return buildingType;
 	}
 
-	public BuildPreview(int[] displaylist, Texture texture) {
+	public BuildPreview(int[] displaylist, EntityTexture texture) {
 		super(displaylist, texture);
 	}
 	
@@ -147,11 +147,9 @@ public class BuildPreview extends Entity {
 			glRotatef(getRotY(), 0, 1, 0);
 			glRotatef(getRotZ(), 0, 0, 1);
 			glEnable(GL_TEXTURE_2D);
-			if(getTexture()!=null)glBindTexture(GL_TEXTURE_2D, getTexture().getTextureID());
-			else glBindTexture(GL_TEXTURE_2D, 0);
 			if(Grid.isAreaFree((int)getX(), (int)getZ(), Buildings.getBuildingType(buildingType).getWidth(), Buildings.getBuildingType(buildingType).getDepth())&&(Grid.buildingSurroundedWith((int) Math.round(Main.mousepos3d[0]), (int) Math.round(Main.mousepos3d[2]), Main.currentBT, Buildings.BUILDINGTYPE_STREET))||Main.currentBT==Buildings.BUILDINGTYPE_STREET){
 				glColor4f(1f, 1f, 1f, 1f);
-				glCallList(getDisplayList()[0]);
+				ResourceManager.drawEntity(this);
 			}
 			
 			

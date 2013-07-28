@@ -87,7 +87,7 @@ class splashScreen extends JFrame implements Runnable{
 		progress.setForeground(new Color(56,130,185));
 		progress.setBorderPainted(false);
 		add(progress);
-		background = new JLabel(new ImageIcon(Main.class.getResource(ResourceManager.texturespath+"forcefieldbackground.png")));
+		background = new JLabel(new ImageIcon(Main.class.getResource(ResourceManager.texturespath+"gui/forcefieldbackground.png")));
 		add(background);
 		background.setBounds(0, 0, getWidth(), getHeight());
 		background.setDoubleBuffered(true);
@@ -97,7 +97,7 @@ class splashScreen extends JFrame implements Runnable{
 
 	public void setInfo(String text)
 	{
-		int percent = Math.round(loadeditems/75f*100);
+		int percent = Math.round(loadeditems/80f*100);
 		if(percent>100)percent=100;
 		label2.setText(percent+"% "+text);
 		progress.setValue(percent);
