@@ -30,5 +30,5 @@ public interface Drawable {
 	public float getScaleY();
 	public float getScaleZ();
 	public float getDestY();
-	public float getPreferredY();
+	public float getHeight();
 }

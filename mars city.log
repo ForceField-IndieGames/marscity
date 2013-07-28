@@ -3,6 +3,4 @@ Reading file: /res/shader/shader.v
 Reading file: /res/shader/shader.f
 Created necessary folders.
 Loading XML: res/settings/settings.xml
-Loading XML: res/lang/DEnö.xml
-Error! Unable to load the XML file: res/lang/DEnö.xml
 Finished loading resources.

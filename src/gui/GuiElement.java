@@ -1,5 +1,6 @@
 package gui;
 import java.awt.Color;
+import java.util.List;
 
 import org.newdawn.slick.opengl.Texture;
 
@@ -29,6 +30,7 @@ public interface GuiElement {
 	public boolean isClickThrough();
 	public float getOpacity();
 	public float getScreenOpacity();
+	public List<GuiElement> getElements();
 	
 	public void setX(float x);
 	public void setY(float y);
@@ -40,4 +42,5 @@ public interface GuiElement {
 	public void setColor(Color color);
 	public void setClickThrough(boolean clickthrough);
 	public void setOpacity(float opacity);
+	public void setElements(List<GuiElement> elements);
 }

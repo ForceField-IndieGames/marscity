@@ -1,11 +1,12 @@
 package objects;
+
 import static org.lwjgl.opengl.GL11.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import game.EntityTexture;
 import game.ResourceManager;
-
-import java.io.IOException;
-
-import org.newdawn.slick.opengl.Texture;
 
 import animation.Animatable;
 
@@ -19,45 +20,34 @@ public class Entity implements Drawable, Animatable {
 	private float x = 0, y = 0, z=0;
 	private float rotX=0,rotY=0,rotZ=0;
 	private float scaleX=1,scaleY=1,scaleZ=1;
-	private Texture texture;
-	private int displayList;
-	
-	private Model model;
+	private EntityTexture texture;
+	private int[] displayList;
 	private float destY;
-	private float preferredY;
+	private float height;
 	private boolean visible = true;
+	private Entity parent;
+	private List<Entity> children = new ArrayList<Entity>();
+
+	public List<Entity> getChildren() {
+		return children;
+	}
+
+	public void addChild(Entity child) {
+		child.setParent(this);
+		this.children.add(child);
+	}
+	
+	public void deleteChild(Entity child)
+	{
+		this.children.remove(child);
+	}
 
 	public Entity()
 	{
 		
 	}
 	
-	public Entity(String modelpath, Texture texture)
-	{
-		try {
-			model = ObjectLoader.loadModel(modelpath);
-			this.displayList = ObjectLoader.createDisplayList(model);
-			this.texture = texture;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Entity(String modelpath, Texture texture, int x, int y, int z)
-	{
-		try {
-			model = ObjectLoader.loadModel(modelpath);
-			this.displayList = ObjectLoader.createDisplayList(model);
-			this.texture = texture;
-			this.x=x;
-			this.y=y;
-			this.z=z;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Entity(int displaylist, Texture texture, float x, float y, float z)
+	public Entity(int[] displaylist, EntityTexture texture, float x, float y, float z)
 	{
 			this.displayList = displaylist;
 			this.texture = texture;
@@ -66,13 +56,13 @@ public class Entity implements Drawable, Animatable {
 			this.z=z;
 	}
 
-	public Entity(int displaylist, Texture texture)
+	public Entity(int[] displaylist, EntityTexture texture)
 	{
 			this.displayList = displaylist;
 			this.texture = texture;
 	}
 
-	public Entity(int displaylist, float x, float y, float z)
+	public Entity(int[] displaylist, float x, float y, float z)
 	{
 			this.displayList = displaylist;
 			this.x=x;
@@ -80,43 +70,20 @@ public class Entity implements Drawable, Animatable {
 			this.z=z;
 	}
 
-	public Entity(String modelpath)
-	{
-		try {
-			model = ObjectLoader.loadModel(modelpath);
-			this.displayList = ObjectLoader.createDisplayList(model);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public Entity(String modelpath, int x, int y, int z)
-	{
-		try {
-			model = ObjectLoader.loadModel(modelpath);
-			this.displayList = ObjectLoader.createDisplayList(model);
-			this.x=x;
-			this.y=y;
-			this.z=z;
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public int getDisplayList() {
+	public int[] getDisplayList() {
 		return displayList;
 	}
 
-	public void setDisplayList(int displayList) {
+	public void setDisplayList(int[] displayList) {
 		this.displayList = displayList;
 	}
 
-	public float getPreferredY() {
-		return preferredY;
+	public float getHeight() {
+		return height;
 	}
 
-	public void setPreferredZ(float preferredY) {
-		this.preferredY = preferredY;
+	public void setPreferredZ(float height) {
+		this.height = height;
 	}
 
 	public float getDestY() {
@@ -199,11 +166,11 @@ public class Entity implements Drawable, Animatable {
 		this.scaleZ = scaleZ;
 	}
 
-	public Texture getTexture() {
+	public EntityTexture getTexture() {
 		return texture;
 	}
 
-	public void setTexture(Texture texture) {
+	public void setTexture(EntityTexture texture) {
 		this.texture = texture;
 	}
 
@@ -216,14 +183,21 @@ public class Entity implements Drawable, Animatable {
 			glRotatef(rotX, 1, 0, 0);
 			glRotatef(rotY, 0, 1, 0);
 			glRotatef(rotZ, 0, 0, 1);
-			if(texture!=null)glBindTexture(GL_TEXTURE_2D, texture.getTextureID());
-			else glBindTexture(GL_TEXTURE_2D, 0);
-			glCallList(displayList);
+			ResourceManager.drawEntity(this);
+			for(Entity e:children)
+			{
+				e.draw();
+			}
 		glPopMatrix();
 	}
 
 	@Override
 	public void update(int delta) {
+		
+	}
+	
+	public void click()
+	{
 		
 	}
 
@@ -252,5 +226,13 @@ public class Entity implements Drawable, Animatable {
 	@Override
 	public boolean isVisible() {
 		return this.visible;
+	}
+
+	public Entity getParent() {
+		return parent;
+	}
+
+	public void setParent(Entity parent) {
+		this.parent = parent;
 	}
 }

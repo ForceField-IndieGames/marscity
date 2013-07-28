@@ -8,14 +8,14 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.FloatBuffer;
+import java.util.HashMap;
 
 import javax.xml.parsers.*;
 import javax.xml.transform.Transformer;
@@ -24,10 +24,11 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import objects.Building;
-import objects.BuildingType;
+import objects.Buildings;
 import objects.Drawable;
 import objects.ObjectLoader;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Display;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.UnicodeFont;
@@ -37,6 +38,8 @@ import org.newdawn.slick.openal.AudioLoader;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.w3c.dom.*;
+
+import objects.Entity;
 
 import animation.Animatable;
 
@@ -51,38 +54,41 @@ public class ResourceManager {
 	/**
 	 * This font is used by buttons and labels in the gui
 	 */
-	public final static UnicodeFont Arial15 = new UnicodeFont(new Font("Arial",0,15));
-	public final static UnicodeFont Arial15B = new UnicodeFont(new Font("Arial",Font.BOLD,15));
-	public final static UnicodeFont Arial30B = new UnicodeFont(new Font("Arial",Font.BOLD,30));
+	public final static UnicodeFont Arial12 = addFont(new Font("Arial",0,12));
+	public final static UnicodeFont Arial15 = addFont(new Font("Arial",0,15));
+	public final static UnicodeFont Arial15B = addFont(new Font("Arial",Font.BOLD,15));
+	public final static UnicodeFont Arial30B = addFont(new Font("Arial",Font.BOLD,30));
+	
+	public final static String PLACEHOLDER1 = "%1%";
+	public final static String PLACEHOLDER2 = "%2%";
 	
 	//The shaders, currently not used
 	public static int shaderProgram, vertexShader, fragmentShader;
 	
 	//Some xml stuff that is only used internally
-	static Document langFile = null;
 	static Document settingsFile = null;
 	static DocumentBuilder builder = null;
+	
+	//A hashmap that contains the localized strings
+	public static HashMap<String,String> strings = new HashMap<String,String>();
 	
 	//The path of the settings file
 	static final String FILE_SETTINGS = "res/settings/settings.xml";
 	
+	//Resource paths
 	public static final String objectspath = "/res/objects/";
 	public static final String soundspath = "/res/sounds/";
 	public static final String texturespath = "/res/textures/";
 	public static final String shaderpath = "/res/shader/";
 	
-	//The building types (used when placing buildings, also saving and loading)
-	public final static int BUILDINGTYPE_HOUSE = 0;
-	public final static int BUILDINGTYPE_BIGHOUSE = 1;
-	public final static int BUILDINGTYPE_STREET = 2;
-	
-	//The objects (Actually loads and pares a file and generates a displaylist)
-	public final static int OBJECT_HOUSE = addObject("house.obj");
-	public final static int OBJECT_TERRAIN = addObject("terrain.obj");
-	public final static int OBJECT_SKYBOX = addObject("skybox.obj");
-	public final static int OBJECT_BIGHOUSE = addObject("bighouse.obj");
-	public final static int OBJECT_STREET = addObject("streetsegment.obj");
-	public final static int OBJECT_GRIDCELL = addObject("gridcell.obj");
+	//The objects (Actually loads and pares a file and generates displaylists for each LOD model)
+	public final static int[] OBJECT_HOUSE = addObject("house");
+	public final static int[] OBJECT_TERRAIN = addObject("terrain");
+	public final static int[] OBJECT_SKYBOX = addObject("skybox");
+	public final static int[] OBJECT_BIGHOUSE = addObject("bighouse");
+	public final static int[] OBJECT_STREET = addObject("streetsegment");
+	public final static int[] OBJECT_GRIDCELL = addObject("gridcell");
+	public final static int[] OBJECT_PLACEHOLDER = addObject("placeholder");
 	
 	//The audio files
 	public final static Audio SOUND_DROP = addSound("WAV", "drop.wav");
@@ -90,87 +96,80 @@ public class ResourceManager {
 	public final static Audio SOUND_SELECT = addSound("WAV", "select.wav");
 	
 	//Loads the textures
-	public final static Texture TEXTURE_ICON16 = addTexture("icon16.png");
-	public final static Texture TEXTURE_ICON32 = addTexture("icon32.png");
-	public final static Texture TEXTURE_ICON256 = addTexture("icon256.png");
-	public final static Texture TEXTURE_SKYBOX = addTexture("skybox.png");
-	public final static Texture TEXTURE_TERRAIN = addTexture("mars.png");
-	public final static Texture TEXTURE_STREET = addTexture("street.png");
-	public final static Texture TEXTURE_HOUSE = addTexture("housetexture.png");
-	public final static Texture TEXTURE_BIGHOUSE = addTexture("bighousetexture.png");
-	public final static Texture TEXTURE_EMPTY = addTexture("empty.png");
-	public final static Texture TEXTURE_MAINMENUBG = addTexture("mainmenubg.png");
-	public final static Texture TEXTURE_MAINMENUFF = addTexture("ForceField.png");
-	public final static Texture TEXTURE_MARSCITYLOGO = addTexture("marscitylogo.png");
-	public final static Texture TEXTURE_FORCEFIELDBG = addTexture("forcefieldbackground2.png");
-	public final static Texture TEXTURE_MSGBOX = addTexture("msgbox.png");
-	public final static Texture TEXTURE_GUITOOLSBG = addTexture("guitoolsBG.png");
-	public final static Texture TEXTURE_GUITOOLTIP = addTexture("guitooltip.png");
-	public final static Texture TEXTURE_GUISELECT = addTexture("guiselect.png");
-	public final static Texture TEXTURE_GUIMENUBUTTON = addTexture("guimenubutton.png");
-	public final static Texture TEXTURE_GUIADD = addTexture("guiadd.png");
-	public final static Texture TEXTURE_GUIDELETE = addTexture("guidelete.png");
-	public final static Texture TEXTURE_GUITOOLBAR = addTexture("guitoolbar.png");
-	public final static Texture TEXTURE_GUIMENU = addTexture("guimenu.png");
-	public final static Texture TEXTURE_GUIBUTTON = addTexture("guibutton.png");
-	public final static Texture TEXTURE_GUIBUTTONDOWN = addTexture("guibuttondown.png");
-	public final static Texture TEXTURE_GUIBUTTON2 = addTexture("guibutton2.png");
-	public final static Texture TEXTURE_GUIBUTTON2DOWN = addTexture("guibutton2down.png");
-	public final static Texture TEXTURE_GUILABELBG = addTexture("guilabelbg.png");
-	public final static Texture TEXTURE_GUILABELBGL = addTexture("guilabelbgl.png");
-	public final static Texture TEXTURE_GUILABELBGR = addTexture("guilabelbgr.png");
-	public final static Texture TEXTURE_PARTICLEFOG = addTexture("fogparticle.png");
-	public final static Texture TEXTURE_GUIDELETEBORDER = addTexture("guideleteborder.png");
-	public final static Texture TEXTURE_GUICAMERAMOVE = addTexture("cameramove.png");
-	public final static Texture TEXTURE_GUICAMERAROTATE = addTexture("camerarotate.png");
-	public final static Texture TEXTURE_GUIBUILDINGSPANEL = addTexture("buildingspanel.png");
-	public final static Texture TEXTURE_GUIBUILDINGSPANELL = addTexture("buildingspanell.png");
-	public final static Texture TEXTURE_GUITHUMBSTREET = addTexture("thumbstreet.png");
-	public final static Texture TEXTURE_GUITHUMBHOUSE = addTexture("thumbhouse.png");
-	public final static Texture TEXTURE_GUITHUMBBIGHOUSE = addTexture("thumbbighouse.png");
-	public final static Texture TEXTURE_GUITEXTFIELD = addTexture("guitextfield.png");
-	public final static Texture TEXTURE_GUITEXTFIELDL = addTexture("guitextfieldl.png");
-	public final static Texture TEXTURE_GUITEXTFIELDR = addTexture("guitextfieldr.png");
-	public final static Texture TEXTURE_CPSHADOW = addTexture("cpshadow.png");
-	public final static Texture TEXTURE_SCROLLUP = addTexture("scrollup.png");
-	public final static Texture TEXTURE_SCROLLDOWN = addTexture("scrolldown.png");
-	public final static Texture TEXTURE_LOADABORT = addTexture("loadabort.png");
-	public final static Texture TEXTURE_CPSPEC = addTexture("cpspec.png");
-	
-	public final static List<BuildingType> buildingTypes = new ArrayList<BuildingType>();
-	
-	public static List<Building> objects = new ArrayList<Building>();
+	public final static Texture TEXTURE_ICON16                  = addTexture("gui/icon16.png");
+	public final static Texture TEXTURE_ICON32                  = addTexture("gui/icon32.png");
+	public final static Texture TEXTURE_ICON256                 = addTexture("gui/icon256.png");
+	public final static EntityTexture TEXTURE_SKYBOX            = addEntityTexture("skybox");
+	public final static EntityTexture TEXTURE_TERRAIN           = addEntityTexture("terrain");
+	public final static EntityTexture TEXTURE_STREET            = addEntityTexture("street");
+	public final static EntityTexture TEXTURE_HOUSE             = addEntityTexture("house");
+	public final static EntityTexture TEXTURE_BIGHOUSE          = addEntityTexture("bighouse");
+	public final static Texture TEXTURE_EMPTY                   = addTexture("empty.png");
+	public final static Texture TEXTURE_MAINMENUBG              = addTexture("gui/mainmenubg.png");
+	public final static Texture TEXTURE_MAINMENUFF              = addTexture("gui/ForceField.png");
+	public final static Texture TEXTURE_MARSCITYLOGO            = addTexture("gui/marscitylogo.png");
+	public final static Texture TEXTURE_FORCEFIELDBG            = addTexture("gui/forcefieldbackground2.png");
+	public final static Texture TEXTURE_MSGBOX                  = addTexture("gui/msgbox.png");
+	public final static Texture TEXTURE_GUITOOLSBG              = addTexture("gui/guitoolsBG.png");
+	public final static Texture TEXTURE_GUITOOLTIP              = addTexture("gui/guitooltip.png");
+	public final static Texture TEXTURE_GUIMENUBUTTON           = addTexture("gui/guimenubutton.png");
+	public final static Texture TEXTURE_GUIDELETE               = addTexture("gui/guidelete.png");
+	public final static Texture TEXTURE_GUITOOLBAR              = addTexture("gui/guitoolbar.png");
+	public final static Texture TEXTURE_GUIMENU                 = addTexture("gui/guimenu.png");
+	public final static Texture TEXTURE_GUIBUTTON               = addTexture("gui/guibutton.png");
+	public final static Texture TEXTURE_GUIBUTTONDOWN           = addTexture("gui/guibuttondown.png");
+	public final static Texture TEXTURE_GUIBUTTON2              = addTexture("gui/guibutton2.png");
+	public final static Texture TEXTURE_GUIBUTTON2DOWN          = addTexture("gui/guibutton2down.png");
+	public final static Texture TEXTURE_GUILABELBG              = addTexture("gui/guilabelbg.png");
+	public final static Texture TEXTURE_GUILABELBGL             = addTexture("gui/guilabelbgl.png");
+	public final static Texture TEXTURE_GUILABELBGR             = addTexture("gui/guilabelbgr.png");
+	public final static Texture TEXTURE_PARTICLEFOG             = addTexture("fogparticle.png");
+	public final static Texture TEXTURE_GUIDELETEBORDER         = addTexture("gui/guideleteborder.png");
+	public final static Texture TEXTURE_GUICAMERAMOVE           = addTexture("gui/cameramove.png");
+	public final static Texture TEXTURE_GUICAMERAROTATE         = addTexture("gui/camerarotate.png");
+	public final static Texture TEXTURE_GUIBUILDINGSPANEL       = addTexture("gui/buildingspanel.png");
+	public final static Texture TEXTURE_GUIBUILDINGSPANELL      = addTexture("gui/buildingspanell.png");
+	public final static Texture TEXTURE_GUITHUMBSTREET          = addTexture("gui/thumbstreet.png");
+	public final static Texture TEXTURE_GUITHUMBHOUSE           = addTexture("gui/thumbhouse.png");
+	public final static Texture TEXTURE_GUITHUMBBIGHOUSE        = addTexture("gui/thumbbighouse.png");
+	public final static Texture TEXTURE_GUITEXTFIELD            = addTexture("gui/guitextfield.png");
+	public final static Texture TEXTURE_GUITEXTFIELDL           = addTexture("gui/guitextfieldl.png");
+	public final static Texture TEXTURE_GUITEXTFIELDR           = addTexture("gui/guitextfieldr.png");
+	public final static Texture TEXTURE_CPSHADOW                = addTexture("gui/cpshadow.png");
+	public final static Texture TEXTURE_SCROLLUP                = addTexture("gui/scrollup.png");
+	public final static Texture TEXTURE_SCROLLDOWN              = addTexture("gui/scrolldown.png");
+	public final static Texture TEXTURE_LOADABORT               = addTexture("gui/loadabort.png");
+	public final static Texture TEXTURE_CPSPEC                  = addTexture("gui/cpspec.png");
+	public final static Texture TEXTURE_BUILDINGINFO            = addTexture("gui/buildinginfo.png");
+	public final static Texture TEXTURE_MONEYBG                 = addTexture("gui/moneybg.png");
+	public final static Texture TEXTURE_GRAPHTRANSITION         = addTexture("gui/graphtransition.png");
+	public final static EntityTexture TEXTURE_PLACEHOLDER       = addEntityTexture("placeholder");
+	public final static Texture TEXTURE_GUITHUMBPLACEHOLDER     = addTexture("gui/placeholderthumb.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONENERGY    = addTexture("gui/dataviewenergy.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONSECUTIRY  = addTexture("gui/dataviewsecurity.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONHEALTH    = addTexture("gui/dataviewhealth.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONGARBAGE   = addTexture("gui/dataviewgarbagecollection.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONINTERNET  = addTexture("gui/dataviewinternet.png");
+	public final static Texture TEXTURE_GUICHECKBOX             = addTexture("gui/guicheckbox.png");
+	public final static Texture TEXTURE_GUICHECKED              = addTexture("gui/guichecked.png");
+	public final static Texture TEXTURE_GUIRADIOBUTTON          = addTexture("gui/guiradiobutton.png");
+	public final static Texture TEXTURE_GUIRADIOCHECKED         = addTexture("gui/guiradiochecked.png");
+	public final static Texture TEXTURE_DATAVIEWBUTTONHAPPINESS = addTexture("gui/dataviewhappiness.png");
+	public final static Texture TEXTURE_TOOLTIP                 = addTexture("gui/tooltip.png");
+	public final static Texture TEXTURE_TOOLTIPL                = addTexture("gui/tooltipl.png");
+	public final static Texture TEXTURE_TOOLTIPR                = addTexture("gui/tooltipr.png");
 	
 	/**
 	 * Initializes the Resources that need to be initialized
 	 */
-	@SuppressWarnings("unchecked")
 	public static void init()
 	{
-		//Set up the font
-		Arial15.getEffects().add(new ColorEffect());
-		Arial15B.getEffects().add(new ColorEffect());
-		Arial30B.getEffects().add(new ColorEffect());
-		Arial15.addAsciiGlyphs();
-		Arial15B.addAsciiGlyphs();
-		Arial30B.addAsciiGlyphs();
-		try {
-			Main.splashscreen.label2.setText("Loading Font: Arial15");
-			Arial15.loadGlyphs();
-			Main.splashscreen.label2.setText("Loading Font: Arial15B");
-			Arial15B.loadGlyphs();
-			Main.splashscreen.label2.setText("Loading Font: Arial30B");
-			Arial30B.loadGlyphs();
-		} catch (SlickException e) {
-			e.printStackTrace();
-		}
 		
 		//Set up the shader
-		Main.splashscreen.label2.setText("Loading shader...");
+		Main.splashscreen.setInfo("Loading shader...");
 		setupShader("shader.v","shader.f");
 		
 		//Load and parse the Language file
-		Main.splashscreen.label2.setText("Loading xml files...");
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		try {
 			builder = factory.newDocumentBuilder();
@@ -178,12 +177,10 @@ public class ResourceManager {
 			e.printStackTrace();
 		}
 		
-		//Building Types
-		buildingTypes.add(BUILDINGTYPE_HOUSE,new BuildingType("BUILDINGTYPE_HOUSE",OBJECT_HOUSE,TEXTURE_HOUSE,500,2,2,0.25f));
-		buildingTypes.add(BUILDINGTYPE_BIGHOUSE,new BuildingType("BUILDINGTYPE_BIGHOUSE",OBJECT_BIGHOUSE,TEXTURE_BIGHOUSE,1500,4,4,4f));
-		buildingTypes.add(BUILDINGTYPE_STREET,new BuildingType("BUILDINGTYPE_STREET",OBJECT_STREET,TEXTURE_STREET,5,1,1,0f));
+		Buildings.init();
 		
 		//create necessary folders and extract files
+		Main.splashscreen.setInfo("Creating folders...");
 		if(!(new File("res")).exists()||Main.debugMode){
 			(new File("res")).mkdir();
 			(new File("res/lang")).mkdir();
@@ -192,7 +189,7 @@ public class ResourceManager {
 			(new File("res/cities")).mkdir();
 			Main.log("Created necessary folders.");
 			try {
-				(new File("res/lang/DE.xml")).createNewFile();
+				(new File("res/lang/DE.lang")).createNewFile();
 				(new File(FILE_SETTINGS)).createNewFile();
 				
 				//settings.xml
@@ -206,9 +203,9 @@ public class ResourceManager {
 				input.close();
 				output.close();
 				
-				//DE.xml
-				input = new BufferedReader(new InputStreamReader(ResourceManager.class.getResourceAsStream("/res/lang/DE.xml")));
-				output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("res/lang/DE.xml"))));
+				//DE.lang
+				input = new BufferedReader(new InputStreamReader(ResourceManager.class.getResourceAsStream("/res/lang/DE.lang")));
+				output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("res/lang/DE.lang"))));
 			
 				while((line=input.readLine())!=null){
 					output.write(line+System.lineSeparator());
@@ -219,12 +216,34 @@ public class ResourceManager {
 				e.printStackTrace();
 			}
 		}
-			
 		
-		
-		//make XML files available for the static methods
+		//load xml files
+		Main.splashscreen.setInfo("Loading xml files...");
 		settingsFile = addXML("res/settings/settings.xml");
-		langFile = addXML("res/lang/"+getSetting("lang")+".xml");
+		try {
+			strings = addLangFile("res/lang/DE.lang");
+		} catch (IOException e) {}
+	}
+
+	/**
+	 * Loads a unicode font
+	 * @param font Font to load
+	 * @return The unicode font ocject
+	 */
+	@SuppressWarnings("unchecked")
+	public static UnicodeFont addFont(Font font)
+	{
+		UnicodeFont ufont = new UnicodeFont(font);
+		ufont.getEffects().add(new ColorEffect());
+		ufont.addAsciiGlyphs();
+		try {
+			Main.splashscreen.setInfo("Loading Font: "+font.getFontName()+" "+font.getSize());
+			ufont.loadGlyphs();
+			return ufont;
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
@@ -232,39 +251,61 @@ public class ResourceManager {
 	 * @param stream The imput stream
 	 * @return The loaded texture
 	 */
-	public static Texture LoadTexture(InputStream stream)
+ 	public static Texture LoadTexture(InputStream stream)
 	{
 		try {
 			return TextureLoader.getTexture("PNG", new BufferedInputStream(stream));
-		} catch (FileNotFoundException e) {
-			System.err.println("Texture file not found.");
-			e.printStackTrace();
-			Display.destroy();
-			System.exit(1);
-		} catch (IOException e) {
-			e.printStackTrace();
-			Display.destroy();
-			System.exit(1);
-		}
+		} catch (Exception e) {
+		} 
 		return null;
 	}
 	
-	/**
-	 * Deletes an object from the render list
-	 * @param obj The object to delete
-	 */
-	public static void deleteObject(Drawable obj)
-	{
-		objects.remove(obj);
-	}
-	
+ 	public static HashMap<String,String> addLangFile(String path) throws IOException
+ 	{
+ 		Main.splashscreen.setInfo("Loading language file: "+path);
+ 		HashMap<String,String> hm = new HashMap<String,String>();
+ 		BufferedReader reader=null;
+ 		try {
+			reader = new BufferedReader(new FileReader(new File(path)));
+		} catch (Exception e) {
+			e.printStackTrace();
+			Game.exit();
+		}
+ 		
+ 		String line;
+ 		while((line=reader.readLine()) != null)
+ 		{
+ 			if(line.startsWith("//"))continue;
+ 			int pos = line.indexOf("|");
+ 			if(pos!=-1){
+ 				try {
+					hm.put(line.substring(0,pos), line.substring(pos+1));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+ 			}
+ 		}
+ 		
+ 		reader.close();
+ 		return hm;
+ 	}
+ 	
 	/**
 	 * Deletes an animatable from the render list ()for compatibility
 	 * @param obj
 	 */
 	public static void deleteObject(Animatable obj)
 	{
-		objects.remove(obj);
+		Buildings.buildings.remove(obj);
+	}
+	
+	/**
+	 * Deletes an drawable from the render list ()for compatibility
+	 * @param obj
+	 */
+	public static void deleteObject(Drawable obj)
+	{
+		Buildings.buildings.remove(obj);
 	}
 	
 	/**
@@ -273,7 +314,7 @@ public class ResourceManager {
 	 */
 	public static void deleteObject(int obj)
 	{
-		objects.remove(obj);
+		Buildings.buildings.remove(obj);
 	}
 	
 	/**
@@ -281,20 +322,26 @@ public class ResourceManager {
 	 * @param path Path to the .obj file
 	 * @return An integer representing the displaylist
 	 */
-	public static int addObject(String path)
+	public static int[] addObject(String path)
 	{
-		path = objectspath + path;
-		System.out.println(path);
 		try {
 			Main.log("Loading object: "+path);
-			Main.splashscreen.label2.setText("Loading object: "+path);
-			return ObjectLoader.createDisplayList(ObjectLoader.loadModel(path));
+			Main.splashscreen.setInfo("Loading object: "+path);
+			int[] i = new int[]{-1,-1,-1};
+			for(int j=0;j<=2;j++){
+				try {
+					i[j]=ObjectLoader.createDisplayList(ObjectLoader.loadModel(path,j));
+				} catch (Exception e) {
+					i[j]=-1;
+				}
+			}
+			return i;
 		} catch (Exception e) {
 			e.printStackTrace();
 			Main.splashscreen.label2.setText("Error! Failed to load object: "+path);
 			Main.log("Failed to load object: "+path);
 		}
-		return -1;
+		return (new int[]{-1,-1,-1});
 	}
 	
 	/**
@@ -307,12 +354,12 @@ public class ResourceManager {
 	{
 		path = soundspath + path;
 		Main.log("Loading sound: "+path);
-		Main.splashscreen.label2.setText("Loading sound: "+path);
+		Main.splashscreen.setInfo("Loading sound: "+path);
 		try {
 			return AudioLoader.getAudio(format, new BufferedInputStream(ResourceManager.class.getResourceAsStream(path)));
 		} catch (Exception e) {
 			e.printStackTrace();
-			Main.splashscreen.label2.setText("Error! Failed to load sound: "+path);
+			Main.splashscreen.setInfo("Error! Failed to load sound: "+path);
 			Main.log("Failed to load sound: "+path);
 		}
 		return null;
@@ -327,7 +374,7 @@ public class ResourceManager {
 	{
 		path = texturespath + path;
 		Main.log("Loading texture: "+path);
-		Main.splashscreen.label2.setText("Loading texture: "+path);
+		Main.splashscreen.setInfo("Loading texture: "+path);
 		try {
 			return LoadTexture(ResourceManager.class.getResourceAsStream(path));
 		} catch (Exception e) {
@@ -338,29 +385,58 @@ public class ResourceManager {
 		return null;
 	}
 	
-	public ResourceManager()
+	/**
+	 * Loads LOD entity textures
+	 * A LOD texture set contains 3 PNG textures, named like this:
+	 * folder name: object
+	 * files: object0.png, object1.png, object2.png
+	 * @param path The name of the texture set (name of the folder)
+	 * @return The loaded texture
+	 */
+	public static EntityTexture addEntityTexture(String path)
 	{
-			
+		path = texturespath + "/objects/"+ path + "/" + path;
+		Main.log("Loading texture: "+path);
+		Main.splashscreen.setInfo("Loading texture: "+path);
+		EntityTexture tex = new EntityTexture();
+		for(int i=0;i<=2;i++)
+		{
+			try {
+				tex.setTexture(i, LoadTexture(ResourceManager.class.getResourceAsStream(path+i+".png")));
+			} catch (Exception e) {
+				tex.setTexture(i, null);
+			}
+		}
+		try {
+			return tex;
+		} catch (Exception e) {
+			e.printStackTrace();
+			Main.splashscreen.label2.setText("Error! Failed to load texture: "+path);
+			Main.log("Failed to load texture: "+path);
+		}
+		return null;
 	}
 	
 	/**
 	 * Returns a the localized String from the language file
 	 * @param input
-	 * @return The localized strong or "String not found: #"
+	 * @return The localized strong or the input, if not found
 	 */
 	public static String getString(String input)
 	{
 		String output =  null;
-		if(langFile==null)return "Unable to load language file for "+getSetting("lang");
-		try {
-			output =  langFile.getElementsByTagName(input).item(0).getTextContent();
-		} catch (Exception e) {
-		}
-		
-		if(output==null){
-			System.err.println("String not found: "+input);
-			return "String not found: "+input;
-		}
+//		if(langFile==null)return "Unable to load language file for "+getSetting("lang");
+//		try {
+//			output =  langFile.getElementsByTagName(input).item(0).getTextContent();
+//		} catch (Exception e) {
+//		}
+//		
+//		if(output==null){
+//			System.err.println("String not found: "+input);
+//			return input;
+//		}
+		output = strings.get(input);
+		if(output==null)output=input;
 		return output;
 	}
 	
@@ -465,7 +541,8 @@ public class ResourceManager {
 	 */
 	public static Building getObject(int index)
 	{
-		return objects.get(index);
+		if(index==-1)return new Building(-1);
+		return Buildings.buildings.get(index);
 	}
 	
 	/**
@@ -501,44 +578,6 @@ public class ResourceManager {
 	}
 	
 	/**
-	 * Gets a BuildingType from its Index
-	 * @param index The index defined in the resourcemanager
-	 * @return The corresponding BuildingType
-	 */
-	public static BuildingType getBuildingType(int index)
-	{
-		return buildingTypes.get(index);
-	}
-	
-	/**
-	 * Gets the localized name of the building type
-	 * @param buildingtype
-	 * @return
-	 */
-	public static String getBuildingTypeName(int buildingtype)
-	{
-		return ResourceManager.getString(ResourceManager.getBuildingType(buildingtype).getName());
-	}
-	
-	/**
-	 * Build a building (Adds it to the grid and to the object list)
-	 * @param x X Position
-	 * @param y Y Position
-	 * @param z Z Position
-	 * @param bt Building type
-	 */
-	public static Building buildBuilding(float x, float y, float z, int bt)
-	{
-		x = Grid.cellSize*Math.round(x/Grid.cellSize);
-		y = Grid.cellSize*Math.round(y/Grid.cellSize);
-		z = Grid.cellSize*Math.round(z/Grid.cellSize);
-		Building building = new Building(bt,x,y,z);
-		Grid.setBuilding(Math.round(x),Math.round(z), building);
-		ResourceManager.objects.add(building);
-		return building;
-	}
-	
-	/**
 	 * Loads a file into a StringBuilder
 	 * @param path The Path to the File
 	 * @return a StringBuilder conatining hte Filecontents
@@ -566,5 +605,63 @@ public class ResourceManager {
 		return null;
 	}
 	
+	public static int getHoveredBuildingtype(int hoveredEntity)
+	{
+		if(hoveredEntity==-1)return -1;
+		return getObject(hoveredEntity).getBuildingType();
+	}
+
+	public static FloatBuffer toFlippedFloatBuffer(float... floats) {
+	    FloatBuffer b = BufferUtils.createFloatBuffer(floats.length);
+	    b.put(floats);
+	    b.flip();
+	    return b;
+	}
+	
+	public static String pathToCityname(String path)
+	{
+		return ((new File(path)).getName()).substring(0, ((new File(path)).getName()).length()-5);
+	}
+	
+	public static String getBtDescription(int bt)
+	{
+		return ResourceManager.getString("DESCRIPTION_"+Buildings.getBuildingType(bt).getName());
+	}
+	
+	public static String getBtDescription2(int bt)
+	{
+		return ResourceManager.getString("DESCRIPTION2_"+Buildings.getBuildingType(bt).getName());
+	}
+	
+	/**
+	 * Chosses the correct LoD model of the entity and draws it
+	 * @param e The entity to draw
+	 */
+	public static void drawEntity(Entity e)
+	{
+		int dist = (int) Math.sqrt((e.getX()-Main.camera.getCx())*(e.getX()-Main.camera.getCx())+(e.getY()-Main.camera.getCy())*(e.getY()-Main.camera.getCy())+(e.getZ()-Main.camera.getCz())*(e.getZ()-Main.camera.getCz()));
+		int lod;
+		if(dist<Main.LOD1){
+			lod = 0;
+		}else if(dist<Main.LOD2){
+			lod = 1;
+		}else{
+			lod = 2;
+		}
+		if(e.getTexture().getTexture(lod)!=null)glBindTexture(GL_TEXTURE_2D, e.getTexture().getTexture(lod).getTextureID());
+		else glBindTexture(GL_TEXTURE_2D, 0);
+		if(e.getDisplayList()[lod]!=-1){
+			glCallList(e.getDisplayList()[lod]);
+		}else{
+			//If correct LoD model is not available, try to use a lower LoD model, or else a higher one
+			for(int i=2;i>=0;i--)
+			{
+				if(e.getDisplayList()[i]!=-1){
+					glCallList(e.getDisplayList()[i]);
+					break;
+				}
+			}
+		}	
+	}
 	
 }

@@ -17,13 +17,15 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-
+import java.util.Timer;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 
 import objects.BuildPreview;
 import objects.Building;
+import objects.Buildings;
 import objects.Entity;
 import objects.Streets;
 import objects.Terrain;
@@ -38,6 +40,7 @@ import org.lwjgl.opengl.DisplayMode;
 
 import animation.AnimationManager;
 import animation.AnimationValue;
+import animation.CustomAnimationValue;
 
 
 /**
@@ -47,17 +50,18 @@ import animation.AnimationValue;
  **/
 
 class splashScreen extends JFrame implements Runnable{
-
 	
 	private static final long serialVersionUID = 1L;
 	
-	JLabel label;
-	JLabel label2;
-	JLabel background;
-	public Thread thread;
+	       short        loadeditems=0;
+	       JLabel       label;
+	       JLabel       label2;
+	       JLabel       background;
+	       JProgressBar progress;
+	public Thread       thread;
 	
 	/**
-	 * The splash screen that is displayed while the resources are sill loaded
+	 * The splash screen that is displayed while the resources are still loading
 	 */
 	public splashScreen()
 	{
@@ -72,12 +76,18 @@ class splashScreen extends JFrame implements Runnable{
 		label.setForeground(Color.white);
 		label.setFont(new Font("comicsans",Font.BOLD,40));
 		add(label);
-		label.setBounds(10, getHeight()-50, 50, 50);
+		label.setBounds(5, getHeight()-50, 50, 50);
 		label2 = new JLabel("");
 		add(label2);
 		label2.setForeground(Color.white);
-		label2.setBounds(0, 0, 500, 20);
-		background = new JLabel(new ImageIcon(Main.class.getResource(ResourceManager.texturespath+"forcefieldbackground.png")));
+		label2.setBounds(2, 0, 500, 20);
+		progress = new JProgressBar();
+		progress.setBounds(0, 0, Toolkit.getDefaultToolkit().getScreenSize().width , 3);
+		progress.setBackground(Color.black);
+		progress.setForeground(new Color(56,130,185));
+		progress.setBorderPainted(false);
+		add(progress);
+		background = new JLabel(new ImageIcon(Main.class.getResource(ResourceManager.texturespath+"gui/forcefieldbackground.png")));
 		add(background);
 		background.setBounds(0, 0, getWidth(), getHeight());
 		background.setDoubleBuffered(true);
@@ -85,6 +95,15 @@ class splashScreen extends JFrame implements Runnable{
 		thread.start();
 	}
 
+	public void setInfo(String text)
+	{
+		int percent = Math.round(loadeditems/80f*100);
+		if(percent>100)percent=100;
+		label2.setText(percent+"% "+text);
+		progress.setValue(percent);
+		loadeditems++;
+	}
+	
 	@Override
 	public void run() {
 		//Animate the dots
@@ -110,42 +129,50 @@ class splashScreen extends JFrame implements Runnable{
 
 public class Main {
 	
-	//The tools
-	public final static int TOOL_SELECT = 0;
-	public final static int TOOL_ADD = 1;
-	public final static int TOOL_DELETE = 2;
-	
-	//The game states (intro is currently not used)
-	public final static int STATE_INTRO = 0;
-	public final static int STATE_MENU = 1;
-	public final static int STATE_GAME = 2;
-
-	//Variables that are used for calculating the delta and fps
-	long lastFrame;
-	int fpsnow, fps;
-	long lastTime;
-	
 	//////////////////////////////////////////////////////////////////////////
 	//The debugmode enables cheats and displays additional debug information//
 	public static boolean debugMode = true;//////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////
 	
-	public static int hoveredEntity = -1; //The index of the object that is hovered with the mouse
-	public static int selectedTool = 0; //The selected tool, SELECT,ADD or DELETE
-	public static int money = Game.INITIALMONEY; //The players money
-	public static String cityname = "Meine Stadt"; //The city's name
-	public static int currentBuildingType = -1; //The currently selected building type
-	public static float[] mousepos3d=new float[3]; //The mouse position in 3d space
-	public static int gameState = debugMode?STATE_GAME:STATE_INTRO; //The current game state
-	public static String clipboard=""; //A local text clipboard
+	//The tools
+	public final static byte TOOL_SELECT = 0;
+	public final static byte TOOL_ADD = 1;
+	public final static byte TOOL_DELETE = 2;
+	
+	//The game states
+	public final static byte STATE_INTRO = 0;
+	public final static byte STATE_MENU = 1;
+	public final static byte STATE_GAME = 2;
+	
+	//other constants
+	public final static int MONTH_MILLIS = debugMode?1000:60000;
+	public final static int LOD1 = 50;
+	public final static int LOD2 = 150;
+
+	//Variables that are used for calculating the delta and fps
+	long lastFrame,lastTime;
+	int  fpsnow, fps;
+	
+	public static int      hoveredEntity = -1;                               //The index of the object that is hovered with the mouse
+	public static byte     selectedTool  = TOOL_SELECT;                      //The selected tool, SELECT,ADD or DELETE
+	public static int      money         = Game.INITIALMONEY;                //The players money
+	public static int      citizens      = 0;                                //The citizens that live in the city
+	public static byte     taxes         = 20;                               //Taxes for citizens in %
+	public static String   cityname      = "Meine Stadt";                    //The city's name
+	public static int      currentBT     = -1;                               //The currently selected building type
+	public static float[]  mousepos3d    = new float[3];                     //The mouse position in 3d space
+	public static byte     gameState     = STATE_INTRO;                      //The current game state
+	public static String   clipboard     = "";                               //A local text clipboard
+	public static Timer    MonthlyTimer  = new Timer();                      //A timer for sheduling monthly acitons
+	public static DataView currentDataView = null;                           //The currently displayed DataView
 	
 	//Some more objects
-	public static Camera camera = new Camera();
-	static Terrain terrain; 
-	static Entity skybox;
-	public static GUI gui;
+	public static Camera       camera       = new Camera();
+	       static Terrain      terrain; 
+	       static Entity       skybox;
+	public static GUI          gui;
 	public static BuildPreview buildpreview;
-	static splashScreen splashscreen;
+	       static splashScreen splashscreen;
 	
 	/**
 	 * Writes a string into the log file
@@ -163,11 +190,8 @@ public class Main {
 
 	/**
 	 * Starts the main game loop
-	 * @throws FileNotFoundException Why? idk.
 	 */
-	public void start() throws FileNotFoundException {
-		
-		
+	public void start(){
 		try {
 			//Setup the display
 			if(debugMode){
@@ -197,6 +221,7 @@ public class Main {
 		
 		ResourceManager.init();//Initialize the resources
 		
+		System.out.println("Loaded "+splashscreen.loadeditems+" resources");
 		log("Finished loading resources.");
 		
 		gui = new GUI(); //Create the GUI
@@ -244,30 +269,22 @@ public class Main {
 		Game.exit();
 	}
 	
-	
-	
-	
-	
-	
 	/** 
 	 * Calculate how many milliseconds have passed 
 	 * since last frame.
 	 * 
 	 * @return milliseconds passed since last frame 
 	 */
-	private int getDelta() {
-		
-		
+	private int getDelta()
+	{
 	    long time = getTime();
 	    int delta = (int) (time - lastFrame);
 	    lastFrame = time;
-	 
 	    return delta;
 	}
 	
 	/**
-	 * Get the accurate system time
-	 * 
+	 * Get the time in ms
 	 * @return The system time in milliseconds
 	 */
 	private long getTime() {
@@ -295,15 +312,13 @@ public class Main {
 		glScissor(Mouse.getX(), Mouse.getY(), 1, 1);
 		glDisable(GL_LIGHTING);
 		glDisable(GL_TEXTURE_2D);
-		for(int i=0;i<ResourceManager.objects.size();i++){
+		for(int i=0;i<Buildings.buildings.size();i++){
 			glColor3ub((byte) ((i >> 0) & 0xff), (byte) ((i >> 8) & 0xff), (byte) ((i >> 16) & 0xff));
 			ResourceManager.getObject(i).draw();
 		}
-		new BufferUtils();
 		ByteBuffer color = BufferUtils.createByteBuffer(4);
 		glReadPixels(Mouse.getX(), Mouse.getY(), 1, 1, GL_RGB, GL_UNSIGNED_BYTE, color);
-        hoveredEntity = color.getInt(0);
-        if(hoveredEntity>16000000)hoveredEntity=-1;
+        hoveredEntity=(color.getInt(0)>16000000)?-1:color.getInt(0);
         glDisable(GL_SCISSOR_TEST);
         glEnable(GL_LIGHTING);
         glEnable(GL_TEXTURE_2D);
@@ -347,12 +362,12 @@ public class Main {
 	{
 		//Movable object
 		try {
-			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) ResourceManager.objects.get(1).setX(ResourceManager.objects.get(1).getX() - 0.05f * delta);
-				if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) ResourceManager.objects.get(1).setX(ResourceManager.objects.get(1).getX() + 0.05f * delta);
-				if (Keyboard.isKeyDown(Keyboard.KEY_UP)) ResourceManager.objects.get(1).setY(ResourceManager.objects.get(1).getY() + 0.05f * delta);
-				if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) ResourceManager.objects.get(1).setY(ResourceManager.objects.get(1).getY() - 0.05f * delta);
-				if (Keyboard.isKeyDown(Keyboard.KEY_ADD)) ResourceManager.objects.get(1).setZ(ResourceManager.objects.get(1).getZ() + 0.05f * delta);
-				if (Keyboard.isKeyDown(Keyboard.KEY_SUBTRACT)) ResourceManager.objects.get(1).setZ(ResourceManager.objects.get(1).getZ() - 0.05f * delta);
+			if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) Buildings.buildings.get(1).setX(Buildings.buildings.get(1).getX() - 0.05f * delta);
+				if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) Buildings.buildings.get(1).setX(Buildings.buildings.get(1).getX() + 0.05f * delta);
+				if (Keyboard.isKeyDown(Keyboard.KEY_UP)) Buildings.buildings.get(1).setY(Buildings.buildings.get(1).getY() + 0.05f * delta);
+				if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) Buildings.buildings.get(1).setY(Buildings.buildings.get(1).getY() - 0.05f * delta);
+				if (Keyboard.isKeyDown(Keyboard.KEY_ADD)) Buildings.buildings.get(1).setZ(Buildings.buildings.get(1).getZ() + 0.05f * delta);
+				if (Keyboard.isKeyDown(Keyboard.KEY_SUBTRACT)) Buildings.buildings.get(1).setZ(Buildings.buildings.get(1).getZ() - 0.05f * delta);
 		} catch (Exception e) {
 		}
 				
@@ -389,17 +404,22 @@ public class Main {
 						{
 							Game.Resume();
 							gui.blur.setVisible(false);
-							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
+							gui.pauseMenu.hide();
+							gui.settingsMenu.hide();
 						}else {
 							Game.Pause();
 							gui.blur.setVisible(true);
 							gui.pauseMenu.setVisible(true);
-							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f);
+							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.OPACITY, 1, 0.005f);
 						}
 						if(debugMode)Game.exit();
 					}
+					if(debugMode&&Keyboard.getEventKey()==Keyboard.KEY_T)
+					{
+						gui.showToolTip("Das ist ein Test Tooltip");
+					}
 					if(debugMode&&Keyboard.getEventKey()==Keyboard.KEY_M&&Keyboard.getEventKeyState()){
-						gui.MsgBox("Text", "Sie haben auf die M Taste gedrückt und eine Messagebox aufgerufen. Der Text hier sollte automatisch gewrapt werden. Das funktioniert bei allen Labels, man braucht also nicht mehr über Zeilenumbrüche nachzudenken");
+						gui.MsgBox("Text", "Sie haben auf die M Taste gedrÃ¼ckt und eine Messagebox aufgerufen. Der Text hier sollte automatisch gewrapt werden. Das funktioniert bei allen Labels, man braucht also nicht mehr Ã¼ber ZeilenumbrÃ¼che nachzudenken");
 					}
 					//Pause and resume game with p
 					if(Keyboard.getEventKey()==Keyboard.KEY_P && Keyboard.getEventKeyState())
@@ -408,12 +428,12 @@ public class Main {
 						{
 							Game.Resume();
 							gui.blur.setVisible(false);
-							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 0, 0.005f, AnimationManager.ACTION_HIDE);
+							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.OPACITY, 0, 0.005f, AnimationManager.ACTION_HIDE);
 						}else {
 							Game.Pause();
 							gui.blur.setVisible(true);
 							gui.pauseMenu.setVisible(true);
-							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.opacity, 1, 0.005f);
+							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.OPACITY, 1, 0.005f);
 						}
 					}
 					//Activate and deactivate debug mode with TAB
@@ -447,7 +467,6 @@ public class Main {
 		//Is the mouse over a gui item?
 		GuiElement guihit = gui.getMouseover();
 		
-		
 		if(guihit==null || Mouse.isGrabbed())
 		{
 			int MX = Mouse.getDX();
@@ -459,14 +478,15 @@ public class Main {
 				camera.setRotX(camera.getRotX()+0.1f*MY);
 				if(camera.getRotX()<-89)camera.setRotX(-89);
 				if(camera.getRotX()>-1)camera.setRotX(-1);
-				gui.cameraRotate.setVisible(true);
-			}else gui.cameraRotate.setVisible(false);
+				if(camera.wasRotated()){
+					gui.cameraRotate.setVisible(true);
+				}
+			}
 			//Move the camera with middle mouse button
 			if(Mouse.isButtonDown(2)){
 				camera.setX((float) (camera.getX()+delta*(0.00008f*camera.getZoom()+0.0004f)*MY*Math.sin(Math.toRadians(camera.getRotY()))-delta*(0.00008f*camera.getZoom()+0.0004f)*MX*Math.cos(Math.toRadians(camera.getRotY()))));
 				camera.setZ((float) (camera.getZ()+delta*(0.00008f*camera.getZoom()+0.0004f)*MY*Math.cos(Math.toRadians(camera.getRotY()))+delta*(0.00008f*camera.getZoom()+0.0004f)*MX*Math.sin(Math.toRadians(camera.getRotY()))));
-				gui.cameraMove.setVisible(true);
-			}else gui.cameraMove.setVisible(false);
+			}
 		}
 		
 		//Fire Mouseover and Mouseout events
@@ -481,81 +501,340 @@ public class Main {
 			if((Mouse.getEventButton()==1||Mouse.getEventButton()==2)&&!Mouse.getEventButtonState())
 			{
 				Mouse.setGrabbed(false);
+				gui.buildinginfo.hide();
+			}
+			//Set mouse grabbed when pressing middl or righte mouse button
+			if((Mouse.getEventButton()==2||Mouse.getEventButton()==1)&&Mouse.getEventButtonState()){
+					Mouse.setGrabbed(true);
+			}
+			//Show move icon when moving camera
+			if(Mouse.getEventButton()==2&&Mouse.getEventButtonState()){
+				gui.cameraMove.setVisible(true);
+			}
+			//hide move icon
+			if(Mouse.getEventButton()==2&&!Mouse.getEventButtonState()){
+				gui.cameraMove.setVisible(false);
+			}
+			//Hide rotation icon
+			if(Mouse.getEventButton()==1){
+				gui.cameraRotate.setVisible(false);
 			}
 			
-			//Start gui click event
+			//Fire gui click event & Building click event & hide the building info 'n stuff
 			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()){
+				if(Mouse.getX()<gui.moneypanel.getScreenX()
+						||Mouse.getX()>gui.moneypanel.getScreenX()+gui.moneypanel.getWidth()
+						||Mouse.getY()<gui.moneypanel.getScreenY()
+						||Mouse.getY()>gui.moneypanel.getScreenY()+gui.moneypanel.getHeight()){
+					gui.moneypanel.hide();
+				}
+				if(Mouse.getX()<gui.citizenspanel.getScreenX()
+						||Mouse.getX()>gui.citizenspanel.getScreenX()+gui.citizenspanel.getWidth()
+						||Mouse.getY()<gui.citizenspanel.getScreenY()
+						||Mouse.getY()>gui.citizenspanel.getScreenY()+gui.citizenspanel.getHeight()){
+					gui.citizenspanel.hide();
+				}
 				gui.callGuiEvents(GuiEventType.Click);
+				gui.buildinginfo.hide();
+				if(hoveredEntity!=-1&&selectedTool==TOOL_SELECT){
+					try {
+						ResourceManager.getObject(hoveredEntity).click();
+					} catch (Exception e) {
+					}
+				}
 			}
+			
+			//Fire scroll events
+			if(Mouse.getEventDWheel()>0)gui.callGuiEvents(GuiEventType.Scrollup);
+			if(Mouse.getEventDWheel()<0)gui.callGuiEvents(GuiEventType.Scrolldown);
 			
 			//Only do things when the mouse is not over the gui
 			if(guihit!=null)return;
 				
-				if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&currentBuildingType==ResourceManager.BUILDINGTYPE_STREET&&selectedTool==TOOL_ADD){
-					Streets.endBuilding(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
-				}
-				//Do some action with the left mouse button based on the selected tool
-				if(Mouse.getEventButton()==0&&Mouse.getEventButtonState()){
-					switch(selectedTool)
-					{
-						case(TOOL_SELECT): //Zoom to a house
-							try {
-								AnimationManager.animateValue(camera, AnimationValue.X, ResourceManager.getObject(hoveredEntity).getX(), 0.2f);
-								AnimationManager.animateValue(camera, AnimationValue.Z, ResourceManager.getObject(hoveredEntity).getZ(), 0.2f);
-							} catch (Exception e) {}
+			//Build a street to the mouse position
+			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&currentBT==Buildings.BUILDINGTYPE_STREET&&selectedTool==TOOL_ADD){
+				Streets.buildStreet(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
+				Buildings.refreshSupply();
+			}
+			
+			//Delete a street
+			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()&&selectedTool==TOOL_DELETE&&ResourceManager.getHoveredBuildingtype(hoveredEntity)==Buildings.BUILDINGTYPE_STREET){
+				Streets.deleteStreet(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
+				Buildings.refreshSupply();
+			}
+			
+			//Do some action with the left mouse button based on the selected tool
+			if(Mouse.getEventButton()==0){
+				switch(selectedTool)
+				{
+					case(TOOL_SELECT): //Zoom to a house
+						if(Mouse.getEventButtonState())break;
+						try {
+							AnimationManager.animateValue(camera, AnimationValue.X, ResourceManager.getObject(hoveredEntity).getX(), 200);
+							AnimationManager.animateValue(camera, AnimationValue.Z, ResourceManager.getObject(hoveredEntity).getZ(), 200);
+						} catch (Exception e) {}
+						break;
+					
+					case(TOOL_ADD): // Create a new building/street at mouse position
+						if(!Mouse.getEventButtonState()||currentBT==-1)break;
+						//Start street building
+						if(currentBT==Buildings.BUILDINGTYPE_STREET){
+							Streets.setStartPos(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
 							break;
+						}
+						//Build a building
+					if (!Grid.isAreaFree((int) Math.round(mousepos3d[0]),
+							(int) Math.round(mousepos3d[2]), 
+							Buildings.getBuildingType(currentBT).getWidth(),
+							Buildings.getBuildingType(currentBT).getDepth())
+							|| money < Buildings.getBuildingType(currentBT).getBuidlingcost()
+							|| !Grid.buildingSurroundedWith((int) Math.round(mousepos3d[0]), (int) Math.round(mousepos3d[2]), currentBT, Buildings.BUILDINGTYPE_STREET))
+						break;
+							ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
+							Building b = Buildings.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBT);
+							money -= Buildings.getBuildingType(currentBT).getBuidlingcost();
+							ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
+							camera.setY(0);
+							AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
+							AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
+							Buildings.refreshSupply();
+						break;
 						
-						case(TOOL_ADD): // Create a new Building at mouse position
-							if(currentBuildingType==-1)break;
-							if(currentBuildingType==ResourceManager.BUILDINGTYPE_STREET){
-								Streets.startBuilding(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
-								break;
-							}
-							if(!Grid.isAreaFree((int)Math.round(mousepos3d[0]), (int)Math.round(mousepos3d[2]), ResourceManager.getBuildingType(currentBuildingType).getWidth(), ResourceManager.getBuildingType(currentBuildingType).getDepth())||money<ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost())break;
-								ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
-								Building b = ResourceManager.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBuildingType);
-								money -= ResourceManager.getBuildingType(currentBuildingType).getBuidlingcost();
-								ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
-								AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
-								AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
+					case(TOOL_DELETE): // Delete the hovered Building
+						if(!Mouse.getEventButtonState()||hoveredEntity==-1)break;
+						if(ResourceManager.getObject(hoveredEntity).getBuildingType()==Buildings.BUILDINGTYPE_STREET){
+							Streets.setStartPos(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]));
 							break;
-							
-						case(TOOL_DELETE): // Delete the hovered Building
-							if(hoveredEntity==-1)break;
-							try {
-								ResourceManager.playSoundRandom(ResourceManager.SOUND_DESTROY);
-								Grid.clearsCells((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuidlingType()).getWidth(), ResourceManager.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuidlingType()).getDepth());
-								ParticleEffects.dustEffect(ResourceManager.getObject(hoveredEntity).getX(),ResourceManager.getObject(hoveredEntity).getY(),ResourceManager.getObject(hoveredEntity).getZ());
-								ResourceManager.getObject(hoveredEntity).delete();
-							} catch (Exception e) {e.printStackTrace();}
-							break;
+						}
+						try {
+							ResourceManager.playSoundRandom(ResourceManager.SOUND_DESTROY);
+							Grid.clearsCells((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ(), Buildings.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuildingType()).getWidth(), Buildings.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuildingType()).getDepth());
+							ParticleEffects.dustEffect(ResourceManager.getObject(hoveredEntity).getX(),ResourceManager.getObject(hoveredEntity).getY(),ResourceManager.getObject(hoveredEntity).getZ());
+							ResourceManager.getObject(hoveredEntity).delete();
+						} catch (Exception e) {e.printStackTrace();}
+						break;
+				}
+			}
+			//Select the select tool with right mouse button
+			if(Mouse.getEventButton()==1&&!Mouse.getEventButtonState()&&!camera.wasRotated()){
+				selectedTool = TOOL_SELECT;
+				gui.toolDelete.setColor(Color.white);
+				buildpreview.setBuilding(-1);
+				currentBT = -1;
+				gui.deleteBorder.setVisible(false);
+				gui.buildingPanels.hide();
+				gui.infoBuildingCosts.setVisible(false);
+				gui.infoMonthlyCosts.setVisible(false);
+			}
+			//Set the last rotation of the camera, for checkign if the camera was moved
+			if(Mouse.getEventButton()==1&&Mouse.getEventButtonState()){
+				camera.setLastrotx();
+				camera.setLastroty();
+			}
+			//Control the zoom with the mouse wheel
+			if(Mouse.getEventDWheel()!=0){
+				AnimationManager.animateValue(camera, new CustomAnimationValue(){
+					@Override
+					public double getValue() {
+						return camera.getZoom();
 					}
-				}
-				//Select the select tool with right mouse button
-				if(Mouse.getEventButton()==1&&!Mouse.getEventButtonState()&&!camera.wasRotated()){
-					selectedTool = TOOL_SELECT;
-					gui.toolDelete.setColor(Color.white);
-					buildpreview.setBuilding(-1);
-					currentBuildingType = -1;
-					gui.deleteBorder.setVisible(false);
-					AnimationManager.animateValue(Main.gui.buildingsPanel, AnimationValue.Y, 20f, 0.5f, AnimationManager.ACTION_HIDE);
-				}
-				if(Mouse.getEventButton()==1&&Mouse.getEventButtonState()){
-					camera.setLastrotx();
-					camera.setLastroty();
-				}
-				//Set mouse grabbed when pressing right or middle mouse button
-				if((Mouse.getEventButton()==2||Mouse.getEventButton()==1)&&Mouse.getEventButtonState()){
-						Mouse.setGrabbed(true);
-				}
-				//Control the zoom with the mouse wheel
-				camera.setZoom((float) (camera.getZoom()-0.001*camera.getZoom()*Mouse.getEventDWheel()));
-				if(camera.getZoom()<7)camera.setZoom(7);
-				if(camera.getZoom()>1000)camera.setZoom(1000);
+					@Override
+					public void setValue(double input) {
+						camera.setZoom((float) ((input)<7?7:((input>1000)?1000:input)));
+					}
+				}, camera.getZoom()-0.004*camera.getZoom()*Mouse.getEventDWheel()-((Mouse.getEventDWheel()<0)?0.1:0.01)*Mouse.getEventDWheel(), 200);
+			}
 		}
 	}
 	
 	
+	/**
+	 * "initalize" OpenGL
+	 */
+	public void initGL() {
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(30f, 1337 / 768f, 0.3f, 3000f);
+		glMatrixMode(GL_MODELVIEW);
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_DEPTH_TEST);
+		glClearColor(0.7f, 0.4f, 1f, 1f);
+		glClearDepth(1); 
+		
+		
+		
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		
+		glEnable(GL_ALPHA_TEST);
+    	glAlphaFunc(GL_GREATER, 0);
+		
+		glShadeModel(GL_SMOOTH);
+		glEnable(GL_LIGHTING);
+		glEnable(GL_LIGHT0);
+		glLightModel(GL_LIGHT_MODEL_AMBIENT, ResourceManager.toFlippedFloatBuffer(new float[] {0.5f,0.5f,0.5f,1f}));
+		glLight(GL_LIGHT0, GL_AMBIENT, ResourceManager.toFlippedFloatBuffer(new float[]{0.2f,0.2f,0.2f,0.2f}));
+		
+		glEnable(GL_MAP_COLOR);
+		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
+		glEnable(GL_FOG);
+		glFog(GL_FOG_COLOR, ResourceManager.toFlippedFloatBuffer(new float[]{0f,0f,0f,1f}));
+		glFogi(GL_FOG_MODE, GL_LINEAR);
+		glHint(GL_FOG_HINT, GL_NICEST);
+		glFogf(GL_FOG_START, 4000);
+		glFogf(GL_FOG_END, 5000);
+		glFogf(GL_FOG_DENSITY, 0.0005f);
+	}
+
+	/**
+	 * Draw the Main menu
+	 */
+	public void renderMenu()
+	{
+		gui.drawMenu();
+	}
+
+	/**
+	 * Do the actual rendering
+	 */
+	public static void renderGL() {
+		// Clear The Screen And The Depth Buffer
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		
+		glPushMatrix();
+		
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
+		gluPerspective(30f, 1337f / 768f, 0.3f, 5000f);
+		glMatrixMode(GL_MODELVIEW);
+//		
+		
+		//Apply the camera transformations
+		camera.applyTransform();
+		
+		//Set the light positions
+		glLight(GL_LIGHT0, GL_POSITION, ResourceManager.toFlippedFloatBuffer(new float[]{-30f,50,100f,0f}));
+		glLight(GL_LIGHT0, GL_DIFFUSE, ResourceManager.toFlippedFloatBuffer(new float[]{2f,2f,2f,1f}));
+        
+		if(gui.getMouseover()==null)
+		{
+			//Picking requires the fog to be disables and the background to be white
+			glDisable(GL_FOG);
+			glClearColor(1f, 1f, 1f, 1f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			picking();//Picking
+			picking3d();//Calculate 3d mouse position
+			glClearColor(0f,0f, 0f, 1f);
+			glEnable(GL_FOG);
+		}else hoveredEntity = -1;
+		
+        //Rendering
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        
+        if(currentDataView!=null){
+        	glDisable(GL_TEXTURE_2D);
+        }else{
+        	glEnable(GL_TEXTURE_2D);
+        }
+       
+        //Draw the skybox
+        glDisable(GL_LIGHTING);
+        if(currentDataView!=null)glColor3f(0.5f, 0.5f, 0.5f);
+        else glColor3f(1f, 1f, 1f);
+        skybox.draw();
+        glEnable(GL_LIGHTING);
+        
+        //Draw the terrain
+        if(currentDataView!=null)glColor3f(0.5f, 0.5f, 0.5f);
+        terrain.draw();
+        
+       // glUseProgram(ResourceManager.shaderProgram);
+       
+        //Draw the buidings
+        for(int i=0;i<Buildings.buildings.size();i++){
+        	if(i==hoveredEntity&&!Mouse.isGrabbed()&&selectedTool!=TOOL_ADD){
+        		if(selectedTool==TOOL_DELETE)glColor3f(1f, 0f, 0f);
+        		if(selectedTool==TOOL_SELECT)glColor3f(1f, 1f, 1f);
+        		glDisable(GL_LIGHTING);
+        	}else {
+        		if(currentDataView==null)
+        		{
+        			glColor3f(1f, 1f, 1f);
+        			glLight(GL_LIGHT0, GL_DIFFUSE, ResourceManager.toFlippedFloatBuffer(new float[]{2f,2f,2f,1f}));
+        		}else{
+        			Color col = currentDataView.buildingColor(Buildings.buildings.get(i));
+        			glColor3f((float)col.getRed()/255f, (float)col.getGreen()/255f, (float)col.getBlue()/255f);
+        			glEnable(GL_COLOR_MATERIAL);
+        			glDisable(GL_TEXTURE_2D);
+        			glLight(GL_LIGHT0, GL_DIFFUSE, ResourceManager.toFlippedFloatBuffer(new float[]{0.5f,0.5f,0.5f,1f}));
+        		}
+        	}
+			Buildings.buildings.get(i).draw();
+			glEnable(GL_LIGHTING);
+			glEnable(GL_TEXTURE_2D);
+			glDisable(GL_COLOR_MATERIAL);
+		}
+        
+        //glUseProgram(0);
+        
+        //Draw the building preview
+        buildpreview.draw();
+        
+        //Draw the particle effects
+        ParticleEffects.draw();
+		
+		glPopMatrix();
+		
+		//GUI rendern
+		gui.draw();
+		
+	}
+	
+	float i= (float) (0.5*Math.PI); //value for the menu animation
+	public void updateIntro(int delta)
+	{
+		gui.IntroFF.setOpacity(1f-(float)anim/1000);
+		gui.IntroFF.setX(gui.IntroFF.getX()-0.2f*delta);
+		gui.IntroFF.setY(gui.IntroFF.getY()-0.1f*delta);
+		gui.IntroFF.setWidth(gui.IntroFF.getWidth()+0.4f*delta);
+		gui.IntroFF.setHeight(gui.IntroFF.getHeight()+0.2f*delta);
+		if(anim>=1000){
+			gameState = STATE_MENU;
+			gui.IntroFF.setVisible(false);
+		}
+		anim+=delta;
+	}
+
+	/**
+	 * Update the Main menu
+	 * @param delta
+	 */
+	public void updateMenu(int delta)
+	{
+		//Animate the background image
+		gui.MenuBG.setX((float) (30*Math.sin(i)-30));
+		gui.MenuBG.setWidth((float) (Display.getWidth()-60*Math.sin(i)+60));
+		gui.MenuBG.setY((float) (30*Math.sin(i))-30);
+		gui.MenuBG.setHeight((float) (Display.getHeight()-60*Math.sin(i)+60));
+		i=(i<2*Math.PI)?i+0.005f:0;
+		//Process mouse inputs
+		GuiElement guihit = gui.mouseoverMenu();
+		if(gui.lastHovered!=guihit)gui.callGuiEventsMenu(GuiEventType.Mouseover);
+		if(gui.lastHovered!=null&&gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mouseout,gui.lastHovered);
+		gui.lastHovered = guihit;
+		while(Mouse.next())
+		{
+			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()){
+				gui.callGuiEventsMenu(GuiEventType.Click);
+			}
+		}
+		while(Keyboard.next()){} //So key events dont get saved
+	}
+	
+	int anim = 0;
 	/**
 	 * The Gamelogic
 	 * @param delta The delta for timing
@@ -586,33 +865,51 @@ public class Main {
 			buildpreview.setVisible(false);
 		}
 		
-		for(int i=0;i<ResourceManager.objects.size();i++)
+		for(int i=0;i<Buildings.buildings.size();i++)
 		{
-			ResourceManager.objects.get(i).update(delta);
+			Buildings.buildings.get(i).update(delta);
+		}
+		
+		//Update tooltip position
+		if(gui.tooltip.isVisible())
+		{
+			gui.tooltip.setX((Mouse.getX()+gui.tooltip.getWidth()<=Display.getWidth())?Mouse.getX():Display.getWidth()-gui.tooltip.getWidth());
+			gui.tooltip.setY((Mouse.getY()+gui.tooltip.getHeight()<=Display.getHeight())?Mouse.getY():Display.getHeight()-gui.tooltip.getHeight());
 		}
 		
 		//Show debug info
 		String bt = "-";
 		try {
 			if(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding()!=null){
-			bt = ""+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuidlingType()+" ("+ResourceManager.getBuildingTypeName(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuidlingType())+")";
+			bt = ""+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType()+" ("+Buildings.getBuildingTypeName(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType())+")";
 		}
 		} catch (Exception e) {
 		}
-		
-		gui.debugInfo.setText("debug mode | Objects: "+ResourceManager.objects.size()+
+		String energy = "-";
+		try {
+			energy = (int)((Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getOwnedSupplyAmount(Supply.Energy)/(float)Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getNeededSupplyAmount(Supply.Energy))*100)+"% ("+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getOwnedSupplyAmount(Supply.Energy)+")";
+		} catch (Exception e) {}
+		String happiness = "-";
+		try {
+			happiness = ""+(int)((Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getHappiness()));
+		} catch (Exception e) {}
+		gui.debugInfo.setText("debug mode | Objects: "+Buildings.buildings.size()+
 				", FPS: "+fps+", ParticleEffects: "+ParticleEffects.getEffectCount()+", Mouse:("+Math.round(mousepos3d[0])+","+Math.round(mousepos3d[1])+","+Math.round(mousepos3d[2])+")"+
 				", GridIndex: "+Grid.posToIndex(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]))+
-				", BuildingType: "+bt);
-
+				", BuildingType: "+bt+", Energy supply: "+energy+", Happiness: "+happiness);
+	
+			
 		//Update gui info labels
 		gui.infoMoney.setText(ResourceManager.getString("INFOBAR_LABEL_MONEY")+": "+money+"$");
-		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+0);
-		if(money<=2000){
-			if(money<=0)gui.infoMoney.setTextColor(Color.red);
-			else gui.infoMoney.setTextColor(new Color(200,100,0));
-		}else gui.infoMoney.setTextColor(Color.black);
+		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+citizens);
+		if(selectedTool==TOOL_ADD&&money<Buildings.getBuildingType(currentBT).getBuidlingcost()){
+			gui.infoMoney.setTextColor(Color.red);
+		}else {
+			gui.infoMoney.setTextColor(Color.black);
+		}
 		
+		//Update the building info
+		gui.buildinginfo.update();
 		
 		//Update the paticle effects
 		ParticleEffects.update(delta);
@@ -624,175 +921,9 @@ public class Main {
 		updateFPS(); 
 	}
 
-	/**
-	 * "initalize" OpenGL
-	 */
-	public void initGL() {
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		gluPerspective(30f, 1337 / 768f, 0.3f, 3000f);
-		glMatrixMode(GL_MODELVIEW);
-		glEnable(GL_TEXTURE_2D);
-		glEnable(GL_DEPTH_TEST);
-		glClearColor(0.7f, 0.4f, 1f, 1f);
-		glClearDepth(1); 
-		
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-		
-		glEnable(GL_ALPHA_TEST);
-    	glAlphaFunc(GL_GREATER, 0);
-		
-		glShadeModel(GL_SMOOTH);
-		glEnable(GL_LIGHTING);
-		glEnable(GL_LIGHT0);
-		glLight(GL_LIGHT0, GL_POSITION, BufferTools.asFlippedFloatBuffer(new float[]{-30f,50,100f,0f}));
-		glLight(GL_LIGHT0, GL_DIFFUSE, BufferTools.asFlippedFloatBuffer(new float[]{1f,1f,0.9f,1f}));
-		glLightModel(GL_LIGHT_MODEL_AMBIENT, BufferTools.asFlippedFloatBuffer(new float[] {0.9f,0.9f,0.9f,1f}));
-		
-		glEnable(GL_MAP_COLOR);
-		glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		
-		glEnable(GL_FOG);
-		glFog(GL_FOG_COLOR, BufferTools.asFlippedFloatBuffer(new float[]{0f,0f,0f,1f}));
-		glFogi(GL_FOG_MODE, GL_LINEAR);
-		glHint(GL_FOG_HINT, GL_NICEST);
-		glFogf(GL_FOG_START, 4000);
-		glFogf(GL_FOG_END, 5000);
-		glFogf(GL_FOG_DENSITY, 0.0005f);
-	}
-
-	/**
-	 * Do the actual rendering
-	 */
-	public static void renderGL() {
-		// Clear The Screen And The Depth Buffer
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		
-		glPushMatrix();
-		
-		glMatrixMode(GL_PROJECTION);
-		glLoadIdentity();
-		gluPerspective(30f, 1337 / 768f, 0.3f, 5000f);
-		glMatrixMode(GL_MODELVIEW);
-		
-		//glUseProgram(shaderProgram);
-//		
-		
-		//Apply the camera transformations
-		camera.applyTransform();
-		
-		//Set the light positions
-		glLight(GL_LIGHT0, GL_POSITION, BufferTools.asFlippedFloatBuffer(new float[]{-30f,50,100f,0f}));
-        
-		if(gui.getMouseover()==null)
-		{
-			//Picking requires the fog to be disables and the background to be white
-			glDisable(GL_FOG);
-			glClearColor(1f, 1f, 1f, 1f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			picking();//Picking
-			picking3d();//Calculate 3d mouse position
-			glClearColor(0f,0f, 0f, 1f);
-			glEnable(GL_FOG);
-		}else hoveredEntity = -1;
-		
-        //Rendering
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glEnable(GL_TEXTURE_2D);
-        
-        //Draw the skybox
-        glDisable(GL_LIGHTING);
-        glColor3f(1f, 1f, 1f);
-        skybox.draw();
-        glEnable(GL_LIGHTING);
-        
-        //Draw the terrain
-        terrain.draw();
-       
-        //Draw the buidings
-        for(int i=0;i<ResourceManager.objects.size();i++){
-        	if(i==hoveredEntity&&!Mouse.isGrabbed()&&selectedTool!=TOOL_ADD){
-        		if(selectedTool==TOOL_DELETE)glColor3f(1f, 0f, 0f);
-        		if(selectedTool==TOOL_SELECT)glColor3f(1f, 1f, 1f);
-        		glDisable(GL_LIGHTING);
-        	}else {
-        		glColor3f(1f, 1f, 1f);
-        	}
-			ResourceManager.objects.get(i).draw();
-			glEnable(GL_LIGHTING);
-		}
-        
-        //Draw the building preview
-        buildpreview.draw();
-        
-        //Draw the particle effects
-        ParticleEffects.draw();
-
-//		glUseProgram(0);
-		
-		glPopMatrix();
-		
-		//GUI rendern
-		gui.draw();
-		
-	}
-	
-	/**
-	 * Draw the Main menu
-	 */
-	public void renderMenu()
-	{
-		gui.drawMenu();
-	}
-	
-	float i= (float) (0.5*Math.PI); //value for the menu animation
-	/**
-	 * Update the Main menu
-	 * @param delta
-	 */
-	public void updateMenu(int delta)
-	{
-		//Animate the background image
-		gui.MenuBG.setX((float) (30*Math.sin(i)-30));
-		gui.MenuBG.setWidth((float) (Display.getWidth()-60*Math.sin(i)+60));
-		gui.MenuBG.setY((float) (30*Math.sin(i))-30);
-		gui.MenuBG.setHeight((float) (Display.getHeight()-60*Math.sin(i)+60));
-		i=(i<2*Math.PI)?i+0.005f:0;
-		//Process mouse inputs
-		GuiElement guihit = gui.mouseoverMenu();
-		if(gui.lastHovered!=guihit)gui.callGuiEventsMenu(GuiEventType.Mouseover);
-		if(gui.lastHovered!=null&&gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mouseout,gui.lastHovered);
-		gui.lastHovered = guihit;
-		while(Mouse.next())
-		{
-			if(Mouse.getEventButton()==0&&!Mouse.getEventButtonState()){
-				gui.callGuiEventsMenu(GuiEventType.Click);
-			}
-		}
-		while(Keyboard.next()){} //So key events dont get saved
-	}
-	
-	int anim = 0;
-	public void updateIntro(int delta)
-	{
-		gui.IntroFF.setOpacity(1f-(float)anim/1000);
-		gui.IntroFF.setX(gui.IntroFF.getX()-0.2f*delta);
-		gui.IntroFF.setY(gui.IntroFF.getY()-0.1f*delta);
-		gui.IntroFF.setWidth(gui.IntroFF.getWidth()+0.4f*delta);
-		gui.IntroFF.setHeight(gui.IntroFF.getHeight()+0.2f*delta);
-		if(anim>=1000){
-			gameState = STATE_MENU;
-			gui.IntroFF.setVisible(false);
-		}
-		anim+=delta;
-	}
-	
 	public static void main(String[] argv) throws FileNotFoundException {
-		Main LwjglTest = new Main();
+		Main MarsCity = new Main();
 		splashscreen = new splashScreen();
-		LwjglTest.start();
+		MarsCity.start();
 	}
 }
