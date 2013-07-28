@@ -5,9 +5,8 @@ import static org.lwjgl.opengl.GL11.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import game.EntityTexture;
 import game.ResourceManager;
-
-import org.newdawn.slick.opengl.Texture;
 
 import animation.Animatable;
 
@@ -21,7 +20,7 @@ public class Entity implements Drawable, Animatable {
 	private float x = 0, y = 0, z=0;
 	private float rotX=0,rotY=0,rotZ=0;
 	private float scaleX=1,scaleY=1,scaleZ=1;
-	private Texture texture;
+	private EntityTexture texture;
 	private int[] displayList;
 	private float destY;
 	private float height;
@@ -48,7 +47,7 @@ public class Entity implements Drawable, Animatable {
 		
 	}
 	
-	public Entity(int[] displaylist, Texture texture, float x, float y, float z)
+	public Entity(int[] displaylist, EntityTexture texture, float x, float y, float z)
 	{
 			this.displayList = displaylist;
 			this.texture = texture;
@@ -57,7 +56,7 @@ public class Entity implements Drawable, Animatable {
 			this.z=z;
 	}
 
-	public Entity(int[] displaylist, Texture texture)
+	public Entity(int[] displaylist, EntityTexture texture)
 	{
 			this.displayList = displaylist;
 			this.texture = texture;
@@ -167,11 +166,11 @@ public class Entity implements Drawable, Animatable {
 		this.scaleZ = scaleZ;
 	}
 
-	public Texture getTexture() {
+	public EntityTexture getTexture() {
 		return texture;
 	}
 
-	public void setTexture(Texture texture) {
+	public void setTexture(EntityTexture texture) {
 		this.texture = texture;
 	}
 
@@ -184,9 +183,7 @@ public class Entity implements Drawable, Animatable {
 			glRotatef(rotX, 1, 0, 0);
 			glRotatef(rotY, 0, 1, 0);
 			glRotatef(rotZ, 0, 0, 1);
-			if(texture!=null)glBindTexture(GL_TEXTURE_2D, texture.getTextureID());
-			else glBindTexture(GL_TEXTURE_2D, 0);
-			ResourceManager.callLODList(this);
+			ResourceManager.drawEntity(this);
 			for(Entity e:children)
 			{
 				e.draw();

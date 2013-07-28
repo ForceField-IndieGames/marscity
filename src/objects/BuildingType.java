@@ -1,5 +1,6 @@
 package objects;
 
+import game.EntityTexture;
 import game.Supply;
 
 import org.newdawn.slick.opengl.Texture;
@@ -15,7 +16,7 @@ public class BuildingType {
 
 	private String name;
 	private int[] displaylist;
-	private Texture texture;
+	private EntityTexture texture;
 	private int buidlingcost;
 	private int monthlycost;
 	private int width, depth;
@@ -37,7 +38,7 @@ public class BuildingType {
 	 */
 		public BuildingType(String name, 
 							int[] displaylist, 
-							Texture texture, 
+							EntityTexture texture, 
 							Texture thumb,
 							int buidlingcost, 
 							int monthlycost,
@@ -78,7 +79,7 @@ public String getName() {
 	public int[] getDisplaylist() {
 		return displaylist;
 	}
-	public Texture getTexture() {
+	public EntityTexture getTexture() {
 		return texture;
 	}
 	public int getBuidlingcost() {
