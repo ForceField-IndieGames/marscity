@@ -89,6 +89,7 @@ public class ResourceManager {
 	public final static int[] OBJECT_STREET = addObject("streetsegment");
 	public final static int[] OBJECT_GRIDCELL = addObject("gridcell");
 	public final static int[] OBJECT_PLACEHOLDER = addObject("placeholder");
+	public final static int[] OBJECT_CITYCENTER = addObject("citycenter");
 	
 	//The audio files
 	public final static Audio SOUND_DROP = addSound("WAV", "drop.wav");
@@ -104,6 +105,7 @@ public class ResourceManager {
 	public final static EntityTexture TEXTURE_STREET            = addEntityTexture("street");
 	public final static EntityTexture TEXTURE_HOUSE             = addEntityTexture("house");
 	public final static EntityTexture TEXTURE_BIGHOUSE          = addEntityTexture("bighouse");
+	public final static EntityTexture TEXTURE_CITYCENTER        = addEntityTexture("citycenter");
 	public final static Texture TEXTURE_EMPTY                   = addTexture("empty.png");
 	public final static Texture TEXTURE_MAINMENUBG              = addTexture("gui/mainmenubg.png");
 	public final static Texture TEXTURE_MAINMENUFF              = addTexture("gui/ForceField.png");
@@ -256,6 +258,7 @@ public class ResourceManager {
 		try {
 			return TextureLoader.getTexture("PNG", new BufferedInputStream(stream));
 		} catch (Exception e) {
+			e.printStackTrace();
 		} 
 		return null;
 	}
@@ -402,19 +405,15 @@ public class ResourceManager {
 		for(int i=0;i<=2;i++)
 		{
 			try {
-				tex.setTexture(i, LoadTexture(ResourceManager.class.getResourceAsStream(path+i+".png")));
+				InputStream is = ResourceManager.class.getResourceAsStream(path+i+".png");
+				if(is!=null)tex.setTexture(i, LoadTexture(is));
+				else System.out.println("LoD texture not found: "+path+", LoD: "+i);
 			} catch (Exception e) {
 				tex.setTexture(i, null);
+				System.out.println("LoD texture not found: "+path+", LoD: "+i);
 			}
 		}
-		try {
-			return tex;
-		} catch (Exception e) {
-			e.printStackTrace();
-			Main.splashscreen.label2.setText("Error! Failed to load texture: "+path);
-			Main.log("Failed to load texture: "+path);
-		}
-		return null;
+		return tex;
 	}
 	
 	/**
