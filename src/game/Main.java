@@ -221,6 +221,8 @@ public class Main {
 		
 		ResourceManager.init();//Initialize the resources
 		
+		ResourceManager.SOUND_AMBIENT.playAsMusic(1, 0, true);
+		
 		System.out.println("Loaded "+splashscreen.loadeditems+" resources");
 		log("Finished loading resources.");
 		

@@ -95,6 +95,7 @@ public class ResourceManager {
 	public final static Audio SOUND_DROP = addSound("WAV", "drop.wav");
 	public final static Audio SOUND_DESTROY = addSound("WAV", "destroy.wav");
 	public final static Audio SOUND_SELECT = addSound("WAV", "select.wav");
+	public final static Audio SOUND_AMBIENT = addSound("WAV", "ambient.wav");
 	
 	//Loads the textures
 	public final static Texture TEXTURE_ICON16                  = addTexture("gui/icon16.png");
