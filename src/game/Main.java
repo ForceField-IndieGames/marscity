@@ -221,6 +221,8 @@ public class Main {
 		
 		ResourceManager.init();//Initialize the resources
 		
+		ResourceManager.SOUND_AMBIENT.playAsMusic(1, 0, true);
+		
 		System.out.println("Loaded "+splashscreen.loadeditems+" resources");
 		log("Finished loading resources.");
 		
@@ -583,21 +585,29 @@ public class Main {
 							break;
 						}
 						//Build a building
-					if (!Grid.isAreaFree((int) Math.round(mousepos3d[0]),
-							(int) Math.round(mousepos3d[2]), 
-							Buildings.getBuildingType(currentBT).getWidth(),
-							Buildings.getBuildingType(currentBT).getDepth())
-							|| money < Buildings.getBuildingType(currentBT).getBuidlingcost()
-							|| !Grid.buildingSurroundedWith((int) Math.round(mousepos3d[0]), (int) Math.round(mousepos3d[2]), currentBT, Buildings.BUILDINGTYPE_STREET))
-						break;
-							ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
-							Building b = Buildings.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBT);
-							money -= Buildings.getBuildingType(currentBT).getBuidlingcost();
-							ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
-							camera.setY(0);
-							AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
-							AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
-							Buildings.refreshSupply();
+						if (!Grid.isAreaFree((int) Math.round(mousepos3d[0]),
+								(int) Math.round(mousepos3d[2]), 
+								Buildings.getBuildingType(currentBT).getWidth(),
+								Buildings.getBuildingType(currentBT).getDepth())){
+							gui.showToolTip(ResourceManager.getString("FEEDBACK_OVERLAPPING"));
+							break;
+						}
+						if (money < Buildings.getBuildingType(currentBT).getBuidlingcost()){
+							gui.showToolTip(ResourceManager.getString("FEEDBACK_NOTENOUGHMONEY"));
+							break;
+						}
+						if (!Grid.buildingSurroundedWith((int) Math.round(mousepos3d[0]), (int) Math.round(mousepos3d[2]), currentBT, Buildings.BUILDINGTYPE_STREET)){
+							gui.showToolTip(ResourceManager.getString("FEEDBACK_NOSTREET"));
+							break;
+						}
+						ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
+						Building b = Buildings.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBT);
+						money -= Buildings.getBuildingType(currentBT).getBuidlingcost();
+						ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
+						camera.setY(0);
+						AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
+						AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
+						Buildings.refreshSupply();
 						break;
 						
 					case(TOOL_DELETE): // Delete the hovered Building
