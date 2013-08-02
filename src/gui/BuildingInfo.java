@@ -14,6 +14,7 @@ import animation.AnimationManager;
 import animation.AnimationValue;
 
 import game.ResourceManager;
+import game.Supply;
 import guielements.GuiLabel;
 import guielements.GuiPanel;
 
@@ -27,6 +28,7 @@ import guielements.GuiPanel;
 public class BuildingInfo extends GuiPanel {
 
 	private GuiLabel title;
+	private GuiLabel supplyneed;
 	private GuiLabel description;
 	private GuiLabel monthlycost;
 	private Building building;
@@ -46,7 +48,12 @@ public class BuildingInfo extends GuiPanel {
 		title.setTextColor(Color.white);
 		title.setText("Title");
 		add(title);
-		description = new GuiLabel(10,10,232,214,(Color)null);
+		supplyneed = new GuiLabel(10,174,232,40,(Color)null);
+		supplyneed.setCentered(true);
+		supplyneed.setText("supplyneed");
+		supplyneed.setTextColor(Color.red);
+		add(supplyneed);
+		description = new GuiLabel(10,10,232,174,(Color)null);
 		description.setCentered(true);
 		description.setText("Description");
 		add(description);
@@ -63,6 +70,17 @@ public class BuildingInfo extends GuiPanel {
 		setVisible(true);
 		AnimationManager.animateValue(this, AnimationValue.OPACITY, 1, 200);
 		title.setText(Buildings.getBuildingTypeName(building.getBuildingType()));
+		String sneed = "";
+		for(Supply s:Supply.values())
+		{
+			if(building.getOwnedSupplyAmount(s)<building.getNeededSupplyAmount(s))sneed=ResourceManager.getString("SUPPLYNEED_"+s.name().toUpperCase());
+		}
+		if(sneed==""){
+			sneed = ResourceManager.getString("SUPPLYNEED_NONE");
+			supplyneed.setTextColor(Color.green);
+		}else supplyneed.setTextColor(Color.red);
+		supplyneed.setText(sneed);
+		supplyneed.wrapText();
 		text = ResourceManager.getBtDescription(building.getBuildingType())+System.lineSeparator()+System.lineSeparator()+
 				ResourceManager.getBtDescription2(building.getBuildingType());
 		description.setText(text);
