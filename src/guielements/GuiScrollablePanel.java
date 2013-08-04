@@ -1,7 +1,5 @@
 package guielements;
 
-import java.awt.Color;
-
 import org.lwjgl.opengl.GL11;
 
 import animation.AnimationManager;
@@ -26,7 +24,6 @@ public class GuiScrollablePanel extends GuiPanel {
 		contentPanel = new GuiPanel(0,0,width,height);
 		elements.add(contentPanel);
 		contentPanel.setParent(this);
-		contentPanel.setClickThrough(true);
 		contentPanel.setColor(null);
 	}
 	
@@ -51,6 +48,12 @@ public class GuiScrollablePanel extends GuiPanel {
 			scrollV -= 40;
 			AnimationManager.animateValue(contentPanel, AnimationValue.Y, scrollV, 100);
 		}
+	}
+	
+	@Override
+	public void callIndirectGuiEvents(GuiEventType eventtype) {
+		super.callGuiEvents(eventtype);
+		callGuiEvents(eventtype);
 	}
 	
 	@Override

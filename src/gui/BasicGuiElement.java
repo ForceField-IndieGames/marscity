@@ -130,6 +130,12 @@ public class BasicGuiElement implements GuiElement, Animatable {
 			getEvent().run(eventtype, this);
 		} catch (Exception e) {
 		}
+		if(getParent()!=null)getParent().callIndirectGuiEvents(eventtype);
+	}
+	
+	@Override
+	public void callIndirectGuiEvents(GuiEventType eventtype) {
+		if(getParent()!=null)getParent().callIndirectGuiEvents(eventtype);
 	}
 
 	@Override
