@@ -98,15 +98,16 @@ public class ResourceManager {
 	public final static Audio SOUND_AMBIENT = addSound("WAV", "ambient.wav");
 	
 	//Loads the textures
-	public final static Texture TEXTURE_ICON16                  = addTexture("gui/icon16.png");
-	public final static Texture TEXTURE_ICON32                  = addTexture("gui/icon32.png");
-	public final static Texture TEXTURE_ICON256                 = addTexture("gui/icon256.png");
 	public final static EntityTexture TEXTURE_SKYBOX            = addEntityTexture("skybox");
 	public final static EntityTexture TEXTURE_TERRAIN           = addEntityTexture("terrain");
 	public final static EntityTexture TEXTURE_STREET            = addEntityTexture("street");
 	public final static EntityTexture TEXTURE_HOUSE             = addEntityTexture("house");
 	public final static EntityTexture TEXTURE_BIGHOUSE          = addEntityTexture("bighouse");
 	public final static EntityTexture TEXTURE_CITYCENTER        = addEntityTexture("citycenter");
+	public final static EntityTexture TEXTURE_PLACEHOLDER       = addEntityTexture("placeholder");
+	public final static Texture TEXTURE_ICON16                  = addTexture("gui/icon16.png");
+	public final static Texture TEXTURE_ICON32                  = addTexture("gui/icon32.png");
+	public final static Texture TEXTURE_ICON256                 = addTexture("gui/icon256.png");
 	public final static Texture TEXTURE_EMPTY                   = addTexture("empty.png");
 	public final static Texture TEXTURE_MAINMENUBG              = addTexture("gui/mainmenubg.png");
 	public final static Texture TEXTURE_MAINMENUFF              = addTexture("gui/ForceField.png");
@@ -146,7 +147,6 @@ public class ResourceManager {
 	public final static Texture TEXTURE_BUILDINGINFO            = addTexture("gui/buildinginfo.png");
 	public final static Texture TEXTURE_MONEYBG                 = addTexture("gui/moneybg.png");
 	public final static Texture TEXTURE_GRAPHTRANSITION         = addTexture("gui/graphtransition.png");
-	public final static EntityTexture TEXTURE_PLACEHOLDER       = addEntityTexture("placeholder");
 	public final static Texture TEXTURE_GUITHUMBPLACEHOLDER     = addTexture("gui/placeholderthumb.png");
 	public final static Texture TEXTURE_DATAVIEWBUTTONENERGY    = addTexture("gui/dataviewenergy.png");
 	public final static Texture TEXTURE_DATAVIEWBUTTONSECUTIRY  = addTexture("gui/dataviewsecurity.png");
@@ -161,6 +161,12 @@ public class ResourceManager {
 	public final static Texture TEXTURE_TOOLTIP                 = addTexture("gui/tooltip.png");
 	public final static Texture TEXTURE_TOOLTIPL                = addTexture("gui/tooltipl.png");
 	public final static Texture TEXTURE_TOOLTIPR                = addTexture("gui/tooltipr.png");
+	public final static Texture TEXTURE_GUISCROLLBAROT          = addTexture("gui/scrollbar_ot.png");
+	public final static Texture TEXTURE_GUISCROLLBAROM          = addTexture("gui/scrollbar_om.png");
+	public final static Texture TEXTURE_GUISCROLLBAROB          = addTexture("gui/scrollbar_ob.png");
+	public final static Texture TEXTURE_GUISCROLLBARIT          = addTexture("gui/scrollbar_it.png");
+	public final static Texture TEXTURE_GUISCROLLBARIM          = addTexture("gui/scrollbar_im.png");
+	public final static Texture TEXTURE_GUISCROLLBARIB          = addTexture("gui/scrollbar_ib.png");
 	
 	/**
 	 * Initializes the Resources that need to be initialized

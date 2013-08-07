@@ -20,6 +20,7 @@ import animation.Animatable;
 public class BasicGuiElement implements GuiElement, Animatable {
 
 	private GuiEvent event;
+	private GuiEvent indirectevent;
 	private float x=0,y=0,width=0,height=0;
 	private boolean visible=true;
 	private GuiElement parent = null;
@@ -135,6 +136,10 @@ public class BasicGuiElement implements GuiElement, Animatable {
 	
 	@Override
 	public void callIndirectGuiEvents(GuiEventType eventtype) {
+		try {
+			getIndirectevent().run(eventtype, this);
+		} catch (Exception e) {
+		}
 		if(getParent()!=null)getParent().callIndirectGuiEvents(eventtype);
 	}
 
@@ -292,6 +297,14 @@ public class BasicGuiElement implements GuiElement, Animatable {
 
 	public void setTooltip(String tooltip) {
 		this.tooltip = tooltip;
+	}
+
+	public GuiEvent getIndirectevent() {
+		return indirectevent;
+	}
+
+	public void setIndirectevent(GuiEvent indirectevent) {
+		this.indirectevent = indirectevent;
 	}
 
 }

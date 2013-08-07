@@ -97,7 +97,7 @@ class splashScreen extends JFrame implements Runnable{
 
 	public void setInfo(String text)
 	{
-		int percent = Math.round(loadeditems/80f*100);
+		int percent = Math.round(loadeditems/89f*100);
 		if(percent>100)percent=100;
 		label2.setText(percent+"% "+text);
 		progress.setValue(percent);
@@ -486,8 +486,12 @@ public class Main {
 			}
 			//Move the camera with middle mouse button
 			if(Mouse.isButtonDown(2)){
-				camera.setX((float) (camera.getX()+delta*(0.00008f*camera.getZoom()+0.0004f)*MY*Math.sin(Math.toRadians(camera.getRotY()))-delta*(0.00008f*camera.getZoom()+0.0004f)*MX*Math.cos(Math.toRadians(camera.getRotY()))));
-				camera.setZ((float) (camera.getZ()+delta*(0.00008f*camera.getZoom()+0.0004f)*MY*Math.cos(Math.toRadians(camera.getRotY()))+delta*(0.00008f*camera.getZoom()+0.0004f)*MX*Math.sin(Math.toRadians(camera.getRotY()))));
+				camera.setX((float) (camera.getX()+delta*(0.00008f*camera.getZoom()+0.0004f)
+						*MY*Math.sin(Math.toRadians(camera.getRotY()))-delta*(0.00008f*camera.getZoom()+0.0004f)
+						*MX*Math.cos(Math.toRadians(camera.getRotY()))));
+				camera.setZ((float) (camera.getZ()+delta*(0.00008f*camera.getZoom()+0.0004f)
+						*MY*Math.cos(Math.toRadians(camera.getRotY()))+delta*(0.00008f*camera.getZoom()+0.0004f)
+						*MX*Math.sin(Math.toRadians(camera.getRotY()))));
 			}
 		}
 		
@@ -520,6 +524,17 @@ public class Main {
 			//Hide rotation icon
 			if(Mouse.getEventButton()==1){
 				gui.cameraRotate.setVisible(false);
+			}
+			
+			//Fire Mousemove and Drag events
+			if(Mouse.getDX()!=0||Mouse.getDY()!=0)
+			{
+				if(Mouse.isButtonDown(0))
+				{
+					gui.callGuiEvents(GuiEventType.Drag);
+				}else{
+					gui.callGuiEvents(GuiEventType.Mousemove);
+				}
 			}
 			
 			//Fire gui click event & Building click event & hide the building info 'n stuff
