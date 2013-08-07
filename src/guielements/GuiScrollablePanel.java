@@ -6,11 +6,13 @@ import animation.AnimationManager;
 import animation.AnimationValue;
 
 import gui.GuiElement;
+import gui.GuiEvent;
 import gui.GuiEventType;
 
 public class GuiScrollablePanel extends GuiPanel {
 
 	private GuiPanel contentPanel;
+	private GuiScrollBar scrollBar;
 	private float scrollH = 0;
 	private float scrollV = 0;
 
@@ -25,6 +27,20 @@ public class GuiScrollablePanel extends GuiPanel {
 		elements.add(contentPanel);
 		contentPanel.setParent(this);
 		contentPanel.setColor(null);
+		scrollBar = new GuiScrollBar(getWidth()-16, 0, getHeight());
+		elements.add(scrollBar);
+		scrollBar.setParent(this);
+		scrollBar.setView_size(getHeight());
+		scrollBar.setEvent(new GuiEvent(){
+			@Override
+			public void run(GuiEventType eventtype) {
+				switch (eventtype) {
+				case Valuechange:
+					setScrollV(scrollBar.getValue());
+					break;
+				}
+			}
+		});
 	}
 	
 	@Override
@@ -36,17 +52,20 @@ public class GuiScrollablePanel extends GuiPanel {
 		if(guielement.getY()+guielement.getHeight()>contentPanel.getHeight()){
 			contentPanel.setHeight(guielement.getY()+guielement.getHeight());
 		}
+		scrollBar.setTotal_size(contentPanel.getHeight());
 	}
 	
 	@Override
 	public void callGuiEvents(GuiEventType eventtype) {
 		super.callGuiEvents(eventtype);
 		if(eventtype == GuiEventType.Scrolldown&&scrollV<0){
-			scrollV += 40;
+			scrollV += (scrollV<=-40)?40:-scrollV;
 			AnimationManager.animateValue(contentPanel, AnimationValue.Y, scrollV, 100);
+			scrollBar.setValue(scrollV);
 		}else if(eventtype == GuiEventType.Scrollup&&scrollV>getHeight()-contentPanel.getHeight()){
-			scrollV -= 40;
+			scrollV = (scrollV-40>=getHeight()-contentPanel.getHeight())?scrollV-40:getHeight()-contentPanel.getHeight();
 			AnimationManager.animateValue(contentPanel, AnimationValue.Y, scrollV, 100);
+			scrollBar.setValue(scrollV);
 		}
 	}
 	
@@ -96,6 +115,7 @@ public class GuiScrollablePanel extends GuiPanel {
 
 	public void setScrollV(float scrollV) {
 		this.scrollV = scrollV;
+		contentPanel.setY(scrollV);
 	}
 
 	public GuiPanel getContentPanel() {
