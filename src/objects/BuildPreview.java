@@ -1,6 +1,9 @@
 package objects;
 
 import static org.lwjgl.opengl.GL11.*;
+
+import java.lang.ProcessBuilder.Redirect;
+
 import game.EntityTexture;
 import game.Grid;
 import game.Main;
@@ -24,7 +27,7 @@ public class BuildPreview extends Entity {
 	private boolean show = false;
 	private int buildingType = 0;
 	public int radius;
-	private final int RADIUSMAX = 30;
+	private final float RADIUSMAX = 30;
 
 	
 	public int getBuildingType() {
@@ -137,18 +140,24 @@ public class BuildPreview extends Entity {
 							else glColor4f(0.5f, 0.5f, 0f,alpha);
 						}else glColor4f(1f, 1f, 1f,alpha-((x%2==0^z%2==0)?0.1f:0f));
 					}
-					glTranslatef(x, 0.001f, z);
+					
 					alpha = (float) ((alpha>0.6)?0.9:alpha+0.3);
 					if(Grid.getCell(x, z).getBuilding()==null)
 					{
+						glTranslatef(x+(1-alpha)*((x-getX())/RADIUSMAX), 0.001f, z+(1-alpha)*((z-getZ())/RADIUSMAX));
 						glScalef((alpha>0)?alpha:1, 1, (alpha>0)?alpha:1);
 						glRotatef(15*(1-alpha), 0, 1, 0);
 						glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
 						glRotatef(-15*(1-alpha), 0, 1, 0);
 						glScalef((alpha>0)?(1f/alpha):1, 1, (alpha>0)?(1f/alpha):1);
-					}else glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+						glTranslatef(-x-(1-alpha)*((x-getX())/RADIUSMAX), -0.001f, -z-(1-alpha)*((z-getZ())/RADIUSMAX));
+					}else {
+						glTranslatef(x, 0.001f, z);
+						glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+						glTranslatef(-x, 0.001f, -z);
+					}
 					
-					glTranslatef(-x, -0.001f, -z);
+					
 				}
 			}
 			
@@ -186,12 +195,7 @@ public class BuildPreview extends Entity {
 				glColor4f(1f, 1f, 1f, 1f);
 				ResourceManager.drawEntity(this);
 			}
-			
-			
 			glPopMatrix();
-			
-			
-			
 			glColor4f(1f, 1f, 1f, 1f);
 			glEnable(GL_LIGHTING);
 	}
