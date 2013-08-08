@@ -38,6 +38,8 @@ public class GuiScrollablePanel extends GuiPanel {
 				case Valuechange:
 					setScrollV(scrollBar.getValue());
 					break;
+				default:
+					break;
 				}
 			}
 		});

@@ -5,9 +5,13 @@ import game.EntityTexture;
 import game.Grid;
 import game.Main;
 import game.ResourceManager;
+import guielements.GuiScrollablePanel;
 
 
 import org.lwjgl.input.Mouse;
+
+import animation.AnimationManager;
+import animation.CustomAnimationValue;
 
 /**
  * This preview is visible when in building mode. It It shows what and where will be build
@@ -19,6 +23,8 @@ public class BuildPreview extends Entity {
 	
 	private boolean show = false;
 	private int buildingType = 0;
+	public int radius;
+	private final int RADIUSMAX = 30;
 
 	
 	public int getBuildingType() {
@@ -49,6 +55,26 @@ public class BuildPreview extends Entity {
 		setTexture(Buildings.getBuildingType(bt).getTexture());
 		show = true;
 		buildingType = bt;
+	}
+	
+	@Override
+	public void setVisible(boolean visible) {
+		if(!isVisible()&&visible)
+		{
+			radius = 0;
+		AnimationManager.animateValue(null, new CustomAnimationValue(){
+			@Override
+			public double getValue() {
+				return Main.buildpreview.radius;
+			}
+			@Override
+			public void setValue(double input) {
+				Main.buildpreview.radius = (int) input;
+			}
+		}, RADIUSMAX, 400);
+		}
+		
+		super.setVisible(visible);
 	}
 	
 	@Override
@@ -94,7 +120,7 @@ public class BuildPreview extends Entity {
 			int x2 = (int) (getX() + (int) Math.floor(Buildings.getBuildingType(getBuildingType()).getWidth()/2));
 			int z1 = (int) (getZ() -(int) Math.ceil(Buildings.getBuildingType(getBuildingType()).getDepth()/2-1));
 			int z2 = (int) (getZ() +(int) Math.floor(Buildings.getBuildingType(getBuildingType()).getDepth()/2));
-			int radius = 30;
+			float alpha=1;
 			for(int z=z1-radius;z<=z2+radius;z++){
 				for(int x=x1-radius;x<=x2+radius;x++){
 					if(z>=z1&&z<=z2&&x>=x1&&x<=x2){
@@ -105,14 +131,23 @@ public class BuildPreview extends Entity {
 					else {
 						//Color other cells within the radius
 						if(Grid.getCell(x, z)==null)break;
-						float alpha = (radius-((float) Math.sqrt((getX()-x)*(getX()-x)+(getZ()-z)*(getZ()-z))))/radius;
+						alpha = (radius-((float) Math.sqrt((getX()-x)*(getX()-x)+(getZ()-z)*(getZ()-z))))/radius;
 						if(Grid.getCell(x, z).getBuilding()!=null){
 							if(Grid.getCell(x, z).getBuilding().getBuildingType()==Buildings.BUILDINGTYPE_STREET)glColor4f(0.2f, 0.2f, 0.2f,alpha);
 							else glColor4f(0.5f, 0.5f, 0f,alpha);
 						}else glColor4f(1f, 1f, 1f,alpha-((x%2==0^z%2==0)?0.1f:0f));
 					}
 					glTranslatef(x, 0.001f, z);
-					glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+					alpha = (float) ((alpha>0.6)?0.9:alpha+0.3);
+					if(Grid.getCell(x, z).getBuilding()==null)
+					{
+						glScalef((alpha>0)?alpha:1, 1, (alpha>0)?alpha:1);
+						glRotatef(15*(1-alpha), 0, 1, 0);
+						glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+						glRotatef(-15*(1-alpha), 0, 1, 0);
+						glScalef((alpha>0)?(1f/alpha):1, 1, (alpha>0)?(1f/alpha):1);
+					}else glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+					
 					glTranslatef(-x, -0.001f, -z);
 				}
 			}

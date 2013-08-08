@@ -1,11 +1,7 @@
 package guielements;
 
 import java.awt.Color;
-import java.util.List;
-
 import org.lwjgl.input.Mouse;
-import org.newdawn.slick.opengl.Texture;
-
 import animation.Animatable;
 import animation.AnimationManager;
 import animation.AnimationValue;

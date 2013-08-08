@@ -17,8 +17,6 @@ import guielements.GuiPanel;
 import guielements.GuiProgressbar;
 import guielements.GuiQuad;
 import guielements.GuiRadiobutton;
-import guielements.GuiScrollBar;
-import guielements.GuiScrollablePanel;
 import guielements.GuiTextbox;
 
 import java.awt.Color;
