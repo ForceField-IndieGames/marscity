@@ -622,6 +622,7 @@ public class Main {
 						camera.setY(0);
 						AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
 						AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
+						buildpreview.waveEffect();
 						Buildings.refreshSupply();
 						break;
 						

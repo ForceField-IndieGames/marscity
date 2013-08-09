@@ -2,15 +2,10 @@ package objects;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import java.lang.ProcessBuilder.Redirect;
-
 import game.EntityTexture;
 import game.Grid;
 import game.Main;
 import game.ResourceManager;
-import guielements.GuiScrollablePanel;
-
-
 import org.lwjgl.input.Mouse;
 
 import animation.AnimationManager;
@@ -26,10 +21,18 @@ public class BuildPreview extends Entity {
 	
 	private boolean show = false;
 	private int buildingType = 0;
-	public int radius;
-	private final float RADIUSMAX = 30;
-
+	private int radius;
+	private final float RADIUSMAX = 25;
+	private int animRadius = -5;
 	
+	public int getAnimRadius() {
+		return animRadius;
+	}
+
+	public void setAnimRadius(int animRadius) {
+		this.animRadius = animRadius;
+	}
+
 	public int getBuildingType() {
 		return buildingType;
 	}
@@ -78,6 +81,21 @@ public class BuildPreview extends Entity {
 		}
 		
 		super.setVisible(visible);
+	}
+	
+	public void waveEffect()
+	{
+		setAnimRadius(-5);
+		AnimationManager.animateValue(null, new CustomAnimationValue(){
+			@Override
+			public double getValue() {
+				return getAnimRadius();
+			}
+			@Override
+			public void setValue(double input) {
+				setAnimRadius((int) input);
+			}
+		}, RADIUSMAX+5f, 500);
 	}
 	
 	@Override
@@ -142,20 +160,29 @@ public class BuildPreview extends Entity {
 					}
 					
 					alpha = (float) ((alpha>0.6)?0.9:alpha+0.3);
-					if(Grid.getCell(x, z).getBuilding()==null)
+					if(alpha>0)
 					{
-						glTranslatef(x+(1-alpha)*((x-getX())/RADIUSMAX), 0.001f, z+(1-alpha)*((z-getZ())/RADIUSMAX));
-						glScalef((alpha>0)?alpha:1, 1, (alpha>0)?alpha:1);
-						glRotatef(15*(1-alpha), 0, 1, 0);
-						glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
-						glRotatef(-15*(1-alpha), 0, 1, 0);
-						glScalef((alpha>0)?(1f/alpha):1, 1, (alpha>0)?(1f/alpha):1);
-						glTranslatef(-x-(1-alpha)*((x-getX())/RADIUSMAX), -0.001f, -z-(1-alpha)*((z-getZ())/RADIUSMAX));
-					}else {
-						glTranslatef(x, 0.001f, z);
-						glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
-						glTranslatef(-x, 0.001f, -z);
+						if(Grid.getCell(x, z).getBuilding()==null)
+						{
+							float dist = (float) Math.sqrt((getX()-x)*(getX()-x)+(getZ()-z)*(getZ()-z));
+							glTranslatef(x+(1-alpha)*((x-getX())/RADIUSMAX), 
+									0.001f+((Math.abs(dist-animRadius)<=3)?3-Math.abs(dist-animRadius):0), 
+									z+(1-alpha)*((z-getZ())/RADIUSMAX));
+							glScalef((alpha>0)?alpha:1, 1, (alpha>0)?alpha:1);
+							glRotatef(15*(1-alpha), 0, 1, 0);
+							glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+							glRotatef(-15*(1-alpha), 0, 1, 0);
+							glScalef((alpha>0)?(1f/alpha):1, 1, (alpha>0)?(1f/alpha):1);
+							glTranslatef(-x-(1-alpha)*((x-getX())/RADIUSMAX),
+									-0.001f-((Math.abs(dist-animRadius)<=3)?3-Math.abs(dist-animRadius):0), 
+									-z-(1-alpha)*((z-getZ())/RADIUSMAX));
+						}else  {
+							glTranslatef(x, 0.001f, z);
+							glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+							glTranslatef(-x, 0.001f, -z);
+						}
 					}
+						
 					
 					
 				}
