@@ -26,6 +26,7 @@ public class Building extends Entity {
 	private int[] neededSupplyAmount = new int[Supply.values().length];
 	private int[] ownedSupplyAmount = new int[Supply.values().length];
 	private byte happiness = 0;  
+	private boolean hasHappiness = false;
 	
 	public Building(){}
 
@@ -175,6 +176,14 @@ public class Building extends Entity {
 
 	public void setHappiness(byte happiness) {
 		this.happiness = happiness;
+	}
+
+	public boolean isHasHappiness() {
+		return hasHappiness;
+	}
+
+	public void setHasHappiness(boolean hasHappiness) {
+		this.hasHappiness = hasHappiness;
 	}
 	
 }
