@@ -90,6 +90,15 @@ public class ResourceManager {
 	public final static int[] OBJECT_GRIDCELL = addObject("gridcell");
 	public final static int[] OBJECT_PLACEHOLDER = addObject("placeholder");
 	public final static int[] OBJECT_CITYCENTER = addObject("citycenter");
+	public final static int[] OBJECT_RESEARCHSTATION = addObject("researchstation");
+	public final static int[] OBJECT_HANGAR = addObject("hangar");
+	public final static int[] OBJECT_BANK = addObject("bank");
+	public final static int[] OBJECT_MEDICALCENTER = addObject("medicalcenter");
+	public final static int[] OBJECT_SERVERCENTER = addObject("servercenter");
+	public final static int[] OBJECT_GARBAGEYARD = addObject("garbageyard");
+	public final static int[] OBJECT_POLICE = addObject("police");
+	public final static int[] OBJECT_SOLARPOWER = addObject("solarpower");
+	public final static int[] OBJECT_FUSIONPOWER = addObject("fusionpower");
 	
 	//The audio files
 	public final static Audio SOUND_DROP = addSound("WAV", "drop.wav");
@@ -105,6 +114,15 @@ public class ResourceManager {
 	public final static EntityTexture TEXTURE_BIGHOUSE          = addEntityTexture("bighouse");
 	public final static EntityTexture TEXTURE_CITYCENTER        = addEntityTexture("citycenter");
 	public final static EntityTexture TEXTURE_PLACEHOLDER       = addEntityTexture("placeholder");
+	public final static EntityTexture TEXTURE_RESEARCHSTATION   = addEntityTexture("placeholder");
+	public final static EntityTexture TEXTURE_HANGAR       = addEntityTexture("placeholder");
+	public final static EntityTexture TEXTURE_BANK       = addEntityTexture("placeholder");
+	public final static EntityTexture TEXTURE_MEDICALCENTER       = addEntityTexture("placeholder");
+	public final static EntityTexture TEXTURE_SERVERCENTER       = addEntityTexture("placeholder");
+	public final static EntityTexture TEXTURE_GARBAGEYARD       = addEntityTexture("placeholder");
+	public final static EntityTexture TEXTURE_POLICE       = addEntityTexture("placeholder");
+	public final static EntityTexture TEXTURE_SOLARPOWER       = addEntityTexture("placeholder");
+	public final static EntityTexture TEXTURE_FUSIONPOWER      = addEntityTexture("placeholder");
 	public final static Texture TEXTURE_ICON16                  = addTexture("gui/icon16.png");
 	public final static Texture TEXTURE_ICON32                  = addTexture("gui/icon32.png");
 	public final static Texture TEXTURE_ICON256                 = addTexture("gui/icon256.png");
