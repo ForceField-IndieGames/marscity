@@ -32,7 +32,7 @@ public class Grid {
 	 * @return The cell at the given position
 	 * @throws IndexOutOfBoundsException
 	 */
-	public static GridCell getCell(int x, int y) throws IndexOutOfBoundsException
+	public static GridCell getCell(int x, int y)
 	{
 		try {
 			return cells.get(XYtoIndex(x+cellsX/2, y+cellsY/2));

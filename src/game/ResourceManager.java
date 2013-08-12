@@ -167,6 +167,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUISCROLLBARIT          = addTexture("gui/scrollbar_it.png");
 	public final static Texture TEXTURE_GUISCROLLBARIM          = addTexture("gui/scrollbar_im.png");
 	public final static Texture TEXTURE_GUISCROLLBARIB          = addTexture("gui/scrollbar_ib.png");
+	public final static Texture TEXTURE_GUIDVBACKGROUND         = addTexture("gui/DVbackground.png");
 	
 	/**
 	 * Initializes the Resources that need to be initialized

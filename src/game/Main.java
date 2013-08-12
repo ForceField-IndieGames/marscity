@@ -157,7 +157,7 @@ public class Main {
 	public static byte     selectedTool  = TOOL_SELECT;                      //The selected tool, SELECT,ADD or DELETE
 	public static int      money         = Game.INITIALMONEY;                //The players money
 	public static int      citizens      = 0;                                //The citizens that live in the city
-	public static byte     taxes         = 20;                               //Taxes for citizens in %
+	public static byte     taxes         = Game.INITIALTAXES;                //Taxes for citizens in %
 	public static String   cityname      = "Meine Stadt";                    //The city's name
 	public static int      currentBT     = -1;                               //The currently selected building type
 	public static float[]  mousepos3d    = new float[3];                     //The mouse position in 3d space
@@ -919,10 +919,14 @@ public class Main {
 		try {
 			happiness = ""+(int)((Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getHappiness()));
 		} catch (Exception e) {}
+		String happinessEffect = "-";
+		try {
+			happinessEffect = ""+(int)((Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getHappinessEffect()));
+		} catch (Exception e) {}
 		gui.debugInfo.setText("debug mode | Objects: "+Buildings.buildings.size()+
 				", FPS: "+fps+", ParticleEffects: "+ParticleEffects.getEffectCount()+", Mouse:("+Math.round(mousepos3d[0])+","+Math.round(mousepos3d[1])+","+Math.round(mousepos3d[2])+")"+
 				", GridIndex: "+Grid.posToIndex(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]))+
-				", BuildingType: "+bt+", Energy supply: "+energy+", Happiness: "+happiness);
+				", BuildingType: "+bt+", Energy supply: "+energy+", Happiness: "+happiness+", HappinessEffect: "+happinessEffect);
 	
 			
 		//Update gui info labels
