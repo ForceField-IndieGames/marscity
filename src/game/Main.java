@@ -783,8 +783,9 @@ public class Main {
         for(int i=0;i<Buildings.buildings.size();i++){
         	if(i==hoveredEntity&&!Mouse.isGrabbed()&&selectedTool!=TOOL_ADD){
         		if(selectedTool==TOOL_DELETE)glColor3f(1f, 0f, 0f);
-        		if(selectedTool==TOOL_SELECT)glColor3f(1f, 1f, 1f);
-        		glDisable(GL_LIGHTING);
+        		if(selectedTool==TOOL_SELECT)glColor3f(0.5f, 0.5f, 0.5f);
+        		glEnable(GL_LIGHTING);
+        		glEnable(GL_COLOR_MATERIAL);
         	}else {
         		if(currentDataView==null)
         		{
