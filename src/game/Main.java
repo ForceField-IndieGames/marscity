@@ -899,7 +899,7 @@ public class Main {
 		//Update tooltip position
 		if(gui.tooltip.isVisible())
 		{
-			gui.tooltip.setX((Mouse.getX()+gui.tooltip.getWidth()<=Display.getWidth())?Mouse.getX():Display.getWidth()-gui.tooltip.getWidth());
+			gui.tooltip.setX((Mouse.getX()+gui.tooltip.getWidth()+gui.tooltip.getHeight()/2<=Display.getWidth())?Mouse.getX():Display.getWidth()-gui.tooltip.getWidth()-gui.tooltip.getHeight()/2);
 			gui.tooltip.setY((Mouse.getY()+gui.tooltip.getHeight()<=Display.getHeight())?Mouse.getY():Display.getHeight()-gui.tooltip.getHeight());
 		}
 		

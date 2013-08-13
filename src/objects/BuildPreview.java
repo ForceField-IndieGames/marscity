@@ -100,6 +100,11 @@ public class BuildPreview extends Entity {
 		}, RADIUSMAX+5f, 500);
 	}
 	
+	public BuildingType getBt()
+	{
+		return Buildings.getBuildingType(getBuildingType());
+	}
+	
 	@Override
 	public void draw() {
 		
@@ -221,6 +226,27 @@ public class BuildPreview extends Entity {
 						glTranslatef(-x, -0.002f, -Streets.getY1());
 					}
 				}
+			}
+			
+			//Draw happinessEffect influence, if needed
+			if(getBt().getHappinessEffect()!=0
+					&&getBt().getHappinessRadius()>0)
+			{
+				glEnable(GL_DEPTH_TEST);
+				glEnable(GL_TEXTURE_2D);
+				glBindTexture(GL_TEXTURE_2D, ResourceManager.TEXTURE_HAPPINESSEFFECT.getTextureID());
+				int he = getBt().getHappinessEffect();
+				if(he>0){
+					glColor4f(1-he/30f, 1f, 1-he/30f,1);
+				}else{
+					glColor4f(1f, 1-he/-30f, 1-he/-30f,1);
+				}
+				glTranslatef(getX(), 0.01f, getZ());
+				float r = (radius<getBt().getHappinessRadius())?radius:getBt().getHappinessRadius();
+				glScalef(r, 1, r);
+				glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+				glTranslatef(-getX(), 0.01f, -getZ());
+				glScalef(1/r, 1, 1/r);
 			}
 			
 			//Draw building
