@@ -31,7 +31,7 @@ import org.lwjgl.opengl.Display;
 
 public class Game {
 	private static boolean pause = false;
-	public static final int INITIALMONEY = 20000;
+	public static final int INITIALMONEY = 50000;
 	public static final int INITIALTAXES = 19;
 	public static final short FileFormatVersion = 1;
 	

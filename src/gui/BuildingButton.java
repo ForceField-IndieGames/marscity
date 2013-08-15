@@ -1,6 +1,7 @@
 package gui;
 
 import game.Main;
+import game.ResourceManager;
 import guielements.GuiLabel;
 import guielements.GuiPanel;
 
@@ -64,8 +65,9 @@ public class BuildingButton extends GuiPanel {
 		break;
 	default:break;}}});
 		add(image);
-		name = new GuiLabel(0,0,getWidth(),30,(Color)null);
+		name = new GuiLabel(0,0,getWidth(),36,(Color)null);
 		name.setText(Buildings.getBuildingTypeName(bt));
+		name.setFont(ResourceManager.Arial12);
 		name.setCentered(true);
 		name.wrapText();
 		add(name);

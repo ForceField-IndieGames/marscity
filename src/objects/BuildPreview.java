@@ -245,8 +245,8 @@ public class BuildPreview extends Entity {
 				float r = (radius<getBt().getHappinessRadius())?radius:getBt().getHappinessRadius();
 				glScalef(r, 1, r);
 				glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
-				glTranslatef(-getX(), 0.01f, -getZ());
 				glScalef(1/r, 1, 1/r);
+				glTranslatef(-getX(), 0.01f, -getZ());
 			}
 			
 			//Draw building
