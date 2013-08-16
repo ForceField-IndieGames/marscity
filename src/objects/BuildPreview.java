@@ -232,7 +232,7 @@ public class BuildPreview extends Entity {
 			if(getBt().getHappinessEffect()!=0
 					&&getBt().getHappinessRadius()>0)
 			{
-				glEnable(GL_DEPTH_TEST);
+				glDisable(GL_DEPTH_TEST);
 				glEnable(GL_TEXTURE_2D);
 				glBindTexture(GL_TEXTURE_2D, ResourceManager.TEXTURE_HAPPINESSEFFECT.getTextureID());
 				int he = getBt().getHappinessEffect();

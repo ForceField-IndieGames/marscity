@@ -70,6 +70,7 @@ public class BuildingButton extends GuiPanel {
 		name.setFont(ResourceManager.Arial12);
 		name.setCentered(true);
 		name.wrapText();
+		name.setClickThrough(true);
 		add(name);
 	}
 
