@@ -15,6 +15,7 @@ public interface GuiElement {
 	public void draw();
 	public GuiElement mouseover();
 	public void callGuiEvents(GuiEventType eventtype);
+	public void callIndirectGuiEvents(GuiEventType eventtype);
 	
 	public float getX();
 	public float getY();

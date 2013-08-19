@@ -1,13 +1,17 @@
 package objects;
 
 import static org.lwjgl.opengl.GL11.*;
+
+import java.awt.Color;
+
 import game.EntityTexture;
 import game.Grid;
 import game.Main;
 import game.ResourceManager;
-
-
 import org.lwjgl.input.Mouse;
+
+import animation.AnimationManager;
+import animation.CustomAnimationValue;
 
 /**
  * This preview is visible when in building mode. It It shows what and where will be build
@@ -19,8 +23,18 @@ public class BuildPreview extends Entity {
 	
 	private boolean show = false;
 	private int buildingType = 0;
-
+	private int radius;
+	private final float RADIUSMAX = 25;
+	private int animRadius = -5;
 	
+	public int getAnimRadius() {
+		return animRadius;
+	}
+
+	public void setAnimRadius(int animRadius) {
+		this.animRadius = animRadius;
+	}
+
 	public int getBuildingType() {
 		return buildingType;
 	}
@@ -49,6 +63,46 @@ public class BuildPreview extends Entity {
 		setTexture(Buildings.getBuildingType(bt).getTexture());
 		show = true;
 		buildingType = bt;
+	}
+	
+	@Override
+	public void setVisible(boolean visible) {
+		if(!isVisible()&&visible)
+		{
+			radius = 0;
+		AnimationManager.animateValue(null, new CustomAnimationValue(){
+			@Override
+			public double getValue() {
+				return Main.buildpreview.radius;
+			}
+			@Override
+			public void setValue(double input) {
+				Main.buildpreview.radius = (int) input;
+			}
+		}, RADIUSMAX, 400);
+		}
+		
+		super.setVisible(visible);
+	}
+	
+	public void waveEffect()
+	{
+		setAnimRadius(-5);
+		AnimationManager.animateValue(null, new CustomAnimationValue(){
+			@Override
+			public double getValue() {
+				return getAnimRadius();
+			}
+			@Override
+			public void setValue(double input) {
+				setAnimRadius((int) input);
+			}
+		}, RADIUSMAX+5f, 500);
+	}
+	
+	public BuildingType getBt()
+	{
+		return Buildings.getBuildingType(getBuildingType());
 	}
 	
 	@Override
@@ -94,26 +148,61 @@ public class BuildPreview extends Entity {
 			int x2 = (int) (getX() + (int) Math.floor(Buildings.getBuildingType(getBuildingType()).getWidth()/2));
 			int z1 = (int) (getZ() -(int) Math.ceil(Buildings.getBuildingType(getBuildingType()).getDepth()/2-1));
 			int z2 = (int) (getZ() +(int) Math.floor(Buildings.getBuildingType(getBuildingType()).getDepth()/2));
-			int radius = 30;
+			float alpha=1;
 			for(int z=z1-radius;z<=z2+radius;z++){
 				for(int x=x1-radius;x<=x2+radius;x++){
 					if(z>=z1&&z<=z2&&x>=x1&&x<=x2){
 						//Color cells under the building
-						if(Grid.getCell(x, z).getBuilding()!=null)glColor4f(1f, 0f, 0f,0.7f);
-						else glColor4f(0f, 1f, 0f,0.7f);
+						try {
+							if(Grid.getCell(x, z).getBuilding()!=null){
+								glColor4f(1f, 0f, 0f,0.7f);
+							}
+							else {
+								Color c = Buildings.getBuildingType(getBuildingType()).getGridColor();
+								glColor4f(c.getRed()/255, c.getGreen()/255, c.getBlue()/255,0.7f);
+							}
+						} catch (Exception e) {}
 					}
 					else {
 						//Color other cells within the radius
 						if(Grid.getCell(x, z)==null)break;
-						float alpha = (radius-((float) Math.sqrt((getX()-x)*(getX()-x)+(getZ()-z)*(getZ()-z))))/radius;
+						alpha = (radius-((float) Math.sqrt((getX()-x)*(getX()-x)+(getZ()-z)*(getZ()-z))))/radius;
 						if(Grid.getCell(x, z).getBuilding()!=null){
-							if(Grid.getCell(x, z).getBuilding().getBuildingType()==Buildings.BUILDINGTYPE_STREET)glColor4f(0.2f, 0.2f, 0.2f,alpha);
-							else glColor4f(0.5f, 0.5f, 0f,alpha);
-						}else glColor4f(1f, 1f, 1f,alpha-((x%2==0^z%2==0)?0.1f:0f));
+							Color col = Buildings.getBuildingType(Grid.getCell(x, z).getBuildingType()).getGridColor();
+							glColor4f(col.getRed(), col.getGreen(), col.getBlue(),alpha);
+						}else {
+							int he = Grid.getCell(x, z).getHappinessEffect();
+							if(he>0){
+								glColor4f(1-he/30f, 1f, 1-he/30f,alpha-((x%2==0^z%2==0)?0.1f:0f));
+							}else{
+								glColor4f(1f, 1-he/-30f, 1-he/-30f,alpha-((x%2==0^z%2==0)?0.1f:0f));
+							}
+						}
 					}
-					glTranslatef(x, 0.001f, z);
-					glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
-					glTranslatef(-x, -0.001f, -z);
+					
+					alpha = (float) ((alpha>0.6)?0.9:alpha+0.3);
+					if(alpha>0)
+					{
+						if(Grid.getCell(x, z)!=null&&Grid.getCell(x, z).getBuilding()==null)
+						{
+							float dist = (float) Math.sqrt((getX()-x)*(getX()-x)+(getZ()-z)*(getZ()-z));
+							glTranslatef(x+(1-alpha)*((x-getX())/RADIUSMAX), 
+									0.001f+((Math.abs(dist-animRadius)<=3)?3-Math.abs(dist-animRadius):0), 
+									z+(1-alpha)*((z-getZ())/RADIUSMAX));
+							glScalef((alpha>0)?alpha:1, 1, (alpha>0)?alpha:1);
+							glRotatef(15*(1-alpha), 0, 1, 0);
+							glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+							glRotatef(-15*(1-alpha), 0, 1, 0);
+							glScalef((alpha>0)?(1f/alpha):1, 1, (alpha>0)?(1f/alpha):1);
+							glTranslatef(-x-(1-alpha)*((x-getX())/RADIUSMAX),
+									-0.001f-((Math.abs(dist-animRadius)<=3)?3-Math.abs(dist-animRadius):0), 
+									-z-(1-alpha)*((z-getZ())/RADIUSMAX));
+						}else  {
+							glTranslatef(x, 0.001f, z);
+							glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+							glTranslatef(-x, -0.001f, -z);
+						}
+					}
 				}
 			}
 			
@@ -139,6 +228,27 @@ public class BuildPreview extends Entity {
 				}
 			}
 			
+			//Draw happinessEffect influence, if needed
+			if(getBt().getHappinessEffect()!=0
+					&&getBt().getHappinessRadius()>0)
+			{
+				glDisable(GL_DEPTH_TEST);
+				glEnable(GL_TEXTURE_2D);
+				glBindTexture(GL_TEXTURE_2D, ResourceManager.TEXTURE_HAPPINESSEFFECT.getTextureID());
+				int he = getBt().getHappinessEffect();
+				if(he>0){
+					glColor4f(1-he/30f, 1f, 1-he/30f,1);
+				}else{
+					glColor4f(1f, 1-he/-30f, 1-he/-30f,1);
+				}
+				glTranslatef(getX(), 0.01f, getZ());
+				float r = (radius<getBt().getHappinessRadius())?radius:getBt().getHappinessRadius();
+				glScalef(r, 1, r);
+				glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+				glScalef(1/r, 1, 1/r);
+				glTranslatef(-getX(), 0.01f, -getZ());
+			}
+			
 			//Draw building
 			glEnable(GL_DEPTH_TEST);
 			glTranslatef(getX(), 0, getZ());
@@ -151,12 +261,7 @@ public class BuildPreview extends Entity {
 				glColor4f(1f, 1f, 1f, 1f);
 				ResourceManager.drawEntity(this);
 			}
-			
-			
 			glPopMatrix();
-			
-			
-			
 			glColor4f(1f, 1f, 1f, 1f);
 			glEnable(GL_LIGHTING);
 	}
