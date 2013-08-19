@@ -218,8 +218,6 @@ public class GuiLabel extends BasicGuiElement {
 				glOrtho(0, Display.getWidth(), Display.getHeight(), 0, 1, -1);
 				glMatrixMode(GL_MODELVIEW);
 				TextureImpl.bindNone();
-				glEnable(GL_SCISSOR_TEST);
-				glScissor((int)getScreenX(), (int)getScreenY(), (int)getWidth(), (int)getHeight()+10);
 				float xpos;
 				if(isCentered()){
 					xpos = getScreenX()+getWidth()/2-font.getWidth(getText())/2;
@@ -232,7 +230,6 @@ public class GuiLabel extends BasicGuiElement {
 				}
 				float ypos = (Display.getHeight()-getScreenY())-getHeight()/2-font.getHeight(getText())/2;
 				font.drawString(xpos, ypos, getText(),new org.newdawn.slick.Color(getTextColor().getRed(), getTextColor().getGreen(), getTextColor().getBlue(),getScreenOpacity()));
-				glDisable(GL_SCISSOR_TEST);
 				TextureImpl.bindNone();
 				glPopMatrix();
 				
