@@ -157,6 +157,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUITHUMBMEDICALCENTER   = addTexture("gui/thumbmedicalcenter.png");
 	public final static Texture TEXTURE_GUITHUMBSERVERCENTER    = addTexture("gui/thumbservercenter.png");
 	public final static Texture TEXTURE_GUITHUMBGARBAGEYARD     = addTexture("gui/thumbgarbageyard.png");
+	public final static Texture TEXTURE_GUITHUMBBANK            = addTexture("gui/thumbbank.png");
 	public final static Texture TEXTURE_GUITEXTFIELD            = addTexture("gui/guitextfield.png");
 	public final static Texture TEXTURE_GUITEXTFIELDL           = addTexture("gui/guitextfieldl.png");
 	public final static Texture TEXTURE_GUITEXTFIELDR           = addTexture("gui/guitextfieldr.png");
