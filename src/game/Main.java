@@ -97,7 +97,7 @@ class splashScreen extends JFrame implements Runnable{
 
 	public void setInfo(String text)
 	{
-		int percent = Math.round(loadeditems/80f*100);
+		int percent = Math.round(loadeditems/114f*100);
 		if(percent>100)percent=100;
 		label2.setText(percent+"% "+text);
 		progress.setValue(percent);
@@ -157,7 +157,7 @@ public class Main {
 	public static byte     selectedTool  = TOOL_SELECT;                      //The selected tool, SELECT,ADD or DELETE
 	public static int      money         = Game.INITIALMONEY;                //The players money
 	public static int      citizens      = 0;                                //The citizens that live in the city
-	public static byte     taxes         = 20;                               //Taxes for citizens in %
+	public static byte     taxes         = Game.INITIALTAXES;                //Taxes for citizens in %
 	public static String   cityname      = "Meine Stadt";                    //The city's name
 	public static int      currentBT     = -1;                               //The currently selected building type
 	public static float[]  mousepos3d    = new float[3];                     //The mouse position in 3d space
@@ -220,6 +220,8 @@ public class Main {
 		log("Mars City started...");
 		
 		ResourceManager.init();//Initialize the resources
+		
+		ResourceManager.SOUND_AMBIENT.playAsMusic(1, 0, true);
 		
 		System.out.println("Loaded "+splashscreen.loadeditems+" resources");
 		log("Finished loading resources.");
@@ -484,8 +486,12 @@ public class Main {
 			}
 			//Move the camera with middle mouse button
 			if(Mouse.isButtonDown(2)){
-				camera.setX((float) (camera.getX()+delta*(0.00008f*camera.getZoom()+0.0004f)*MY*Math.sin(Math.toRadians(camera.getRotY()))-delta*(0.00008f*camera.getZoom()+0.0004f)*MX*Math.cos(Math.toRadians(camera.getRotY()))));
-				camera.setZ((float) (camera.getZ()+delta*(0.00008f*camera.getZoom()+0.0004f)*MY*Math.cos(Math.toRadians(camera.getRotY()))+delta*(0.00008f*camera.getZoom()+0.0004f)*MX*Math.sin(Math.toRadians(camera.getRotY()))));
+				camera.setX((float) (camera.getX()+delta*(0.00008f*camera.getZoom()+0.0004f)
+						*MY*Math.sin(Math.toRadians(camera.getRotY()))-delta*(0.00008f*camera.getZoom()+0.0004f)
+						*MX*Math.cos(Math.toRadians(camera.getRotY()))));
+				camera.setZ((float) (camera.getZ()+delta*(0.00008f*camera.getZoom()+0.0004f)
+						*MY*Math.cos(Math.toRadians(camera.getRotY()))+delta*(0.00008f*camera.getZoom()+0.0004f)
+						*MX*Math.sin(Math.toRadians(camera.getRotY()))));
 			}
 		}
 		
@@ -518,6 +524,17 @@ public class Main {
 			//Hide rotation icon
 			if(Mouse.getEventButton()==1){
 				gui.cameraRotate.setVisible(false);
+			}
+			
+			//Fire Mousemove and Drag events
+			if(Mouse.getDX()!=0||Mouse.getDY()!=0)
+			{
+				if(Mouse.isButtonDown(0))
+				{
+					gui.callGuiEvents(GuiEventType.Drag);
+				}else{
+					gui.callGuiEvents(GuiEventType.Mousemove);
+				}
 			}
 			
 			//Fire gui click event & Building click event & hide the building info 'n stuff
@@ -583,21 +600,30 @@ public class Main {
 							break;
 						}
 						//Build a building
-					if (!Grid.isAreaFree((int) Math.round(mousepos3d[0]),
-							(int) Math.round(mousepos3d[2]), 
-							Buildings.getBuildingType(currentBT).getWidth(),
-							Buildings.getBuildingType(currentBT).getDepth())
-							|| money < Buildings.getBuildingType(currentBT).getBuidlingcost()
-							|| !Grid.buildingSurroundedWith((int) Math.round(mousepos3d[0]), (int) Math.round(mousepos3d[2]), currentBT, Buildings.BUILDINGTYPE_STREET))
-						break;
-							ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
-							Building b = Buildings.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBT);
-							money -= Buildings.getBuildingType(currentBT).getBuidlingcost();
-							ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
-							camera.setY(0);
-							AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
-							AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
-							Buildings.refreshSupply();
+						if (!Grid.isAreaFree((int) Math.round(mousepos3d[0]),
+								(int) Math.round(mousepos3d[2]), 
+								Buildings.getBuildingType(currentBT).getWidth(),
+								Buildings.getBuildingType(currentBT).getDepth())){
+							gui.showToolTip(ResourceManager.getString("FEEDBACK_OVERLAPPING"));
+							break;
+						}
+						if (money < Buildings.getBuildingType(currentBT).getBuidlingcost()){
+							gui.showToolTip(ResourceManager.getString("FEEDBACK_NOTENOUGHMONEY"));
+							break;
+						}
+						if (!Grid.buildingSurroundedWith((int) Math.round(mousepos3d[0]), (int) Math.round(mousepos3d[2]), currentBT, Buildings.BUILDINGTYPE_STREET)){
+							gui.showToolTip(ResourceManager.getString("FEEDBACK_NOSTREET"));
+							break;
+						}
+						ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
+						Building b = Buildings.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBT);
+						money -= Buildings.getBuildingType(currentBT).getBuidlingcost();
+						ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
+						camera.setY(0);
+						AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
+						AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
+						buildpreview.waveEffect();
+						Buildings.refreshSupply();
 						break;
 						
 					case(TOOL_DELETE): // Delete the hovered Building
@@ -757,8 +783,9 @@ public class Main {
         for(int i=0;i<Buildings.buildings.size();i++){
         	if(i==hoveredEntity&&!Mouse.isGrabbed()&&selectedTool!=TOOL_ADD){
         		if(selectedTool==TOOL_DELETE)glColor3f(1f, 0f, 0f);
-        		if(selectedTool==TOOL_SELECT)glColor3f(1f, 1f, 1f);
-        		glDisable(GL_LIGHTING);
+        		if(selectedTool==TOOL_SELECT)glColor3f(0.5f, 0.5f, 0.5f);
+        		glEnable(GL_LIGHTING);
+        		glEnable(GL_COLOR_MATERIAL);
         	}else {
         		if(currentDataView==null)
         		{
@@ -873,7 +900,7 @@ public class Main {
 		//Update tooltip position
 		if(gui.tooltip.isVisible())
 		{
-			gui.tooltip.setX((Mouse.getX()+gui.tooltip.getWidth()<=Display.getWidth())?Mouse.getX():Display.getWidth()-gui.tooltip.getWidth());
+			gui.tooltip.setX((Mouse.getX()+gui.tooltip.getWidth()+gui.tooltip.getHeight()/2<=Display.getWidth())?Mouse.getX():Display.getWidth()-gui.tooltip.getWidth()-gui.tooltip.getHeight()/2);
 			gui.tooltip.setY((Mouse.getY()+gui.tooltip.getHeight()<=Display.getHeight())?Mouse.getY():Display.getHeight()-gui.tooltip.getHeight());
 		}
 		
@@ -893,10 +920,14 @@ public class Main {
 		try {
 			happiness = ""+(int)((Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getHappiness()));
 		} catch (Exception e) {}
+		String happinessEffect = "-";
+		try {
+			happinessEffect = ""+(int)((Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getHappinessEffect()));
+		} catch (Exception e) {}
 		gui.debugInfo.setText("debug mode | Objects: "+Buildings.buildings.size()+
 				", FPS: "+fps+", ParticleEffects: "+ParticleEffects.getEffectCount()+", Mouse:("+Math.round(mousepos3d[0])+","+Math.round(mousepos3d[1])+","+Math.round(mousepos3d[2])+")"+
 				", GridIndex: "+Grid.posToIndex(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]))+
-				", BuildingType: "+bt+", Energy supply: "+energy+", Happiness: "+happiness);
+				", BuildingType: "+bt+", Energy supply: "+energy+", Happiness: "+happiness+", HappinessEffect: "+happinessEffect);
 	
 			
 		//Update gui info labels

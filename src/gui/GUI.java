@@ -283,7 +283,7 @@ public class GUI {
 		add(infoBar);
 	}};
 	
-	public GuiPanel DataViewButtons = new GuiPanel(Display.getWidth()-32,0,32,0,(Color)null)
+	public GuiPanel DataViewButtons = new GuiPanel(Display.getWidth()-32,0,32,0,ResourceManager.TEXTURE_GUIDVBACKGROUND)
 	{
 		{
 			setHeight(32*DataView.values().length);

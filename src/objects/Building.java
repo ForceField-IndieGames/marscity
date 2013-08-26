@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import game.Grid;
 import game.Main;
 import game.Supply;
 import animation.AnimationManager;
@@ -26,6 +27,7 @@ public class Building extends Entity {
 	private int[] neededSupplyAmount = new int[Supply.values().length];
 	private int[] ownedSupplyAmount = new int[Supply.values().length];
 	private byte happiness = 0;  
+	private boolean hasHappiness = false;
 	
 	public Building(){}
 
@@ -39,6 +41,18 @@ public class Building extends Entity {
 			setNeededSupplyAmount(Buildings.getBuildingType(this).getNeededSupplies(supply), supply);
 		}	
 		setProducedSupplyAmount(Buildings.getBuildingType(this).getProducedSupplyAmount());
+		//update happinessEffect on the grid:
+		BuildingType btype = Buildings.getBuildingType(this);
+		for(int i=(int) (getZ()-btype.getHappinessRadius());i<=getZ()+btype.getHappinessRadius();i++){
+			for(int j=(int) (getX()-btype.getHappinessRadius());j<=getX()+btype.getHappinessRadius();j++){
+				try {
+					double val = (1-Math.sqrt((getX()-j)*(getX()-j)+(getZ()-i)*(getZ()-i))/btype.getHappinessRadius())*btype.getHappinessEffect();
+					Grid.getCell(j, i).setHappinessEffect((byte) (Grid.getCell(j, i).getHappinessEffect()+val));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	public Building(int bt, float x, float y, float z)
@@ -51,6 +65,19 @@ public class Building extends Entity {
 			setNeededSupplyAmount(Buildings.getBuildingType(this).getNeededSupplies(supply), supply);
 		}
 		setProducedSupplyAmount(Buildings.getBuildingType(this).getProducedSupplyAmount());
+		//update happinessEffect on the grid:
+		BuildingType btype = Buildings.getBuildingType(this);
+		for(int i=(int) (getZ()-btype.getHappinessRadius());i<=getZ()+btype.getHappinessRadius();i++){
+			for(int j=(int) (getX()-btype.getHappinessRadius());j<=getX()+btype.getHappinessRadius();j++){
+				try {
+					double dist = Math.sqrt((getX()-j)*(getX()-j)+(getZ()-i)*(getZ()-i));
+					double val = (btype.getHappinessRadius()>0&&dist<=btype.getHappinessRadius())?(1-dist/btype.getHappinessRadius())*btype.getHappinessEffect():0;
+					Grid.getCell(j, i).setHappinessEffect((byte) (Grid.getCell(j, i).getHappinessEffect()+val));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	public int getBuildingType() {
@@ -73,17 +100,28 @@ public class Building extends Entity {
 	public void monthlyAction()
 	{
 		//Calculate happiness value
-		int counter = 0;
-		int happiness = 0;
-		for(Supply s:Supply.values())
+		if(isHasHappiness())
 		{
-			if(getNeededSupplyAmount(s)>0)
+			int happiness = 0;
+			int count = 0;
+			for(Supply s:Supply.values())
 			{
-				happiness += (((float)getOwnedSupplyAmount(s))/getNeededSupplyAmount(s))*100;
-				counter++;
+				if(getNeededSupplyAmount(s)>0)
+				{
+					happiness += (((float)getOwnedSupplyAmount(s))/getNeededSupplyAmount(s))*100;
+					count ++;
+				}
 			}
+			happiness /= count;
+			//Max happiness tha can be achieved thru supplies
+			happiness *= 0.8; 
+			/*Taxes over 20 reduce happiness by 5 each percent. Taxes under 20
+			add 1 to the happines each percent */
+			happiness += ((Main.taxes>20)?5:1.5)*(20-Main.taxes);
+			//The happnessEffect on the grid effects the happiness
+			happiness += Grid.getCell((int)getX(), (int)getZ()).getHappinessEffect();
+			setHappiness((byte) (happiness));
 		}
-		setHappiness((byte) ((counter<=0)?0:(happiness/counter)));
 	}
 	
 	/**
@@ -125,6 +163,18 @@ public class Building extends Entity {
 		AnimationManager.animateValue(this, AnimationValue.ROTX, (float) (getRotX()-10+Math.random()*20), 1000);
 		AnimationManager.animateValue(this, AnimationValue.ROTY, (float) (getRotY()-10+Math.random()*20), 1000);
 		AnimationManager.animateValue(this, AnimationValue.ROTZ, (float) (getRotZ()-10+Math.random()*20), 1000);
+		//update happinessEffect on teh grid:
+		BuildingType btype = Buildings.getBuildingType(this);
+		for(int i=(int) (getZ()-btype.getHappinessRadius()/2);i<=getZ()+btype.getHappinessRadius()/2;i++){
+			for(int j=(int) (getX()-btype.getHappinessRadius()/2);j<=getX()+btype.getHappinessRadius()/2;j++){
+				try {
+					double val = (1-Math.sqrt((getX()-j)*(getX()-j)+(getZ()-i)*(getZ()-i))/btype.getHappinessRadius())*btype.getHappinessEffect();
+					Grid.getCell(j, i).setHappinessEffect((byte) (Grid.getCell(j, i).getHappinessEffect()-val));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 	public void setSupply(int value, Supply supply)
@@ -174,7 +224,15 @@ public class Building extends Entity {
 	}
 
 	public void setHappiness(byte happiness) {
-		this.happiness = happiness;
+		this.happiness = (happiness<0)?0:((happiness>100)?100:happiness);
+	}
+
+	public boolean isHasHappiness() {
+		return hasHappiness;
+	}
+
+	public void setHasHappiness(boolean hasHappiness) {
+		this.hasHappiness = hasHappiness;
 	}
 	
 }
