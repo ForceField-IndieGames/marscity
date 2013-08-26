@@ -3,6 +3,10 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.newdawn.slick.opengl.Texture;
 
+/**
+ * This displays a sprite. Or at least it should. I don't think it does aktually work right now.
+ * @author Benedikt Ringlein
+ */
 
 public class Sprite implements Drawable {
 	
@@ -14,7 +18,7 @@ public class Sprite implements Drawable {
 	private float destY;
 	private float preferredY;
 	
-	public float getPreferredY() {
+	public float getHeight() {
 		return preferredY;
 	}
 

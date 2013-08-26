@@ -1,14 +1,35 @@
 package game;
 import static org.lwjgl.util.glu.GLU.gluLookAt;
+
 import animation.Animatable;
 
+/**
+ * @author Benedikt Ringlein
+ * This is the camera. It contains information like posiiton, rotation and zoom and
+ * also applies those transformations.
+ */
 
 public class Camera implements Animatable {
 	
 	private float x=0,y=0,z=0;
-	private float rotX=0,rotY=0,rotZ=0;
-	private float zoom = 25;
+	private float rotX=-45,rotY=0,rotZ=0;
+	private float lastrotx=0, lastroty=0;
+	private float zoom = 50;
 	private boolean animate = false;
+	private float cx,cy,cz;
+	
+	public float getCx() {
+		return cx;
+	}
+
+	public float getCy() {
+		return cy;
+	}
+
+	public float getCz() {
+		return cz;
+	}
+
 	public boolean isAnimate() {
 		return animate;
 	}
@@ -16,12 +37,21 @@ public class Camera implements Animatable {
 	public void setAnimate(boolean animate) {
 		this.animate = animate;
 	}
+	
+	private float dcos(float f){
+		return (float) Math.cos(Math.toRadians(f));
+	}
+	private float dsin(float f){
+		return (float) Math.sin(Math.toRadians(f));
+	}
 
 	public void applyTransform()
 	{
-		gluLookAt((float)(getX()+2*getZoom()*Math.sin(Math.toRadians(getRotY()))), y+zoom*zoom*0.2f, (float)(getZ()+2*getZoom()*Math.cos(Math.toRadians(getRotY()))),
-				getX(), getY(), getZ(), 
-				0, 1, 0);
+		cx = getX() + dsin(getRotY()) * dcos(getRotX()) * zoom;
+		cy = getY() - dsin(getRotX()) * zoom;
+		cz = getZ() + dcos(getRotX()) * dcos(getRotY()) * zoom;
+		
+		gluLookAt(cx, cy, cz,getX(), getY(), getZ(), 0, 1, 0);
 	}
 	
 	public float getZoom() {
@@ -108,6 +138,28 @@ public class Camera implements Animatable {
 	@Override
 	public boolean isVisible() {
 		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public float getLastroty() {
+		return lastroty;
+	}
+
+	public void setLastroty() {
+		this.lastroty = getRotY();
+	}
+
+	public float getLastrotx() {
+		return lastrotx;
+	}
+
+	public void setLastrotx() {
+		this.lastrotx = getRotX();
+	}
+	
+	public boolean wasRotated()
+	{
+		if(getLastrotx()!=getRotX()||getLastroty()!=getRotY())return true;
 		return false;
 	}
 }

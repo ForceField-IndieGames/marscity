@@ -1,4 +1,5 @@
 Mars City started...
+<<<<<<< HEAD
 Loading object: /res/house.obj
 Loading object: /res/terrain.obj
 Loading object: /res/bighouse.obj
@@ -26,6 +27,10 @@ Loading texture: /res/bighousetexture.png
 Loading texture: /res/fogparticle.png
 Reading file: /res/shader.v
 Reading file: /res/shader.f
+=======
+Reading file: /res/shader/shader.v
+Reading file: /res/shader/shader.f
+Created necessary folders.
+>>>>>>> 656a3703b55844281387edb8ecd55c3201f91f58
 Loading XML: res/settings/settings.xml
-Loading XML: res/lang/DE.xml
 Finished loading resources.

@@ -1,5 +1,10 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><settings>
+<settings>
 	<lang>DE</lang>
 	<vsync>disabled</vsync>
+<<<<<<< HEAD
 	<particlequality>low</particlequality>
 </settings>
+=======
+	<particlequality>high</particlequality>
+</settings>
+>>>>>>> 656a3703b55844281387edb8ecd55c3201f91f58
