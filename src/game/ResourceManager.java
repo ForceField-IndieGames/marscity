@@ -60,6 +60,7 @@ public class ResourceManager {
 	public final static int OBJECT_HOUSE = addObject("/res/house.obj");
 	public final static int OBJECT_TERRAIN = addObject("/res/terrain.obj");
 	public final static int OBJECT_BIGHOUSE = addObject("/res/bighouse.obj");
+	public final static int OBJECT_SMALLHOUSE = addObject("/res/bighouse.obj");
 	
 	public final static Audio SOUND_DROP = addSound("WAV", "/res/drop.wav");
 	public final static Audio SOUND_DESTROY = addSound("WAV", "/res/destroy.wav");
@@ -77,6 +78,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUIBUTTON = addTexture("/res/guibutton.png");
 	public final static Texture TEXTURE_MAINMENUBG = addTexture("/res/mainmenubg.png");
 	public final static Texture TEXTURE_GUIBUTTON2 = addTexture("/res/guibutton2.png");
+	public final static Texture TEXTURE_GUIBUTTON3 = addTexture("/res/guibutton3.png"); // neuer _Button test
 	public final static Texture TEXTURE_GUIBUTTON2DOWN = addTexture("/res/guibutton2down.png");
 	public final static Texture TEXTURE_MAINMENUFF = addTexture("/res/ForceField.png");
 	public final static Texture TEXTURE_MARSCITYLOGO = addTexture("/res/marscitylogo.png");
