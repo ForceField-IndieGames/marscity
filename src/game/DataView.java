@@ -66,12 +66,16 @@ public enum DataView {
 	Happiness(ResourceManager.TEXTURE_DATAVIEWBUTTONHAPPINESS){
 		@Override
 		public Color buildingColor(Building b) {
-			if(b.getHappiness()<=50)
+			if(b.isHasHappiness())
 			{
-				return new Color(255,(int) (255*(b.getHappiness()/50f)),0);
-			}else{
-				return new Color(255- (int) (255*((b.getHappiness()-50)/50f)),255,0);
-			}
+				if(b.getHappiness()<=50)
+				{
+					return new Color(255,(int) (255*(b.getHappiness()/50f)),0);
+				}else{
+					return new Color(255- (int) (255*((b.getHappiness()-50)/50f)),255,0);
+				}
+			}else return Color.white;
+				
 		}
 	};
 	

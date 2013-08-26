@@ -119,7 +119,10 @@ public class Streets {
 			// vertical
 			endposx = startposx;
 			endposy = posy;
-			if(!Grid.isStripFree(startposx, startposy, endposy-startposy, true, Buildings.BUILDINGTYPE_STREET))return;
+			if(!Grid.isStripFree(startposx, startposy, endposy-startposy, true, Buildings.BUILDINGTYPE_STREET)){
+				Main.gui.showToolTip(ResourceManager.getString("FEEDBACK_OVERLAPPING"));
+				return;
+			}
 			int cost=0;
 			if(startposy>endposy){
 				int tmp = startposy;
@@ -131,7 +134,10 @@ public class Streets {
 					cost+=Buildings.getBuildingType(Buildings.BUILDINGTYPE_STREET).getBuidlingcost();
 				}
 			}
-			if(Main.money<cost)return; else Main.money-=cost;
+			if(Main.money<cost){
+				Main.gui.showToolTip(ResourceManager.getString("FEEDBACK_NOTENOUGHMONEY"));
+				return;
+			}else Main.money-=cost;
 			for(int i=startposy;i<=endposy;i++){
 				if(Grid.isAreaFree(startposx, i, 1, 1)){
 					Buildings.buildBuilding(startposx, 0, i, Buildings.BUILDINGTYPE_STREET);
@@ -141,7 +147,10 @@ public class Streets {
 			// horizontal
 			endposx = posx;
 			endposy = startposy;
-			if(!Grid.isStripFree(startposx, startposy, endposx-startposx, false, Buildings.BUILDINGTYPE_STREET))return;
+			if(!Grid.isStripFree(startposx, startposy, endposx-startposx, false, Buildings.BUILDINGTYPE_STREET)){
+				Main.gui.showToolTip(ResourceManager.getString("FEEDBACK_OVERLAPPING"));
+				return;
+			}
 			int cost=0;
 			if(startposx>endposx){
 				int tmp = startposx;
@@ -153,7 +162,10 @@ public class Streets {
 					cost+=Buildings.getBuildingType(Buildings.BUILDINGTYPE_STREET).getBuidlingcost();
 				}
 			}
-			if(Main.money<cost)return; else Main.money-=cost;
+			if(Main.money<cost){
+				Main.gui.showToolTip(ResourceManager.getString("FEEDBACK_NOTENOUGHMONEY"));
+				return;
+			}else Main.money-=cost;
 			for(int i=startposx;i<=endposx;i++){
 				if(Grid.isAreaFree(i, startposy, 1, 1)){
 					Buildings.buildBuilding(i, 0, startposy, Buildings.BUILDINGTYPE_STREET);

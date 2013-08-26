@@ -78,8 +78,7 @@ public class ObjectLoader {
                 continue;
             }
             if (line.startsWith("mtllib ")) {
-                String materialFileName = line.split(" ")[1];
-                BufferedReader materialFileReader = new BufferedReader(new InputStreamReader(ObjectLoader.class.getResourceAsStream(ResourceManager.objectspath+path+ "/" + materialFileName)));
+                BufferedReader materialFileReader = new BufferedReader(new InputStreamReader(ObjectLoader.class.getResourceAsStream(ResourceManager.objectspath+path+ "/" + path+".mtl")));
                 String materialLine;
                 Mesh.Material parseMaterial = new Mesh.Material();
                 String parseMaterialName = "";
