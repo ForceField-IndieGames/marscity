@@ -907,11 +907,9 @@ public class Main {
 		//Show debug info
 		String bt = "-";
 		try {
-			if(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding()!=null){
-			bt = ""+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType()+" ("+Buildings.getBuildingTypeName(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType())+")";
-		}
-		} catch (Exception e) {
-		}
+			if(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding()!=null)
+				bt = ""+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType()+" ("+Buildings.getBuildingTypeName(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType())+")";
+		} catch (Exception e) {}
 		String energy = "-";
 		try {
 			energy = (int)((Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getOwnedSupplyAmount(Supply.Energy)/(float)Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getNeededSupplyAmount(Supply.Energy))*100)+"% ("+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getOwnedSupplyAmount(Supply.Energy)+")";
@@ -924,7 +922,7 @@ public class Main {
 		try {
 			happinessEffect = ""+(int)((Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getHappinessEffect()));
 		} catch (Exception e) {}
-		gui.debugInfo.setText("debug mode | Objects: "+Buildings.buildings.size()+
+		gui.debugInfo.setText(" DEBUG MODE | Objects: "+Buildings.buildings.size()+
 				", FPS: "+fps+", ParticleEffects: "+ParticleEffects.getEffectCount()+", Mouse:("+Math.round(mousepos3d[0])+","+Math.round(mousepos3d[1])+","+Math.round(mousepos3d[2])+")"+
 				", GridIndex: "+Grid.posToIndex(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]))+
 				", BuildingType: "+bt+", Energy supply: "+energy+", Happiness: "+happiness+", HappinessEffect: "+happinessEffect);

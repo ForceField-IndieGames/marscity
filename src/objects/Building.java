@@ -165,11 +165,12 @@ public class Building extends Entity {
 		AnimationManager.animateValue(this, AnimationValue.ROTZ, (float) (getRotZ()-10+Math.random()*20), 1000);
 		//update happinessEffect on teh grid:
 		BuildingType btype = Buildings.getBuildingType(this);
-		for(int i=(int) (getZ()-btype.getHappinessRadius()/2);i<=getZ()+btype.getHappinessRadius()/2;i++){
-			for(int j=(int) (getX()-btype.getHappinessRadius()/2);j<=getX()+btype.getHappinessRadius()/2;j++){
+		for(int i=(int) (getZ()-btype.getHappinessRadius());i<=getZ()+btype.getHappinessRadius();i++){
+			for(int j=(int) (getX()-btype.getHappinessRadius());j<=getX()+btype.getHappinessRadius();j++){
 				try {
-					double val = (1-Math.sqrt((getX()-j)*(getX()-j)+(getZ()-i)*(getZ()-i))/btype.getHappinessRadius())*btype.getHappinessEffect();
-					Grid.getCell(j, i).setHappinessEffect((byte) (Grid.getCell(j, i).getHappinessEffect()-val));
+					double dist = Math.sqrt((getX()-j)*(getX()-j)+(getZ()-i)*(getZ()-i));
+					double val = (1-dist/btype.getHappinessRadius())*btype.getHappinessEffect();
+					if(Math.abs(dist)<=btype.getHappinessRadius())Grid.getCell(j, i).setHappinessEffect((byte) (Grid.getCell(j, i).getHappinessEffect()-val));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

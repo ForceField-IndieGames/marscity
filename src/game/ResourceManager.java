@@ -123,6 +123,19 @@ public class ResourceManager {
 	public final static EntityTexture TEXTURE_POLICE            = addEntityTexture("police");
 	public final static EntityTexture TEXTURE_SOLARPOWER        = addEntityTexture("solarpower");
 	public final static EntityTexture TEXTURE_FUSIONPOWER       = addEntityTexture("fusionpower");
+	
+	public final static Texture TEXTURE_GUITHUMBSTREET          = addTexture("gui/thumbstreet.png");
+	public final static Texture TEXTURE_GUITHUMBHOUSE           = addTexture("gui/thumbhouse.png");
+	public final static Texture TEXTURE_GUITHUMBBIGHOUSE        = addTexture("gui/thumbbighouse.png");
+	public final static Texture TEXTURE_GUITHUMBMEDICALCENTER   = addTexture("gui/thumbmedicalcenter.png");
+	public final static Texture TEXTURE_GUITHUMBSERVERCENTER    = addTexture("gui/thumbservercenter.png");
+	public final static Texture TEXTURE_GUITHUMBGARBAGEYARD     = addTexture("gui/thumbgarbageyard.png");
+	public final static Texture TEXTURE_GUITHUMBBANK            = addTexture("gui/thumbbank.png");
+	public final static Texture TEXTURE_GUITHUMBRESEARCHSTATION = addTexture("gui/thumbresearchstation.png");
+	public final static Texture TEXTURE_GUITHUMBSOLARPOWER      = addTexture("gui/thumbsolarpower.png");
+	public final static Texture TEXTURE_GUITHUMBFUSIONPOWER     = addTexture("gui/thumbfusionpower.png");
+	public final static Texture TEXTURE_GUITHUMBHANGAR          = addTexture("gui/thumbhangar.png");
+	
 	public final static Texture TEXTURE_ICON16                  = addTexture("gui/icon16.png");
 	public final static Texture TEXTURE_ICON32                  = addTexture("gui/icon32.png");
 	public final static Texture TEXTURE_ICON256                 = addTexture("gui/icon256.png");
@@ -151,17 +164,6 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUICAMERAROTATE         = addTexture("gui/camerarotate.png");
 	public final static Texture TEXTURE_GUIBUILDINGSPANEL       = addTexture("gui/buildingspanel.png");
 	public final static Texture TEXTURE_GUIBUILDINGSPANELL      = addTexture("gui/buildingspanell.png");
-	public final static Texture TEXTURE_GUITHUMBSTREET          = addTexture("gui/thumbstreet.png");
-	public final static Texture TEXTURE_GUITHUMBHOUSE           = addTexture("gui/thumbhouse.png");
-	public final static Texture TEXTURE_GUITHUMBBIGHOUSE        = addTexture("gui/thumbbighouse.png");
-	public final static Texture TEXTURE_GUITHUMBMEDICALCENTER   = addTexture("gui/thumbmedicalcenter.png");
-	public final static Texture TEXTURE_GUITHUMBSERVERCENTER    = addTexture("gui/thumbservercenter.png");
-	public final static Texture TEXTURE_GUITHUMBGARBAGEYARD     = addTexture("gui/thumbgarbageyard.png");
-	public final static Texture TEXTURE_GUITHUMBBANK            = addTexture("gui/thumbbank.png");
-	public final static Texture TEXTURE_GUITHUMBRESEARCHSTATION = addTexture("gui/thumbresearchstation.png");
-	public final static Texture TEXTURE_GUITHUMBSOLARPOWER      = addTexture("gui/thumbsolarpower.png");
-	public final static Texture TEXTURE_GUITHUMBFUSIONPOWER     = addTexture("gui/thumbfusionpower.png");
-	public final static Texture TEXTURE_GUITHUMBHANGAR          = addTexture("gui/thumbhangar.png");
 	public final static Texture TEXTURE_GUITEXTFIELD            = addTexture("gui/guitextfield.png");
 	public final static Texture TEXTURE_GUITEXTFIELDL           = addTexture("gui/guitextfieldl.png");
 	public final static Texture TEXTURE_GUITEXTFIELDR           = addTexture("gui/guitextfieldr.png");
@@ -194,6 +196,8 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUISCROLLBARIM          = addTexture("gui/scrollbar_im.png");
 	public final static Texture TEXTURE_GUISCROLLBARIB          = addTexture("gui/scrollbar_ib.png");
 	public final static Texture TEXTURE_GUIDVBACKGROUND         = addTexture("gui/DVbackground.png");
+	public final static Texture TEXTURE_GUIDVBACKGROUNDT        = addTexture("gui/DVbackgroundt.png");
+	public final static Texture TEXTURE_GUIDVBACKGROUNDB        = addTexture("gui/DVbackgroundb.png");
 	public final static Texture TEXTURE_HAPPINESSEFFECT         = addTexture("happinesseffect.png");
 	
 	/**

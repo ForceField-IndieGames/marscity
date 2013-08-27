@@ -288,6 +288,8 @@ public class GUI {
 		{
 			setHeight(32*DataView.values().length);
 			setY(Display.getHeight()/2-getHeight()/2);
+			add(new GuiPanel(0,-32,32,32,ResourceManager.TEXTURE_GUIDVBACKGROUNDB));
+			add(new GuiPanel(0,getHeight(),32,32,ResourceManager.TEXTURE_GUIDVBACKGROUNDT));
 			for(DataView d:DataView.values())
 			{
 				add(new DataViewButton(0,32*d.ordinal(),32,32,d.getButtonTexture(),d));
@@ -395,8 +397,10 @@ public class GUI {
 		};
 	};
 	
-	public GuiLabel debugInfo = new GuiLabel(0,Display.getHeight()-20,Display.getWidth(),20,Color.white){{
+	public GuiLabel debugInfo = new GuiLabel(0,Display.getHeight()-20,Display.getWidth(),20,Color.black){{
 		setVisible(Main.debugMode);
+		setOpacity(0.6f);
+		setTextColor(Color.green);
 	}};
 	
 	public GuiButton settingsResume = new GuiButton(156, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON){{
