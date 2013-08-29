@@ -249,9 +249,24 @@ public class BuildPreview extends Entity {
 				glTranslatef(-getX(), 0.01f, -getZ());
 			}
 			
+			//Draw producedSupplyRadius, if needed
+			if(getBt().getProducedSupplyRadius()!=0)
+			{
+				glDisable(GL_DEPTH_TEST);
+				glEnable(GL_TEXTURE_2D);
+				glBindTexture(GL_TEXTURE_2D, ResourceManager.TEXTURE_HAPPINESSEFFECT.getTextureID());
+				glColor4f(0.8f,0.8f,0,radius/RADIUSMAX);
+				glTranslatef(getX(), 0.5f+(float)(0.5*Math.sin((System.currentTimeMillis()%3141)*0.002)), getZ());
+				float r = getBt().getProducedSupplyRadius();
+				glScalef(2*r, 1, 2*r);
+				glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+				glScalef(0.5f/r, 1, 0.5f/r);
+				glTranslatef(-getX(), -0.5f-(float)(0.5*Math.sin((System.currentTimeMillis()%3141)*0.002)), -getZ());
+			}
+			
 			//Draw building
 			glEnable(GL_DEPTH_TEST);
-			glTranslatef(getX(), 0, getZ());
+			glTranslatef(getX(), 0.25f-(float)(0.25*Math.sin((System.currentTimeMillis()%3141)*0.002)), getZ());
 			glScalef(getScaleX(), getScaleY(), getScaleZ());
 			glRotatef(getRotX(), 1, 0, 0);
 			glRotatef(getRotY(), 0, 1, 0);

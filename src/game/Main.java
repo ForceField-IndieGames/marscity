@@ -68,7 +68,7 @@ class splashScreen extends JFrame implements Runnable{
 		this.setUndecorated(true);
 		getContentPane().setBackground(Color.black);
 		setVisible(true);
-		setTitle("lwjglTest");
+		setTitle("MarsCity");
 		setBounds(0, 0, Toolkit.getDefaultToolkit().getScreenSize().width , Toolkit.getDefaultToolkit().getScreenSize().height);
 		setAlwaysOnTop(true);
 		setLayout(null);

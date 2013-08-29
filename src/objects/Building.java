@@ -24,36 +24,13 @@ public class Building extends Entity {
 	private int[] supply = new int[Supply.values().length];
 	private Supply producedSupply = null;
 	private int producedSupplyAmount = 0;
+	private int producedSupplyRadius = 0;
 	private int[] neededSupplyAmount = new int[Supply.values().length];
 	private int[] ownedSupplyAmount = new int[Supply.values().length];
 	private byte happiness = 0;  
 	private boolean hasHappiness = false;
-	
-	public Building(){}
-
-	public Building(int bt)
-	{
-		super(Buildings.getBuildingType(bt).getDisplaylist(), Buildings.getBuildingType(bt).getTexture());
-		height = Buildings.getBuildingType(bt).getHeight();
-		this.buidlingType = bt;
-		for(Supply supply:Supply.values())
-		{
-			setNeededSupplyAmount(Buildings.getBuildingType(this).getNeededSupplies(supply), supply);
-		}	
-		setProducedSupplyAmount(Buildings.getBuildingType(this).getProducedSupplyAmount());
-		//update happinessEffect on the grid:
-		BuildingType btype = Buildings.getBuildingType(this);
-		for(int i=(int) (getZ()-btype.getHappinessRadius());i<=getZ()+btype.getHappinessRadius();i++){
-			for(int j=(int) (getX()-btype.getHappinessRadius());j<=getX()+btype.getHappinessRadius();j++){
-				try {
-					double val = (1-Math.sqrt((getX()-j)*(getX()-j)+(getZ()-i)*(getZ()-i))/btype.getHappinessRadius())*btype.getHappinessEffect();
-					Grid.getCell(j, i).setHappinessEffect((byte) (Grid.getCell(j, i).getHappinessEffect()+val));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
+	private int happinessEffect;
+	private int happinessRadius;
 
 	public Building(int bt, float x, float y, float z)
 	{
@@ -65,19 +42,21 @@ public class Building extends Entity {
 			setNeededSupplyAmount(Buildings.getBuildingType(this).getNeededSupplies(supply), supply);
 		}
 		setProducedSupplyAmount(Buildings.getBuildingType(this).getProducedSupplyAmount());
+		//set happiness effect and radius
+		setHappinessEffect(Buildings.getBuildingType(this).getHappinessEffect());
+		setHappinessRadius(Buildings.getBuildingType(this).getHappinessRadius());
 		//update happinessEffect on the grid:
-		BuildingType btype = Buildings.getBuildingType(this);
-		for(int i=(int) (getZ()-btype.getHappinessRadius());i<=getZ()+btype.getHappinessRadius();i++){
-			for(int j=(int) (getX()-btype.getHappinessRadius());j<=getX()+btype.getHappinessRadius();j++){
+		for(int i=(int) (getZ()-getHappinessRadius());i<=getZ()+getHappinessRadius();i++){
+			for(int j=(int) (getX()-getHappinessRadius());j<=getX()+getHappinessRadius();j++){
 				try {
-					double dist = Math.sqrt((getX()-j)*(getX()-j)+(getZ()-i)*(getZ()-i));
-					double val = (btype.getHappinessRadius()>0&&dist<=btype.getHappinessRadius())?(1-dist/btype.getHappinessRadius())*btype.getHappinessEffect():0;
+					double val = (1-Math.sqrt((getX()-j)*(getX()-j)+(getZ()-i)*(getZ()-i))/getHappinessRadius())*getHappinessEffect();
 					Grid.getCell(j, i).setHappinessEffect((byte) (Grid.getCell(j, i).getHappinessEffect()+val));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		}
+		setProducedSupplyRadius(Buildings.getBuildingType(this).getProducedSupplyRadius());
 	}
 
 	public int getBuildingType() {
@@ -100,6 +79,11 @@ public class Building extends Entity {
 	public void monthlyAction()
 	{
 		//Calculate happiness value
+		calculateHappiness();
+	}
+	
+	public void calculateHappiness()
+	{
 		if(isHasHappiness())
 		{
 			int happiness = 0;
@@ -163,14 +147,13 @@ public class Building extends Entity {
 		AnimationManager.animateValue(this, AnimationValue.ROTX, (float) (getRotX()-10+Math.random()*20), 1000);
 		AnimationManager.animateValue(this, AnimationValue.ROTY, (float) (getRotY()-10+Math.random()*20), 1000);
 		AnimationManager.animateValue(this, AnimationValue.ROTZ, (float) (getRotZ()-10+Math.random()*20), 1000);
-		//update happinessEffect on teh grid:
-		BuildingType btype = Buildings.getBuildingType(this);
-		for(int i=(int) (getZ()-btype.getHappinessRadius());i<=getZ()+btype.getHappinessRadius();i++){
-			for(int j=(int) (getX()-btype.getHappinessRadius());j<=getX()+btype.getHappinessRadius();j++){
+		//update happinessEffect on the grid:
+		for(int i=(int) (getZ()-getHappinessRadius());i<=getZ()+getHappinessRadius();i++){
+			for(int j=(int) (getX()-getHappinessRadius());j<=getX()+getHappinessRadius();j++){
 				try {
 					double dist = Math.sqrt((getX()-j)*(getX()-j)+(getZ()-i)*(getZ()-i));
-					double val = (1-dist/btype.getHappinessRadius())*btype.getHappinessEffect();
-					if(Math.abs(dist)<=btype.getHappinessRadius())Grid.getCell(j, i).setHappinessEffect((byte) (Grid.getCell(j, i).getHappinessEffect()-val));
+					double val = (1-dist/getHappinessRadius())*getHappinessEffect();
+					if(Math.abs(dist)<=getHappinessRadius())Grid.getCell(j, i).setHappinessEffect((byte) (Grid.getCell(j, i).getHappinessEffect()-val));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -234,6 +217,30 @@ public class Building extends Entity {
 
 	public void setHasHappiness(boolean hasHappiness) {
 		this.hasHappiness = hasHappiness;
+	}
+
+	public int getHappinessEffect() {
+		return happinessEffect;
+	}
+
+	public void setHappinessEffect(int happinessEffect) {
+		this.happinessEffect = happinessEffect;
+	}
+
+	public int getHappinessRadius() {
+		return happinessRadius;
+	}
+
+	public void setHappinessRadius(int happinessRadius) {
+		this.happinessRadius = happinessRadius;
+	}
+
+	public int getProducedSupplyRadius() {
+		return producedSupplyRadius;
+	}
+
+	public void setProducedSupplyRadius(int producedSupplyRadius) {
+		this.producedSupplyRadius = producedSupplyRadius;
 	}
 	
 }

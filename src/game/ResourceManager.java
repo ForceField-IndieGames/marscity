@@ -579,7 +579,7 @@ public class ResourceManager {
 	 */
 	public static Building getObject(int index)
 	{
-		if(index==-1)return new Building(-1);
+		if(index==-1)return new Building(-1,0,0,0);
 		return Buildings.buildings.get(index);
 	}
 	

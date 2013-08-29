@@ -29,6 +29,7 @@ public class BuildingType {
 	private int happinessRadius;
 	private Texture thumb;
 	private int producedSupplyAmount;
+	private int producedSupplyRadius;
 	private int[] neededSupplies;
 	private Color gridColor;
 
@@ -53,7 +54,7 @@ public class BuildingType {
 	public BuildingType(String name, int[] displaylist, EntityTexture texture,
 			Texture thumb, Color gridColor, int buidlingcost, int monthlycost, int width,
 			int depth, float height, int happinessEffect, int happinessRadius, int producedSupplyAmount,
-			int... neededSupplies) {
+			int producedSupplyRadius, int... neededSupplies) {
 		this.name = name;
 		this.displaylist = displaylist;
 		this.texture = texture;
@@ -67,6 +68,7 @@ public class BuildingType {
 		this.happinessEffect = happinessEffect;
 		this.happinessRadius = happinessRadius;
 		this.producedSupplyAmount = producedSupplyAmount;
+		this.producedSupplyRadius = producedSupplyRadius;
 		this.neededSupplies = neededSupplies;
 	}
 
@@ -128,6 +130,14 @@ public class BuildingType {
 
 	public int getMonthlycost() {
 		return monthlycost;
+	}
+
+	public int getProducedSupplyRadius() {
+		return producedSupplyRadius;
+	}
+
+	public void setProducedSupplyRadius(int producedSupplyRadius) {
+		this.producedSupplyRadius = producedSupplyRadius;
 	}
 
 }
