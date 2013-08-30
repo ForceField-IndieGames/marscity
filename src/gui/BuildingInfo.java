@@ -93,7 +93,7 @@ public class BuildingInfo extends GuiPanel {
 		}
 		if(sneed==""){
 			sneed = ResourceManager.getString("SUPPLYNEED_NONE");
-			supplyneed.setTextColor(Color.green);
+			supplyneed.setTextColor(Color.black);
 		}else supplyneed.setTextColor(Color.red);
 		supplyneed.setText(sneed);
 		supplyneed.wrapText();

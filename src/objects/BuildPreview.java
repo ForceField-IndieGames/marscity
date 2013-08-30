@@ -276,7 +276,7 @@ public class BuildPreview extends Entity {
 					if(building.getProducedSupply()==getBt().getProducedSupply())
 					{
 						glTranslatef(building.getX(), 0.01f, building.getZ());
-						float r = Buildings.getBuildingType(building).getProducedSupplyRadius();
+						float r = building.getProducedSupplyRadius();
 						glScalef(2*r, 1, 2*r);
 						glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
 						glScalef(0.5f/r, 1, 0.5f/r);

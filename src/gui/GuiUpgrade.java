@@ -6,6 +6,7 @@ import animation.AnimationManager;
 import animation.AnimationValue;
 
 import objects.Building;
+import objects.Buildings;
 import objects.Upgrade;
 import game.Main;
 import game.ResourceManager;
@@ -41,12 +42,23 @@ public class GuiUpgrade extends GuiPanel {
 		this.upgrade = upgrade;
 		this.building = building;
 		button = new GuiButton(362,0,128,128,ResourceManager.TEXTURE_GUIUPGRADEBUTTON);
+		if(upgrade.getNeededupgrades()!=null)
+		{
+			for(Upgrade u:upgrade.getNeededupgrades())
+			{
+				if(!building.getUpgrade(u)){
+					button.setVisible(false);
+					setOpacity(0.7f);
+					break;
+				}
+			}
+		}
 		if(Main.money<upgrade.getUpgradecost()||building.getUpgrade(upgrade))
 		{
 			button.setVisible(false);
-			setOpacity(0.6f);
+			setOpacity(0.7f);
 		}
-		if(building.getUpgrade(upgrade))setColor(new Color(100,255,100));
+		if(building.getUpgrade(upgrade))setColor(new Color(50,255,50));
 		button.setEvent(new GuiEvent(){
 			@Override
 			public void run(GuiEventType eventtype, GuiElement element) {
@@ -59,11 +71,12 @@ public class GuiUpgrade extends GuiPanel {
 						g.getBuilding().setUpgrade(g.getUpgrade(), true);
 						g.getBuilding().updateUpgrades();
 						AnimationManager.animateValue(g, AnimationValue.Y, g.getY()+20, 100,AnimationManager.ACTION_REVERSE);
+						Buildings.refreshSupply();
 					}
 				}	
 			}
 		});
-		AnimationManager.animateValue(button, AnimationValue.OPACITY, 0.2f, 500,AnimationManager.ACTION_REVERSE);
+		AnimationManager.animateValue(button, AnimationValue.OPACITY, 0.6f, 0.0003f,AnimationManager.ACTION_REVERSEREPEAT);
 		add(button);
 		title = new GuiLabel(150,90,212,30,(Color)null);
 		title.setText(ResourceManager.getString("UPGRADENAME_"+upgrade.name().toUpperCase()));
@@ -92,7 +105,7 @@ public class GuiUpgrade extends GuiPanel {
 		add(monthlycost);
 		image = new GuiPanel(23,0,128,128,upgrade.getImage());
 		add(image);
-		upgraded = new GuiPanel(23,0,128,128,ResourceManager.TEXTURE_GUIUPGRADED);
+		upgraded = new GuiPanel(362,0,128,128,ResourceManager.TEXTURE_GUIUPGRADED);
 		if(building.getUpgrade(upgrade)==false)upgraded.setVisible(false);
 		add(upgraded);
 	}

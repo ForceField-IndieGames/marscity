@@ -57,11 +57,13 @@ public class House extends Building {
 	
 	@Override
 	public void saveToStream(ObjectOutputStream o) throws IOException {
+		super.saveToStream(o);
 		o.writeInt(citizens);
 	}
 	
 	@Override
 	public void loadFromStream(ObjectInputStream i) throws IOException {
+		super.loadFromStream(i);
 		citizens = i.readInt();
 	}
 

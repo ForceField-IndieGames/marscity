@@ -11,8 +11,12 @@ import org.newdawn.slick.opengl.Texture;
 
 public enum Upgrade {
 
-	MedicalcenterRooms(ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER,Buildings.BUILDINGTYPE_MEDICALCENTER,1000,5,(Upgrade[])null),
-	MedicalcenterVehicles(ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER,Buildings.BUILDINGTYPE_MEDICALCENTER,750,3,(Upgrade[])null);
+	MedicalcenterRooms(ResourceManager.TEXTURE_GUITHUMBMEDICALCENTER,Buildings.BUILDINGTYPE_MEDICALCENTER,1000,4),
+	MedicalcenterVehicles(ResourceManager.TEXTURE_GUITHUMBMEDICALCENTER,Buildings.BUILDINGTYPE_MEDICALCENTER,750,3),
+	PoliceStaff(ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER,Buildings.BUILDINGTYPE_POLICE,500,5),
+	PoliceVehicles(ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER,Buildings.BUILDINGTYPE_POLICE,750,3),
+	SolarpowerPanel(ResourceManager.TEXTURE_GUITHUMBSOLARPOWER,Buildings.BUILDINGTYPE_SOLARPOWER,1000,3),
+	SolarpowerCoating(ResourceManager.TEXTURE_GUITHUMBSOLARPOWER,Buildings.BUILDINGTYPE_SOLARPOWER,5000,-2);
 	
 	private Texture image;
 	private int bt;
@@ -25,6 +29,14 @@ public enum Upgrade {
 		setImage(image);
 		setBt(bt);
 		setNeededupgrades(neededupgrades);
+		setMonthlyupgradecost(monthlyupgradecost);
+		setUpgradecost(upgradecost);
+	}
+	
+	Upgrade(Texture image, int bt, int upgradecost, int monthlyupgradecost)
+	{
+		setImage(image);
+		setBt(bt);
 		setMonthlyupgradecost(monthlyupgradecost);
 		setUpgradecost(upgradecost);
 	}

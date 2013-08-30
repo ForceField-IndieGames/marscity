@@ -15,8 +15,10 @@ public class MedicalCenter extends Building {
 	@Override
 	public void updateUpgrades() {
 		super.updateUpgrades();
-		//MedicalcenterRooms upgrade gives +30% supply
-		setProducedSupplyAmount((int) (Buildings.getBuildingType(this).getProducedSupplyAmount()*(getUpgrade(Upgrade.MedicalcenterRooms)?1.3:1)));
+		//MedicalcenterRooms upgrade gives +40% supply
+		setProducedSupplyAmount((int) (Buildings.getBuildingType(this).getProducedSupplyAmount()*(getUpgrade(Upgrade.MedicalcenterRooms)?1.4:1)));
+		//MedicalcenterVehicles upgrade gives +40% range
+		setProducedSupplyRadius((int) (Buildings.getBuildingType(this).getProducedSupplyRadius()*(getUpgrade(Upgrade.MedicalcenterVehicles)?1.4:1)));
 	}
 	
 }

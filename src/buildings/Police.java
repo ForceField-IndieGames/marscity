@@ -1,6 +1,8 @@
 package buildings;
 
 import objects.Building;
+import objects.Buildings;
+import objects.Upgrade;
 
 public class Police extends Building {
 
@@ -9,5 +11,13 @@ public class Police extends Building {
 		super(bt,x,y,z);
 	}
 
+	@Override
+	public void updateUpgrades() {
+		super.updateUpgrades();
+		//PoliceStaff upgrade gives +40% supply
+		setProducedSupplyAmount((int) (Buildings.getBuildingType(this).getProducedSupplyAmount()*(getUpgrade(Upgrade.PoliceStaff)?1.4:1)));
+		//PoliceVehicles upgrade gives +40% range
+		setProducedSupplyRadius((int) (Buildings.getBuildingType(this).getProducedSupplyRadius()*(getUpgrade(Upgrade.PoliceVehicles)?1.4:1)));
+	}
 	
 }

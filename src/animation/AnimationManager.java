@@ -44,6 +44,7 @@ public class AnimationManager {
 	public static final int ACTION_RESET = 4;
 	public static final int ACTION_REVERSE = 5;
 	public static final int ACTION_REMOVEGUI = 6;
+	public static final int ACTION_REVERSEREPEAT = 7;
 	
 	private static List<Animation> animations = new ArrayList<Animation>();
 	
@@ -317,6 +318,12 @@ public class AnimationManager {
 				animateValue(animation.object, animation.customvalue, animation.startvalue, animation.speed, ACTION_NOTHING);
 			}else{
 				animateValue(animation.object, animation.value, animation.startvalue, animation.speed);
+			}
+		}else if(animation.finishedAction==ACTION_REVERSEREPEAT){
+			if(animation.value==AnimationValue.CUSTOM){
+				animateValue(animation.object, animation.customvalue, animation.startvalue, animation.speed, ACTION_REVERSEREPEAT);
+			}else{
+				animateValue(animation.object, animation.value, animation.startvalue, animation.speed,ACTION_REVERSEREPEAT);
 			}
 		}
 		if(animation.value==AnimationValue.CUSTOM){

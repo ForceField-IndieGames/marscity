@@ -137,7 +137,17 @@ public class Building extends Entity {
 	 */
 	public void loadFromStream(ObjectInputStream i) throws IOException
 	{
-		
+		if(hasUpgrades())
+		{
+			for(Upgrade u:Upgrade.values())
+			{
+				if(u.getBt()==getBuildingType())
+				{
+					upgrades.put(u,i.readBoolean());
+				}
+			}
+			updateUpgrades();
+		}
 	}
 	
 	/**
@@ -147,7 +157,16 @@ public class Building extends Entity {
 	 */
 	public void saveToStream(ObjectOutputStream o) throws IOException
 	{
-		
+		if(hasUpgrades())
+		{
+			for(Upgrade u:Upgrade.values())
+			{
+				if(u.getBt()==getBuildingType())
+				{
+					o.writeBoolean(upgrades.get(u));
+				}
+			}
+		}
 	}
 	
 	/**
