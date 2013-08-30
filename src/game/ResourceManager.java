@@ -199,6 +199,10 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUIDVBACKGROUNDT        = addTexture("gui/DVbackgroundt.png");
 	public final static Texture TEXTURE_GUIDVBACKGROUNDB        = addTexture("gui/DVbackgroundb.png");
 	public final static Texture TEXTURE_HAPPINESSEFFECT         = addTexture("happinesseffect.png");
+	public final static Texture TEXTURE_GUIUPGRADEBACKGROUND    = addTexture("gui/upgradebackground.png");
+	public final static Texture TEXTURE_GUIUPGRADEBUTTON        = addTexture("gui/upgradebutton.png");
+	public final static Texture TEXTURE_SUPPLYRADIUS            = addTexture("supplyradius.png");
+	public final static Texture TEXTURE_GUIUPGRADED             = addTexture("gui/upgraded.png");
 	
 	/**
 	 * Initializes the Resources that need to be initialized

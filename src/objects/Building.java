@@ -3,9 +3,11 @@ package objects;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 
 import game.Grid;
 import game.Main;
+import game.MonthlyActions;
 import game.Supply;
 import animation.AnimationManager;
 import animation.AnimationValue;
@@ -31,12 +33,16 @@ public class Building extends Entity {
 	private boolean hasHappiness = false;
 	private int happinessEffect;
 	private int happinessRadius;
+	private int monthlycost;
+	private HashMap<Upgrade,Boolean> upgrades = new HashMap<Upgrade,Boolean>();
 
 	public Building(int bt, float x, float y, float z)
 	{
 		super(Buildings.getBuildingType(bt).getDisplaylist(), Buildings.getBuildingType(bt).getTexture(),x,y,z);
 		height = Buildings.getBuildingType(bt).getHeight();
 		this.buidlingType = bt;
+		this.setMonthlycost(Buildings.getBuildingType(this).getMonthlycost());
+		setProducedSupply(Buildings.getBuildingType(this).getProducedSupply());
 		for(Supply supply:Supply.values())
 		{
 			setNeededSupplyAmount(Buildings.getBuildingType(this).getNeededSupplies(supply), supply);
@@ -57,6 +63,11 @@ public class Building extends Entity {
 			}
 		}
 		setProducedSupplyRadius(Buildings.getBuildingType(this).getProducedSupplyRadius());
+		//Load upgrades that belong to this building
+		for(Upgrade u:Upgrade.values())
+		{
+			if(u.getBt()==bt)upgrades.put(u, false);
+		}
 	}
 
 	public int getBuildingType() {
@@ -80,6 +91,8 @@ public class Building extends Entity {
 	{
 		//Calculate happiness value
 		calculateHappiness();
+		//Apply transactions
+		if(Buildings.getBuildingType(this).getTransactioncategory()!=null)MonthlyActions.addTransaction(-getMonthlycost(), Buildings.getBuildingType(this).getTransactioncategory());
 	}
 	
 	public void calculateHappiness()
@@ -241,6 +254,43 @@ public class Building extends Entity {
 
 	public void setProducedSupplyRadius(int producedSupplyRadius) {
 		this.producedSupplyRadius = producedSupplyRadius;
+	}
+
+	public boolean getUpgrade(Upgrade upgrade) {
+		return upgrades.get(upgrade);
+	}
+
+	public void setUpgrade(Upgrade upgrade, boolean value) {
+		this.upgrades.put(upgrade, value);
+	}
+	public boolean hasUpgrades()
+	{
+		if(upgrades.size()>0)return true;
+		else return false;
+	}
+	
+	/**
+	 * Is overwritten by the individual buildings.
+	 * Applies upgrades to the building's values.
+	 */
+	public void updateUpgrades()
+	{
+		monthlycost=Buildings.getBuildingType(this).getMonthlycost();
+		for(Upgrade u:Upgrade.values())
+		{
+			if(u.getBt()==getBuildingType()&&getUpgrade(u))
+			{
+				monthlycost+=u.getMonthlyupgradecost();
+			}
+		}
+	}
+
+	public int getMonthlycost() {
+		return monthlycost;
+	}
+
+	public void setMonthlycost(int monthlycost) {
+		this.monthlycost = monthlycost;
 	}
 	
 }

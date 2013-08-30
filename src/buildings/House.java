@@ -33,7 +33,6 @@ public class House extends Building {
 	@Override
 	public void monthlyAction() {
 		super.monthlyAction();
-		MonthlyActions.addTransaction((int) (citizens*((float)Main.taxes/100)), TransactionCategory.Taxes);
 		if(getCitizens()<getCitizensmax()*(getHappiness()/100f)){
 			if(getCitizens()+CITIZENSPERMONTH<=getCitizensmax()*(getHappiness()/100f)){
 				setCitizens(getCitizens()+CITIZENSPERMONTH);
@@ -53,6 +52,7 @@ public class House extends Building {
 				setCitizens(0);
 			}
 		}
+		MonthlyActions.addTransaction((int) (citizens*((float)Main.taxes/100)), TransactionCategory.Taxes);
 	}
 	
 	@Override

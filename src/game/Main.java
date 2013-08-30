@@ -97,7 +97,7 @@ class splashScreen extends JFrame implements Runnable{
 
 	public void setInfo(String text)
 	{
-		int percent = Math.round(loadeditems/114f*100);
+		int percent = Math.round(loadeditems/123f*100);
 		if(percent>100)percent=100;
 		label2.setText(percent+"% "+text);
 		progress.setValue(percent);
@@ -145,7 +145,7 @@ public class Main {
 	public final static byte STATE_GAME = 2;
 	
 	//other constants
-	public final static int MONTH_MILLIS = debugMode?1000:60000;
+	public final static int MONTH_MILLIS = debugMode?1000:5000;
 	public final static int LOD1 = 50;
 	public final static int LOD2 = 150;
 

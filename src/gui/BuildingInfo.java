@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import objects.Building;
 import objects.Buildings;
+import objects.Upgrade;
 
 import org.lwjgl.opengl.Display;
 
@@ -13,6 +14,7 @@ import buildings.House;
 import animation.AnimationManager;
 import animation.AnimationValue;
 
+import game.Main;
 import game.ResourceManager;
 import game.Supply;
 import guielements.GuiLabel;
@@ -68,7 +70,21 @@ public class BuildingInfo extends GuiPanel {
 	{
 		this.building = building;
 		setVisible(true);
+		int count=0;
+		if(building.hasUpgrades()){
+			Main.gui.buildingupgrades.show();
+			for(Upgrade u:Upgrade.values())
+			{
+				if(u.getBt()==building.getBuildingType())
+				{
+					Main.gui.buildingupgrades.add(new GuiUpgrade(0, count*128, u, building));
+					count++;
+				}
+			}
+		}
 		AnimationManager.animateValue(this, AnimationValue.OPACITY, 1, 200);
+		setX(Display.getWidth()/2-336);
+		AnimationManager.animateValue(this, AnimationValue.X, Display.getWidth()/2-286, 200);
 		title.setText(Buildings.getBuildingTypeName(building.getBuildingType()));
 		String sneed = "";
 		for(Supply s:Supply.values())
@@ -86,7 +102,11 @@ public class BuildingInfo extends GuiPanel {
 		description.setText(text);
 		description.wrapText();
 		text = description.getText();
-		monthlycost.setText("-"+Buildings.getBuildingType(building.getBuildingType()).getMonthlycost()+"$");
+		if(building.hasUpgrades())
+		{
+			monthlycost.setText("-"+building.getMonthlycost()+"$ ("+"-"+(building.getMonthlycost()-Buildings.getBuildingType(building).getMonthlycost())+"$"+")");
+		}else monthlycost.setText("-"+building.getMonthlycost()+"$");
+		
 	}
 	
 	public void update()
@@ -109,6 +129,7 @@ public class BuildingInfo extends GuiPanel {
 	public void hide()
 	{
 		AnimationManager.animateValue(this, AnimationValue.OPACITY, 0, 200,AnimationManager.ACTION_HIDE);
+		Main.gui.buildingupgrades.hide();
 	}
 	
 }

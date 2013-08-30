@@ -264,9 +264,31 @@ public class BuildPreview extends Entity {
 				glTranslatef(-getX(), -0.5f-(float)(0.5*Math.sin((System.currentTimeMillis()%3141)*0.002)), -getZ());
 			}
 			
+			//Draw producesSupplyRadius of other buildings that produce the same supply
+			if(getBt().getProducedSupplyAmount()>0)
+			{
+				glDisable(GL_DEPTH_TEST);
+				glEnable(GL_TEXTURE_2D);
+				glBindTexture(GL_TEXTURE_2D, ResourceManager.TEXTURE_SUPPLYRADIUS.getTextureID());
+				glColor4f(0.8f,0.8f,0,radius*0.5f/RADIUSMAX);
+				for(Building building:Buildings.buildings)
+				{
+					if(building.getProducedSupply()==getBt().getProducedSupply())
+					{
+						glTranslatef(building.getX(), 0.01f, building.getZ());
+						float r = Buildings.getBuildingType(building).getProducedSupplyRadius();
+						glScalef(2*r, 1, 2*r);
+						glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+						glScalef(0.5f/r, 1, 0.5f/r);
+						glTranslatef(-building.getX(), -0.01f, -building.getZ());
+					}
+				}
+			}
+				
+			
 			//Draw building
 			glEnable(GL_DEPTH_TEST);
-			glTranslatef(getX(), 0.25f-(float)(0.25*Math.sin((System.currentTimeMillis()%3141)*0.002)), getZ());
+			glTranslatef(getX(), 0.25f+(float)(0.25*Math.cos((System.currentTimeMillis()%3141)*0.002)), getZ());
 			glScalef(getScaleX(), getScaleY(), getScaleZ());
 			glRotatef(getRotX(), 1, 0, 0);
 			glRotatef(getRotY(), 0, 1, 0);

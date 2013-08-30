@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import game.EntityTexture;
 import game.Supply;
+import game.TransactionCategory;
 
 import org.newdawn.slick.opengl.Texture;
 
@@ -28,8 +29,10 @@ public class BuildingType {
 	private int happinessEffect;
 	private int happinessRadius;
 	private Texture thumb;
+	private Supply producedSupply;
 	private int producedSupplyAmount;
 	private int producedSupplyRadius;
+	private TransactionCategory transactioncategory;
 	private int[] neededSupplies;
 	private Color gridColor;
 
@@ -53,8 +56,8 @@ public class BuildingType {
 	 */
 	public BuildingType(String name, int[] displaylist, EntityTexture texture,
 			Texture thumb, Color gridColor, int buidlingcost, int monthlycost, int width,
-			int depth, float height, int happinessEffect, int happinessRadius, int producedSupplyAmount,
-			int producedSupplyRadius, int... neededSupplies) {
+			int depth, float height, int happinessEffect, int happinessRadius, TransactionCategory transactioncategory, Supply producedSupply,
+			int producedSupplyAmount,int producedSupplyRadius, int... neededSupplies) {
 		this.name = name;
 		this.displaylist = displaylist;
 		this.texture = texture;
@@ -67,6 +70,8 @@ public class BuildingType {
 		this.height = height;
 		this.happinessEffect = happinessEffect;
 		this.happinessRadius = happinessRadius;
+		this.transactioncategory = transactioncategory;
+		this.setProducedSupply(producedSupply);
 		this.producedSupplyAmount = producedSupplyAmount;
 		this.producedSupplyRadius = producedSupplyRadius;
 		this.neededSupplies = neededSupplies;
@@ -138,6 +143,22 @@ public class BuildingType {
 
 	public void setProducedSupplyRadius(int producedSupplyRadius) {
 		this.producedSupplyRadius = producedSupplyRadius;
+	}
+
+	public Supply getProducedSupply() {
+		return producedSupply;
+	}
+
+	public void setProducedSupply(Supply producedSupply) {
+		this.producedSupply = producedSupply;
+	}
+
+	public TransactionCategory getTransactioncategory() {
+		return transactioncategory;
+	}
+
+	public void setTransactioncategory(TransactionCategory transactioncategory) {
+		this.transactioncategory = transactioncategory;
 	}
 
 }

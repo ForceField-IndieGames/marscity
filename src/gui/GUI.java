@@ -569,6 +569,23 @@ public class GUI {
 	}};
 	
 	public BuildingInfo buildinginfo = new BuildingInfo();
+	public GuiPanel buildingupgrades = new GuiPanel(Display.getWidth()/2+50,100,512,Display.getHeight()-200,(Color)null){
+		{
+			setVisible(false);
+			setOpacity(0);
+		}
+		public void show() {
+			setVisible(true);
+			setOpacity(0);
+			setX(Display.getWidth()/2+100);
+			AnimationManager.animateValue(this, AnimationValue.OPACITY, 1f, 200);
+			AnimationManager.animateValue(this, AnimationValue.X, Display.getWidth()/2+50, 200);
+			elements.clear();
+		};
+		public void hide() {
+			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0f, 200,AnimationManager.ACTION_HIDE);
+		};
+	};
 	
 	public GuiPanel moneycategories = new GuiPanel(30,30,452,412,(Color)null);
 	public GuiNumberbox taxes = new GuiNumberbox(372, 450, 110, 32);
@@ -676,8 +693,9 @@ public class GUI {
 		add(buildingPanels);
 		add(toolBar);
 		add(guiTools);
-		add(buildinginfo);
 		add(DataViewButtons);
+		add(buildinginfo);
+		add(buildingupgrades);
 		add(moneypanel);
 		add(citizenspanel);
 		add(buildingTooltip);

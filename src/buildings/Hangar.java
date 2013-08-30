@@ -1,9 +1,6 @@
 package buildings;
 
-import game.MonthlyActions;
-import game.TransactionCategory;
 import objects.Building;
-import objects.Buildings;
 
 public class Hangar extends Building {
 
@@ -12,9 +9,5 @@ public class Hangar extends Building {
 		super(bt,x,y,z);
 	}
 
-	@Override
-	public void monthlyAction() {
-		MonthlyActions.addTransaction(-Buildings.getBuildingType(getBuildingType()).getMonthlycost(), TransactionCategory.Other);
-	}
 	
 }
