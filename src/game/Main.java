@@ -41,6 +41,7 @@ import org.lwjgl.opengl.DisplayMode;
 import animation.AnimationManager;
 import animation.AnimationValue;
 import animation.CustomAnimationValue;
+import animation.FinishedAction;
 
 
 /**
@@ -430,7 +431,7 @@ public class Main {
 						{
 							Game.Resume();
 							gui.blur.setVisible(false);
-							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.OPACITY, 0, 0.005f, AnimationManager.ACTION_HIDE);
+							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.OPACITY, 0, 0.005f, FinishedAction.HIDE);
 						}else {
 							Game.Pause();
 							gui.blur.setVisible(true);
@@ -479,18 +480,25 @@ public class Main {
 				camera.setRotY(camera.getRotY()-0.1f*MX);
 				camera.setRotX(camera.getRotX()+0.1f*MY);
 				if(camera.getRotX()<-89)camera.setRotX(-89);
-				if(camera.getRotX()>-1)camera.setRotX(-1);
+				if(camera.getRotX()>89)camera.setRotX(89);
 				if(camera.wasRotated()){
 					gui.cameraRotate.setVisible(true);
 				}
 			}
 			//Move the camera with middle mouse button
 			if(Mouse.isButtonDown(2)){
-				camera.setX((float) (camera.getX()+delta*(0.00008f*camera.getZoom()+0.0004f)
-						*MY*Math.sin(Math.toRadians(camera.getRotY()))-delta*(0.00008f*camera.getZoom()+0.0004f)
+//				camera.setX((float) (camera.getX()+delta*(0.00008f*camera.getZoom()+0.0004f)
+//						*MY*Math.sin(Math.toRadians(camera.getRotY()))-delta*(0.00008f*camera.getZoom()+0.0004f)
+//						*MX*Math.cos(Math.toRadians(camera.getRotY()))));
+//				camera.setZ((float) (camera.getZ()+delta*(0.00008f*camera.getZoom()+0.0004f)
+//						*MY*Math.cos(Math.toRadians(camera.getRotY()))+delta*(0.00008f*camera.getZoom()+0.0004f)
+//						*MX*Math.sin(Math.toRadians(camera.getRotY()))));
+				System.out.println("delta="+delta);
+				camera.setX((float) (camera.getX()+15*(0.00008f*camera.getZoom()+0.0004f)
+						*MY*Math.sin(Math.toRadians(camera.getRotY()))-15*(0.00008f*camera.getZoom()+0.0004f)
 						*MX*Math.cos(Math.toRadians(camera.getRotY()))));
-				camera.setZ((float) (camera.getZ()+delta*(0.00008f*camera.getZoom()+0.0004f)
-						*MY*Math.cos(Math.toRadians(camera.getRotY()))+delta*(0.00008f*camera.getZoom()+0.0004f)
+				camera.setZ((float) (camera.getZ()+15*(0.00008f*camera.getZoom()+0.0004f)
+						*MY*Math.cos(Math.toRadians(camera.getRotY()))+15*(0.00008f*camera.getZoom()+0.0004f)
 						*MX*Math.sin(Math.toRadians(camera.getRotY()))));
 			}
 		}
@@ -620,7 +628,7 @@ public class Main {
 						money -= Buildings.getBuildingType(currentBT).getBuidlingcost();
 						ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
 						camera.setY(0);
-						AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
+						AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, FinishedAction.REVERSE);
 						AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
 						buildpreview.waveEffect();
 						Buildings.refreshSupply();

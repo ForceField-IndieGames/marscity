@@ -12,6 +12,7 @@ import org.lwjgl.opengl.Display;
 import animation.Animatable;
 import animation.AnimationManager;
 import animation.AnimationValue;
+import animation.FinishedAction;
 
 /**
  * This is a basic messagebox. It can display text and a title and
@@ -49,7 +50,7 @@ public class MsgBox extends GuiPanel {
 			@Override public void run(GuiEventType eventtype, GuiElement element) {
 				switch (eventtype) {
 				case Click:
-						AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.OPACITY, 0f, 100, AnimationManager.ACTION_REMOVEGUI);
+						AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.OPACITY, 0f, 100, FinishedAction.REMOVEGUI);
 						AnimationManager.animateValue((Animatable) element.getParent(), AnimationValue.Y, element.getParent().getY()-20, 100);
 						break;
 				default:break;}}});
@@ -57,7 +58,7 @@ public class MsgBox extends GuiPanel {
 		button.setColor(color);
 		add(button);
 		AnimationManager.animateValue(this, AnimationValue.OPACITY, 1f, 100);
-		AnimationManager.animateValue(this, AnimationValue.Y, getY()+10, 100, AnimationManager.ACTION_REVERSE);
+		AnimationManager.animateValue(this, AnimationValue.Y, getY()+10, 100, FinishedAction.REVERSE);
 	}
 	
 }

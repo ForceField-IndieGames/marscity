@@ -11,6 +11,7 @@ import game.MonthlyActions;
 import game.Supply;
 import animation.AnimationManager;
 import animation.AnimationValue;
+import animation.FinishedAction;
 
 /**
  * This is a building. It is defined by a buildingtype and a position.
@@ -175,7 +176,7 @@ public class Building extends Entity {
 	@Override
 	public void delete()
 	{
-		AnimationManager.animateValue(this, AnimationValue.Y, getY()-getHeight(), 1000, AnimationManager.ACTION_DELETE);
+		AnimationManager.animateValue(this, AnimationValue.Y, getY()-getHeight(), 1000, FinishedAction.DELETE);
 		AnimationManager.animateValue(this, AnimationValue.ROTX, (float) (getRotX()-10+Math.random()*20), 1000);
 		AnimationManager.animateValue(this, AnimationValue.ROTY, (float) (getRotY()-10+Math.random()*20), 1000);
 		AnimationManager.animateValue(this, AnimationValue.ROTZ, (float) (getRotZ()-10+Math.random()*20), 1000);

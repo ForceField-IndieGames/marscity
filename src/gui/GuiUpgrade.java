@@ -4,6 +4,7 @@ import java.awt.Color;
 
 import animation.AnimationManager;
 import animation.AnimationValue;
+import animation.FinishedAction;
 
 import objects.Building;
 import objects.Buildings;
@@ -42,6 +43,7 @@ public class GuiUpgrade extends GuiPanel {
 		this.upgrade = upgrade;
 		this.building = building;
 		button = new GuiButton(362,0,128,128,ResourceManager.TEXTURE_GUIUPGRADEBUTTON);
+		button.setTooltip(ResourceManager.getString("TOOLTIP_UPGRADEBUTTON"));
 		if(upgrade.getNeededupgrades()!=null)
 		{
 			for(Upgrade u:upgrade.getNeededupgrades())
@@ -70,13 +72,13 @@ public class GuiUpgrade extends GuiPanel {
 						Main.money-=g.getUpgrade().getUpgradecost();
 						g.getBuilding().setUpgrade(g.getUpgrade(), true);
 						g.getBuilding().updateUpgrades();
-						AnimationManager.animateValue(g, AnimationValue.Y, g.getY()+20, 100,AnimationManager.ACTION_REVERSE);
+						AnimationManager.animateValue(g, AnimationValue.Y, g.getY()+20, 100,FinishedAction.REVERSE);
 						Buildings.refreshSupply();
 					}
 				}	
 			}
 		});
-		AnimationManager.animateValue(button, AnimationValue.OPACITY, 0.6f, 0.0003f,AnimationManager.ACTION_REVERSEREPEAT);
+		AnimationManager.animateValue(button, AnimationValue.OPACITY, 0.6f, 0.0003f,FinishedAction.REVERSEREPEAT);
 		add(button);
 		title = new GuiLabel(150,90,212,30,(Color)null);
 		title.setText(ResourceManager.getString("UPGRADENAME_"+upgrade.name().toUpperCase()));
@@ -100,7 +102,7 @@ public class GuiUpgrade extends GuiPanel {
 		monthlycost = new GuiLabel(375,10,95,20,(Color)null);
 		monthlycost.setRightaligned(true);
 		monthlycost.setFont(ResourceManager.Arial12);
-		monthlycost.setText(upgrade.getMonthlyupgradecost()+"$");
+		monthlycost.setText(upgrade.getMonthlyupgradecost()+"$$");
 		monthlycost.setTextColor(Color.white);
 		add(monthlycost);
 		image = new GuiPanel(23,0,128,128,upgrade.getImage());

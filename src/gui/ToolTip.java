@@ -5,6 +5,7 @@ import java.util.TimerTask;
 
 import animation.AnimationManager;
 import animation.AnimationValue;
+import animation.FinishedAction;
 import game.ResourceManager;
 import guielements.GuiLabel;
 
@@ -27,7 +28,7 @@ public class ToolTip extends GuiLabel {
 		AutoSize();
 		setHeight(20);
 		setVisible(true);
-		AnimationManager.animateValue(this, AnimationValue.OPACITY, 1f, 100);
+		AnimationManager.animateValue(this, AnimationValue.OPACITY, 1f, 500);
 		try{timer.cancel();}catch(Exception e){}
 		timer = new Timer();
 		timer.schedule(new TimerTask() {@Override public void run() {hide();}}, 2000);
@@ -35,7 +36,7 @@ public class ToolTip extends GuiLabel {
 	
 	@Override
 	public void hide() {
-		AnimationManager.animateValue(this, AnimationValue.OPACITY, 0f, 100,AnimationManager.ACTION_HIDE);
+		AnimationManager.animateValue(this, AnimationValue.OPACITY, 0f, 500,FinishedAction.HIDE);
 	}
 	
 }

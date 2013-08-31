@@ -462,23 +462,43 @@ public class ResourceManager {
 	/**
 	 * Returns a the localized String from the language file
 	 * @param input
-	 * @return The localized strong or the input, if not found
+	 * @return The localized string or the input, if not found
 	 */
 	public static String getString(String input)
 	{
 		String output =  null;
-//		if(langFile==null)return "Unable to load language file for "+getSetting("lang");
-//		try {
-//			output =  langFile.getElementsByTagName(input).item(0).getTextContent();
-//		} catch (Exception e) {
-//		}
-//		
-//		if(output==null){
-//			System.err.println("String not found: "+input);
-//			return input;
-//		}
 		output = strings.get(input);
 		if(output==null)output=input;
+		return output;
+	}
+	
+	/**
+	 * Return a localized String from the language file and replaces placeholders
+	 * %1%, %2%, %3%, ...
+	 * @param input
+	 * @param replace String to fill in the placeholders
+	 * @return The localized string with replacements or the input, if not found
+	 */
+	public static String getString(String input, String...replace)
+	{
+		String output = getString(input);
+		return replacePlaceholders(output, replace);
+	}
+	
+	/**
+	 * Replaces placeholders in the input String
+	 * @param input
+	 * @param replace Strings to replace the placeholders %1%,%2%... with
+	 * @return
+	 */
+	public static String replacePlaceholders(String input, String...replace)
+	{
+		String output=input;
+		System.out.println("replace.length="+replace.length+", input="+input);
+		for(int i=0;i<replace.length;i++)
+		{
+			output = output.replaceAll("%"+(i+1)+"%", replace[i]);
+		}
 		return output;
 	}
 	

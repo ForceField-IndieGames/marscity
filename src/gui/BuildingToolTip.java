@@ -44,7 +44,7 @@ public class BuildingToolTip extends GuiPanel {
 		add(price);
 		monthlycost = new GuiLabel(136,15,100,30,(Color)null);
 		monthlycost.setRightaligned(true);
-		monthlycost.setText("0$");
+		monthlycost.setText("0$$");
 		add(monthlycost);
 	}
 	
@@ -57,7 +57,7 @@ public class BuildingToolTip extends GuiPanel {
 		if(Main.money<Buildings.getBuildingType(bt).getBuidlingcost()){
 			price.setTextColor(Color.red);
 		}else price.setTextColor(Color.black);
-		monthlycost.setText(Buildings.getBuildingType(bt).getMonthlycost()+"$");
+		monthlycost.setText(Buildings.getBuildingType(bt).getMonthlycost()+"$$");
 	}
 	
 }

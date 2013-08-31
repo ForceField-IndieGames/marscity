@@ -31,6 +31,7 @@ import org.lwjgl.opengl.Display;
 
 import animation.AnimationManager;
 import animation.AnimationValue;
+import animation.FinishedAction;
 
 /**
  * This class generates and displays the gui.
@@ -79,7 +80,7 @@ public class GUI {
 	}
 		@Override
 		public void hide() {
-			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0, 200, AnimationManager.ACTION_HIDE);
+			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0, 200, FinishedAction.HIDE);
 		};
 	};
 	public GuiButton MenuExit = new GuiButton(660, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2){{
@@ -183,12 +184,12 @@ public class GUI {
 	};
 	public GuiLabel infoMonthly = new GuiLabel(150,0,50,30,(Color)null){{
 		setTooltip(ResourceManager.getString("TOOLTIP_INFOMONTHLY"));
-		setText("0$");
+		setText("0$$");
 		setFont(ResourceManager.Arial12);
 		setRightaligned(true);
 	}};
 	public GuiLabel infoMonthlyCosts = new GuiLabel(infoMonthly.getScreenX(),23,50,20,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
-		setText("0$");
+		setText("0$$");
 		setFont(ResourceManager.Arial12);
 		AutoSize();
 		setVisible(false);
@@ -196,7 +197,7 @@ public class GUI {
 		@Override
 		public void setText(String text)
 		{
-			super.setText("-"+text+"$");
+			super.setText("-"+text+"$$");
 		}
 	};
 	public GuiLabel infoMoney = new GuiLabel(350,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
@@ -334,7 +335,7 @@ public class GUI {
 	    				Game.Save("res/cities/"+Main.cityname+".city");
 	    				Game.Resume();
 	    				Main.gui.blur.setVisible(false);
-	    				AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.OPACITY, 1, 0.005f, AnimationManager.ACTION_HIDE);
+	    				AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.OPACITY, 1, 0.005f, FinishedAction.HIDE);
 	    				break;
 	    		case Mouseover:
 	    				break;
@@ -374,7 +375,7 @@ public class GUI {
 				case Click:
 						Main.gui.blur.setVisible(false);
 						Game.Resume();
-						AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.OPACITY, 0, 0.005f, AnimationManager.ACTION_HIDE);
+						AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.OPACITY, 0, 0.005f, FinishedAction.HIDE);
 						break;
 				case Mouseover:
 						break;
@@ -393,7 +394,7 @@ public class GUI {
 	}
 		@Override
 		public void hide() {
-			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0, 200, AnimationManager.ACTION_HIDE);
+			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0, 200, FinishedAction.HIDE);
 		};
 	};
 	
@@ -416,7 +417,7 @@ public class GUI {
 					case Main.STATE_GAME:
 						Game.Resume();
 						Main.gui.blur.setVisible(false);
-						AnimationManager.animateValue(Main.gui.settingsMenu, AnimationValue.OPACITY, 0, 0.005f, AnimationManager.ACTION_HIDE);
+						AnimationManager.animateValue(Main.gui.settingsMenu, AnimationValue.OPACITY, 0, 0.005f, FinishedAction.HIDE);
 						break;
 					default:
 						break;
@@ -557,7 +558,7 @@ public class GUI {
 	}
 		@Override
 		public void hide() {
-			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0, 200, AnimationManager.ACTION_HIDE);
+			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0, 200, FinishedAction.HIDE);
 		};
 	};
 	
@@ -583,7 +584,7 @@ public class GUI {
 			elements.clear();
 		};
 		public void hide() {
-			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0f, 200,AnimationManager.ACTION_HIDE);
+			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0f, 200,FinishedAction.HIDE);
 		};
 	};
 	
@@ -624,12 +625,12 @@ public class GUI {
 		@Override public void show() {
 			setVisible(true);
 			AnimationManager.animateValue(this, AnimationValue.OPACITY, 1f, 100);
-			AnimationManager.animateValue(this, AnimationValue.Y, getY()+10, 100, AnimationManager.ACTION_REVERSE);
+			AnimationManager.animateValue(this, AnimationValue.Y, getY()+10, 100, FinishedAction.REVERSE);
 		};
 		
 		@Override public void hide() {
-			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0f, 200,AnimationManager.ACTION_HIDE);
-			AnimationManager.animateValue(this, AnimationValue.Y, getY()-10, 200, AnimationManager.ACTION_RESET);
+			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0f, 200,FinishedAction.HIDE);
+			AnimationManager.animateValue(this, AnimationValue.Y, getY()-10, 200, FinishedAction.RESET);
 		};
 	};
 	public GuiGraph populationGraph = new GuiGraph(30, 45, 452, 420, 0);
@@ -661,12 +662,12 @@ public class GUI {
 		@Override public void show() {
 			setVisible(true);
 			AnimationManager.animateValue(this, AnimationValue.OPACITY, 1f, 200);
-			AnimationManager.animateValue(this, AnimationValue.Y, getY()+10, 100, AnimationManager.ACTION_REVERSE);
+			AnimationManager.animateValue(this, AnimationValue.Y, getY()+10, 100, FinishedAction.REVERSE);
 		};
 		
 		@Override public void hide() {
-			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0f, 200,AnimationManager.ACTION_HIDE);
-			AnimationManager.animateValue(this, AnimationValue.Y, getY()-10, 200, AnimationManager.ACTION_RESET);
+			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0f, 200,FinishedAction.HIDE);
+			AnimationManager.animateValue(this, AnimationValue.Y, getY()-10, 200, FinishedAction.RESET);
 		};
 	};
 	

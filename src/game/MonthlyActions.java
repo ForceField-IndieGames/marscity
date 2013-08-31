@@ -32,7 +32,7 @@ public class MonthlyActions {
 				int total=0;
 				for(TransactionCategory t:TransactionCategory.values())
 				{
-					((GuiProgressbar)Main.gui.moneycategories.elements.get(t.ordinal())).setText(t.getName()+": "+TransactionList[t.ordinal()]+"$");
+					((GuiProgressbar)Main.gui.moneycategories.elements.get(t.ordinal())).setText(t.getName()+": "+TransactionList[t.ordinal()]+"$$");
 					((GuiProgressbar)Main.gui.moneycategories.elements.get(t.ordinal())).setBarColor((TransactionList[t.ordinal()]<0)?new Color(255,150,150):new Color(150,255,150));
 					((GuiProgressbar)Main.gui.moneycategories.elements.get(t.ordinal())).setValue((max!=0)?Math.abs(TransactionList[t.ordinal()]/max):0);
 					((GuiProgressbar)Main.gui.moneycategories.elements.get(t.ordinal())).setRightaligned((TransactionList[t.ordinal()]<0)?true:false);
@@ -47,13 +47,13 @@ public class MonthlyActions {
 					TransactionList[i]=0;
 				}
 				if(total>0){
-					Main.gui.infoMonthly.setText("+"+total+"$");
-					Main.gui.infoMoney.setColor(new Color(150,250,150));
+					Main.gui.infoMonthly.setText("+"+total+"$$");
+					Main.gui.infoMoney.setColor(new Color(100,250,100));
 				}else if(total<0){
-					Main.gui.infoMonthly.setText("-"+total+"$");
-					Main.gui.infoMoney.setColor(new Color(250,150,150));
+					Main.gui.infoMonthly.setText("-"+total+"$$");
+					Main.gui.infoMoney.setColor(new Color(250,100,100));
 				}else{
-					Main.gui.infoMonthly.setText(total+"$");
+					Main.gui.infoMonthly.setText(total+"$$");
 					Main.gui.infoMoney.setColor(Color.white);
 				}
 				

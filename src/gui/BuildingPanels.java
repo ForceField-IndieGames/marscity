@@ -2,6 +2,7 @@ package gui;
 
 import animation.AnimationManager;
 import animation.AnimationValue;
+import animation.FinishedAction;
 import game.ResourceManager;
 import guielements.GuiPanel;
 
@@ -41,7 +42,7 @@ public class BuildingPanels extends GuiPanel {
 	
 	public void hide()
 	{
-		AnimationManager.animateValue(this, AnimationValue.Y, 20f, 100, AnimationManager.ACTION_HIDE);
+		AnimationManager.animateValue(this, AnimationValue.Y, 20f, 100, FinishedAction.HIDE);
 		AnimationManager.animateValue(this, AnimationValue.OPACITY, 0f, 100);
 	}
 	

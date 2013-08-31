@@ -11,6 +11,7 @@ import objects.Buildings;
 
 import animation.AnimationManager;
 import animation.AnimationValue;
+import animation.FinishedAction;
 
 /**
  * This is a button that selects a buildingtpe to build.
@@ -60,7 +61,7 @@ public class BuildingButton extends GuiPanel {
 			Main.gui.buildingTooltip.setBuilding(getBt());
 			break;
 	case Mouseout:
-		AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.OPACITY, 0f, 200,AnimationManager.ACTION_HIDE);
+		AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.OPACITY, 0f, 200,FinishedAction.HIDE);
 		AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.Y, Main.gui.buildingTooltip.getY()-10, 200);
 		break;
 	default:break;}}});
