@@ -6,6 +6,7 @@ import effects.ParticleEffects;
 import gui.GUI;
 import gui.GuiEventType;
 import gui.GuiElement;
+import buildings.*;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -174,6 +175,8 @@ public class Main {
 	public static GUI          gui;
 	public static BuildPreview buildpreview;
 	       static splashScreen splashscreen;
+	public static Entity       shield;
+	public static CityCenter   BuildingCitycenter;
 	
 	/**
 	 * Writes a string into the log file
@@ -231,6 +234,11 @@ public class Main {
 		buildpreview = new BuildPreview(); //Create the Building Preview
 		skybox = new Entity(ResourceManager.OBJECT_SKYBOX, ResourceManager.TEXTURE_SKYBOX);
 		terrain = new Terrain(0,0,0);//create the terrain
+		shield = new Entity(ResourceManager.OBJECT_SHIELD,ResourceManager.TEXTURE_SHIELD);
+			shield.setOpacity(0.3f);
+			shield.setScaleX(200);
+			shield.setScaleY(200);
+			shield.setScaleZ(200);
 		
 		//Enable vsync according to the settings
 		if(ResourceManager.getSetting("vsync").equals("enabled"))Display.setVSyncEnabled(true);
@@ -487,13 +495,6 @@ public class Main {
 			}
 			//Move the camera with middle mouse button
 			if(Mouse.isButtonDown(2)){
-//				camera.setX((float) (camera.getX()+delta*(0.00008f*camera.getZoom()+0.0004f)
-//						*MY*Math.sin(Math.toRadians(camera.getRotY()))-delta*(0.00008f*camera.getZoom()+0.0004f)
-//						*MX*Math.cos(Math.toRadians(camera.getRotY()))));
-//				camera.setZ((float) (camera.getZ()+delta*(0.00008f*camera.getZoom()+0.0004f)
-//						*MY*Math.cos(Math.toRadians(camera.getRotY()))+delta*(0.00008f*camera.getZoom()+0.0004f)
-//						*MX*Math.sin(Math.toRadians(camera.getRotY()))));
-				System.out.println("delta="+delta);
 				camera.setX((float) (camera.getX()+15*(0.00008f*camera.getZoom()+0.0004f)
 						*MY*Math.sin(Math.toRadians(camera.getRotY()))-15*(0.00008f*camera.getZoom()+0.0004f)
 						*MX*Math.cos(Math.toRadians(camera.getRotY()))));
@@ -504,7 +505,7 @@ public class Main {
 		}
 		
 		//Fire Mouseover and Mouseout events
-		if(gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mouseover);
+		if(gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mousein);
 		if(gui.lastHovered!=null&&gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mouseout,gui.lastHovered);
 		gui.lastHovered = guihit;
 		
@@ -623,6 +624,10 @@ public class Main {
 							gui.showToolTip(ResourceManager.getString("FEEDBACK_NOSTREET"));
 							break;
 						}
+						if (Math.sqrt(Math.round(mousepos3d[0])*Math.round(mousepos3d[0])+Math.round(mousepos3d[2])*Math.round(mousepos3d[2]))>BuildingCitycenter.getBuildRadius()){
+							gui.showToolTip(ResourceManager.getString("FEEDBACK_OUTOFRANGE"));
+							break;
+						}
 						ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
 						Building b = Buildings.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBT);
 						money -= Buildings.getBuildingType(currentBT).getBuidlingcost();
@@ -694,8 +699,6 @@ public class Main {
 		glEnable(GL_DEPTH_TEST);
 		glClearColor(0.7f, 0.4f, 1f, 1f);
 		glClearDepth(1); 
-		
-		
 		
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
@@ -820,6 +823,17 @@ public class Main {
         
         //Draw the particle effects
         ParticleEffects.draw();
+        
+        //Draw shield
+        glEnable(GL_LIGHTING);
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_COLOR_MATERIAL);
+		glDisable(GL_LIGHTING);
+		glEnable(GL_DEPTH_TEST);
+		glColor4f(1, 1, 1,0.3f);
+        shield.draw();
+        glEnable(GL_LIGHTING);
+        glDisable(GL_COLOR_MATERIAL);
 		
 		glPopMatrix();
 		
@@ -857,7 +871,7 @@ public class Main {
 		i=(i<2*Math.PI)?i+0.005f:0;
 		//Process mouse inputs
 		GuiElement guihit = gui.mouseoverMenu();
-		if(gui.lastHovered!=guihit)gui.callGuiEventsMenu(GuiEventType.Mouseover);
+		if(gui.lastHovered!=guihit)gui.callGuiEventsMenu(GuiEventType.Mousein);
 		if(gui.lastHovered!=null&&gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mouseout,gui.lastHovered);
 		gui.lastHovered = guihit;
 		while(Mouse.next())
@@ -953,6 +967,9 @@ public class Main {
 		
 		//Rotate the camera while in pause mode
 		if(Game.isPaused())camera.setRotY(camera.getRotY()+0.05f);
+		
+		//Rotate the shield
+		shield.setRotY(shield.getRotY()+0.01f);
 		
 		// update FPS Counter
 		updateFPS(); 

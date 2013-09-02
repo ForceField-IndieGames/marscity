@@ -64,7 +64,7 @@ public class LoadingScreen extends GuiPanel {
 						AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.OPACITY, 0, 0.005f, FinishedAction.HIDE);
 						Main.gui.loadingscreen.setVisible(false);
 						break;
-				case Mouseover:
+				case Mousein:
 						break;
 				default:break;}}});
 		add(abort);

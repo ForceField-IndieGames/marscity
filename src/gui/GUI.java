@@ -128,7 +128,7 @@ public class GUI {
 						Main.gui.pauseMenu.setVisible(true);
 						AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.OPACITY, 1, 0.005f);
 						break;
-				case Mouseover:
+				case Mousein:
 						break;
 				default:break;}}});
 	}};
@@ -147,7 +147,7 @@ public class GUI {
 						Main.gui.infoBuildingCosts.setVisible(false);
 						Main.gui.infoMonthlyCosts.setVisible(false);
 						break;
-				case Mouseover:
+				case Mousein:
 						break;
 				default:break;}}});
 	}};
@@ -312,7 +312,7 @@ public class GUI {
 	    				Main.gameState = Main.STATE_MENU;
 	    				Main.gui = new GUI();
 	    				break;
-	    		case Mouseover:
+	    		case Mousein:
 	    				break;
 	    		default:break;}}});
 	}};
@@ -337,7 +337,7 @@ public class GUI {
 	    				Main.gui.blur.setVisible(false);
 	    				AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.OPACITY, 1, 0.005f, FinishedAction.HIDE);
 	    				break;
-	    		case Mouseover:
+	    		case Mousein:
 	    				break;
 	    		default:break;}}});
 	}};
@@ -351,7 +351,7 @@ public class GUI {
 	    				Main.gui.settingsMenu.setVisible(true);
 	    				AnimationManager.animateValue(Main.gui.settingsMenu, AnimationValue.OPACITY, 1, 0.005f);
 	    				break;
-	    		case Mouseover:
+	    		case Mousein:
 	    				break;
 	    		default:break;}}});
 	}};
@@ -363,7 +363,7 @@ public class GUI {
 	    		case Click:
 	    				Game.exit();
 	    				break;
-	    		case Mouseover:
+	    		case Mousein:
 	    				break;
 	    		default:break;}}});
 	}};
@@ -377,7 +377,7 @@ public class GUI {
 						Game.Resume();
 						AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.OPACITY, 0, 0.005f, FinishedAction.HIDE);
 						break;
-				case Mouseover:
+				case Mousein:
 						break;
 				default:break;}}});
 	}};
@@ -423,7 +423,7 @@ public class GUI {
 						break;
 					}
 						break;
-				case Mouseover:
+				case Mousein:
 						break;
 				default:break;}}});
 	}};
@@ -488,7 +488,7 @@ public class GUI {
 							e.printStackTrace();
 						}
 						break;
-				case Mouseover:
+				case Mousein:
 						break;
 				default:break;}}});                              
 	}};
@@ -505,7 +505,7 @@ public class GUI {
 							e.printStackTrace();
 						}
 						break;
-				case Mouseover:
+				case Mousein:
 						break;
 				default:break;}}});
 	}};
@@ -522,7 +522,7 @@ public class GUI {
 							e.printStackTrace();
 						}
 						break;
-				case Mouseover:
+				case Mousein:
 						break;
 				default:break;}}});
 	}};

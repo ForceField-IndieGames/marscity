@@ -71,7 +71,7 @@ public class GuiUpgrade extends GuiPanel {
 					{
 						Main.money-=g.getUpgrade().getUpgradecost();
 						g.getBuilding().setUpgrade(g.getUpgrade(), true);
-						g.getBuilding().updateUpgrades();
+						g.getBuilding().updateUpgrades(g.getUpgrade());
 						AnimationManager.animateValue(g, AnimationValue.Y, g.getY()+20, 100,FinishedAction.REVERSE);
 						Buildings.refreshSupply();
 					}

@@ -147,7 +147,7 @@ public class Building extends Entity {
 					upgrades.put(u,i.readBoolean());
 				}
 			}
-			updateUpgrades();
+			updateUpgrades(null);
 		}
 	}
 	
@@ -293,7 +293,7 @@ public class Building extends Entity {
 	 * Is overwritten by the individual buildings.
 	 * Applies upgrades to the building's values.
 	 */
-	public void updateUpgrades()
+	public void updateUpgrades(Upgrade changedupgrade)
 	{
 		monthlycost=Buildings.getBuildingType(this).getMonthlycost();
 		for(Upgrade u:Upgrade.values())

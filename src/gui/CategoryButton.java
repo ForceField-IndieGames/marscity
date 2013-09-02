@@ -38,7 +38,7 @@ public class CategoryButton extends GuiButton {
 						Main.gui.toolDelete.setColor(Color.white);
 						((CategoryButton) e).getPanel().setVisible(true);
 						break;
-				case Mouseover:
+				case Mousein:
 						break;
 				default:break;}}});
 	}

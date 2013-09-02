@@ -99,6 +99,8 @@ public class ResourceManager {
 	public final static int[] OBJECT_POLICE = addObject("police");
 	public final static int[] OBJECT_SOLARPOWER = addObject("solarpower");
 	public final static int[] OBJECT_FUSIONPOWER = addObject("fusionpower");
+	public final static int[] OBJECT_SHIELD = addObject("shield");
+	public final static int[] OBJECT_MEDICALCENTERROOMS = addObject("medicalcenterrooms");
 	
 	//The audio files
 	public final static Audio SOUND_DROP = addSound("WAV", "drop.wav");
@@ -123,6 +125,8 @@ public class ResourceManager {
 	public final static EntityTexture TEXTURE_POLICE            = addEntityTexture("police");
 	public final static EntityTexture TEXTURE_SOLARPOWER        = addEntityTexture("solarpower");
 	public final static EntityTexture TEXTURE_FUSIONPOWER       = addEntityTexture("fusionpower");
+	public final static EntityTexture TEXTURE_SHIELD            = addEntityTexture("shield");
+	public final static EntityTexture TEXTURE_MEDICALCENTERROOMS= addEntityTexture("medicalcenterrooms");
 	
 	public final static Texture TEXTURE_GUITHUMBSTREET          = addTexture("gui/thumbstreet.png");
 	public final static Texture TEXTURE_GUITHUMBHOUSE           = addTexture("gui/thumbhouse.png");
@@ -135,6 +139,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUITHUMBSOLARPOWER      = addTexture("gui/thumbsolarpower.png");
 	public final static Texture TEXTURE_GUITHUMBFUSIONPOWER     = addTexture("gui/thumbfusionpower.png");
 	public final static Texture TEXTURE_GUITHUMBHANGAR          = addTexture("gui/thumbhangar.png");
+	public final static Texture TEXTURE_GUITHUMBMEDICALCENTERROOMS= addTexture("gui/thumbmedicalcenterrooms.png");
 	
 	public final static Texture TEXTURE_ICON16                  = addTexture("gui/icon16.png");
 	public final static Texture TEXTURE_ICON32                  = addTexture("gui/icon32.png");

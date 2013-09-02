@@ -155,11 +155,11 @@ public class BuildPreview extends Entity {
 						//Color cells under the building
 						try {
 							if(Grid.getCell(x, z).getBuilding()!=null){
-								glColor4f(1f, 0f, 0f,0.7f);
+								glColor4f(1f, 0f, 0f,0.7f*(radius/RADIUSMAX));
 							}
 							else {
 								Color c = Buildings.getBuildingType(getBuildingType()).getGridColor();
-								glColor4f(c.getRed()/255, c.getGreen()/255, c.getBlue()/255,0.7f);
+								glColor4f(c.getRed()/255, c.getGreen()/255, c.getBlue()/255,0.7f*(radius/RADIUSMAX));
 							}
 						} catch (Exception e) {}
 					}
@@ -284,7 +284,16 @@ public class BuildPreview extends Entity {
 					}
 				}
 			}
-				
+			
+			//Draw buildradius
+			glDisable(GL_DEPTH_TEST);
+			glEnable(GL_TEXTURE_2D);
+			glBindTexture(GL_TEXTURE_2D, ResourceManager.TEXTURE_HAPPINESSEFFECT.getTextureID());
+			glColor4f(0.2f,0.3f,1,radius*0.5f/RADIUSMAX);
+			glScalef(Main.BuildingCitycenter.getBuildRadius()*2, 1, Main.BuildingCitycenter.getBuildRadius()*2);
+			glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+			glScalef(0.5f/Main.BuildingCitycenter.getBuildRadius(), 1, 0.5f/Main.BuildingCitycenter.getBuildRadius());
+			
 			
 			//Draw building
 			glEnable(GL_DEPTH_TEST);
@@ -301,6 +310,7 @@ public class BuildPreview extends Entity {
 			glPopMatrix();
 			glColor4f(1f, 1f, 1f, 1f);
 			glEnable(GL_LIGHTING);
+			
 	}
 
 }

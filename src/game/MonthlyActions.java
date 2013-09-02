@@ -5,7 +5,6 @@ import guielements.GuiProgressbar;
 import java.awt.Color;
 import java.util.TimerTask;
 
-import objects.Building;
 import objects.Buildings;
 
 /**
@@ -22,8 +21,8 @@ public class MonthlyActions {
 		@Override
 		public void run() {
 			if(!Game.isPaused()&&Main.gameState==Main.STATE_GAME){
-				for(Building b:Buildings.buildings){
-					b.monthlyAction();
+				for(int i=0;i<Buildings.buildings.size();i++){
+					Buildings.buildings.get(i).monthlyAction();
 				}
 				float max=0;
 				for(int i=0;i<TransactionList.length;i++){

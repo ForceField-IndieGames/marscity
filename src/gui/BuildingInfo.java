@@ -9,6 +9,7 @@ import objects.Upgrade;
 import org.lwjgl.opengl.Display;
 
 import buildings.BigHouse;
+import buildings.CityCenter;
 import buildings.House;
 import animation.AnimationManager;
 import animation.AnimationValue;
@@ -144,6 +145,9 @@ public class BuildingInfo extends GuiPanel {
 				break;
 			case Buildings.BUILDINGTYPE_FUSIONPOWER:
 				description2.setText(ResourceManager.replacePlaceholders(text, ""+building.getProducedSupplyAmount()));
+				break;
+			case Buildings.BUILDINGTYPE_CITYCENTER:
+				description2.setText(ResourceManager.replacePlaceholders(text, ""+((CityCenter)building).getBuildRadius()));
 				break;
 			default: break;
 			}

@@ -2,6 +2,7 @@ package gui;
 
 import game.Main;
 import game.ResourceManager;
+import guielements.GuiButton;
 import guielements.GuiLabel;
 import guielements.GuiPanel;
 
@@ -23,7 +24,7 @@ import animation.FinishedAction;
 public class BuildingButton extends GuiPanel {
 
 	private GuiLabel name;
-	private GuiPanel image;
+	private GuiButton image;
 	private int bt;
 	
 	public BuildingButton(float x, float y, int bt)
@@ -34,7 +35,22 @@ public class BuildingButton extends GuiPanel {
 		setWidth(100);
 		setHeight(100);
 		setColor(null);
-		image = new GuiPanel(10,25,80,80, Buildings.getBuildingType(bt).getThumb());
+		setIndirectevent(new GuiEvent(){
+			@Override
+			public void run(GuiEventType eventtype) {
+				switch (eventtype) {
+				case Mousein:
+					AnimationManager.animateValue(image, AnimationValue.Y, 35, 300);
+					break;
+				case Mouseout:
+					AnimationManager.animateValue(image, AnimationValue.Y, 25, 300);
+					break;
+				default:
+					break;
+				}
+			}
+		});
+		image = new GuiButton(10,25,80,80, Buildings.getBuildingType(bt).getThumb());
 		image.setEvent(new GuiEvent(){
 	@Override public void run(GuiEventType eventtype, GuiElement e) {
 	switch (eventtype) {
@@ -49,8 +65,9 @@ public class BuildingButton extends GuiPanel {
 			Main.gui.infoMonthlyCosts.setVisible(true);
 			Main.gui.infoMonthlyCosts.setText(""+Buildings.getBuildingType(Main.currentBT).getMonthlycost());
 			Main.gui.infoMonthlyCosts.AutoSize();
+			AnimationManager.animateValue(image, AnimationValue.Y, 145f, 50,FinishedAction.RESET);
 			break;
-	case Mouseover:
+	case Mousein:
 			Main.gui.buildingTooltip.setVisible(true);
 			AnimationManager.animateValue(Main.gui.buildingTooltip, AnimationValue.OPACITY, 1f, 200);
 			Main.gui.buildingTooltip.setY(e.getScreenY()+e.getHeight()-10);

@@ -12,8 +12,8 @@ public class SolarPower extends Building {
 	}
 
 	@Override
-	public void updateUpgrades() {
-		super.updateUpgrades();
+	public void updateUpgrades(Upgrade changedupgrade) {
+		super.updateUpgrades(changedupgrade);
 		//SolarpowerPanel upgrade gives +30% supply
 		setProducedSupplyAmount((int) (Buildings.getBuildingType(this).getProducedSupplyAmount()*(getUpgrade(Upgrade.SolarpowerPanel)?1.3:1)));
 	}

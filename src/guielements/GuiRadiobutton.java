@@ -63,7 +63,7 @@ public class GuiRadiobutton extends GuiPanel {
 			}
 			setChecked(true);
 		}
-		if(eventtype==GuiEventType.Mouseover)bg.setColor(new Color(230,230,230));
+		if(eventtype==GuiEventType.Mousein)bg.setColor(new Color(230,230,230));
 		if(eventtype==GuiEventType.Mouseout)bg.setColor(Color.white);
 		super.callGuiEvents(eventtype);
 	}
