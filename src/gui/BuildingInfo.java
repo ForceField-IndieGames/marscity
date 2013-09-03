@@ -58,7 +58,6 @@ public class BuildingInfo extends GuiPanel {
 		supplyneed.setTextColor(Color.red);
 		add(supplyneed);
 		description = new GuiLabel(10,114,232,74,(Color)null);
-		description.setCentered(true);
 		description.setText("Description");
 		add(description);
 		description2 = new GuiLabel(10,10,232,104,(Color)null);
@@ -89,7 +88,7 @@ public class BuildingInfo extends GuiPanel {
 				}
 			}
 		}
-		AnimationManager.animateValue(this, AnimationValue.OPACITY, 1, 200);
+		AnimationManager.animateValue(this, AnimationValue.OPACITY, 0.9f, 200);
 		setX(Display.getWidth()/2-336);
 		AnimationManager.animateValue(this, AnimationValue.X, Display.getWidth()/2-286, 200);
 		title.setText(Buildings.getBuildingTypeName(building.getBuildingType()));

@@ -41,6 +41,12 @@ public class Grid {
 		}
 	}
 	
+	public static int getCellBT(int x, int y)
+	{
+		if(getCell(x, y)!=null)return getCell(x, y).getBuildingType();
+		return -1;
+	}
+	
 	public static void setBuilding(int x, int y, Building building)
 	{
 		int width = Buildings.getBuildingType(building.getBuildingType()).getWidth();

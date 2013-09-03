@@ -73,6 +73,7 @@ public class GuiUpgrade extends GuiPanel {
 						g.getBuilding().setUpgrade(g.getUpgrade(), true);
 						g.getBuilding().updateUpgrades(g.getUpgrade());
 						AnimationManager.animateValue(g, AnimationValue.Y, g.getY()+20, 100,FinishedAction.REVERSE);
+						ResourceManager.playSound(ResourceManager.SOUND_UPGRADE);
 						Buildings.refreshSupply();
 					}
 				}	

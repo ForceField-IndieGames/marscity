@@ -82,36 +82,46 @@ public class ResourceManager {
 	public static final String shaderpath = "/res/shader/";
 	
 	//The objects (Actually loads and pares a file and generates displaylists for each LOD model)
-	public final static int[] OBJECT_HOUSE = addObject("house");
-	public final static int[] OBJECT_TERRAIN = addObject("terrain");
-	public final static int[] OBJECT_SKYBOX = addObject("skybox");
-	public final static int[] OBJECT_BIGHOUSE = addObject("bighouse");
-	public final static int[] OBJECT_STREET = addObject("streetsegment");
-	public final static int[] OBJECT_GRIDCELL = addObject("gridcell");
-	public final static int[] OBJECT_PLACEHOLDER = addObject("placeholder");
-	public final static int[] OBJECT_CITYCENTER = addObject("citycenter");
-	public final static int[] OBJECT_RESEARCHSTATION = addObject("researchstation");
-	public final static int[] OBJECT_HANGAR = addObject("hangar");
-	public final static int[] OBJECT_BANK = addObject("bank");
-	public final static int[] OBJECT_MEDICALCENTER = addObject("medicalcenter");
-	public final static int[] OBJECT_SERVERCENTER = addObject("servercenter");
-	public final static int[] OBJECT_GARBAGEYARD = addObject("garbageyard");
-	public final static int[] OBJECT_POLICE = addObject("police");
-	public final static int[] OBJECT_SOLARPOWER = addObject("solarpower");
-	public final static int[] OBJECT_FUSIONPOWER = addObject("fusionpower");
-	public final static int[] OBJECT_SHIELD = addObject("shield");
-	public final static int[] OBJECT_MEDICALCENTERROOMS = addObject("medicalcenterrooms");
+	public final static int[] OBJECT_HOUSE                 = addObject("house");
+	public final static int[] OBJECT_TERRAIN               = addObject("terrain");
+	public final static int[] OBJECT_SKYBOX                = addObject("skybox");
+	public final static int[] OBJECT_BIGHOUSE              = addObject("bighouse");
+	public final static int[] OBJECT_STREET                = addObject("streetsegment");
+	public final static int[] OBJECT_GRIDCELL              = addObject("gridcell");
+	public final static int[] OBJECT_PLACEHOLDER           = addObject("placeholder");
+	public final static int[] OBJECT_CITYCENTER            = addObject("citycenter");
+	public final static int[] OBJECT_RESEARCHSTATION       = addObject("researchstation");
+	public final static int[] OBJECT_HANGAR                = addObject("hangar");
+	public final static int[] OBJECT_BANK                  = addObject("bank");
+	public final static int[] OBJECT_MEDICALCENTER         = addObject("medicalcenter");
+	public final static int[] OBJECT_SERVERCENTER          = addObject("servercenter");
+	public final static int[] OBJECT_GARBAGEYARD           = addObject("garbageyard");
+	public final static int[] OBJECT_POLICE                = addObject("police");
+	public final static int[] OBJECT_SOLARPOWER            = addObject("solarpower");
+	public final static int[] OBJECT_FUSIONPOWER           = addObject("fusionpower");
+	public final static int[] OBJECT_SHIELD                = addObject("shield");
+	public final static int[] OBJECT_MEDICALCENTERROOMS    = addObject("medicalcenterrooms");
+	public final static int[] OBJECT_MEDICALCENTERVEHICLES = addObject("medicalcentervehicles");
+	public final static int[] OBJECT_SERVERCENTERSERVERS   = addObject("servercenterservers");
+	public final static int[] OBJECT_SOLARPOWERPANELS      = addObject("solarpowerpanels");
 	
 	//The audio files
-	public final static Audio SOUND_DROP = addSound("WAV", "drop.wav");
+	public final static Audio SOUND_DROP    = addSound("WAV", "drop.wav");
 	public final static Audio SOUND_DESTROY = addSound("WAV", "destroy.wav");
-	public final static Audio SOUND_SELECT = addSound("WAV", "select.wav");
+	public final static Audio SOUND_SELECT  = addSound("WAV", "select.wav");
 	public final static Audio SOUND_AMBIENT = addSound("WAV", "ambient.wav");
+	public final static Audio SOUND_UPGRADE = addSound("WAV", "upgrade.wav");
 	
 	//Loads the textures
 	public final static EntityTexture TEXTURE_SKYBOX            = addEntityTexture("skybox");
 	public final static EntityTexture TEXTURE_TERRAIN           = addEntityTexture("terrain");
 	public final static EntityTexture TEXTURE_STREET            = addEntityTexture("street");
+	public final static EntityTexture TEXTURE_STREETDEFAULT     = addEntityTexture("streetdefault");
+	public final static EntityTexture TEXTURE_STREETSTRAIGHT    = addEntityTexture("streetstraight");
+	public final static EntityTexture TEXTURE_STREETTCROSSING   = addEntityTexture("streettcrossing");
+	public final static EntityTexture TEXTURE_STREETCROSSING    = addEntityTexture("streetcrossing");
+	public final static EntityTexture TEXTURE_STREETCURVE       = addEntityTexture("streetcurve");
+	public final static EntityTexture TEXTURE_STREETEND         = addEntityTexture("streetend");
 	public final static EntityTexture TEXTURE_HOUSE             = addEntityTexture("house");
 	public final static EntityTexture TEXTURE_BIGHOUSE          = addEntityTexture("bighouse");
 	public final static EntityTexture TEXTURE_CITYCENTER        = addEntityTexture("citycenter");
@@ -127,19 +137,25 @@ public class ResourceManager {
 	public final static EntityTexture TEXTURE_FUSIONPOWER       = addEntityTexture("fusionpower");
 	public final static EntityTexture TEXTURE_SHIELD            = addEntityTexture("shield");
 	public final static EntityTexture TEXTURE_MEDICALCENTERROOMS= addEntityTexture("medicalcenterrooms");
+	public final static EntityTexture TEXTURE_MEDICALCENTERVEHICLES= addEntityTexture("medicalcentervehicles");
 	
-	public final static Texture TEXTURE_GUITHUMBSTREET          = addTexture("gui/thumbstreet.png");
-	public final static Texture TEXTURE_GUITHUMBHOUSE           = addTexture("gui/thumbhouse.png");
-	public final static Texture TEXTURE_GUITHUMBBIGHOUSE        = addTexture("gui/thumbbighouse.png");
-	public final static Texture TEXTURE_GUITHUMBMEDICALCENTER   = addTexture("gui/thumbmedicalcenter.png");
-	public final static Texture TEXTURE_GUITHUMBSERVERCENTER    = addTexture("gui/thumbservercenter.png");
-	public final static Texture TEXTURE_GUITHUMBGARBAGEYARD     = addTexture("gui/thumbgarbageyard.png");
-	public final static Texture TEXTURE_GUITHUMBBANK            = addTexture("gui/thumbbank.png");
-	public final static Texture TEXTURE_GUITHUMBRESEARCHSTATION = addTexture("gui/thumbresearchstation.png");
-	public final static Texture TEXTURE_GUITHUMBSOLARPOWER      = addTexture("gui/thumbsolarpower.png");
-	public final static Texture TEXTURE_GUITHUMBFUSIONPOWER     = addTexture("gui/thumbfusionpower.png");
-	public final static Texture TEXTURE_GUITHUMBHANGAR          = addTexture("gui/thumbhangar.png");
-	public final static Texture TEXTURE_GUITHUMBMEDICALCENTERROOMS= addTexture("gui/thumbmedicalcenterrooms.png");
+	public final static Texture TEXTURE_GUITHUMBSTREET               = addTexture("gui/thumbstreet.png");
+	public final static Texture TEXTURE_GUITHUMBHOUSE                = addTexture("gui/thumbhouse.png");
+	public final static Texture TEXTURE_GUITHUMBBIGHOUSE             = addTexture("gui/thumbbighouse.png");
+	public final static Texture TEXTURE_GUITHUMBMEDICALCENTER        = addTexture("gui/thumbmedicalcenter.png");
+	public final static Texture TEXTURE_GUITHUMBSERVERCENTER         = addTexture("gui/thumbservercenter.png");
+	public final static Texture TEXTURE_GUITHUMBGARBAGEYARD          = addTexture("gui/thumbgarbageyard.png");
+	public final static Texture TEXTURE_GUITHUMBBANK                 = addTexture("gui/thumbbank.png");
+	public final static Texture TEXTURE_GUITHUMBRESEARCHSTATION      = addTexture("gui/thumbresearchstation.png");
+	public final static Texture TEXTURE_GUITHUMBSOLARPOWER           = addTexture("gui/thumbsolarpower.png");
+	public final static Texture TEXTURE_GUITHUMBFUSIONPOWER          = addTexture("gui/thumbfusionpower.png");
+	public final static Texture TEXTURE_GUITHUMBHANGAR               = addTexture("gui/thumbhangar.png");
+	public final static Texture TEXTURE_GUITHUMBMEDICALCENTERROOMS   = addTexture("gui/thumbmedicalcenterrooms.png");
+	public final static Texture TEXTURE_GUITHUMBMEDICALCENTERVEHICLES= addTexture("gui/thumbmedicalcentervehicles.png");
+	public final static Texture TEXTURE_GUITHUMBSERVERCENTERSERVERS  = addTexture("gui/thumbservercenterservers.png");
+	public final static Texture TEXTURE_GUITHUMBCITYCENTERSHIELD     = addTexture("gui/thumbcitycentershield.png");
+	public final static Texture TEXTURE_GUITHUMBSOLARPOWERPANELS     = addTexture("gui/thumbsolarpowerpanels.png");
+	public final static Texture TEXTURE_GUITHUMBSOLARPOWERCOATING    = addTexture("gui/thumbsolarpowercoating.png");
 	
 	public final static Texture TEXTURE_ICON16                  = addTexture("gui/icon16.png");
 	public final static Texture TEXTURE_ICON32                  = addTexture("gui/icon32.png");
@@ -216,8 +232,8 @@ public class ResourceManager {
 	{
 		
 		//Set up the shader
-		Main.splashscreen.setInfo("Loading shader...");
-		setupShader("shader.v","shader.f");
+		//Main.splashscreen.setInfo("Loading shader...");
+		//setupShader("shader.v","shader.f");
 		
 		//Load and parse the Language file
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -314,6 +330,7 @@ public class ResourceManager {
  	public static HashMap<String,String> addLangFile(String path) throws IOException
  	{
  		Main.splashscreen.setInfo("Loading language file: "+path);
+ 		Main.log("Loading language file: "+path);
  		HashMap<String,String> hm = new HashMap<String,String>();
  		BufferedReader reader=null;
  		try {
@@ -446,7 +463,7 @@ public class ResourceManager {
 	 */
 	public static EntityTexture addEntityTexture(String path)
 	{
-		path = texturespath + "/objects/"+ path + "/" + path;
+		path = texturespath + "objects/"+ path + "/" + path;
 		Main.log("Loading texture: "+path);
 		Main.splashscreen.setInfo("Loading texture: "+path);
 		EntityTexture tex = new EntityTexture();
@@ -499,7 +516,6 @@ public class ResourceManager {
 	public static String replacePlaceholders(String input, String...replace)
 	{
 		String output=input;
-		System.out.println("replace.length="+replace.length+", input="+input);
 		for(int i=0;i<replace.length;i++)
 		{
 			output = output.replaceAll("%"+(i+1)+"%", replace[i]);

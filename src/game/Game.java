@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 
 import objects.Building;
 import objects.Buildings;
+import objects.Streets;
 
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
@@ -127,6 +128,7 @@ public class Game {
 		Main.gui.cityName.setText(Main.cityname);
 		Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_CITYLOADED"), ResourceManager.getString("MSGBOX_TEXT_CITYLOADED").replaceAll(ResourceManager.PLACEHOLDER1, ResourceManager.pathToCityname(path)));
 		Buildings.refreshSupply();
+		Streets.updateSegments();
 	}
 	
 	public static void newGame()

@@ -25,12 +25,23 @@ public class MedicalCenter extends Building {
 		//MedicalcenterVehicles upgrade gives +40% range
 		setProducedSupplyRadius((int) (Buildings.getBuildingType(this).getProducedSupplyRadius()*(getUpgrade(Upgrade.MedicalcenterVehicles)?1.4:1)));
 		//Add upgrade models
+		getChildren().clear();
+		Entity rooms = new Entity(ResourceManager.OBJECT_MEDICALCENTERROOMS,ResourceManager.TEXTURE_MEDICALCENTERROOMS,0,0,0);
+		Entity vehicles = new Entity(ResourceManager.OBJECT_MEDICALCENTERVEHICLES,ResourceManager.TEXTURE_MEDICALCENTERVEHICLES,0,0,0);
+		if(getUpgrade(Upgrade.MedicalcenterRooms))addChild(rooms);
+		if(getUpgrade(Upgrade.MedicalcenterVehicles))addChild(vehicles);
+		
 		if(changedupgrade==Upgrade.MedicalcenterRooms){
-			Entity ent = new Entity(ResourceManager.OBJECT_MEDICALCENTERROOMS,ResourceManager.TEXTURE_MEDICALCENTERROOMS,0,2,0);
-			AnimationManager.animateValue(ent, AnimationValue.Y, 0, 100);
+			rooms.setY(-1);
+			AnimationManager.animateValue(rooms, AnimationValue.Y, 0, 500);
 			ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
 			ParticleEffects.dustEffect(getX(), 0, getZ());
-			addChild(ent);
+		}
+		if(changedupgrade==Upgrade.MedicalcenterVehicles){
+			vehicles.setY(-1);
+			AnimationManager.animateValue(vehicles, AnimationValue.Y, 0, 500);
+			ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
+			ParticleEffects.dustEffect(getX(), 0, getZ());
 		}
 		
 	}

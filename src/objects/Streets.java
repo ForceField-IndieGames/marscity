@@ -177,6 +177,121 @@ public class Streets {
 		Main.gui.infoBuildingCosts.AutoSize();
 		Main.gui.infoMonthlyCosts.setText(""+Buildings.getBuildingType(Buildings.BUILDINGTYPE_STREET).getMonthlycost());
 		Main.gui.infoMonthlyCosts.AutoSize();
+		updateSegments();
+	}
+	
+	/**
+	 * Updates the segments textures to match patterns like curves
+	 */
+	public static void updateSegments()
+	{
+		for(int i=0;i<Buildings.buildings.size();i++)
+		{
+			Building b = Buildings.buildings.get(i);
+			if(b.getBuildingType()==Buildings.BUILDINGTYPE_STREET)
+			{
+				int x = (int) b.getX();
+				int z = (int) b.getZ();
+				int bts = Buildings.BUILDINGTYPE_STREET;
+				//Check for patterns and update the textures
+				if(Grid.getCellBT(x-1, z)==bts&&Grid.getCellBT(x+1, z)!=bts
+						&&Grid.getCellBT(x, z-1)!=bts&&Grid.getCellBT(x, z+1)!=bts)
+				{
+					//End right
+					b.setRotY(0);
+					b.setTexture(ResourceManager.TEXTURE_STREETEND);
+				}else if(Grid.getCellBT(x-1, z)!=bts&&Grid.getCellBT(x+1, z)==bts
+						&&Grid.getCellBT(x, z-1)!=bts&&Grid.getCellBT(x, z+1)!=bts)
+				{
+					//End left
+					b.setRotY(180);
+					b.setTexture(ResourceManager.TEXTURE_STREETEND);
+				}else if(Grid.getCellBT(x+1, z)!=bts&&Grid.getCellBT(x-1, z)!=bts
+						&&Grid.getCellBT(x, z-1)==bts&&Grid.getCellBT(x, z+1)!=bts)
+				{
+					//End front
+					b.setRotY(270);
+					b.setTexture(ResourceManager.TEXTURE_STREETEND);
+				}else if(Grid.getCellBT(x+1, z)!=bts&&Grid.getCellBT(x-1, z)!=bts
+						&&Grid.getCellBT(x, z-1)!=bts&&Grid.getCellBT(x, z+1)==bts)
+				{
+					//End back
+					b.setRotY(90);
+					b.setTexture(ResourceManager.TEXTURE_STREETEND);
+				}else if(Grid.getCellBT(x+1, z)==bts&&Grid.getCellBT(x-1, z)==bts
+						&&Grid.getCellBT(x, z-1)!=bts&&Grid.getCellBT(x, z+1)!=bts)
+				{
+					//Straight left-right
+					b.setRotY(0);
+					b.setTexture(ResourceManager.TEXTURE_STREETSTRAIGHT);
+				}else if(Grid.getCellBT(x+1, z)!=bts&&Grid.getCellBT(x-1, z)!=bts
+						&&Grid.getCellBT(x, z-1)==bts&&Grid.getCellBT(x, z+1)==bts)
+				{
+					//Straight front-back
+					b.setRotY(90);
+					b.setTexture(ResourceManager.TEXTURE_STREETSTRAIGHT);
+				}else if(Grid.getCellBT(x+1, z)==bts&&Grid.getCellBT(x-1, z)!=bts
+						&&Grid.getCellBT(x, z-1)!=bts&&Grid.getCellBT(x, z+1)==bts)
+				{
+					//Curve left-back
+					b.setRotY(180);
+					b.setTexture(ResourceManager.TEXTURE_STREETCURVE);
+				}else if(Grid.getCellBT(x+1, z)!=bts&&Grid.getCellBT(x-1, z)==bts
+						&&Grid.getCellBT(x, z-1)!=bts&&Grid.getCellBT(x, z+1)==bts)
+				{
+					//Curve back-right
+					b.setRotY(90);
+					b.setTexture(ResourceManager.TEXTURE_STREETCURVE);
+				}else if(Grid.getCellBT(x+1, z)!=bts&&Grid.getCellBT(x-1, z)==bts
+						&&Grid.getCellBT(x, z-1)==bts&&Grid.getCellBT(x, z+1)!=bts)
+				{
+					//Curve right-front
+					b.setRotY(0);
+					b.setTexture(ResourceManager.TEXTURE_STREETCURVE);
+				}else if(Grid.getCellBT(x+1, z)==bts&&Grid.getCellBT(x-1, z)!=bts
+						&&Grid.getCellBT(x, z-1)==bts&&Grid.getCellBT(x, z+1)!=bts)
+				{
+					//Curve front-left
+					b.setRotY(270);
+					b.setTexture(ResourceManager.TEXTURE_STREETCURVE);
+				}else if(Grid.getCellBT(x+1, z)==bts&&Grid.getCellBT(x-1, z)==bts
+						&&Grid.getCellBT(x, z-1)==bts&&Grid.getCellBT(x, z+1)==bts)
+				{
+					//crossing
+					b.setRotY(0);
+					b.setTexture(ResourceManager.TEXTURE_STREETCROSSING);
+				}else if(Grid.getCellBT(x+1, z)==bts&&Grid.getCellBT(x-1, z)==bts
+						&&Grid.getCellBT(x, z-1)==bts&&Grid.getCellBT(x, z+1)!=bts)
+				{
+					//crossing left-front-right
+					b.setRotY(180);
+					b.setTexture(ResourceManager.TEXTURE_STREETTCROSSING);
+				}else if(Grid.getCellBT(x+1, z)!=bts&&Grid.getCellBT(x-1, z)==bts
+						&&Grid.getCellBT(x, z-1)==bts&&Grid.getCellBT(x, z+1)==bts)
+				{
+					//crossing back-right-front
+					b.setRotY(270);
+					b.setTexture(ResourceManager.TEXTURE_STREETTCROSSING);
+				}else if(Grid.getCellBT(x+1, z)==bts&&Grid.getCellBT(x-1, z)==bts
+						&&Grid.getCellBT(x, z-1)!=bts&&Grid.getCellBT(x, z+1)==bts)
+				{
+					//crossing left-back-right
+					b.setRotY(0);
+					b.setTexture(ResourceManager.TEXTURE_STREETTCROSSING);
+				}else if(Grid.getCellBT(x+1, z)==bts&&Grid.getCellBT(x-1, z)!=bts
+						&&Grid.getCellBT(x, z-1)==bts&&Grid.getCellBT(x, z+1)==bts)
+				{
+					//crossing left-back-front
+					b.setRotY(90);
+					b.setTexture(ResourceManager.TEXTURE_STREETTCROSSING);
+				}else
+				{
+					//default
+					b.setRotY(0);
+					b.setTexture(ResourceManager.TEXTURE_STREETDEFAULT);
+				}
+			}
+		}
 	}
 	
 	/**
@@ -222,6 +337,7 @@ public class Streets {
 			}
 		}
 		ResourceManager.playSoundRandom(ResourceManager.SOUND_DESTROY);
+		updateSegments();
 	}
 
 	public static int getStartposx() {

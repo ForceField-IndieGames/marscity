@@ -99,7 +99,7 @@ class splashScreen extends JFrame implements Runnable{
 
 	public void setInfo(String text)
 	{
-		int percent = Math.round(loadeditems/123f*100);
+		int percent = Math.round(loadeditems/143f*100);
 		if(percent>100)percent=100;
 		label2.setText(percent+"% "+text);
 		progress.setValue(percent);
@@ -216,9 +216,6 @@ public class Main {
 		list[0] = ByteBuffer.wrap(ResourceManager.TEXTURE_ICON16.getTextureData());
 		list[1] =  ByteBuffer.wrap(ResourceManager.TEXTURE_ICON32.getTextureData());
 		Display.setIcon(list);
-		
-		//Delete the log file
-		try {(new File("mars city.log")).delete();} catch (Exception e) {}
 		
 		System.out.println("Mars City started...");
 		log("Mars City started...");
@@ -791,6 +788,7 @@ public class Main {
        // glUseProgram(ResourceManager.shaderProgram);
        
         //Draw the buidings
+        glEnable(GL_COLOR_MATERIAL);
         for(int i=0;i<Buildings.buildings.size();i++){
         	if(i==hoveredEntity&&!Mouse.isGrabbed()&&selectedTool!=TOOL_ADD){
         		if(selectedTool==TOOL_DELETE)glColor3f(1f, 0f, 0f);
@@ -813,7 +811,7 @@ public class Main {
 			Buildings.buildings.get(i).draw();
 			glEnable(GL_LIGHTING);
 			glEnable(GL_TEXTURE_2D);
-			glDisable(GL_COLOR_MATERIAL);
+			
 		}
         
         //glUseProgram(0);
@@ -976,6 +974,8 @@ public class Main {
 	}
 
 	public static void main(String[] argv) throws FileNotFoundException {
+		//Delete the log file
+		try {(new File("mars city.log")).delete();} catch (Exception e) {}
 		Main MarsCity = new Main();
 		splashscreen = new splashScreen();
 		MarsCity.start();

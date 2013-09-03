@@ -265,7 +265,7 @@ public class BuildPreview extends Entity {
 			}
 			
 			//Draw producesSupplyRadius of other buildings that produce the same supply
-			if(getBt().getProducedSupplyAmount()>0)
+			if(getBt().getProducedSupplyAmount()>0&&getBt().getProducedSupplyRadius()>0)
 			{
 				glDisable(GL_DEPTH_TEST);
 				glEnable(GL_TEXTURE_2D);
