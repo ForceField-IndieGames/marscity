@@ -20,6 +20,8 @@ Loading object: medicalcenterrooms
 Loading object: medicalcentervehicles
 Loading object: servercenterservers
 Loading object: solarpowerpanels
+Loading object: garbageyardburner
+Loading object: garbageyardvehicles
 Loading sound: /res/sounds/drop.wav
 Loading sound: /res/sounds/destroy.wav
 Loading sound: /res/sounds/select.wav
@@ -27,7 +29,6 @@ Loading sound: /res/sounds/ambient.wav
 Loading sound: /res/sounds/upgrade.wav
 Loading texture: /res/textures/objects/skybox/skybox
 Loading texture: /res/textures/objects/terrain/terrain
-Loading texture: /res/textures/objects/street/street
 Loading texture: /res/textures/objects/streetdefault/streetdefault
 Loading texture: /res/textures/objects/streetstraight/streetstraight
 Loading texture: /res/textures/objects/streettcrossing/streettcrossing
@@ -49,7 +50,7 @@ Loading texture: /res/textures/objects/solarpower/solarpower
 Loading texture: /res/textures/objects/fusionpower/fusionpower
 Loading texture: /res/textures/objects/shield/shield
 Loading texture: /res/textures/objects/medicalcenterrooms/medicalcenterrooms
-Loading texture: /res/textures/objects/medicalcentervehicles/medicalcentervehicles
+Loading texture: /res/textures/objects/upgradevehicles/upgradevehicles
 Loading texture: /res/textures/gui/thumbstreet.png
 Loading texture: /res/textures/gui/thumbhouse.png
 Loading texture: /res/textures/gui/thumbbighouse.png
@@ -62,11 +63,12 @@ Loading texture: /res/textures/gui/thumbsolarpower.png
 Loading texture: /res/textures/gui/thumbfusionpower.png
 Loading texture: /res/textures/gui/thumbhangar.png
 Loading texture: /res/textures/gui/thumbmedicalcenterrooms.png
-Loading texture: /res/textures/gui/thumbmedicalcentervehicles.png
+Loading texture: /res/textures/gui/thumbupgradevehicles.png
 Loading texture: /res/textures/gui/thumbservercenterservers.png
 Loading texture: /res/textures/gui/thumbcitycentershield.png
 Loading texture: /res/textures/gui/thumbsolarpowerpanels.png
 Loading texture: /res/textures/gui/thumbsolarpowercoating.png
+Loading texture: /res/textures/gui/thumbgarbageyardburner.png
 Loading texture: /res/textures/gui/icon16.png
 Loading texture: /res/textures/gui/icon32.png
 Loading texture: /res/textures/gui/icon256.png

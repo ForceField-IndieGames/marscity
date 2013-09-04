@@ -255,7 +255,9 @@ public class Streets {
 					b.setRotY(270);
 					b.setTexture(ResourceManager.TEXTURE_STREETCURVE);
 				}else if(Grid.getCellBT(x+1, z)==bts&&Grid.getCellBT(x-1, z)==bts
-						&&Grid.getCellBT(x, z-1)==bts&&Grid.getCellBT(x, z+1)==bts)
+						&&Grid.getCellBT(x, z-1)==bts&&Grid.getCellBT(x, z+1)==bts
+						&&Grid.getCellBT(x+1, z+1)!=bts&&Grid.getCellBT(x+1, z-1)!=bts
+						&&Grid.getCellBT(x-1, z+1)!=bts&&Grid.getCellBT(x-1, z-1)!=bts)
 				{
 					//crossing
 					b.setRotY(0);

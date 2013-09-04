@@ -104,6 +104,8 @@ public class ResourceManager {
 	public final static int[] OBJECT_MEDICALCENTERVEHICLES = addObject("medicalcentervehicles");
 	public final static int[] OBJECT_SERVERCENTERSERVERS   = addObject("servercenterservers");
 	public final static int[] OBJECT_SOLARPOWERPANELS      = addObject("solarpowerpanels");
+	public final static int[] OBJECT_GARBAGEYARDBURNER     = addObject("garbageyardburner");
+	public final static int[] OBJECT_GARBAGEYARDVEHICLES   = addObject("garbageyardvehicles");
 	
 	//The audio files
 	public final static Audio SOUND_DROP    = addSound("WAV", "drop.wav");
@@ -115,7 +117,6 @@ public class ResourceManager {
 	//Loads the textures
 	public final static EntityTexture TEXTURE_SKYBOX            = addEntityTexture("skybox");
 	public final static EntityTexture TEXTURE_TERRAIN           = addEntityTexture("terrain");
-	public final static EntityTexture TEXTURE_STREET            = addEntityTexture("street");
 	public final static EntityTexture TEXTURE_STREETDEFAULT     = addEntityTexture("streetdefault");
 	public final static EntityTexture TEXTURE_STREETSTRAIGHT    = addEntityTexture("streetstraight");
 	public final static EntityTexture TEXTURE_STREETTCROSSING   = addEntityTexture("streettcrossing");
@@ -137,7 +138,7 @@ public class ResourceManager {
 	public final static EntityTexture TEXTURE_FUSIONPOWER       = addEntityTexture("fusionpower");
 	public final static EntityTexture TEXTURE_SHIELD            = addEntityTexture("shield");
 	public final static EntityTexture TEXTURE_MEDICALCENTERROOMS= addEntityTexture("medicalcenterrooms");
-	public final static EntityTexture TEXTURE_MEDICALCENTERVEHICLES= addEntityTexture("medicalcentervehicles");
+	public final static EntityTexture TEXTURE_UPGRADEVEHICLES   = addEntityTexture("upgradevehicles");
 	
 	public final static Texture TEXTURE_GUITHUMBSTREET               = addTexture("gui/thumbstreet.png");
 	public final static Texture TEXTURE_GUITHUMBHOUSE                = addTexture("gui/thumbhouse.png");
@@ -151,11 +152,12 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUITHUMBFUSIONPOWER          = addTexture("gui/thumbfusionpower.png");
 	public final static Texture TEXTURE_GUITHUMBHANGAR               = addTexture("gui/thumbhangar.png");
 	public final static Texture TEXTURE_GUITHUMBMEDICALCENTERROOMS   = addTexture("gui/thumbmedicalcenterrooms.png");
-	public final static Texture TEXTURE_GUITHUMBMEDICALCENTERVEHICLES= addTexture("gui/thumbmedicalcentervehicles.png");
+	public final static Texture TEXTURE_GUITHUMBUPGRADEVEHICLES      = addTexture("gui/thumbupgradevehicles.png");
 	public final static Texture TEXTURE_GUITHUMBSERVERCENTERSERVERS  = addTexture("gui/thumbservercenterservers.png");
 	public final static Texture TEXTURE_GUITHUMBCITYCENTERSHIELD     = addTexture("gui/thumbcitycentershield.png");
 	public final static Texture TEXTURE_GUITHUMBSOLARPOWERPANELS     = addTexture("gui/thumbsolarpowerpanels.png");
 	public final static Texture TEXTURE_GUITHUMBSOLARPOWERCOATING    = addTexture("gui/thumbsolarpowercoating.png");
+	public final static Texture TEXTURE_GUITHUMBGARBAGEYARDBURNER    = addTexture("gui/thumbgarbageyardburner.png");
 	
 	public final static Texture TEXTURE_ICON16                  = addTexture("gui/icon16.png");
 	public final static Texture TEXTURE_ICON32                  = addTexture("gui/icon32.png");

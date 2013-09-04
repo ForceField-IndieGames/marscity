@@ -27,7 +27,7 @@ public class MedicalCenter extends Building {
 		//Add upgrade models
 		getChildren().clear();
 		Entity rooms = new Entity(ResourceManager.OBJECT_MEDICALCENTERROOMS,ResourceManager.TEXTURE_MEDICALCENTERROOMS,0,0,0);
-		Entity vehicles = new Entity(ResourceManager.OBJECT_MEDICALCENTERVEHICLES,ResourceManager.TEXTURE_MEDICALCENTERVEHICLES,0,0,0);
+		Entity vehicles = new Entity(ResourceManager.OBJECT_MEDICALCENTERVEHICLES,ResourceManager.TEXTURE_UPGRADEVEHICLES,0,0,0);
 		if(getUpgrade(Upgrade.MedicalcenterRooms))addChild(rooms);
 		if(getUpgrade(Upgrade.MedicalcenterVehicles))addChild(vehicles);
 		
