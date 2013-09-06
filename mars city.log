@@ -139,5 +139,5 @@ Loading texture: /res/textures/gui/upgraded.png
 Mars City started...
 Created necessary folders.
 Loading XML: res/settings/settings.xml
-Loading language file: res/lang/DE.lang
+Loading language file: /res/lang/DE.lang
 Finished loading resources.

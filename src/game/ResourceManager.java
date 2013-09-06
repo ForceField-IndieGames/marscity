@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -251,13 +250,11 @@ public class ResourceManager {
 		Main.splashscreen.setInfo("Creating folders...");
 		if(!(new File("res")).exists()||Main.debugMode){
 			(new File("res")).mkdir();
-			(new File("res/lang")).mkdir();
 			
 			(new File("res/settings")).mkdir();
 			(new File("res/cities")).mkdir();
 			Main.log("Created necessary folders.");
 			try {
-				(new File("res/lang/DE.lang")).createNewFile();
 				(new File(FILE_SETTINGS)).createNewFile();
 				
 				//settings.xml
@@ -265,16 +262,6 @@ public class ResourceManager {
 				BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("res/settings/settings.xml"))));
 			
 				String line;
-				while((line=input.readLine())!=null){
-					output.write(line+System.lineSeparator());
-				}
-				input.close();
-				output.close();
-				
-				//DE.lang
-				input = new BufferedReader(new InputStreamReader(ResourceManager.class.getResourceAsStream("/res/lang/DE.lang")));
-				output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("res/lang/DE.lang"))));
-			
 				while((line=input.readLine())!=null){
 					output.write(line+System.lineSeparator());
 				}
@@ -289,7 +276,7 @@ public class ResourceManager {
 		Main.splashscreen.setInfo("Loading xml files...");
 		settingsFile = addXML("res/settings/settings.xml");
 		try {
-			strings = addLangFile("res/lang/DE.lang");
+			strings = addLangFile("/res/lang/"+getSetting("lang")+".lang");
 		} catch (IOException e) {}
 	}
 
@@ -336,7 +323,8 @@ public class ResourceManager {
  		HashMap<String,String> hm = new HashMap<String,String>();
  		BufferedReader reader=null;
  		try {
-			reader = new BufferedReader(new FileReader(new File(path)));
+ 			reader = new BufferedReader(new InputStreamReader(ResourceManager.class.getResourceAsStream(path)));
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			Game.exit();
@@ -626,7 +614,7 @@ public class ResourceManager {
 	 */
 	public static Building getObject(int index)
 	{
-		if(index==-1)return new Building(-1,0,0,0);
+		if(index==-1)return new Building(-1,0,0,0,0);
 		return Buildings.buildings.get(index);
 	}
 	

@@ -6,9 +6,9 @@ import objects.Upgrade;
 
 public class Police extends Building {
 
-	public Police(int bt, float x, float y, float z)
+	public Police(int bt, float x, float y, float z, float rY)
 	{
-		super(bt,x,y,z);
+		super(bt,x,y,z,rY);
 	}
 
 	@Override

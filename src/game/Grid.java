@@ -47,10 +47,19 @@ public class Grid {
 		return -1;
 	}
 	
-	public static void setBuilding(int x, int y, Building building)
+	public static void setBuilding(int x, int y, Building building, float rY)
 	{
-		int width = Buildings.getBuildingType(building.getBuildingType()).getWidth();
-		int height = Buildings.getBuildingType(building.getBuildingType()).getDepth();
+		int width;
+		int depth;
+		//Take rotation into account
+		if(rY!=0&&rY!=180){
+			width = Buildings.getBuildingType(building.getBuildingType()).getDepth();
+			depth = Buildings.getBuildingType(building.getBuildingType()).getWidth();
+		}else{
+			width = Buildings.getBuildingType(building.getBuildingType()).getWidth();
+			depth = Buildings.getBuildingType(building.getBuildingType()).getDepth();
+		}
+		
 		int x1;
 		int y1;
 		int x2;
@@ -62,12 +71,12 @@ public class Grid {
 			x1 = x - (int) Math.ceil(width/2-1);
 			x2 = x + (int) Math.floor(width/2);
 		}
-		if(height==1){
+		if(depth==1){
 			y1 = y;
 			y2 = y;
 		}else{
-			y1 = y -(int) Math.ceil(height/2-1);
-			y2 = y +(int) Math.floor(height/2);
+			y1 = y -(int) Math.ceil(depth/2-1);
+			y2 = y +(int) Math.floor(depth/2);
 		}
 		for(int i=y1+cellsY/2;i<=y2+cellsY/2;i++){
 			for(int j=x1+cellsX/2;j<=x2+cellsX/2;j++){
@@ -258,12 +267,20 @@ public class Grid {
 	 * @param y The y posiitno of the building's center
 	 * @param btarea The building type of the building
 	 * @param btsourround The buildingtype that is searched for
+	 * @param rY Y rotation
 	 * @return True, if the buildings type was found next to the building
 	 */
-	public static boolean buildingSurroundedWith(int x, int y, int btarea, int btsourround)
+	public static boolean buildingSurroundedWith(int x, int y, int btarea, int btsourround, float rY)
 	{
-		int width = Buildings.getBuildingType(btarea).getWidth();
-		int height = Buildings.getBuildingType(btarea).getDepth();
+		int width; 
+		int height;
+		if(rY!=0&&rY!=180){
+			width = Buildings.getBuildingType(btarea).getDepth();
+			height = Buildings.getBuildingType(btarea).getWidth();
+		}else{
+			width = Buildings.getBuildingType(btarea).getWidth();
+			height = Buildings.getBuildingType(btarea).getDepth();
+		}
 		int x1;
 		int y1;
 		if(width==1) x1 = x; else x1 = x - (int) Math.ceil(width/2-1);

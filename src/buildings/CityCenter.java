@@ -8,9 +8,9 @@ public class CityCenter extends Building {
 	
 	private int buildRadius=200;
 
-	public CityCenter(int bt, float x, float y, float z)
+	public CityCenter(int bt, float x, float y, float z, float rY)
 	{
-		super(bt,x,y,z);
+		super(bt,x,y,z,rY);
 		Main.BuildingCitycenter = this;
 	}
 	

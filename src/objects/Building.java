@@ -1,5 +1,11 @@
 package objects;
 
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glScalef;
+import static org.lwjgl.opengl.GL11.glTranslatef;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -8,6 +14,7 @@ import java.util.HashMap;
 import game.Grid;
 import game.Main;
 import game.MonthlyActions;
+import game.ResourceManager;
 import game.Supply;
 import animation.AnimationManager;
 import animation.AnimationValue;
@@ -22,7 +29,9 @@ import animation.FinishedAction;
 
 public class Building extends Entity {
 	
-	private float height = 0;
+	private float height = 1;
+	private float width = 1;
+	private float depth = 1;
 	private int buidlingType;
 	private int[] supply = new int[Supply.values().length];
 	private Supply producedSupply = null;
@@ -37,10 +46,18 @@ public class Building extends Entity {
 	private int monthlycost;
 	private HashMap<Upgrade,Boolean> upgrades = new HashMap<Upgrade,Boolean>();
 
-	public Building(int bt, float x, float y, float z)
+	public Building(int bt, float x, float y, float z, float rY)
 	{
 		super(Buildings.getBuildingType(bt).getDisplaylist(), Buildings.getBuildingType(bt).getTexture(),x,y,z);
 		height = Buildings.getBuildingType(bt).getHeight();
+		setRotY(rY);
+		if(getRotY()!=0&&getRotY()!=180){
+			width = Buildings.getBuildingType(bt).getDepth();
+			depth = Buildings.getBuildingType(bt).getWidth();
+		}else{
+			width = Buildings.getBuildingType(bt).getWidth();
+			depth = Buildings.getBuildingType(bt).getDepth();
+		}
 		this.buidlingType = bt;
 		this.setMonthlycost(Buildings.getBuildingType(this).getMonthlycost());
 		setProducedSupply(Buildings.getBuildingType(this).getProducedSupply());
@@ -168,6 +185,23 @@ public class Building extends Entity {
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void draw() {
+		if(!isVisible())return;
+		glPushMatrix();
+			glTranslatef(getX()-((getWidth()%2==1)?0.5f:0), getY(), getZ()-((getDepth()%2==1)?0.5f:0));
+			glScalef(getScaleX(), getScaleY(), getScaleZ());
+			glRotatef(getRotX(), 1, 0, 0);
+			glRotatef(getRotY(), 0, 1, 0);
+			glRotatef(getRotZ(), 0, 0, 1);
+			ResourceManager.drawEntity(this);
+			for(Entity e:getChildren())
+			{
+				e.draw();
+			}
+		glPopMatrix();
 	}
 	
 	/**
@@ -311,6 +345,22 @@ public class Building extends Entity {
 
 	public void setMonthlycost(int monthlycost) {
 		this.monthlycost = monthlycost;
+	}
+
+	public float getWidth() {
+		return width;
+	}
+
+	public void setWidth(float width) {
+		this.width = width;
+	}
+
+	public float getDepth() {
+		return depth;
+	}
+
+	public void setDepth(float depth) {
+		this.depth = depth;
 	}
 	
 }

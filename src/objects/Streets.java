@@ -140,7 +140,7 @@ public class Streets {
 			}else Main.money-=cost;
 			for(int i=startposy;i<=endposy;i++){
 				if(Grid.isAreaFree(startposx, i, 1, 1)){
-					Buildings.buildBuilding(startposx, 0, i, Buildings.BUILDINGTYPE_STREET);
+					Buildings.buildBuilding(startposx, 0, i, Buildings.BUILDINGTYPE_STREET, 0);
 				}
 			}
 		}else{
@@ -168,7 +168,7 @@ public class Streets {
 			}else Main.money-=cost;
 			for(int i=startposx;i<=endposx;i++){
 				if(Grid.isAreaFree(i, startposy, 1, 1)){
-					Buildings.buildBuilding(i, 0, startposy, Buildings.BUILDINGTYPE_STREET);
+					Buildings.buildBuilding(i, 0, startposy, Buildings.BUILDINGTYPE_STREET, 0);
 				}
 			}
 		}

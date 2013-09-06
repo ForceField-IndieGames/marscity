@@ -29,7 +29,6 @@ import objects.Building;
 import objects.Buildings;
 import objects.Entity;
 import objects.Streets;
-import objects.Terrain;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -167,10 +166,11 @@ public class Main {
 	public static String   clipboard     = "";                               //A local text clipboard
 	public static Timer    MonthlyTimer  = new Timer();                      //A timer for sheduling monthly acitons
 	public static DataView currentDataView = null;                           //The currently displayed DataView
+	public static float    buildRotation = 0;                                //The rotation of new buildings
 	
 	//Some more objects
 	public static Camera       camera       = new Camera();
-	       static Terrain      terrain; 
+	       static Entity       terrain; 
 	       static Entity       skybox;
 	public static GUI          gui;
 	public static BuildPreview buildpreview;
@@ -230,7 +230,7 @@ public class Main {
 		gui = new GUI(); //Create the GUI
 		buildpreview = new BuildPreview(); //Create the Building Preview
 		skybox = new Entity(ResourceManager.OBJECT_SKYBOX, ResourceManager.TEXTURE_SKYBOX);
-		terrain = new Terrain(0,0,0);//create the terrain
+		terrain = new Entity(ResourceManager.OBJECT_TERRAIN,ResourceManager.TEXTURE_TERRAIN);//create the terrain
 		shield = new Entity(ResourceManager.OBJECT_SHIELD,ResourceManager.TEXTURE_SHIELD);
 			shield.setOpacity(0.3f);
 			shield.setScaleX(200);
@@ -357,9 +357,9 @@ public class Main {
         glReadPixels(Mouse.getX(), Mouse.getY(), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, mouseZ);
         gluUnProject(Mouse.getX(), Mouse.getY(), mouseZ.get(0), mv, p,  vp,  result);
         
-        mousepos3d[0] = result.get(0);
+        mousepos3d[0] = result.get(0)+0.5f;
         mousepos3d[1] = result.get(1);
-        mousepos3d[2] = result.get(2);
+        mousepos3d[2] = result.get(2)+0.5f;
 	}
 	
 	/**
@@ -443,6 +443,19 @@ public class Main {
 							gui.pauseMenu.setVisible(true);
 							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.OPACITY, 1, 0.005f);
 						}
+					}
+					//Rotate Buildings in buildmode with , and .
+					if(Keyboard.getEventKey()==Keyboard.KEY_COMMA && Keyboard.getEventKeyState())
+					{
+						buildRotation+=90;
+						buildRotation%=360;
+						if(buildRotation<0)buildRotation+=360;
+					}
+					if(Keyboard.getEventKey()==Keyboard.KEY_PERIOD && Keyboard.getEventKeyState())
+					{
+						buildRotation-=90;
+						buildRotation%=360;
+						if(buildRotation<0)buildRotation+=360;
 					}
 					//Activate and deactivate debug mode with TAB
 					if(Keyboard.getEventKey()==Keyboard.KEY_TAB&&Keyboard.getEventKeyState()){
@@ -606,10 +619,19 @@ public class Main {
 							break;
 						}
 						//Build a building
+						int buildwidth;
+						int builddepth;
+						if(buildRotation!=0&&buildRotation!=180)
+						{
+							buildwidth = Buildings.getBuildingType(currentBT).getDepth();
+							builddepth = Buildings.getBuildingType(currentBT).getWidth();
+						}else{
+							buildwidth = Buildings.getBuildingType(currentBT).getWidth();
+							builddepth = Buildings.getBuildingType(currentBT).getDepth();
+						}
 						if (!Grid.isAreaFree((int) Math.round(mousepos3d[0]),
 								(int) Math.round(mousepos3d[2]), 
-								Buildings.getBuildingType(currentBT).getWidth(),
-								Buildings.getBuildingType(currentBT).getDepth())){
+								buildwidth,builddepth)){
 							gui.showToolTip(ResourceManager.getString("FEEDBACK_OVERLAPPING"));
 							break;
 						}
@@ -617,7 +639,7 @@ public class Main {
 							gui.showToolTip(ResourceManager.getString("FEEDBACK_NOTENOUGHMONEY"));
 							break;
 						}
-						if (!Grid.buildingSurroundedWith((int) Math.round(mousepos3d[0]), (int) Math.round(mousepos3d[2]), currentBT, Buildings.BUILDINGTYPE_STREET)){
+						if (!Grid.buildingSurroundedWith((int) Math.round(mousepos3d[0]), (int) Math.round(mousepos3d[2]), currentBT, Buildings.BUILDINGTYPE_STREET,buildRotation)){
 							gui.showToolTip(ResourceManager.getString("FEEDBACK_NOSTREET"));
 							break;
 						}
@@ -626,7 +648,7 @@ public class Main {
 							break;
 						}
 						ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
-						Building b = Buildings.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBT);
+						Building b = Buildings.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBT, buildRotation);
 						money -= Buildings.getBuildingType(currentBT).getBuidlingcost();
 						ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
 						camera.setY(0);

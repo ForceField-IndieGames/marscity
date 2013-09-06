@@ -21,8 +21,8 @@ public class House extends Building {
 	
 	private static final int CITIZENSPERMONTH = 5;
 	
-	public House(int bt, float x, float y, float z) {
-		super(bt,x,y,z);
+	public House(int bt, float x, float y, float z, float rY) {
+		super(bt,x,y,z,rY);
 		setHasHappiness(true);
 	}
 	

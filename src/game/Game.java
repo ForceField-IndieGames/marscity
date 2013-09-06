@@ -66,6 +66,7 @@ public class Game {
 				o.writeShort((short) b.getX());
 				o.writeShort((short) b.getZ());
 				o.writeShort(b.getBuildingType());
+				o.writeShort((short)b.getRotY());
 				b.saveToStream(o);
 			}
 			o.close();
@@ -108,7 +109,7 @@ public class Game {
 					Main.camera.setRotY(i.readShort());
 					int count = i.readInt();
 					for(int j=0;j<count;j++){
-						(Buildings.buildBuilding(i.readShort(), 0, i.readShort(), i.readShort())).loadFromStream(i);
+						(Buildings.buildBuilding(i.readShort(), 0, i.readShort(), i.readShort(), i.readShort())).loadFromStream(i);
 					}
 					break;
 				default:
@@ -135,7 +136,7 @@ public class Game {
 	{
 		Grid.init();
 		Buildings.buildings = new ArrayList<Building>();
-		Buildings.buildBuilding(0, 0, 0, Buildings.BUILDINGTYPE_CITYCENTER);
+		Buildings.buildBuilding(0, 0, 0, Buildings.BUILDINGTYPE_CITYCENTER, 0);
 		Main.money = INITIALMONEY;
 		Main.taxes = INITIALTAXES;
 		Main.citizens = 0;

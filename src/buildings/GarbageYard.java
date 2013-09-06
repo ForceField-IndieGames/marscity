@@ -11,9 +11,9 @@ import objects.Upgrade;
 
 public class GarbageYard extends Building {
 
-	public GarbageYard(int bt, float x, float y, float z)
+	public GarbageYard(int bt, float x, float y, float z, float rY)
 	{
-		super(bt,x,y,z);
+		super(bt,x,y,z,rY);
 	}
 
 	@Override

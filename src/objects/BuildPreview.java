@@ -139,15 +139,30 @@ public class BuildPreview extends Entity {
 		} catch (Exception e) {}
 			
 		
+		float width,depth;
+		
 		if(!isVisible()||!show)return;
 		glPushMatrix();
 			//Draw grid
 			glDisable(GL_TEXTURE_2D);
 			glDisable(GL_DEPTH_TEST);
-			int x1 = (int) (getX() - (int) Math.ceil(Buildings.getBuildingType(getBuildingType()).getWidth()/2-1));
-			int x2 = (int) (getX() + (int) Math.floor(Buildings.getBuildingType(getBuildingType()).getWidth()/2));
-			int z1 = (int) (getZ() -(int) Math.ceil(Buildings.getBuildingType(getBuildingType()).getDepth()/2-1));
-			int z2 = (int) (getZ() +(int) Math.floor(Buildings.getBuildingType(getBuildingType()).getDepth()/2));
+			int x1,x2,z1,z2;
+			if(Main.buildRotation!=0&&Main.buildRotation!=180){
+				x1 = (int) (getX() - (int) Math.ceil(Buildings.getBuildingType(getBuildingType()).getDepth()/2-1));
+				x2 = (int) (getX() + (int) Math.floor(Buildings.getBuildingType(getBuildingType()).getDepth()/2));
+				z1 = (int) (getZ() -(int) Math.ceil(Buildings.getBuildingType(getBuildingType()).getWidth()/2-1));
+				z2 = (int) (getZ() +(int) Math.floor(Buildings.getBuildingType(getBuildingType()).getWidth()/2));
+				width = Buildings.getBuildingType(getBuildingType()).getDepth();
+				depth = Buildings.getBuildingType(getBuildingType()).getWidth();
+			}else{
+				x1 = (int) (getX() - (int) Math.ceil(Buildings.getBuildingType(getBuildingType()).getWidth()/2-1));
+				x2 = (int) (getX() + (int) Math.floor(Buildings.getBuildingType(getBuildingType()).getWidth()/2));
+				z1 = (int) (getZ() -(int) Math.ceil(Buildings.getBuildingType(getBuildingType()).getDepth()/2-1));
+				z2 = (int) (getZ() +(int) Math.floor(Buildings.getBuildingType(getBuildingType()).getDepth()/2));
+				width = Buildings.getBuildingType(getBuildingType()).getWidth();
+				depth = Buildings.getBuildingType(getBuildingType()).getDepth();
+			}
+			
 			float alpha=1;
 			for(int z=z1-radius;z<=z2+radius;z++){
 				for(int x=x1-radius;x<=x2+radius;x++){
@@ -244,7 +259,7 @@ public class BuildPreview extends Entity {
 				glTranslatef(getX(), 0.01f, getZ());
 				float r = (radius<getBt().getHappinessRadius())?radius:getBt().getHappinessRadius();
 				glScalef(2*r, 1, 2*r);
-				glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+				glCallList(ResourceManager.OBJECT_STREET[0]);
 				glScalef(0.5f/r, 1, 0.5f/r);
 				glTranslatef(-getX(), 0.01f, -getZ());
 			}
@@ -259,7 +274,7 @@ public class BuildPreview extends Entity {
 				glTranslatef(getX(), 0.5f+(float)(0.5*Math.sin((System.currentTimeMillis()%3141)*0.002)), getZ());
 				float r = getBt().getProducedSupplyRadius();
 				glScalef(2*r, 1, 2*r);
-				glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+				glCallList(ResourceManager.OBJECT_STREET[0]);
 				glScalef(0.5f/r, 1, 0.5f/r);
 				glTranslatef(-getX(), -0.5f-(float)(0.5*Math.sin((System.currentTimeMillis()%3141)*0.002)), -getZ());
 			}
@@ -278,7 +293,7 @@ public class BuildPreview extends Entity {
 						glTranslatef(building.getX(), 0.01f, building.getZ());
 						float r = building.getProducedSupplyRadius();
 						glScalef(2*r, 1, 2*r);
-						glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+						glCallList(ResourceManager.OBJECT_STREET[0]);
 						glScalef(0.5f/r, 1, 0.5f/r);
 						glTranslatef(-building.getX(), -0.01f, -building.getZ());
 					}
@@ -291,19 +306,26 @@ public class BuildPreview extends Entity {
 			glBindTexture(GL_TEXTURE_2D, ResourceManager.TEXTURE_HAPPINESSEFFECT.getTextureID());
 			glColor4f(0.2f,0.3f,1,radius*0.5f/RADIUSMAX);
 			glScalef(Main.BuildingCitycenter.getBuildRadius()*2, 1, Main.BuildingCitycenter.getBuildRadius()*2);
-			glCallList(ResourceManager.OBJECT_GRIDCELL[0]);
+			glCallList(ResourceManager.OBJECT_STREET[0]);
 			glScalef(0.5f/Main.BuildingCitycenter.getBuildRadius(), 1, 0.5f/Main.BuildingCitycenter.getBuildRadius());
 			
 			
 			//Draw building
 			glEnable(GL_DEPTH_TEST);
-			glTranslatef(getX(), 0.25f+(float)(0.25*Math.cos((System.currentTimeMillis()%3141)*0.002)), getZ());
+			glTranslatef(getX()-((width%2==1)?0.5f:0), 0.25f+(float)(0.25*Math.cos((System.currentTimeMillis()%3141)*0.002)), getZ()-((depth%2==1)?0.5f:0));
 			glScalef(getScaleX(), getScaleY(), getScaleZ());
 			glRotatef(getRotX(), 1, 0, 0);
-			glRotatef(getRotY(), 0, 1, 0);
+			glRotatef(getRotY()+Main.buildRotation, 0, 1, 0);
 			glRotatef(getRotZ(), 0, 0, 1);
 			glEnable(GL_TEXTURE_2D);
-			if(Grid.isAreaFree((int)getX(), (int)getZ(), Buildings.getBuildingType(buildingType).getWidth(), Buildings.getBuildingType(buildingType).getDepth())&&(Grid.buildingSurroundedWith((int) Math.round(Main.mousepos3d[0]), (int) Math.round(Main.mousepos3d[2]), Main.currentBT, Buildings.BUILDINGTYPE_STREET))||Main.currentBT==Buildings.BUILDINGTYPE_STREET){
+			boolean areafree=false;
+			if(Main.buildRotation!=0&&Main.buildRotation!=180)
+			{
+				areafree=Grid.isAreaFree((int)getX(), (int)getZ(), Buildings.getBuildingType(buildingType).getDepth(), Buildings.getBuildingType(buildingType).getWidth());
+			}else{
+				areafree=Grid.isAreaFree((int)getX(), (int)getZ(), Buildings.getBuildingType(buildingType).getWidth(), Buildings.getBuildingType(buildingType).getDepth());
+			}
+			if(areafree&&(Grid.buildingSurroundedWith((int) Math.round(Main.mousepos3d[0]), (int) Math.round(Main.mousepos3d[2]), Main.currentBT, Buildings.BUILDINGTYPE_STREET,Main.buildRotation))||Main.currentBT==Buildings.BUILDINGTYPE_STREET){
 				glColor4f(1f, 1f, 1f, 1f);
 				ResourceManager.drawEntity(this);
 			}
