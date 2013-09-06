@@ -123,8 +123,8 @@ public class Buildings{
 				int supplyAmount = b.getProducedSupplyAmount();
 				int x = (int) b.getX();
 				int y = (int) b.getZ();
-				int width = Buildings.getBuildingType(b).getWidth();
-				int depth = Buildings.getBuildingType(b).getDepth();
+				int width = (int) b.getWidth();
+				int depth = (int) b.getDepth();
 				
 				//Initialize the openlist:
 				/*bottom*/for(int i=(int) (x-width*0.5+1);i<x+width*0.5+1;i++){if(Grid.getCell(i,(int) (y+depth*0.5+1)).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point(i,(int) (y+depth*0.5+1)));}

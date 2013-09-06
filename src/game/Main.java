@@ -666,7 +666,7 @@ public class Main {
 						}
 						try {
 							ResourceManager.playSoundRandom(ResourceManager.SOUND_DESTROY);
-							Grid.clearsCells((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ(), Buildings.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuildingType()).getWidth(), Buildings.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuildingType()).getDepth());
+							Grid.clearsCells((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ(), (int)ResourceManager.getObject(hoveredEntity).getWidth(), (int)ResourceManager.getObject(hoveredEntity).getDepth());
 							ParticleEffects.dustEffect(ResourceManager.getObject(hoveredEntity).getX(),ResourceManager.getObject(hoveredEntity).getY(),ResourceManager.getObject(hoveredEntity).getZ());
 							ResourceManager.getObject(hoveredEntity).delete();
 						} catch (Exception e) {e.printStackTrace();}
