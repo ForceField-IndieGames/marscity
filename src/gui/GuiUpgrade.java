@@ -9,8 +9,8 @@ import animation.FinishedAction;
 import objects.Building;
 import objects.Buildings;
 import objects.Upgrade;
-import game.Main;
 import game.ResourceManager;
+import game.Statistics;
 import guielements.GuiButton;
 import guielements.GuiLabel;
 import guielements.GuiPanel;
@@ -55,7 +55,7 @@ public class GuiUpgrade extends GuiPanel {
 				}
 			}
 		}
-		if(Main.money<upgrade.getUpgradecost()||building.getUpgrade(upgrade))
+		if(Statistics.money<upgrade.getUpgradecost()||building.getUpgrade(upgrade))
 		{
 			button.setVisible(false);
 			setOpacity(0.7f);
@@ -67,9 +67,9 @@ public class GuiUpgrade extends GuiPanel {
 				if(eventtype==GuiEventType.Click)
 				{
 					GuiUpgrade g = (GuiUpgrade)element.getParent();
-					if(Main.money>=g.getUpgrade().getUpgradecost())
+					if(Statistics.money>=g.getUpgrade().getUpgradecost())
 					{
-						Main.money-=g.getUpgrade().getUpgradecost();
+						Statistics.money-=g.getUpgrade().getUpgradecost();
 						g.getBuilding().setUpgrade(g.getUpgrade(), true);
 						g.getBuilding().updateUpgrades(g.getUpgrade());
 						AnimationManager.animateValue(g, AnimationValue.Y, g.getY()+20, 100,FinishedAction.REVERSE);
@@ -96,7 +96,7 @@ public class GuiUpgrade extends GuiPanel {
 		cost = new GuiLabel(375,10,95,20,(Color)null);
 		cost.setFont(ResourceManager.Arial12);
 		cost.setText(upgrade.getUpgradecost()+"$");
-		if(Main.money<upgrade.getUpgradecost())cost.setTextColor(Color.red);
+		if(Statistics.money<upgrade.getUpgradecost())cost.setTextColor(Color.red);
 		else cost.setTextColor(Color.white);
 		if(building.getUpgrade(upgrade))cost.setVisible(false);
 		add(cost);

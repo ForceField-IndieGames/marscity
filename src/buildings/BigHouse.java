@@ -2,6 +2,7 @@ package buildings;
 
 import game.Main;
 import game.MonthlyActions;
+import game.Statistics;
 import game.TransactionCategory;
 
 import java.io.IOException;
@@ -36,19 +37,25 @@ public class BigHouse extends Building {
 		if(getCitizens()<getCitizensmax()*(getHappiness()/100f)){
 			if(getCitizens()+CITIZENSPERMONTH<=getCitizensmax()*(getHappiness()/100f)){
 				setCitizens(getCitizens()+CITIZENSPERMONTH);
-				Main.citizens += CITIZENSPERMONTH;
+				Statistics.citizens += CITIZENSPERMONTH;
+				Statistics.CitizensBighouseMax += CITIZENSPERMONTH;
+				Statistics.CitizensBighouseCurrent += CITIZENSPERMONTH;
 			}
 			else {
-				Main.citizens += (getCitizensmax()*(getHappiness()/100f))-getCitizens();
+				Statistics.citizens += (getCitizensmax()*(getHappiness()/100f))-getCitizens();
+				Statistics.CitizensBighouseMax += (getCitizensmax()*(getHappiness()/100f))-getCitizens();
+				Statistics.CitizensBighouseCurrent += (getCitizensmax()*(getHappiness()/100f))-getCitizens();
 				setCitizens((int) (getCitizensmax()*(getHappiness()/100f)));
 			}
 		}else if(getCitizens()>getCitizensmax()*(getHappiness()/100f)){
 			if(getCitizens()-CITIZENSPERMONTH>=0){
 				setCitizens(getCitizens()-CITIZENSPERMONTH);
-				Main.citizens -= CITIZENSPERMONTH;
+				Statistics.citizens -= CITIZENSPERMONTH;
+				Statistics.CitizensBighouseCurrent -= CITIZENSPERMONTH;
 			}
 			else {
-				Main.citizens -= getCitizens();
+				Statistics.citizens -= getCitizens();
+				Statistics.CitizensBighouseCurrent -= getCitizens();
 				setCitizens(0);
 			}
 		}
@@ -69,7 +76,8 @@ public class BigHouse extends Building {
 	
 	@Override
 	public void delete() {
-		Main.citizens-=getCitizens();
+		Statistics.citizens-=getCitizens();
+		Statistics.CitizensBighouseCurrent-=getCitizens();
 		super.delete();
 	}
 

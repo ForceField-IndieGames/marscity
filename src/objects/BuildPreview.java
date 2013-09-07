@@ -325,7 +325,7 @@ public class BuildPreview extends Entity {
 			}else{
 				areafree=Grid.isAreaFree((int)getX(), (int)getZ(), Buildings.getBuildingType(buildingType).getWidth(), Buildings.getBuildingType(buildingType).getDepth());
 			}
-			if(areafree&&(Grid.buildingSurroundedWith((int) Math.round(Main.mousepos3d[0]), (int) Math.round(Main.mousepos3d[2]), Main.currentBT, Buildings.BUILDINGTYPE_STREET,Main.buildRotation))||Main.currentBT==Buildings.BUILDINGTYPE_STREET){
+			if(areafree&&(Grid.buildingSurroundedWith((int) getX(), (int) getZ(), Main.currentBT, Buildings.BUILDINGTYPE_STREET,Main.buildRotation))||Main.currentBT==Buildings.BUILDINGTYPE_STREET){
 				glColor4f(1f, 1f, 1f, 1f);
 				ResourceManager.drawEntity(this);
 			}

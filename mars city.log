@@ -136,6 +136,7 @@ Loading texture: /res/textures/gui/upgradebackground.png
 Loading texture: /res/textures/gui/upgradebutton.png
 Loading texture: /res/textures/supplyradius.png
 Loading texture: /res/textures/gui/upgraded.png
+Loading texture: /res/textures/gui/locked.png
 Mars City started...
 Created necessary folders.
 Loading XML: res/settings/settings.xml

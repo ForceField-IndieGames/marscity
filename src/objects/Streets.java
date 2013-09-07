@@ -3,6 +3,7 @@ package objects;
 import game.Grid;
 import game.Main;
 import game.ResourceManager;
+import game.Statistics;
 
 /**
  * This class will provide static methods to build streets and also
@@ -134,10 +135,10 @@ public class Streets {
 					cost+=Buildings.getBuildingType(Buildings.BUILDINGTYPE_STREET).getBuidlingcost();
 				}
 			}
-			if(Main.money<cost){
+			if(Statistics.money<cost){
 				Main.gui.showToolTip(ResourceManager.getString("FEEDBACK_NOTENOUGHMONEY"));
 				return;
-			}else Main.money-=cost;
+			}else Statistics.money-=cost;
 			for(int i=startposy;i<=endposy;i++){
 				if(Grid.isAreaFree(startposx, i, 1, 1)){
 					Buildings.buildBuilding(startposx, 0, i, Buildings.BUILDINGTYPE_STREET, 0);
@@ -162,10 +163,10 @@ public class Streets {
 					cost+=Buildings.getBuildingType(Buildings.BUILDINGTYPE_STREET).getBuidlingcost();
 				}
 			}
-			if(Main.money<cost){
+			if(Statistics.money<cost){
 				Main.gui.showToolTip(ResourceManager.getString("FEEDBACK_NOTENOUGHMONEY"));
 				return;
-			}else Main.money-=cost;
+			}else Statistics.money-=cost;
 			for(int i=startposx;i<=endposx;i++){
 				if(Grid.isAreaFree(i, startposy, 1, 1)){
 					Buildings.buildBuilding(i, 0, startposy, Buildings.BUILDINGTYPE_STREET, 0);

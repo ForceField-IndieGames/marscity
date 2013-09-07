@@ -2,6 +2,7 @@ package objects;
 
 import java.awt.Color;
 
+import game.BooleanCallback;
 import game.EntityTexture;
 import game.Supply;
 import game.TransactionCategory;
@@ -35,6 +36,7 @@ public class BuildingType {
 	private TransactionCategory transactioncategory;
 	private int[] neededSupplies;
 	private Color gridColor;
+	private BooleanCallback locked;
 
 	/**
 	 * Creates a new BuildingType
@@ -55,7 +57,7 @@ public class BuildingType {
 	 *            The buildings height
 	 */
 	public BuildingType(String name, int[] displaylist, EntityTexture texture,
-			Texture thumb, Color gridColor, int buidlingcost, int monthlycost, int width,
+			Texture thumb, Color gridColor, BooleanCallback locked, int buidlingcost, int monthlycost, int width,
 			int depth, float height, int happinessEffect, int happinessRadius, TransactionCategory transactioncategory, Supply producedSupply,
 			int producedSupplyAmount,int producedSupplyRadius, int... neededSupplies) {
 		this.name = name;
@@ -63,6 +65,8 @@ public class BuildingType {
 		this.texture = texture;
 		this.setThumb(thumb);
 		this.gridColor = gridColor;
+		if(locked==null)this.locked=new BooleanCallback();
+		else this.locked = locked;
 		this.buidlingcost = buidlingcost;
 		this.monthlycost = monthlycost;
 		this.width = width;
@@ -159,6 +163,19 @@ public class BuildingType {
 
 	public void setTransactioncategory(TransactionCategory transactioncategory) {
 		this.transactioncategory = transactioncategory;
+	}
+
+	public BooleanCallback getLocked() {
+		return locked;
+	}
+
+	public void setLocked(BooleanCallback locked) {
+		this.locked = locked;
+	}
+	
+	public boolean isLocked()
+	{
+		return locked.run();
 	}
 
 }

@@ -26,6 +26,7 @@ public class BuildingButton extends GuiPanel {
 	private GuiLabel name;
 	private GuiButton image;
 	private int bt;
+	private GuiPanel lock;
 	
 	public BuildingButton(float x, float y, int bt)
 	{
@@ -55,6 +56,7 @@ public class BuildingButton extends GuiPanel {
 	@Override public void run(GuiEventType eventtype, GuiElement e) {
 	switch (eventtype) {
 	case Click:
+			if(Buildings.getBuildingType(getBt()).isLocked())break;
 			Main.selectedTool = Main.TOOL_ADD;
 			Main.gui.buildingPanels.hide();
 			Main.currentBT = getBt();
@@ -90,7 +92,24 @@ public class BuildingButton extends GuiPanel {
 		name.wrapText();
 		name.setClickThrough(true);
 		add(name);
+		lock = new GuiPanel(0,15,100,100,ResourceManager.TEXTURE_GUILOCKED);
+		lock.setClickThrough(true);
+		lock.setVisible(false);
+		add(lock);
 	}
+	
+	public void lock()
+	{
+		lock.setVisible(true);
+		image.setOpacity(0.2f);
+	}
+	
+	public void unlock()
+	{
+		lock.setVisible(false);
+		image.setOpacity(1);
+	}
+	
 
 	public int getBt() {
 		return bt;

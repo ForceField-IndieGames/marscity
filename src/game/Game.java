@@ -54,13 +54,14 @@ public class Game {
 			/////////////////////
 			ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(new File(path)));
 			o.writeShort(FileFormatVersion);
-			o.writeInt(Main.money);
+			o.writeInt(Statistics.money);
 			o.writeByte(Main.taxes);
-			o.writeInt(Main.citizens);
+			o.writeInt(Statistics.citizens);
 			o.writeShort((short) Main.camera.getX());
 			o.writeShort((short) Main.camera.getZ());
 			o.writeByte((byte) Main.camera.getRotX());
 			o.writeShort((short) Main.camera.getRotY());
+			Statistics.saveToStream(o);
 			o.writeInt(Buildings.buildings.size());
 			for(Building b:Buildings.buildings){
 				o.writeShort((short) b.getX());
@@ -99,14 +100,15 @@ public class Game {
 			switch(FFV)
 			{
 				case 1:
-					Main.money = i.readInt();
+					Statistics.money = i.readInt();
 					Main.taxes = i.readByte();
 					Main.gui.taxes.setValue(Main.taxes);
-					Main.citizens = i.readInt();
+					Statistics.citizens = i.readInt();
 					Main.camera.setX(i.readShort());
 					Main.camera.setZ(i.readShort());
 					Main.camera.setRotX(i.readByte());
 					Main.camera.setRotY(i.readShort());
+					Statistics.loadFromStream(i);
 					int count = i.readInt();
 					for(int j=0;j<count;j++){
 						(Buildings.buildBuilding(i.readShort(), 0, i.readShort(), i.readShort(), i.readShort())).loadFromStream(i);
@@ -137,9 +139,9 @@ public class Game {
 		Grid.init();
 		Buildings.buildings = new ArrayList<Building>();
 		Buildings.buildBuilding(0, 0, 0, Buildings.BUILDINGTYPE_CITYCENTER, 0);
-		Main.money = INITIALMONEY;
+		Statistics.money = INITIALMONEY;
 		Main.taxes = INITIALTAXES;
-		Main.citizens = 0;
+		Statistics.citizens = 0;
 		Main.currentDataView = null;
 		Main.gameState = Main.STATE_GAME;
 		Main.currentBT = -1;
@@ -147,6 +149,13 @@ public class Game {
 		Main.selectedTool=Main.TOOL_SELECT;
 		Main.gui = null;
 		Main.gui = new GUI();
+		Main.camera.setX(0);
+		Main.camera.setY(0);
+		Main.camera.setZ(0);
+		Main.camera.setRotX(-45);
+		Main.camera.setRotY(0);
+		Main.camera.setRotZ(0);
+		Main.camera.setZoom(50);
 		Game.Resume();
 		try {
 			Main.MonthlyTimer.scheduleAtFixedRate(MonthlyActions.ExecuteTransactions, Main.MONTH_MILLIS, Main.MONTH_MILLIS);

@@ -35,13 +35,13 @@ public class MonthlyActions {
 					((GuiProgressbar)Main.gui.moneycategories.elements.get(t.ordinal())).setBarColor((TransactionList[t.ordinal()]<0)?new Color(255,150,150):new Color(150,255,150));
 					((GuiProgressbar)Main.gui.moneycategories.elements.get(t.ordinal())).setValue((max!=0)?Math.abs(TransactionList[t.ordinal()]/max):0);
 					((GuiProgressbar)Main.gui.moneycategories.elements.get(t.ordinal())).setRightaligned((TransactionList[t.ordinal()]<0)?true:false);
-					Main.money+=TransactionList[t.ordinal()];
+					Statistics.money+=TransactionList[t.ordinal()];
 					total+=TransactionList[t.ordinal()];
 					TransactionList[t.ordinal()]=0;
 				}
 				for(byte i=0;i<TransactionList.length;i++)
 				{
-					Main.money+=TransactionList[i];
+					Statistics.money+=TransactionList[i];
 					total+=TransactionList[i];
 					TransactionList[i]=0;
 				}
@@ -61,7 +61,7 @@ public class MonthlyActions {
 				{
 					PopulationStatistics[i]=PopulationStatistics[i+1];
 				}
-				PopulationStatistics[9] = Main.citizens;
+				PopulationStatistics[9] = Statistics.citizens;
 				Main.gui.populationGraph.setPoints(PopulationStatistics);
 				Main.gui.max.setText(""+(int)Main.gui.populationGraph.getMax());
 			}
