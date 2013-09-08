@@ -849,6 +849,7 @@ public class Main {
        
         //Draw the buidings
         glEnable(GL_COLOR_MATERIAL);
+        glEnable(GL_TEXTURE_2D);
         for(int i=0;i<Buildings.buildings.size();i++){
         	if(i==hoveredEntity&&!Mouse.isGrabbed()&&selectedTool!=TOOL_ADD){
         		if(selectedTool==TOOL_DELETE)glColor3f(1f, 0f, 0f);
@@ -871,7 +872,6 @@ public class Main {
 			Buildings.buildings.get(i).draw();
 			glEnable(GL_LIGHTING);
 			glEnable(GL_TEXTURE_2D);
-			
 		}
         
         //glUseProgram(0);
