@@ -75,8 +75,11 @@ public class Building extends Entity {
 			for(int i=(int) (getZ()-getHappinessRadius());i<=getZ()+getHappinessRadius();i++){
 				for(int j=(int) (getX()-getHappinessRadius());j<=getX()+getHappinessRadius();j++){
 					try {
-						double val = (1-Math.sqrt((getX()-j)*(getX()-j)+(getZ()-i)*(getZ()-i))/getHappinessRadius())*getHappinessEffect();
-						Grid.getCell(j, i).setHappinessEffect((byte) (Grid.getCell(j, i).getHappinessEffect()+val));
+						double dist = Math.sqrt((getX()-j)*(getX()-j)+(getZ()-i)*(getZ()-i));
+						if(dist<=getHappinessRadius()){
+							double val = (1-dist/getHappinessRadius())*getHappinessEffect();
+							Grid.getCell(j, i).setHappinessEffect((byte) (Grid.getCell(j, i).getHappinessEffect()+val));
+						}
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
