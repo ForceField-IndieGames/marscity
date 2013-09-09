@@ -94,7 +94,7 @@ public class GUI {
 	    				break;
 	    		default:break;}}});
 	}};
-	public GuiLabel MenuVersion = new GuiLabel(0,0,180,20,(Color)null){{setText("Mars City [PreAlpha]");}};
+	public GuiLabel MenuVersion = new GuiLabel(0,0,180,20,(Color)null){{setText("Mars City [0.1.0-alpha]");}};
 	public GuiPanel MenuIcon = new GuiPanel(Display.getWidth()/2-64,20,64,64,ResourceManager.TEXTURE_ICON256){{
 		setOpacity(0.9f);
 	}};
