@@ -157,6 +157,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUITHUMBSOLARPOWERPANELS     = addTexture("gui/thumbsolarpowerpanels.png");
 	public final static Texture TEXTURE_GUITHUMBSOLARPOWERCOATING    = addTexture("gui/thumbsolarpowercoating.png");
 	public final static Texture TEXTURE_GUITHUMBGARBAGEYARDBURNER    = addTexture("gui/thumbgarbageyardburner.png");
+	public final static Texture TEXTURE_GUITHUMBPOLICE               = addTexture("gui/thumbpolice.png");
 	
 	public final static Texture TEXTURE_ICON16                  = addTexture("gui/icon16.png");
 	public final static Texture TEXTURE_ICON32                  = addTexture("gui/icon32.png");
