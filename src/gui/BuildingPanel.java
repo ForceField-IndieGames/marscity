@@ -2,6 +2,8 @@ package gui;
 
 import guielements.GuiPanel;
 
+import objects.Buildings;
+
 import org.lwjgl.opengl.Display;
 
 /**
@@ -27,6 +29,15 @@ public class BuildingPanel extends GuiPanel {
 		add(new BuildingButton(100*getElements().size(), 0, bt));
 	}
 
+	@Override
+	public void show() {
+		super.show();
+		for(int i=0;i<=getElements().size();i++){
+			if(Buildings.getBuildingType(((BuildingButton)getElements().get(i)).getBt()).isLocked())((BuildingButton)getElements().get(i)).lock();
+			else ((BuildingButton)getElements().get(i)).unlock();
+		}
+	}
+	
 	public String getName() {
 		return name;
 	}

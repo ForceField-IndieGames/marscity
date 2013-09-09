@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 
 import objects.Building;
 import objects.Buildings;
+import objects.Streets;
 
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
@@ -53,18 +54,20 @@ public class Game {
 			/////////////////////
 			ObjectOutputStream o = new ObjectOutputStream(new FileOutputStream(new File(path)));
 			o.writeShort(FileFormatVersion);
-			o.writeInt(Main.money);
+			o.writeInt(Statistics.money);
 			o.writeByte(Main.taxes);
-			o.writeInt(Main.citizens);
+			o.writeInt(Statistics.citizens);
 			o.writeShort((short) Main.camera.getX());
 			o.writeShort((short) Main.camera.getZ());
 			o.writeByte((byte) Main.camera.getRotX());
 			o.writeShort((short) Main.camera.getRotY());
+			Statistics.saveToStream(o);
 			o.writeInt(Buildings.buildings.size());
 			for(Building b:Buildings.buildings){
 				o.writeShort((short) b.getX());
 				o.writeShort((short) b.getZ());
 				o.writeShort(b.getBuildingType());
+				o.writeShort((short)b.getRotY());
 				b.saveToStream(o);
 			}
 			o.close();
@@ -97,17 +100,18 @@ public class Game {
 			switch(FFV)
 			{
 				case 1:
-					Main.money = i.readInt();
+					Statistics.money = i.readInt();
 					Main.taxes = i.readByte();
 					Main.gui.taxes.setValue(Main.taxes);
-					Main.citizens = i.readInt();
+					Statistics.citizens = i.readInt();
 					Main.camera.setX(i.readShort());
 					Main.camera.setZ(i.readShort());
 					Main.camera.setRotX(i.readByte());
 					Main.camera.setRotY(i.readShort());
+					Statistics.loadFromStream(i);
 					int count = i.readInt();
 					for(int j=0;j<count;j++){
-						(Buildings.buildBuilding(i.readShort(), 0, i.readShort(), i.readShort())).loadFromStream(i);
+						(Buildings.buildBuilding(i.readShort(), 0, i.readShort(), i.readShort(), i.readShort())).loadFromStream(i);
 					}
 					break;
 				default:
@@ -127,16 +131,17 @@ public class Game {
 		Main.gui.cityName.setText(Main.cityname);
 		Main.gui.MsgBox(ResourceManager.getString("MSGBOX_TITLE_CITYLOADED"), ResourceManager.getString("MSGBOX_TEXT_CITYLOADED").replaceAll(ResourceManager.PLACEHOLDER1, ResourceManager.pathToCityname(path)));
 		Buildings.refreshSupply();
+		Streets.updateSegments();
 	}
 	
 	public static void newGame()
 	{
 		Grid.init();
 		Buildings.buildings = new ArrayList<Building>();
-		Buildings.buildBuilding(0, 0, 0, Buildings.BUILDINGTYPE_CITYCENTER);
-		Main.money = INITIALMONEY;
+		Buildings.buildBuilding(0, 0, 0, Buildings.BUILDINGTYPE_CITYCENTER, 0);
+		Statistics.money = INITIALMONEY;
 		Main.taxes = INITIALTAXES;
-		Main.citizens = 0;
+		Statistics.citizens = 0;
 		Main.currentDataView = null;
 		Main.gameState = Main.STATE_GAME;
 		Main.currentBT = -1;
@@ -144,6 +149,13 @@ public class Game {
 		Main.selectedTool=Main.TOOL_SELECT;
 		Main.gui = null;
 		Main.gui = new GUI();
+		Main.camera.setX(0);
+		Main.camera.setY(0);
+		Main.camera.setZ(0);
+		Main.camera.setRotX(-45);
+		Main.camera.setRotY(0);
+		Main.camera.setRotZ(0);
+		Main.camera.setZoom(50);
 		Game.Resume();
 		try {
 			Main.MonthlyTimer.scheduleAtFixedRate(MonthlyActions.ExecuteTransactions, Main.MONTH_MILLIS, Main.MONTH_MILLIS);

@@ -1,20 +1,13 @@
 package buildings;
 
-import game.MonthlyActions;
-import game.TransactionCategory;
 import objects.Building;
-import objects.Buildings;
 
 public class ResearchStation extends Building {
 
-	public ResearchStation(int bt, float x, float y, float z)
+	public ResearchStation(int bt, float x, float y, float z, float rY)
 	{
-		super(bt,x,y,z);
+		super(bt,x,y,z,rY);
 	}
 
-	@Override
-	public void monthlyAction() {
-		MonthlyActions.addTransaction(-Buildings.getBuildingType(getBuildingType()).getMonthlycost(), TransactionCategory.Other);
-	}
 	
 }

@@ -1,14 +1,24 @@
 package objects;
 
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glScalef;
+import static org.lwjgl.opengl.GL11.glTranslatef;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashMap;
 
 import game.Grid;
 import game.Main;
+import game.MonthlyActions;
+import game.ResourceManager;
 import game.Supply;
 import animation.AnimationManager;
 import animation.AnimationValue;
+import animation.FinishedAction;
 
 /**
  * This is a building. It is defined by a buildingtype and a position.
@@ -19,64 +29,69 @@ import animation.AnimationValue;
 
 public class Building extends Entity {
 	
-	private float height = 0;
+	private float height = 1;
+	private float width = 1;
+	private float depth = 1;
 	private int buidlingType;
 	private int[] supply = new int[Supply.values().length];
 	private Supply producedSupply = null;
 	private int producedSupplyAmount = 0;
+	private int producedSupplyRadius = 0;
 	private int[] neededSupplyAmount = new int[Supply.values().length];
 	private int[] ownedSupplyAmount = new int[Supply.values().length];
 	private byte happiness = 0;  
 	private boolean hasHappiness = false;
-	
-	public Building(){}
+	private int happinessEffect;
+	private int happinessRadius;
+	private int monthlycost;
+	private HashMap<Upgrade,Boolean> upgrades = new HashMap<Upgrade,Boolean>();
 
-	public Building(int bt)
-	{
-		super(Buildings.getBuildingType(bt).getDisplaylist(), Buildings.getBuildingType(bt).getTexture());
-		height = Buildings.getBuildingType(bt).getHeight();
-		this.buidlingType = bt;
-		for(Supply supply:Supply.values())
-		{
-			setNeededSupplyAmount(Buildings.getBuildingType(this).getNeededSupplies(supply), supply);
-		}	
-		setProducedSupplyAmount(Buildings.getBuildingType(this).getProducedSupplyAmount());
-		//update happinessEffect on the grid:
-		BuildingType btype = Buildings.getBuildingType(this);
-		for(int i=(int) (getZ()-btype.getHappinessRadius());i<=getZ()+btype.getHappinessRadius();i++){
-			for(int j=(int) (getX()-btype.getHappinessRadius());j<=getX()+btype.getHappinessRadius();j++){
-				try {
-					double val = (1-Math.sqrt((getX()-j)*(getX()-j)+(getZ()-i)*(getZ()-i))/btype.getHappinessRadius())*btype.getHappinessEffect();
-					Grid.getCell(j, i).setHappinessEffect((byte) (Grid.getCell(j, i).getHappinessEffect()+val));
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-	public Building(int bt, float x, float y, float z)
+	public Building(int bt, float x, float y, float z, float rY)
 	{
 		super(Buildings.getBuildingType(bt).getDisplaylist(), Buildings.getBuildingType(bt).getTexture(),x,y,z);
 		height = Buildings.getBuildingType(bt).getHeight();
+		setRotY(rY);
+		if(getRotY()!=0&&getRotY()!=180){
+			width = Buildings.getBuildingType(bt).getDepth();
+			depth = Buildings.getBuildingType(bt).getWidth();
+		}else{
+			width = Buildings.getBuildingType(bt).getWidth();
+			depth = Buildings.getBuildingType(bt).getDepth();
+		}
 		this.buidlingType = bt;
+		this.setMonthlycost(Buildings.getBuildingType(this).getMonthlycost());
+		setProducedSupply(Buildings.getBuildingType(this).getProducedSupply());
 		for(Supply supply:Supply.values())
 		{
 			setNeededSupplyAmount(Buildings.getBuildingType(this).getNeededSupplies(supply), supply);
 		}
 		setProducedSupplyAmount(Buildings.getBuildingType(this).getProducedSupplyAmount());
+		//set happiness effect and radius
+		setHappinessEffect(Buildings.getBuildingType(this).getHappinessEffect());
+		setHappinessRadius(Buildings.getBuildingType(this).getHappinessRadius());
 		//update happinessEffect on the grid:
-		BuildingType btype = Buildings.getBuildingType(this);
-		for(int i=(int) (getZ()-btype.getHappinessRadius());i<=getZ()+btype.getHappinessRadius();i++){
-			for(int j=(int) (getX()-btype.getHappinessRadius());j<=getX()+btype.getHappinessRadius();j++){
-				try {
-					double dist = Math.sqrt((getX()-j)*(getX()-j)+(getZ()-i)*(getZ()-i));
-					double val = (btype.getHappinessRadius()>0&&dist<=btype.getHappinessRadius())?(1-dist/btype.getHappinessRadius())*btype.getHappinessEffect():0;
-					Grid.getCell(j, i).setHappinessEffect((byte) (Grid.getCell(j, i).getHappinessEffect()+val));
-				} catch (Exception e) {
-					e.printStackTrace();
+		if(getHappinessEffect()!=0&&getHappinessRadius()>0)
+		{
+			for(int i=(int) (getZ()-getHappinessRadius());i<=getZ()+getHappinessRadius();i++){
+				for(int j=(int) (getX()-getHappinessRadius());j<=getX()+getHappinessRadius();j++){
+					try {
+						double dist = Math.sqrt((getX()-j)*(getX()-j)+(getZ()-i)*(getZ()-i));
+						if(dist<=getHappinessRadius()){
+							double val = (1-dist/getHappinessRadius())*getHappinessEffect();
+							Grid.getCell(j, i).setHappinessEffect((byte) (Grid.getCell(j, i).getHappinessEffect()+val));
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
+		}
+			
+		setProducedSupplyRadius(Buildings.getBuildingType(this).getProducedSupplyRadius());
+		//Load upgrades that belong to this building
+		for(Upgrade u:Upgrade.values())
+		{
+			if(u.getBt()==bt)upgrades.put(u, false);
 		}
 	}
 
@@ -100,6 +115,13 @@ public class Building extends Entity {
 	public void monthlyAction()
 	{
 		//Calculate happiness value
+		calculateHappiness();
+		//Apply transactions
+		if(Buildings.getBuildingType(this).getTransactioncategory()!=null)MonthlyActions.addTransaction(-getMonthlycost(), Buildings.getBuildingType(this).getTransactioncategory());
+	}
+	
+	public void calculateHappiness()
+	{
 		if(isHasHappiness())
 		{
 			int happiness = 0;
@@ -140,7 +162,17 @@ public class Building extends Entity {
 	 */
 	public void loadFromStream(ObjectInputStream i) throws IOException
 	{
-		
+		if(hasUpgrades())
+		{
+			for(Upgrade u:Upgrade.values())
+			{
+				if(u.getBt()==getBuildingType())
+				{
+					upgrades.put(u,i.readBoolean());
+				}
+			}
+			updateUpgrades(null);
+		}
 	}
 	
 	/**
@@ -150,7 +182,33 @@ public class Building extends Entity {
 	 */
 	public void saveToStream(ObjectOutputStream o) throws IOException
 	{
-		
+		if(hasUpgrades())
+		{
+			for(Upgrade u:Upgrade.values())
+			{
+				if(u.getBt()==getBuildingType())
+				{
+					o.writeBoolean(upgrades.get(u));
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void draw() {
+		if(!isVisible())return;
+		glPushMatrix();
+			glTranslatef(getX()-((getWidth()%2==1)?0.5f:0), getY(), getZ()-((getDepth()%2==1)?0.5f:0));
+			glScalef(getScaleX(), getScaleY(), getScaleZ());
+			glRotatef(getRotX(), 1, 0, 0);
+			glRotatef(getRotY(), 0, 1, 0);
+			glRotatef(getRotZ(), 0, 0, 1);
+			ResourceManager.drawEntity(this);
+			for(Entity e:getChildren())
+			{
+				e.draw();
+			}
+		glPopMatrix();
 	}
 	
 	/**
@@ -159,22 +217,26 @@ public class Building extends Entity {
 	@Override
 	public void delete()
 	{
-		AnimationManager.animateValue(this, AnimationValue.Y, getY()-getHeight(), 1000, AnimationManager.ACTION_DELETE);
+		AnimationManager.animateValue(this, AnimationValue.Y, getY()-getHeight(), 1000, FinishedAction.DELETE);
 		AnimationManager.animateValue(this, AnimationValue.ROTX, (float) (getRotX()-10+Math.random()*20), 1000);
 		AnimationManager.animateValue(this, AnimationValue.ROTY, (float) (getRotY()-10+Math.random()*20), 1000);
 		AnimationManager.animateValue(this, AnimationValue.ROTZ, (float) (getRotZ()-10+Math.random()*20), 1000);
-		//update happinessEffect on teh grid:
-		BuildingType btype = Buildings.getBuildingType(this);
-		for(int i=(int) (getZ()-btype.getHappinessRadius()/2);i<=getZ()+btype.getHappinessRadius()/2;i++){
-			for(int j=(int) (getX()-btype.getHappinessRadius()/2);j<=getX()+btype.getHappinessRadius()/2;j++){
-				try {
-					double val = (1-Math.sqrt((getX()-j)*(getX()-j)+(getZ()-i)*(getZ()-i))/btype.getHappinessRadius())*btype.getHappinessEffect();
-					Grid.getCell(j, i).setHappinessEffect((byte) (Grid.getCell(j, i).getHappinessEffect()-val));
-				} catch (Exception e) {
-					e.printStackTrace();
+		//update happinessEffect on the grid:
+		if(getHappinessEffect()!=0&&getHappinessRadius()>0)
+		{
+			for(int i=(int) (getZ()-getHappinessRadius());i<=getZ()+getHappinessRadius();i++){
+				for(int j=(int) (getX()-getHappinessRadius());j<=getX()+getHappinessRadius();j++){
+					try {
+						double dist = Math.sqrt((getX()-j)*(getX()-j)+(getZ()-i)*(getZ()-i));
+						double val = (1-dist/getHappinessRadius())*getHappinessEffect();
+						if(Math.abs(dist)<=getHappinessRadius())Grid.getCell(j, i).setHappinessEffect((byte) (Grid.getCell(j, i).getHappinessEffect()-val));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 				}
 			}
 		}
+			
 	}
 	
 	public void setSupply(int value, Supply supply)
@@ -233,6 +295,83 @@ public class Building extends Entity {
 
 	public void setHasHappiness(boolean hasHappiness) {
 		this.hasHappiness = hasHappiness;
+	}
+
+	public int getHappinessEffect() {
+		return happinessEffect;
+	}
+
+	public void setHappinessEffect(int happinessEffect) {
+		this.happinessEffect = happinessEffect;
+	}
+
+	public int getHappinessRadius() {
+		return happinessRadius;
+	}
+
+	public void setHappinessRadius(int happinessRadius) {
+		this.happinessRadius = happinessRadius;
+	}
+
+	public int getProducedSupplyRadius() {
+		return producedSupplyRadius;
+	}
+
+	public void setProducedSupplyRadius(int producedSupplyRadius) {
+		this.producedSupplyRadius = producedSupplyRadius;
+	}
+
+	public boolean getUpgrade(Upgrade upgrade) {
+		return upgrades.get(upgrade);
+	}
+
+	public void setUpgrade(Upgrade upgrade, boolean value) {
+		this.upgrades.put(upgrade, value);
+	}
+	public boolean hasUpgrades()
+	{
+		if(upgrades.size()>0)return true;
+		else return false;
+	}
+	
+	/**
+	 * Is overwritten by the individual buildings.
+	 * Applies upgrades to the building's values.
+	 */
+	public void updateUpgrades(Upgrade changedupgrade)
+	{
+		monthlycost=Buildings.getBuildingType(this).getMonthlycost();
+		for(Upgrade u:Upgrade.values())
+		{
+			if(u.getBt()==getBuildingType()&&getUpgrade(u))
+			{
+				monthlycost+=u.getMonthlyupgradecost();
+			}
+		}
+	}
+
+	public int getMonthlycost() {
+		return monthlycost;
+	}
+
+	public void setMonthlycost(int monthlycost) {
+		this.monthlycost = monthlycost;
+	}
+
+	public float getWidth() {
+		return width;
+	}
+
+	public void setWidth(float width) {
+		this.width = width;
+	}
+
+	public float getDepth() {
+		return depth;
+	}
+
+	public void setDepth(float depth) {
+		this.depth = depth;
 	}
 	
 }

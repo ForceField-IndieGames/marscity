@@ -31,6 +31,7 @@ import org.lwjgl.opengl.Display;
 
 import animation.AnimationManager;
 import animation.AnimationValue;
+import animation.FinishedAction;
 
 /**
  * This class generates and displays the gui.
@@ -79,7 +80,7 @@ public class GUI {
 	}
 		@Override
 		public void hide() {
-			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0, 200, AnimationManager.ACTION_HIDE);
+			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0, 200, FinishedAction.HIDE);
 		};
 	};
 	public GuiButton MenuExit = new GuiButton(660, 0, 200, 50,ResourceManager.TEXTURE_GUIBUTTON2){{
@@ -93,7 +94,7 @@ public class GUI {
 	    				break;
 	    		default:break;}}});
 	}};
-	public GuiLabel MenuVersion = new GuiLabel(0,0,180,20,(Color)null){{setText("Mars City [Alpha]");}};
+	public GuiLabel MenuVersion = new GuiLabel(0,0,180,20,(Color)null){{setText("Mars City [0.1.0-alpha]");}};
 	public GuiPanel MenuIcon = new GuiPanel(Display.getWidth()/2-64,20,64,64,ResourceManager.TEXTURE_ICON256){{
 		setOpacity(0.9f);
 	}};
@@ -127,7 +128,7 @@ public class GUI {
 						Main.gui.pauseMenu.setVisible(true);
 						AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.OPACITY, 1, 0.005f);
 						break;
-				case Mouseover:
+				case Mousein:
 						break;
 				default:break;}}});
 	}};
@@ -146,7 +147,7 @@ public class GUI {
 						Main.gui.infoBuildingCosts.setVisible(false);
 						Main.gui.infoMonthlyCosts.setVisible(false);
 						break;
-				case Mouseover:
+				case Mousein:
 						break;
 				default:break;}}});
 	}};
@@ -183,12 +184,12 @@ public class GUI {
 	};
 	public GuiLabel infoMonthly = new GuiLabel(150,0,50,30,(Color)null){{
 		setTooltip(ResourceManager.getString("TOOLTIP_INFOMONTHLY"));
-		setText("0$");
+		setText("0$$");
 		setFont(ResourceManager.Arial12);
 		setRightaligned(true);
 	}};
 	public GuiLabel infoMonthlyCosts = new GuiLabel(infoMonthly.getScreenX(),23,50,20,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
-		setText("0$");
+		setText("0$$");
 		setFont(ResourceManager.Arial12);
 		AutoSize();
 		setVisible(false);
@@ -196,7 +197,7 @@ public class GUI {
 		@Override
 		public void setText(String text)
 		{
-			super.setText("-"+text+"$");
+			super.setText("-"+text+"$$");
 		}
 	};
 	public GuiLabel infoMoney = new GuiLabel(350,5,200,30,ResourceManager.TEXTURE_GUILABELBG,ResourceManager.TEXTURE_GUILABELBGL,ResourceManager.TEXTURE_GUILABELBGR){{
@@ -288,6 +289,8 @@ public class GUI {
 		{
 			setHeight(32*DataView.values().length);
 			setY(Display.getHeight()/2-getHeight()/2);
+			add(new GuiPanel(0,-32,32,32,ResourceManager.TEXTURE_GUIDVBACKGROUNDB));
+			add(new GuiPanel(0,getHeight(),32,32,ResourceManager.TEXTURE_GUIDVBACKGROUNDT));
 			for(DataView d:DataView.values())
 			{
 				add(new DataViewButton(0,32*d.ordinal(),32,32,d.getButtonTexture(),d));
@@ -309,7 +312,7 @@ public class GUI {
 	    				Main.gameState = Main.STATE_MENU;
 	    				Main.gui = new GUI();
 	    				break;
-	    		case Mouseover:
+	    		case Mousein:
 	    				break;
 	    		default:break;}}});
 	}};
@@ -332,9 +335,9 @@ public class GUI {
 	    				Game.Save("res/cities/"+Main.cityname+".city");
 	    				Game.Resume();
 	    				Main.gui.blur.setVisible(false);
-	    				AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.OPACITY, 1, 0.005f, AnimationManager.ACTION_HIDE);
+	    				AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.OPACITY, 1, 0.005f, FinishedAction.HIDE);
 	    				break;
-	    		case Mouseover:
+	    		case Mousein:
 	    				break;
 	    		default:break;}}});
 	}};
@@ -348,7 +351,7 @@ public class GUI {
 	    				Main.gui.settingsMenu.setVisible(true);
 	    				AnimationManager.animateValue(Main.gui.settingsMenu, AnimationValue.OPACITY, 1, 0.005f);
 	    				break;
-	    		case Mouseover:
+	    		case Mousein:
 	    				break;
 	    		default:break;}}});
 	}};
@@ -360,7 +363,7 @@ public class GUI {
 	    		case Click:
 	    				Game.exit();
 	    				break;
-	    		case Mouseover:
+	    		case Mousein:
 	    				break;
 	    		default:break;}}});
 	}};
@@ -372,9 +375,9 @@ public class GUI {
 				case Click:
 						Main.gui.blur.setVisible(false);
 						Game.Resume();
-						AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.OPACITY, 0, 0.005f, AnimationManager.ACTION_HIDE);
+						AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.OPACITY, 0, 0.005f, FinishedAction.HIDE);
 						break;
-				case Mouseover:
+				case Mousein:
 						break;
 				default:break;}}});
 	}};
@@ -391,12 +394,14 @@ public class GUI {
 	}
 		@Override
 		public void hide() {
-			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0, 200, AnimationManager.ACTION_HIDE);
+			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0, 200, FinishedAction.HIDE);
 		};
 	};
 	
-	public GuiLabel debugInfo = new GuiLabel(0,Display.getHeight()-20,Display.getWidth(),20,Color.white){{
+	public GuiLabel debugInfo = new GuiLabel(0,Display.getHeight()-20,Display.getWidth(),20,Color.black){{
 		setVisible(Main.debugMode);
+		setOpacity(0.6f);
+		setTextColor(Color.green);
 	}};
 	
 	public GuiButton settingsResume = new GuiButton(156, 30, 200, 30, ResourceManager.TEXTURE_GUIBUTTON){{
@@ -412,13 +417,13 @@ public class GUI {
 					case Main.STATE_GAME:
 						Game.Resume();
 						Main.gui.blur.setVisible(false);
-						AnimationManager.animateValue(Main.gui.settingsMenu, AnimationValue.OPACITY, 0, 0.005f, AnimationManager.ACTION_HIDE);
+						AnimationManager.animateValue(Main.gui.settingsMenu, AnimationValue.OPACITY, 0, 0.005f, FinishedAction.HIDE);
 						break;
 					default:
 						break;
 					}
 						break;
-				case Mouseover:
+				case Mousein:
 						break;
 				default:break;}}});
 	}};
@@ -483,7 +488,7 @@ public class GUI {
 							e.printStackTrace();
 						}
 						break;
-				case Mouseover:
+				case Mousein:
 						break;
 				default:break;}}});                              
 	}};
@@ -500,7 +505,7 @@ public class GUI {
 							e.printStackTrace();
 						}
 						break;
-				case Mouseover:
+				case Mousein:
 						break;
 				default:break;}}});
 	}};
@@ -517,7 +522,7 @@ public class GUI {
 							e.printStackTrace();
 						}
 						break;
-				case Mouseover:
+				case Mousein:
 						break;
 				default:break;}}});
 	}};
@@ -553,7 +558,7 @@ public class GUI {
 	}
 		@Override
 		public void hide() {
-			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0, 200, AnimationManager.ACTION_HIDE);
+			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0, 200, FinishedAction.HIDE);
 		};
 	};
 	
@@ -565,6 +570,23 @@ public class GUI {
 	}};
 	
 	public BuildingInfo buildinginfo = new BuildingInfo();
+	public GuiPanel buildingupgrades = new GuiPanel(Display.getWidth()/2+50,100,512,Display.getHeight()-200,(Color)null){
+		{
+			setVisible(false);
+			setOpacity(0);
+		}
+		public void show() {
+			setVisible(true);
+			setOpacity(0);
+			setX(Display.getWidth()/2+100);
+			AnimationManager.animateValue(this, AnimationValue.OPACITY, 1f, 200);
+			AnimationManager.animateValue(this, AnimationValue.X, Display.getWidth()/2+50, 200);
+			elements.clear();
+		};
+		public void hide() {
+			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0f, 200,FinishedAction.HIDE);
+		};
+	};
 	
 	public GuiPanel moneycategories = new GuiPanel(30,30,452,412,(Color)null);
 	public GuiNumberbox taxes = new GuiNumberbox(372, 450, 110, 32);
@@ -603,12 +625,12 @@ public class GUI {
 		@Override public void show() {
 			setVisible(true);
 			AnimationManager.animateValue(this, AnimationValue.OPACITY, 1f, 100);
-			AnimationManager.animateValue(this, AnimationValue.Y, getY()+10, 100, AnimationManager.ACTION_REVERSE);
+			AnimationManager.animateValue(this, AnimationValue.Y, getY()+10, 100, FinishedAction.REVERSE);
 		};
 		
 		@Override public void hide() {
-			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0f, 200,AnimationManager.ACTION_HIDE);
-			AnimationManager.animateValue(this, AnimationValue.Y, getY()-10, 200, AnimationManager.ACTION_RESET);
+			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0f, 200,FinishedAction.HIDE);
+			AnimationManager.animateValue(this, AnimationValue.Y, getY()-10, 200, FinishedAction.RESET);
 		};
 	};
 	public GuiGraph populationGraph = new GuiGraph(30, 45, 452, 420, 0);
@@ -640,12 +662,12 @@ public class GUI {
 		@Override public void show() {
 			setVisible(true);
 			AnimationManager.animateValue(this, AnimationValue.OPACITY, 1f, 200);
-			AnimationManager.animateValue(this, AnimationValue.Y, getY()+10, 100, AnimationManager.ACTION_REVERSE);
+			AnimationManager.animateValue(this, AnimationValue.Y, getY()+10, 100, FinishedAction.REVERSE);
 		};
 		
 		@Override public void hide() {
-			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0f, 200,AnimationManager.ACTION_HIDE);
-			AnimationManager.animateValue(this, AnimationValue.Y, getY()-10, 200, AnimationManager.ACTION_RESET);
+			AnimationManager.animateValue(this, AnimationValue.OPACITY, 0f, 200,FinishedAction.HIDE);
+			AnimationManager.animateValue(this, AnimationValue.Y, getY()-10, 200, FinishedAction.RESET);
 		};
 	};
 	
@@ -672,8 +694,9 @@ public class GUI {
 		add(buildingPanels);
 		add(toolBar);
 		add(guiTools);
-		add(buildinginfo);
 		add(DataViewButtons);
+		add(buildinginfo);
+		add(buildingupgrades);
 		add(moneypanel);
 		add(citizenspanel);
 		add(buildingTooltip);

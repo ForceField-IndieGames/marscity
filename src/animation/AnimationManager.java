@@ -22,9 +22,9 @@ class Animation{
 	double destValue;
 	double speed;
 	CustomAnimationValue customvalue;
-	int finishedAction = AnimationManager.ACTION_NOTHING;
+	FinishedAction finishedAction = FinishedAction.NOTHING;
 
-	public Animation(Animatable object, AnimationValue value, CustomAnimationValue customvalue, double startvalue, double destValue, double speed, int finishedAction){
+	public Animation(Animatable object, AnimationValue value, CustomAnimationValue customvalue, double startvalue, double destValue, double speed, FinishedAction finishedAction){
 		this.object=object;
 		this.value = value;
 		this.customvalue = customvalue;
@@ -36,31 +36,23 @@ class Animation{
 }
 
 public class AnimationManager {
-
-	public static final int ACTION_NOTHING = 0;
-	public static final int ACTION_DELETE = 1;
-	public static final int ACTION_SHOW = 2;
-	public static final int ACTION_HIDE = 3;
-	public static final int ACTION_RESET = 4;
-	public static final int ACTION_REVERSE = 5;
-	public static final int ACTION_REMOVEGUI = 6;
 	
 	private static List<Animation> animations = new ArrayList<Animation>();
 	
 	public static void animateValue(Animatable object, CustomAnimationValue customvalue, double destValue, int time)
 	{
-		animateValue(object, customvalue, destValue, time, ACTION_NOTHING);
+		animateValue(object, customvalue, destValue, time, FinishedAction.NOTHING);
 	}
-	public static void animateValue(Animatable object, CustomAnimationValue customvalue, double destValue, int time, int action)
+	public static void animateValue(Animatable object, CustomAnimationValue customvalue, double destValue, int time, FinishedAction action)
 	{
 		double speed = Math.abs(destValue-customvalue.getValue())/time;
 		animateValue(object, customvalue, destValue, speed, action);
 	}
 	public static void animateValue(Animatable object, CustomAnimationValue customvalue, double destValue, double speed)
 	{
-		animateValue(object, customvalue, destValue, speed, ACTION_NOTHING);
+		animateValue(object, customvalue, destValue, speed, FinishedAction.NOTHING);
 	}
-	public static void animateValue(Animatable object, CustomAnimationValue customvalue, double destValue, double speed, int action)
+	public static void animateValue(Animatable object, CustomAnimationValue customvalue, double destValue, double speed, FinishedAction action)
 	{
 		for(int i=0;i<animations.size();i++){
 			if(animations.get(i).object==object&&animations.get(i).value==AnimationValue.CUSTOM){
@@ -71,7 +63,7 @@ public class AnimationManager {
 		animations.add(new Animation(object, AnimationValue.CUSTOM, customvalue, customvalue.getValue(), destValue, speed, action));
 	}
 	public static void animateValue(Animatable object, AnimationValue value, float destValue, int time){
-		animateValue(object, value, destValue, time, ACTION_NOTHING);
+		animateValue(object, value, destValue, time, FinishedAction.NOTHING);
 	}
 	/**
 	 * Animates a value
@@ -81,7 +73,7 @@ public class AnimationManager {
 	 * @param time The duration of the animation in milliseconds
 	 * @param action The actions that should be done when the animation is finished
 	 */
-	public static void animateValue(Animatable object, AnimationValue value, double destValue, int time, int action)
+	public static void animateValue(Animatable object, AnimationValue value, double destValue, int time, FinishedAction action)
 	{
 		double speed=0;
 		switch(value){
@@ -114,10 +106,10 @@ public class AnimationManager {
 	}
 	public static void animateValue(Animatable object, AnimationValue value, double destValue, double speed)
 	{
-		animateValue(object, value, destValue, speed, ACTION_NOTHING);
+		animateValue(object, value, destValue, speed, FinishedAction.NOTHING);
 		
 	}
-	public static void animateValue(Animatable object, AnimationValue value, double destValue, double speed, int action)
+	public static void animateValue(Animatable object, AnimationValue value, double destValue, double speed, FinishedAction action)
 	{
 		for(int i=0;i<animations.size();i++){
 			if(animations.get(i).object==object&&animations.get(i).value==value){
@@ -270,20 +262,20 @@ public class AnimationManager {
 	
 	public static void ExecuteFinishedAction(Animation animation)
 	{
-		if(animation.finishedAction==ACTION_DELETE)
+		if(animation.finishedAction==FinishedAction.DELETE)
 		{
 			ResourceManager.deleteObject(animation.object);
 			Buildings.refreshSupply();
-		}else if(animation.finishedAction==ACTION_REMOVEGUI)
+		}else if(animation.finishedAction==FinishedAction.REMOVEGUI)
 		{
 			Main.gui.remove((GuiElement)animation.object);
-		}else if(animation.finishedAction==ACTION_HIDE)
+		}else if(animation.finishedAction==FinishedAction.HIDE)
 		{
 			animation.object.setVisible(false);
-		}else if(animation.finishedAction==ACTION_SHOW)
+		}else if(animation.finishedAction==FinishedAction.SHOW)
 		{
 			animation.object.setVisible(true);
-		}else if(animation.finishedAction==ACTION_RESET){
+		}else if(animation.finishedAction==FinishedAction.RESET){
 			switch(animation.value){
 			case X: 
 				animation.object.setX((float) animation.startvalue);
@@ -312,11 +304,17 @@ public class AnimationManager {
 			default:
 				break;
 			}
-		}else if(animation.finishedAction==ACTION_REVERSE){
+		}else if(animation.finishedAction==FinishedAction.REVERSE){
 			if(animation.value==AnimationValue.CUSTOM){
-				animateValue(animation.object, animation.customvalue, animation.startvalue, animation.speed, ACTION_NOTHING);
+				animateValue(animation.object, animation.customvalue, animation.startvalue, animation.speed, FinishedAction.NOTHING);
 			}else{
 				animateValue(animation.object, animation.value, animation.startvalue, animation.speed);
+			}
+		}else if(animation.finishedAction==FinishedAction.REVERSEREPEAT){
+			if(animation.value==AnimationValue.CUSTOM){
+				animateValue(animation.object, animation.customvalue, animation.startvalue, animation.speed, FinishedAction.REVERSEREPEAT);
+			}else{
+				animateValue(animation.object, animation.value, animation.startvalue, animation.speed,FinishedAction.REVERSEREPEAT);
 			}
 		}
 		if(animation.value==AnimationValue.CUSTOM){

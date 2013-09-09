@@ -1,8 +1,11 @@
 package objects;
 
+import game.BooleanCallback;
 import game.Grid;
 import game.ResourceManager;
+import game.Statistics;
 import game.Supply;
+import game.TransactionCategory;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -72,21 +75,25 @@ public class Buildings{
 		SupplyThread.start();
 		SupplyThread.setName("Supply Thread");
 		
-		//Building Types:           INDEX                                            NAME                                            OBJECT                                   TEXTURE                                       THUMBNAIL                        GRIDCOLOR        BUILDINGCOST  MONTHLYCOST  WIDTH    DEPTH   HEIGHT  HAPPINESSEFFECT  HAPPINESSRADIUS  SUPPLY  NEEDED: ENERGY  HEALTH  GARBAGE  INTERNET  SECURITY                            
-				buildingTypes.add(  BUILDINGTYPE_HOUSE,           new BuildingType(  "BUILDINGTYPE_HOUSE",           ResourceManager.OBJECT_HOUSE,            ResourceManager.TEXTURE_HOUSE,                ResourceManager.TEXTURE_GUITHUMBHOUSE,           Color.GREEN,     250,          0,           2,       2,      1.5f,   0,               0,               0,              10,     10,     10,      10,       10       ));
-				buildingTypes.add(  BUILDINGTYPE_BIGHOUSE,        new BuildingType(  "BUILDINGTYPE_BIGHOUSE",        ResourceManager.OBJECT_BIGHOUSE,         ResourceManager.TEXTURE_BIGHOUSE,             ResourceManager.TEXTURE_GUITHUMBBIGHOUSE,        Color.GREEN,     1500,         0,           4,       4,      8,      0,               0,               0,              50,     50,     50,      50,       50       ));
-				buildingTypes.add(  BUILDINGTYPE_STREET,          new BuildingType(  "BUILDINGTYPE_STREET",          ResourceManager.OBJECT_STREET,           ResourceManager.TEXTURE_STREET,               ResourceManager.TEXTURE_GUITHUMBSTREET,          Color.BLACK,     5,            0,           1,       1,      0,      0,               0,               0,              0,      0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_CITYCENTER,      new BuildingType(  "BUILDINGTYPE_CITYCENTER",      ResourceManager.OBJECT_CITYCENTER,       ResourceManager.TEXTURE_CITYCENTER,           ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER,     Color.BLACK,     0,            0,           8,       8,      6,      10,              15,              0,              0,      0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_RESEARCHSTATION, new BuildingType(  "BUILDINGTYPE_RESEARCHSTATION", ResourceManager.OBJECT_RESEARCHSTATION,  ResourceManager.TEXTURE_RESEARCHSTATION,      ResourceManager.TEXTURE_GUITHUMBRESEARCHSTATION, Color.RED,       7000,         10,          6,       6,      4,      0,               0,               0,              10,     0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_HANGAR,          new BuildingType(  "BUILDINGTYPE_HANGAR",          ResourceManager.OBJECT_HANGAR,           ResourceManager.TEXTURE_HANGAR,               ResourceManager.TEXTURE_GUITHUMBHANGAR,          Color.RED,       15000,        10,          6,       8,      4,      0,               0,               0,              10,     0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_BANK,            new BuildingType(  "BUILDINGTYPE_BANK",            ResourceManager.OBJECT_BANK,             ResourceManager.TEXTURE_BANK,                 ResourceManager.TEXTURE_GUITHUMBBANK,            Color.RED,       5000,         10,          6,       4,      3,      0,               0,               0,              10,     0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_MEDICALCENTER,   new BuildingType(  "BUILDINGTYPE_MEDICALCENTER",   ResourceManager.OBJECT_MEDICALCENTER,    ResourceManager.TEXTURE_MEDICALCENTER,        ResourceManager.TEXTURE_GUITHUMBMEDICALCENTER,   Color.BLUE,      10000,        15,          6,       4,      3,      10,              15,              500,            0,      0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_SERVERCENTER,    new BuildingType(  "BUILDINGTYPE_SERVERCENTER",    ResourceManager.OBJECT_SERVERCENTER,     ResourceManager.TEXTURE_SERVERCENTER,         ResourceManager.TEXTURE_GUITHUMBSERVERCENTER,    Color.BLUE,      10000,        10,          8,       8,      3,      0,               0,               1000,           0,      0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_GARBAGEYARD,     new BuildingType(  "BUILDINGTYPE_GARBAGEYARD",     ResourceManager.OBJECT_GARBAGEYARD,      ResourceManager.TEXTURE_GARBAGEYARD,          ResourceManager.TEXTURE_GUITHUMBGARBAGEYARD,     Color.BLUE,      5000,         10,          8,       4,      2,      -20,             20,              1000,           0,      0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_POLICE,          new BuildingType(  "BUILDINGTYPE_POLICE",          ResourceManager.OBJECT_POLICE,           ResourceManager.TEXTURE_POLICE,               ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER,     Color.BLUE,      15000,        15,          2,       2,      3,      10,              15,              500,            0,      0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_SOLARPOWER,      new BuildingType(  "BUILDINGTYPE_SOLARPOWER",      ResourceManager.OBJECT_SOLARPOWER,       ResourceManager.TEXTURE_SOLARPOWER,           ResourceManager.TEXTURE_GUITHUMBSOLARPOWER,      Color.YELLOW,    5000,         10,          16,      8,      1,      0,               0,               1000,           0,      0,      0,       0,        0        ));
-				buildingTypes.add(  BUILDINGTYPE_FUSIONPOWER,     new BuildingType(  "BUILDINGTYPE_FUSIONPOWER",     ResourceManager.OBJECT_FUSIONPOWER,      ResourceManager.TEXTURE_FUSIONPOWER,          ResourceManager.TEXTURE_GUITHUMBFUSIONPOWER,     Color.YELLOW,    25000,        60,          12,      12,     3,      0,               0,               10000,          0,      0,      0,       0,        0        ));
-	}                                                                                                                                                                                                                                                                                                                                                           
+		BooleanCallback BighouseLocked = new BooleanCallback(){
+			public boolean run() {if(Statistics.CitizensHouseMax>=800)return false; else return true;}
+		};
+		
+		//Building Types:           INDEX                                            NAME                                            OBJECT                                   TEXTURE                                       THUMBNAIL                        GRIDCOLOR     LOCKEDCALLBACK    BUILDINGCOST  MONTHLYCOST  WIDTH    DEPTH   HEIGHT  HAPPINESSEFFECT  HAPPINESSRADIUS  TRANSACTIONCATEGORY              SUPPLY                    ->AMOUNT ->RADIUS  NEEDED: ENERGY  HEALTH  GARBAGE  INTERNET  SECURITY                            
+				buildingTypes.add(  BUILDINGTYPE_HOUSE,           new BuildingType(  "BUILDINGTYPE_HOUSE",           ResourceManager.OBJECT_HOUSE,            ResourceManager.TEXTURE_HOUSE,                ResourceManager.TEXTURE_GUITHUMBHOUSE,           Color.GREEN,  null,             200,          0,           2,       2,      1.5f,   0,               0,               null,                            null,                     0,       0,                10,     10,     10,      10,       10       ));
+				buildingTypes.add(  BUILDINGTYPE_BIGHOUSE,        new BuildingType(  "BUILDINGTYPE_BIGHOUSE",        ResourceManager.OBJECT_BIGHOUSE,         ResourceManager.TEXTURE_BIGHOUSE,             ResourceManager.TEXTURE_GUITHUMBBIGHOUSE,        Color.GREEN,  BighouseLocked,   1000,         0,           4,       4,      8,      0,               0,               null,                            null,                     0,       0,                50,     50,     50,      50,       50       ));
+				buildingTypes.add(  BUILDINGTYPE_STREET,          new BuildingType(  "BUILDINGTYPE_STREET",          ResourceManager.OBJECT_STREET,           ResourceManager.TEXTURE_STREETDEFAULT,        ResourceManager.TEXTURE_GUITHUMBSTREET,          Color.BLACK,  null,             5,            0,           1,       1,      0,      0,               0,               TransactionCategory.Other,       null,                     0,       0,                0,      0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_CITYCENTER,      new BuildingType(  "BUILDINGTYPE_CITYCENTER",      ResourceManager.OBJECT_CITYCENTER,       ResourceManager.TEXTURE_CITYCENTER,           ResourceManager.TEXTURE_GUITHUMBPLACEHOLDER,     Color.BLACK,  null,             0,            0,           8,       8,      6,      10,              15,              TransactionCategory.Other,       null,                     0,       0,                0,      0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_RESEARCHSTATION, new BuildingType(  "BUILDINGTYPE_RESEARCHSTATION", ResourceManager.OBJECT_RESEARCHSTATION,  ResourceManager.TEXTURE_RESEARCHSTATION,      ResourceManager.TEXTURE_GUITHUMBRESEARCHSTATION, Color.RED,    null,             7000,         10,          6,       6,      4,      0,               0,               TransactionCategory.Other,       null,                     0,       0,                10,     0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_HANGAR,          new BuildingType(  "BUILDINGTYPE_HANGAR",          ResourceManager.OBJECT_HANGAR,           ResourceManager.TEXTURE_HANGAR,               ResourceManager.TEXTURE_GUITHUMBHANGAR,          Color.RED,    null,             15000,        10,          6,       8,      4,      0,               0,               TransactionCategory.Other,       null,                     0,       0,                10,     0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_BANK,            new BuildingType(  "BUILDINGTYPE_BANK",            ResourceManager.OBJECT_BANK,             ResourceManager.TEXTURE_BANK,                 ResourceManager.TEXTURE_GUITHUMBBANK,            Color.RED,    null,             5000,         10,          6,       4,      3,      0,               0,               TransactionCategory.Other,       null,                     0,       0,                10,     0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_MEDICALCENTER,   new BuildingType(  "BUILDINGTYPE_MEDICALCENTER",   ResourceManager.OBJECT_MEDICALCENTER,    ResourceManager.TEXTURE_MEDICALCENTER,        ResourceManager.TEXTURE_GUITHUMBMEDICALCENTER,   Color.BLUE,   null,             5000,         8,           6,       4,      3,      10,              15,              TransactionCategory.Health,      Supply.Health,            500,     30,               0,      0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_SERVERCENTER,    new BuildingType(  "BUILDINGTYPE_SERVERCENTER",    ResourceManager.OBJECT_SERVERCENTER,     ResourceManager.TEXTURE_SERVERCENTER,         ResourceManager.TEXTURE_GUITHUMBSERVERCENTER,    Color.BLUE,   null,             5500,         8,           8,       8,      3,      0,               0,               TransactionCategory.Other,       Supply.Internet,          1000,    0,                0,      0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_GARBAGEYARD,     new BuildingType(  "BUILDINGTYPE_GARBAGEYARD",     ResourceManager.OBJECT_GARBAGEYARD,      ResourceManager.TEXTURE_GARBAGEYARD,          ResourceManager.TEXTURE_GUITHUMBGARBAGEYARD,     Color.BLUE,   null,             5000,         6,           8,       4,      2,      -20,             20,              TransactionCategory.Garbage,     Supply.Garbagecollection, 1000,    100,              0,      0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_POLICE,          new BuildingType(  "BUILDINGTYPE_POLICE",          ResourceManager.OBJECT_POLICE,           ResourceManager.TEXTURE_POLICE,               ResourceManager.TEXTURE_GUITHUMBPOLICE,          Color.BLUE,   null,             5500,         10,          6,       4,      3,      10,              15,              TransactionCategory.Police,      Supply.Security,          500,     30,               0,      0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_SOLARPOWER,      new BuildingType(  "BUILDINGTYPE_SOLARPOWER",      ResourceManager.OBJECT_SOLARPOWER,       ResourceManager.TEXTURE_SOLARPOWER,           ResourceManager.TEXTURE_GUITHUMBSOLARPOWER,      Color.YELLOW, null,             5000,         10,          16,      8,      1,      0,               0,               TransactionCategory.Energy,      Supply.Energy,            1000,    0,                0,      0,      0,       0,        0        ));
+				buildingTypes.add(  BUILDINGTYPE_FUSIONPOWER,     new BuildingType(  "BUILDINGTYPE_FUSIONPOWER",     ResourceManager.OBJECT_FUSIONPOWER,      ResourceManager.TEXTURE_FUSIONPOWER,          ResourceManager.TEXTURE_GUITHUMBFUSIONPOWER,     Color.YELLOW, null,             25000,        60,          12,      12,     3,      0,               0,               TransactionCategory.Energy,      Supply.Energy,            10000,   0,                0,      0,      0,       0,        0        ));
+	}                                                                                                                                                                                                                                                                                                                                                                                   
 	
 	/**
 	 * Refreshes the distribution of supplies
@@ -122,14 +129,14 @@ public class Buildings{
 				int supplyAmount = b.getProducedSupplyAmount();
 				int x = (int) b.getX();
 				int y = (int) b.getZ();
-				int width = Buildings.getBuildingType(b).getWidth();
-				int depth = Buildings.getBuildingType(b).getDepth();
+				int width = (int) b.getWidth();
+				int depth = (int) b.getDepth();
 				
 				//Initialize the openlist:
-				/*bottom*/for(int i=x;i<x+width;i++){if(Grid.getCell(i,y+depth).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point(i,y+depth));}
-				/*top*/   for(int i=x;i<x+width;i++){if(Grid.getCell(i,y-1).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point(i,y-1));}
-				/*left*/  for(int i=y;i<y+depth;i++){if(Grid.getCell(x-1,i).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point(x-1,i));}
-				/*right*/ for(int i=y;i<y+depth;i++){if(Grid.getCell(x+width,i).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point(x+width,i));}
+				/*bottom*/for(int i=(int) (x-width*0.5+1);i<x+width*0.5+1;i++){if(Grid.getCell(i,(int) (y+depth*0.5+1)).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point(i,(int) (y+depth*0.5+1)));}
+				/*top*/   for(int i=(int) (x-width*0.5+1);i<x+width*0.5+1;i++){if(Grid.getCell(i,(int) (y-depth*0.5)).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point(i,(int) (y-depth*0.5)));}
+				/*left*/  for(int i=(int) (y-depth*0.5+1);i<y+depth*0.5+1;i++){if(Grid.getCell((int) (x-width*0.5),i).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point((int) (x-width*0.5),i));}
+				/*right*/ for(int i=(int) (y-depth*0.5+1);i<y+depth*0.5+1;i++){if(Grid.getCell((int) (x+width*0.5+1),i).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point((int) (x+width*0.5+1),i));}
 				
 				//Main algorithm loop
 				while((!openlist.isEmpty())&&supplyAmount>0)
@@ -145,10 +152,10 @@ public class Buildings{
 					closedlist.add(current);
 					
 					//Add sourrounding points to openlist
-					/*bottom*/if(!openlist.contains(new Point(current.getX(),current.getY()+1))&&!closedlist.contains(new Point(current.getX(),current.getY()+1))&&Grid.getCell(current.getX(),current.getY()+1).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point(current.getX(),current.getY()+1));
-					/*top*/   if(!openlist.contains(new Point(current.getX(),current.getY()-1))&&!closedlist.contains(new Point(current.getX(),current.getY()-1))&&Grid.getCell(current.getX(),current.getY()-1).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point(current.getX(),current.getY()-1));
-					/*left*/  if(!openlist.contains(new Point(current.getX()+1,current.getY()))&&!closedlist.contains(new Point(current.getX()+1,current.getY()))&&Grid.getCell(current.getX()+1,current.getY()).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point(current.getX()+1,current.getY()));
-					/*right*/ if(!openlist.contains(new Point(current.getX()-1,current.getY()))&&!closedlist.contains(new Point(current.getX()-1,current.getY()))&&Grid.getCell(current.getX()-1,current.getY()).getBuildingType()==Buildings.BUILDINGTYPE_STREET)openlist.add(new Point(current.getX()-1,current.getY()));
+					/*bottom*/if(!openlist.contains(new Point(current.getX(),current.getY()+1))&&!closedlist.contains(new Point(current.getX(),current.getY()+1))&&Grid.getCell(current.getX(),current.getY()+1).getBuildingType()==Buildings.BUILDINGTYPE_STREET&&(b.getProducedSupplyRadius()==0||Math.sqrt((b.getX()-current.getX())*(b.getX()-current.getX())+(b.getY()-current.getY()-1)*(b.getY()-current.getY()-1))<=b.getProducedSupplyRadius()))openlist.add(new Point(current.getX(),current.getY()+1));
+					/*top*/   if(!openlist.contains(new Point(current.getX(),current.getY()-1))&&!closedlist.contains(new Point(current.getX(),current.getY()-1))&&Grid.getCell(current.getX(),current.getY()-1).getBuildingType()==Buildings.BUILDINGTYPE_STREET&&(b.getProducedSupplyRadius()==0||Math.sqrt((b.getX()-current.getX())*(b.getX()-current.getX())+(b.getY()-current.getY()+1)*(b.getY()-current.getY()+1))<=b.getProducedSupplyRadius()))openlist.add(new Point(current.getX(),current.getY()-1));
+					/*left*/  if(!openlist.contains(new Point(current.getX()+1,current.getY()))&&!closedlist.contains(new Point(current.getX()+1,current.getY()))&&Grid.getCell(current.getX()+1,current.getY()).getBuildingType()==Buildings.BUILDINGTYPE_STREET&&(b.getProducedSupplyRadius()==0||Math.sqrt((b.getX()-current.getX()-1)*(b.getX()-current.getX()-1)+(b.getY()-current.getY())*(b.getY()-current.getY()))<=b.getProducedSupplyRadius()))openlist.add(new Point(current.getX()+1,current.getY()));
+					/*right*/ if(!openlist.contains(new Point(current.getX()-1,current.getY()))&&!closedlist.contains(new Point(current.getX()-1,current.getY()))&&Grid.getCell(current.getX()-1,current.getY()).getBuildingType()==Buildings.BUILDINGTYPE_STREET&&(b.getProducedSupplyRadius()==0||Math.sqrt((b.getX()-current.getX()+1)*(b.getX()-current.getX()+1)+(b.getY()-current.getY())*(b.getY()-current.getY()))<=b.getProducedSupplyRadius()))openlist.add(new Point(current.getX()-1,current.getY()));
 					
 					//Supply surrounding buildings
 					int own,needed;
@@ -235,8 +242,9 @@ public class Buildings{
 	 * @param y Y Position
 	 * @param z Z Position
 	 * @param bt Building type
+	 * @param rY Y rotation
 	 */
-	public static Building buildBuilding(float x, float y, float z, int bt)
+	public static Building buildBuilding(float x, float y, float z, int bt, float rY)
 	{
 		x = Grid.cellSize*Math.round(x/Grid.cellSize);
 		y = Grid.cellSize*Math.round(y/Grid.cellSize);
@@ -244,23 +252,24 @@ public class Buildings{
 		Building building = null;
 		switch(bt)
 		{
-			case BUILDINGTYPE_STREET:           building=new  Street(bt,x,y,z);          break;
-			case BUILDINGTYPE_HOUSE:            building=new  House(bt,x,y,z);           break;
-			case BUILDINGTYPE_BIGHOUSE:         building=new  BigHouse(bt,x,y,z);        break;
-			case BUILDINGTYPE_CITYCENTER:       building=new  CityCenter(bt,x,y,z);      break;
-			case BUILDINGTYPE_RESEARCHSTATION:  building=new  ResearchStation(bt,x,y,z); break;
-			case BUILDINGTYPE_HANGAR:           building=new  Hangar(bt,x,y,z);          break;
-			case BUILDINGTYPE_BANK:             building=new  Bank(bt,x,y,z);            break;
-			case BUILDINGTYPE_MEDICALCENTER:    building=new  MedicalCenter(bt,x,y,z);   break;
-			case BUILDINGTYPE_SERVERCENTER:     building=new  ServerCenter(bt,x,y,z);    break;
-			case BUILDINGTYPE_GARBAGEYARD:      building=new  GarbageYard(bt,x,y,z);     break;
-			case BUILDINGTYPE_POLICE:           building=new  Police(bt,x,y,z);          break;
-			case BUILDINGTYPE_SOLARPOWER:       building=new  SolarPower(bt,x,y,z);      break;
-			case BUILDINGTYPE_FUSIONPOWER:      building=new  FusionPower(bt,x,y,z);     break;
-			default:                            building=new  Building(bt,x,y,z);        break;
+			case BUILDINGTYPE_STREET:           building=new  Street(bt,x,y,z,rY);          break;
+			case BUILDINGTYPE_HOUSE:            building=new  House(bt,x,y,z,rY);           break;
+			case BUILDINGTYPE_BIGHOUSE:         building=new  BigHouse(bt,x,y,z,rY);        break;
+			case BUILDINGTYPE_CITYCENTER:       building=new  CityCenter(bt,x,y,z,rY);      break;
+			case BUILDINGTYPE_RESEARCHSTATION:  building=new  ResearchStation(bt,x,y,z,rY); break;
+			case BUILDINGTYPE_HANGAR:           building=new  Hangar(bt,x,y,z,rY);          break;
+			case BUILDINGTYPE_BANK:             building=new  Bank(bt,x,y,z,rY);            break;
+			case BUILDINGTYPE_MEDICALCENTER:    building=new  MedicalCenter(bt,x,y,z,rY);   break;
+			case BUILDINGTYPE_SERVERCENTER:     building=new  ServerCenter(bt,x,y,z,rY);    break;
+			case BUILDINGTYPE_GARBAGEYARD:      building=new  GarbageYard(bt,x,y,z,rY);     break;
+			case BUILDINGTYPE_POLICE:           building=new  Police(bt,x,y,z,rY);          break;
+			case BUILDINGTYPE_SOLARPOWER:       building=new  SolarPower(bt,x,y,z,rY);      break;
+			case BUILDINGTYPE_FUSIONPOWER:      building=new  FusionPower(bt,x,y,z,rY);     break;
+			default:                            building=new  Building(bt,x,y,z,rY);        break;
 		}                                                     
-		Grid.setBuilding(Math.round(x),Math.round(z), building);
+		Grid.setBuilding(Math.round(x),Math.round(z), building, rY);
 		buildings.add(building);
+		building.setRotY(rY);
 		return building;
 	}
 

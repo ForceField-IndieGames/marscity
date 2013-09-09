@@ -109,6 +109,7 @@ public class GuiLabel extends BasicGuiElement {
 		//Automatically wrap the text
 		float lineheight = getFont().getHeight("j");
 		int maxlines = (int) Math.floor(getHeight()/lineheight);
+		//One line
 		if(maxlines<=1){
 			if(getFont().getWidth(getText())>getWidth())
 			{
@@ -121,6 +122,7 @@ public class GuiLabel extends BasicGuiElement {
 			}
 			return;
 		}
+		//Multiple lines
 		int currentlinestart = 0;
 		for(int i=0;i<getText().length();i++){
 			if(getWidth()<getFont().getWidth(getText().substring(currentlinestart, i))){
@@ -129,7 +131,7 @@ public class GuiLabel extends BasicGuiElement {
 					currentlinestart=i+1;
 				}else{
 					boolean found=false;
-					for(int j=i;j>i-6;j--){
+					for(int j=i;j>i-10;j--){
 						if(getText().substring(j-3,j-2).equals(" ")){
 							this.text=getText().substring(0,j-2)+System.lineSeparator()+getText().substring(j-2);
 							found=true;

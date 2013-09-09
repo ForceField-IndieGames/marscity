@@ -58,7 +58,7 @@ public class GuiCheckbox extends GuiPanel {
 	@Override
 	public void callGuiEvents(GuiEventType eventtype) {
 		if(eventtype==GuiEventType.Click)toggleChecked();
-		if(eventtype==GuiEventType.Mouseover)bg.setColor(new Color(230,230,230));
+		if(eventtype==GuiEventType.Mousein)bg.setColor(new Color(230,230,230));
 		if(eventtype==GuiEventType.Mouseout)bg.setColor(Color.white);
 		super.callGuiEvents(eventtype);
 	}

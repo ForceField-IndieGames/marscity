@@ -6,5 +6,5 @@ package gui;
  */
 
 public enum GuiEventType {
-	Click,Mouseover,Mouseout,Keypress,Valuechange,Scrollup,Scrolldown,Mousemove, Drag;
+	Click,Mousein,Mouseout,Keypress,Valuechange,Scrollup,Scrolldown,Mousemove, Drag;
 }

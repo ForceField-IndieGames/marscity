@@ -6,6 +6,7 @@ import effects.ParticleEffects;
 import gui.GUI;
 import gui.GuiEventType;
 import gui.GuiElement;
+import buildings.*;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -28,7 +29,6 @@ import objects.Building;
 import objects.Buildings;
 import objects.Entity;
 import objects.Streets;
-import objects.Terrain;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -41,6 +41,7 @@ import org.lwjgl.opengl.DisplayMode;
 import animation.AnimationManager;
 import animation.AnimationValue;
 import animation.CustomAnimationValue;
+import animation.FinishedAction;
 
 
 /**
@@ -68,7 +69,7 @@ class splashScreen extends JFrame implements Runnable{
 		this.setUndecorated(true);
 		getContentPane().setBackground(Color.black);
 		setVisible(true);
-		setTitle("lwjglTest");
+		setTitle("MarsCity");
 		setBounds(0, 0, Toolkit.getDefaultToolkit().getScreenSize().width , Toolkit.getDefaultToolkit().getScreenSize().height);
 		setAlwaysOnTop(true);
 		setLayout(null);
@@ -97,7 +98,7 @@ class splashScreen extends JFrame implements Runnable{
 
 	public void setInfo(String text)
 	{
-		int percent = Math.round(loadeditems/114f*100);
+		int percent = Math.round(loadeditems/149f*100);
 		if(percent>100)percent=100;
 		label2.setText(percent+"% "+text);
 		progress.setValue(percent);
@@ -131,7 +132,7 @@ public class Main {
 	
 	//////////////////////////////////////////////////////////////////////////
 	//The debugmode enables cheats and displays additional debug information//
-	public static boolean debugMode = true;//////////////////////////////////
+	public static boolean debugMode = false;//////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////
 	
 	//The tools
@@ -145,7 +146,7 @@ public class Main {
 	public final static byte STATE_GAME = 2;
 	
 	//other constants
-	public final static int MONTH_MILLIS = debugMode?1000:60000;
+	public final static int MONTH_MILLIS = 5000;
 	public final static int LOD1 = 50;
 	public final static int LOD2 = 150;
 
@@ -155,8 +156,6 @@ public class Main {
 	
 	public static int      hoveredEntity = -1;                               //The index of the object that is hovered with the mouse
 	public static byte     selectedTool  = TOOL_SELECT;                      //The selected tool, SELECT,ADD or DELETE
-	public static int      money         = Game.INITIALMONEY;                //The players money
-	public static int      citizens      = 0;                                //The citizens that live in the city
 	public static byte     taxes         = Game.INITIALTAXES;                //Taxes for citizens in %
 	public static String   cityname      = "Meine Stadt";                    //The city's name
 	public static int      currentBT     = -1;                               //The currently selected building type
@@ -165,14 +164,17 @@ public class Main {
 	public static String   clipboard     = "";                               //A local text clipboard
 	public static Timer    MonthlyTimer  = new Timer();                      //A timer for sheduling monthly acitons
 	public static DataView currentDataView = null;                           //The currently displayed DataView
+	public static float    buildRotation = 0;                                //The rotation of new buildings
 	
 	//Some more objects
 	public static Camera       camera       = new Camera();
-	       static Terrain      terrain; 
+	       static Entity       terrain; 
 	       static Entity       skybox;
 	public static GUI          gui;
 	public static BuildPreview buildpreview;
 	       static splashScreen splashscreen;
+	public static Entity       shield;
+	public static CityCenter   BuildingCitycenter;
 	
 	/**
 	 * Writes a string into the log file
@@ -213,9 +215,6 @@ public class Main {
 		list[1] =  ByteBuffer.wrap(ResourceManager.TEXTURE_ICON32.getTextureData());
 		Display.setIcon(list);
 		
-		//Delete the log file
-		try {(new File("mars city.log")).delete();} catch (Exception e) {}
-		
 		System.out.println("Mars City started...");
 		log("Mars City started...");
 		
@@ -229,7 +228,12 @@ public class Main {
 		gui = new GUI(); //Create the GUI
 		buildpreview = new BuildPreview(); //Create the Building Preview
 		skybox = new Entity(ResourceManager.OBJECT_SKYBOX, ResourceManager.TEXTURE_SKYBOX);
-		terrain = new Terrain(0,0,0);//create the terrain
+		terrain = new Entity(ResourceManager.OBJECT_TERRAIN,ResourceManager.TEXTURE_TERRAIN);//create the terrain
+		shield = new Entity(ResourceManager.OBJECT_SHIELD,ResourceManager.TEXTURE_SHIELD);
+			shield.setOpacity(0.3f);
+			shield.setScaleX(200);
+			shield.setScaleY(200);
+			shield.setScaleZ(200);
 		
 		//Enable vsync according to the settings
 		if(ResourceManager.getSetting("vsync").equals("enabled"))Display.setVSyncEnabled(true);
@@ -351,9 +355,9 @@ public class Main {
         glReadPixels(Mouse.getX(), Mouse.getY(), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, mouseZ);
         gluUnProject(Mouse.getX(), Mouse.getY(), mouseZ.get(0), mv, p,  vp,  result);
         
-        mousepos3d[0] = result.get(0);
+        mousepos3d[0] = result.get(0)+0.5f;
         mousepos3d[1] = result.get(1);
-        mousepos3d[2] = result.get(2);
+        mousepos3d[2] = result.get(2)+0.5f;
 	}
 	
 	/**
@@ -390,8 +394,6 @@ public class Main {
 					camera.setX((float) (camera.getX()+0.002f*delta*camera.getZoom()*Math.cos(Math.toRadians(camera.getRotY()))));
 					camera.setZ((float) (camera.getZ()-0.002f*delta*camera.getZoom()*Math.sin(Math.toRadians(camera.getRotY()))));
 				}
-				if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) camera.setY(camera.getY()+0.1f*delta);
-				if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) camera.setY(camera.getY()-0.1f*delta);
 				
 				//The o key aktivates a particle effect in debug mode
 				if(Keyboard.isKeyDown(Keyboard.KEY_O)&&debugMode){
@@ -430,13 +432,57 @@ public class Main {
 						{
 							Game.Resume();
 							gui.blur.setVisible(false);
-							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.OPACITY, 0, 0.005f, AnimationManager.ACTION_HIDE);
+							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.OPACITY, 0, 0.005f, FinishedAction.HIDE);
 						}else {
 							Game.Pause();
 							gui.blur.setVisible(true);
 							gui.pauseMenu.setVisible(true);
 							AnimationManager.animateValue(gui.pauseMenu, AnimationValue.OPACITY, 1, 0.005f);
 						}
+					}
+					//Rotate Buildings in buildmode with , and .
+					if(Keyboard.getEventKey()==Keyboard.KEY_COMMA && Keyboard.getEventKeyState())
+					{
+						buildRotation=Math.round((buildRotation%360)/90)*90;
+						if(buildRotation<0)buildRotation+=360;
+						float newrot = buildRotation+90;
+						AnimationManager.animateValue(null, new CustomAnimationValue(){
+							@Override
+							public double getValue() {
+								return buildRotation;
+							}
+							@Override
+							public void setValue(double input) {
+								buildRotation = (float) input;
+							}
+							@Override
+							public void finishedAction() {
+								buildRotation=Math.round((buildRotation%360)/90)*90;
+								if(buildRotation<0)buildRotation+=360;
+							}
+						}, newrot, 200);
+					}
+					if(Keyboard.getEventKey()==Keyboard.KEY_PERIOD && Keyboard.getEventKeyState())
+					{
+						buildRotation=Math.round((buildRotation%360)/90)*90;
+						if(buildRotation<0)buildRotation+=360;
+						float newrot = buildRotation-90;
+						AnimationManager.animateValue(null, new CustomAnimationValue(){
+							@Override
+							public double getValue() {
+								return buildRotation;
+							}
+							@Override
+							public void setValue(double input) {
+								buildRotation = (float) input;
+							}
+							@Override
+							public void finishedAction() {
+								buildRotation=Math.round((buildRotation%360)/90)*90;
+								if(buildRotation<0)buildRotation+=360;
+							}
+						}, newrot, 200);
+						
 					}
 					//Activate and deactivate debug mode with TAB
 					if(Keyboard.getEventKey()==Keyboard.KEY_TAB&&Keyboard.getEventKeyState()){
@@ -455,7 +501,7 @@ public class Main {
 					}
 					//Get money with F1 in debug mode
 					if(Keyboard.getEventKey()==Keyboard.KEY_F1&&Keyboard.getEventKeyState()&&debugMode){
-						money += 50000;
+						Statistics.money += 50000;
 					}
 				}
 	}
@@ -479,24 +525,24 @@ public class Main {
 				camera.setRotY(camera.getRotY()-0.1f*MX);
 				camera.setRotX(camera.getRotX()+0.1f*MY);
 				if(camera.getRotX()<-89)camera.setRotX(-89);
-				if(camera.getRotX()>-1)camera.setRotX(-1);
+				if(camera.getRotX()>89)camera.setRotX(89);
 				if(camera.wasRotated()){
 					gui.cameraRotate.setVisible(true);
 				}
 			}
 			//Move the camera with middle mouse button
 			if(Mouse.isButtonDown(2)){
-				camera.setX((float) (camera.getX()+delta*(0.00008f*camera.getZoom()+0.0004f)
-						*MY*Math.sin(Math.toRadians(camera.getRotY()))-delta*(0.00008f*camera.getZoom()+0.0004f)
+				camera.setX((float) (camera.getX()+15*(0.00008f*camera.getZoom()+0.0004f)
+						*MY*Math.sin(Math.toRadians(camera.getRotY()))-15*(0.00008f*camera.getZoom()+0.0004f)
 						*MX*Math.cos(Math.toRadians(camera.getRotY()))));
-				camera.setZ((float) (camera.getZ()+delta*(0.00008f*camera.getZoom()+0.0004f)
-						*MY*Math.cos(Math.toRadians(camera.getRotY()))+delta*(0.00008f*camera.getZoom()+0.0004f)
+				camera.setZ((float) (camera.getZ()+15*(0.00008f*camera.getZoom()+0.0004f)
+						*MY*Math.cos(Math.toRadians(camera.getRotY()))+15*(0.00008f*camera.getZoom()+0.0004f)
 						*MX*Math.sin(Math.toRadians(camera.getRotY()))));
 			}
 		}
 		
 		//Fire Mouseover and Mouseout events
-		if(gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mouseover);
+		if(gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mousein);
 		if(gui.lastHovered!=null&&gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mouseout,gui.lastHovered);
 		gui.lastHovered = guihit;
 		
@@ -593,6 +639,8 @@ public class Main {
 						break;
 					
 					case(TOOL_ADD): // Create a new building/street at mouse position
+						
+						
 						if(!Mouse.getEventButtonState()||currentBT==-1)break;
 						//Start street building
 						if(currentBT==Buildings.BUILDINGTYPE_STREET){
@@ -600,27 +648,47 @@ public class Main {
 							break;
 						}
 						//Build a building
-						if (!Grid.isAreaFree((int) Math.round(mousepos3d[0]),
-								(int) Math.round(mousepos3d[2]), 
-								Buildings.getBuildingType(currentBT).getWidth(),
-								Buildings.getBuildingType(currentBT).getDepth())){
+						int buildwidth;
+						int builddepth;
+						buildRotation=Math.round(buildRotation/90)*90;
+						if(buildRotation!=0&&buildRotation!=180)
+						{
+							buildwidth = Buildings.getBuildingType(currentBT).getDepth();
+							builddepth = Buildings.getBuildingType(currentBT).getWidth();
+						}else{
+							buildwidth = Buildings.getBuildingType(currentBT).getWidth();
+							builddepth = Buildings.getBuildingType(currentBT).getDepth();
+						}
+						
+						int mposx = Math.round(mousepos3d[0]-0.5f*(1-buildwidth%2));
+						int mposz = Math.round(mousepos3d[2]-0.5f*(1-builddepth%2));
+						
+						//Is the area free?
+						if (!Grid.isAreaFree(mposx,mposz,buildwidth,builddepth)){
 							gui.showToolTip(ResourceManager.getString("FEEDBACK_OVERLAPPING"));
 							break;
 						}
-						if (money < Buildings.getBuildingType(currentBT).getBuidlingcost()){
+						//Does the player have enough money?
+						if (Statistics.money < Buildings.getBuildingType(currentBT).getBuidlingcost()){
 							gui.showToolTip(ResourceManager.getString("FEEDBACK_NOTENOUGHMONEY"));
 							break;
 						}
-						if (!Grid.buildingSurroundedWith((int) Math.round(mousepos3d[0]), (int) Math.round(mousepos3d[2]), currentBT, Buildings.BUILDINGTYPE_STREET)){
+						//Is a street nearby?
+						if (!Grid.buildingSurroundedWith(mposx, mposz, currentBT, Buildings.BUILDINGTYPE_STREET,buildRotation)){
 							gui.showToolTip(ResourceManager.getString("FEEDBACK_NOSTREET"));
 							break;
 						}
+						//Will the building be within the shield boundaries?
+						if (Math.sqrt(mposx*mposx+mposz*mposz)>BuildingCitycenter.getBuildRadius()){
+							gui.showToolTip(ResourceManager.getString("FEEDBACK_OUTOFRANGE"));
+							break;
+						}
 						ResourceManager.playSoundRandom(ResourceManager.SOUND_DROP);
-						Building b = Buildings.buildBuilding(mousepos3d[0], mousepos3d[1]+5, mousepos3d[2], currentBT);
-						money -= Buildings.getBuildingType(currentBT).getBuidlingcost();
+						Building b = Buildings.buildBuilding(mposx, mousepos3d[1]+5, mposz, currentBT, buildRotation);
+						Statistics.money -= Buildings.getBuildingType(currentBT).getBuidlingcost();
 						ParticleEffects.dustEffect(b.getX(), 0, b.getZ());
 						camera.setY(0);
-						AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, AnimationManager.ACTION_REVERSE);
+						AnimationManager.animateValue(camera, AnimationValue.Y, camera.getY()+2, 0.05f, FinishedAction.REVERSE);
 						AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
 						buildpreview.waveEffect();
 						Buildings.refreshSupply();
@@ -634,7 +702,7 @@ public class Main {
 						}
 						try {
 							ResourceManager.playSoundRandom(ResourceManager.SOUND_DESTROY);
-							Grid.clearsCells((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ(), Buildings.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuildingType()).getWidth(), Buildings.getBuildingType(ResourceManager.getObject(hoveredEntity).getBuildingType()).getDepth());
+							Grid.clearsCells((int)ResourceManager.getObject(hoveredEntity).getX(), (int)ResourceManager.getObject(hoveredEntity).getZ(), (int)ResourceManager.getObject(hoveredEntity).getWidth(), (int)ResourceManager.getObject(hoveredEntity).getDepth());
 							ParticleEffects.dustEffect(ResourceManager.getObject(hoveredEntity).getX(),ResourceManager.getObject(hoveredEntity).getY(),ResourceManager.getObject(hoveredEntity).getZ());
 							ResourceManager.getObject(hoveredEntity).delete();
 						} catch (Exception e) {e.printStackTrace();}
@@ -668,7 +736,7 @@ public class Main {
 					public void setValue(double input) {
 						camera.setZoom((float) ((input)<7?7:((input>1000)?1000:input)));
 					}
-				}, camera.getZoom()-0.004*camera.getZoom()*Mouse.getEventDWheel()-((Mouse.getEventDWheel()<0)?0.1:0.01)*Mouse.getEventDWheel(), 200);
+				}, camera.getZoom()-0.0035*camera.getZoom()*Mouse.getEventDWheel()-((Mouse.getEventDWheel()<0)?0.1:0.01)*Mouse.getEventDWheel(), 150);
 			}
 		}
 	}
@@ -686,8 +754,6 @@ public class Main {
 		glEnable(GL_DEPTH_TEST);
 		glClearColor(0.7f, 0.4f, 1f, 1f);
 		glClearDepth(1); 
-		
-		
 		
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
@@ -780,6 +846,8 @@ public class Main {
        // glUseProgram(ResourceManager.shaderProgram);
        
         //Draw the buidings
+        glEnable(GL_COLOR_MATERIAL);
+        glEnable(GL_TEXTURE_2D);
         for(int i=0;i<Buildings.buildings.size();i++){
         	if(i==hoveredEntity&&!Mouse.isGrabbed()&&selectedTool!=TOOL_ADD){
         		if(selectedTool==TOOL_DELETE)glColor3f(1f, 0f, 0f);
@@ -802,7 +870,6 @@ public class Main {
 			Buildings.buildings.get(i).draw();
 			glEnable(GL_LIGHTING);
 			glEnable(GL_TEXTURE_2D);
-			glDisable(GL_COLOR_MATERIAL);
 		}
         
         //glUseProgram(0);
@@ -812,6 +879,21 @@ public class Main {
         
         //Draw the particle effects
         ParticleEffects.draw();
+        
+        //Draw shield
+        if(currentDataView==null)
+        {
+        	glEnable(GL_LIGHTING);
+			glEnable(GL_TEXTURE_2D);
+			glEnable(GL_COLOR_MATERIAL);
+			glDisable(GL_LIGHTING);
+			glEnable(GL_DEPTH_TEST);
+			glColor4f(1, 1, 1,0.3f);
+	        shield.draw();
+	        glEnable(GL_LIGHTING);
+	        glDisable(GL_COLOR_MATERIAL);
+        }
+        
 		
 		glPopMatrix();
 		
@@ -849,7 +931,7 @@ public class Main {
 		i=(i<2*Math.PI)?i+0.005f:0;
 		//Process mouse inputs
 		GuiElement guihit = gui.mouseoverMenu();
-		if(gui.lastHovered!=guihit)gui.callGuiEventsMenu(GuiEventType.Mouseover);
+		if(gui.lastHovered!=guihit)gui.callGuiEventsMenu(GuiEventType.Mousein);
 		if(gui.lastHovered!=null&&gui.lastHovered!=guihit)gui.callGuiEvents(GuiEventType.Mouseout,gui.lastHovered);
 		gui.lastHovered = guihit;
 		while(Mouse.next())
@@ -884,9 +966,9 @@ public class Main {
 		
 		//Move the BuildPreview
 		if(selectedTool==TOOL_ADD&&gui.getMouseover()==null&&!Mouse.isGrabbed()){
-			buildpreview.setX(Grid.cellSize*Math.round(mousepos3d[0]/Grid.cellSize));
+			buildpreview.setX(Grid.cellSize*Math.round((mousepos3d[0]-0.5f*(1-((buildRotation!=0||buildRotation!=180)?buildpreview.getBt().getDepth():buildpreview.getBt().getWidth())%2))/Grid.cellSize));
 			buildpreview.setY(Grid.cellSize*Math.round(mousepos3d[1]/Grid.cellSize));
-			buildpreview.setZ(Grid.cellSize*Math.round(mousepos3d[2]/Grid.cellSize));
+			buildpreview.setZ(Grid.cellSize*Math.round((mousepos3d[2]-0.5f*(1-((buildRotation!=0||buildRotation!=180)?buildpreview.getBt().getWidth():buildpreview.getBt().getDepth())%2))/Grid.cellSize));
 			buildpreview.setVisible(true);
 		}else{
 			buildpreview.setVisible(false);
@@ -907,11 +989,9 @@ public class Main {
 		//Show debug info
 		String bt = "-";
 		try {
-			if(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding()!=null){
-			bt = ""+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType()+" ("+Buildings.getBuildingTypeName(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType())+")";
-		}
-		} catch (Exception e) {
-		}
+			if(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding()!=null)
+				bt = ""+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType()+" ("+Buildings.getBuildingTypeName(Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getBuildingType())+")";
+		} catch (Exception e) {}
 		String energy = "-";
 		try {
 			energy = (int)((Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getOwnedSupplyAmount(Supply.Energy)/(float)Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getNeededSupplyAmount(Supply.Energy))*100)+"% ("+Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getBuilding().getOwnedSupplyAmount(Supply.Energy)+")";
@@ -924,16 +1004,16 @@ public class Main {
 		try {
 			happinessEffect = ""+(int)((Grid.getCell(Math.round(mousepos3d[0]), Math.round(mousepos3d[2])).getHappinessEffect()));
 		} catch (Exception e) {}
-		gui.debugInfo.setText("debug mode | Objects: "+Buildings.buildings.size()+
+		gui.debugInfo.setText(" DEBUG MODE | Objects: "+Buildings.buildings.size()+
 				", FPS: "+fps+", ParticleEffects: "+ParticleEffects.getEffectCount()+", Mouse:("+Math.round(mousepos3d[0])+","+Math.round(mousepos3d[1])+","+Math.round(mousepos3d[2])+")"+
 				", GridIndex: "+Grid.posToIndex(Math.round(mousepos3d[0]), Math.round(mousepos3d[2]))+
 				", BuildingType: "+bt+", Energy supply: "+energy+", Happiness: "+happiness+", HappinessEffect: "+happinessEffect);
 	
 			
 		//Update gui info labels
-		gui.infoMoney.setText(ResourceManager.getString("INFOBAR_LABEL_MONEY")+": "+money+"$");
-		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+citizens);
-		if(selectedTool==TOOL_ADD&&money<Buildings.getBuildingType(currentBT).getBuidlingcost()){
+		gui.infoMoney.setText(ResourceManager.getString("INFOBAR_LABEL_MONEY")+": "+Statistics.money+"$");
+		gui.infoCitizens.setText(ResourceManager.getString("INFOBAR_LABEL_CITIZENS")+": "+Statistics.citizens);
+		if(selectedTool==TOOL_ADD&&Statistics.money<Buildings.getBuildingType(currentBT).getBuidlingcost()){
 			gui.infoMoney.setTextColor(Color.red);
 		}else {
 			gui.infoMoney.setTextColor(Color.black);
@@ -948,11 +1028,16 @@ public class Main {
 		//Rotate the camera while in pause mode
 		if(Game.isPaused())camera.setRotY(camera.getRotY()+0.05f);
 		
+		//Rotate the shield
+		shield.setRotY(shield.getRotY()+0.01f);
+		
 		// update FPS Counter
 		updateFPS(); 
 	}
 
 	public static void main(String[] argv) throws FileNotFoundException {
+		//Delete the log file
+		try {(new File("mars city.log")).delete();} catch (Exception e) {}
 		Main MarsCity = new Main();
 		splashscreen = new splashScreen();
 		MarsCity.start();

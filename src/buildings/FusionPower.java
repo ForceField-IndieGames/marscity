@@ -1,22 +1,13 @@
 package buildings;
 
-import game.MonthlyActions;
-import game.Supply;
-import game.TransactionCategory;
 import objects.Building;
-import objects.Buildings;
 
 public class FusionPower extends Building {
 
-	public FusionPower(int bt, float x, float y, float z)
+	public FusionPower(int bt, float x, float y, float z, float rY)
 	{
-		super(bt,x,y,z);
-		setProducedSupply(Supply.Energy);
+		super(bt,x,y,z,rY);
 	}
 
-	@Override
-	public void monthlyAction() {
-		MonthlyActions.addTransaction(-Buildings.getBuildingType(getBuildingType()).getMonthlycost(), TransactionCategory.Energy);
-	}
 	
 }

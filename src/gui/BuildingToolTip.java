@@ -4,8 +4,8 @@ import java.awt.Color;
 
 import objects.Buildings;
 
-import game.Main;
 import game.ResourceManager;
+import game.Statistics;
 import guielements.GuiLabel;
 import guielements.GuiPanel;
 
@@ -44,7 +44,7 @@ public class BuildingToolTip extends GuiPanel {
 		add(price);
 		monthlycost = new GuiLabel(136,15,100,30,(Color)null);
 		monthlycost.setRightaligned(true);
-		monthlycost.setText("0$");
+		monthlycost.setText("0$$");
 		add(monthlycost);
 	}
 	
@@ -54,10 +54,10 @@ public class BuildingToolTip extends GuiPanel {
 		description.setText(ResourceManager.getBtDescription(bt));
 		description.wrapText();
 		price.setText(Buildings.getBuildingType(bt).getBuidlingcost()+"$");
-		if(Main.money<Buildings.getBuildingType(bt).getBuidlingcost()){
+		if(Statistics.money<Buildings.getBuildingType(bt).getBuidlingcost()){
 			price.setTextColor(Color.red);
 		}else price.setTextColor(Color.black);
-		monthlycost.setText(Buildings.getBuildingType(bt).getMonthlycost()+"$");
+		monthlycost.setText(Buildings.getBuildingType(bt).getMonthlycost()+"$$");
 	}
 	
 }
