@@ -105,6 +105,7 @@ public class ResourceManager {
 	public final static int[] OBJECT_SOLARPOWERPANELS      = addObject("solarpowerpanels");
 	public final static int[] OBJECT_GARBAGEYARDBURNER     = addObject("garbageyardburner");
 	public final static int[] OBJECT_GARBAGEYARDVEHICLES   = addObject("garbageyardvehicles");
+	public final static int[] OBJECT_POLICEVEHICLES        = addObject("policevehicles");
 	
 	//The audio files
 	public final static Audio SOUND_DROP    = addSound("WAV", "drop.wav");
@@ -158,6 +159,7 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUITHUMBSOLARPOWERCOATING    = addTexture("gui/thumbsolarpowercoating.png");
 	public final static Texture TEXTURE_GUITHUMBGARBAGEYARDBURNER    = addTexture("gui/thumbgarbageyardburner.png");
 	public final static Texture TEXTURE_GUITHUMBPOLICE               = addTexture("gui/thumbpolice.png");
+	public final static Texture TEXTURE_GUITHUMBPOLICESTAFF          = addTexture("gui/thumbpolicestaff.png");
 	
 	public final static Texture TEXTURE_ICON16                  = addTexture("gui/icon16.png");
 	public final static Texture TEXTURE_ICON32                  = addTexture("gui/icon32.png");
@@ -339,14 +341,13 @@ public class ResourceManager {
  			int pos = line.indexOf("|");
  			if(pos!=-1){
  				try {
-					hm.put(line.substring(0,pos), line.substring(pos+1));
+					hm.put(line.substring(0,pos), new String(line.substring(pos+1).getBytes(),"UTF-8"));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
  			}
  		}
- 		
- 		reader.close();
+ 		reader.close(); 		
  		return hm;
  	}
  	

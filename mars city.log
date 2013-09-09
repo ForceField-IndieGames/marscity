@@ -22,6 +22,7 @@ Loading object: servercenterservers
 Loading object: solarpowerpanels
 Loading object: garbageyardburner
 Loading object: garbageyardvehicles
+Loading object: policevehicles
 Loading sound: /res/sounds/drop.wav
 Loading sound: /res/sounds/destroy.wav
 Loading sound: /res/sounds/select.wav
@@ -70,6 +71,7 @@ Loading texture: /res/textures/gui/thumbsolarpowerpanels.png
 Loading texture: /res/textures/gui/thumbsolarpowercoating.png
 Loading texture: /res/textures/gui/thumbgarbageyardburner.png
 Loading texture: /res/textures/gui/thumbpolice.png
+Loading texture: /res/textures/gui/thumbpolicestaff.png
 Loading texture: /res/textures/gui/icon16.png
 Loading texture: /res/textures/gui/icon32.png
 Loading texture: /res/textures/gui/icon256.png
@@ -139,7 +141,6 @@ Loading texture: /res/textures/supplyradius.png
 Loading texture: /res/textures/gui/upgraded.png
 Loading texture: /res/textures/gui/locked.png
 Mars City started...
-Created necessary folders.
 Loading XML: res/settings/settings.xml
 Loading language file: /res/lang/DE.lang
 Finished loading resources.
