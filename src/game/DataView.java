@@ -5,6 +5,7 @@ import java.awt.Color;
 import org.newdawn.slick.opengl.Texture;
 
 import objects.Building;
+import objects.Buildings;
 
 public enum DataView {
 	
@@ -16,7 +17,8 @@ public enum DataView {
 				if(b.getOwnedSupplyAmount(Supply.Energy)<=0)return Color.red;
 				else return new Color(255,100,0);
 			}else if(b.getNeededSupplyAmount(Supply.Energy)>0)return Color.green;
-			return super.buildingColor(b);
+			if(b.getBuildingType()==Buildings.BUILDINGTYPE_STREET)return Color.black;
+			else return super.buildingColor(b);
 		}
 	},
 	Security(ResourceManager.TEXTURE_DATAVIEWBUTTONSECUTIRY){
@@ -27,7 +29,8 @@ public enum DataView {
 				if(b.getOwnedSupplyAmount(Supply.Security)<=0)return Color.red;
 				else return new Color(255,100,0);
 			}else if(b.getNeededSupplyAmount(Supply.Security)>0)return Color.green;
-			return super.buildingColor(b);
+			if(b.getBuildingType()==Buildings.BUILDINGTYPE_STREET)return Color.black;
+			else return super.buildingColor(b);
 		}
 	}, 
 	Health(ResourceManager.TEXTURE_DATAVIEWBUTTONHEALTH){
@@ -38,7 +41,8 @@ public enum DataView {
 				if(b.getOwnedSupplyAmount(Supply.Health)<=0)return Color.red;
 				else return new Color(255,100,0);
 			}else if(b.getNeededSupplyAmount(Supply.Health)>0)return Color.green;
-			return super.buildingColor(b);
+			if(b.getBuildingType()==Buildings.BUILDINGTYPE_STREET)return Color.black;
+			else return super.buildingColor(b);
 		}
 	},
 	Garbagecollection(ResourceManager.TEXTURE_DATAVIEWBUTTONGARBAGE){
@@ -49,7 +53,8 @@ public enum DataView {
 				if(b.getOwnedSupplyAmount(Supply.Garbagecollection)<=0)return Color.red;
 				else return new Color(255,100,0);
 			}else if(b.getNeededSupplyAmount(Supply.Garbagecollection)>0)return Color.green;
-			return super.buildingColor(b);
+			if(b.getBuildingType()==Buildings.BUILDINGTYPE_STREET)return Color.black;
+			else return super.buildingColor(b);
 		}
 	},
 	Internet(ResourceManager.TEXTURE_DATAVIEWBUTTONINTERNET){
@@ -60,7 +65,8 @@ public enum DataView {
 				if(b.getOwnedSupplyAmount(Supply.Internet)<=0)return Color.red;
 				else return new Color(255,100,0);
 			}else if(b.getNeededSupplyAmount(Supply.Internet)>0)return Color.green;
-			return super.buildingColor(b);
+			if(b.getBuildingType()==Buildings.BUILDINGTYPE_STREET)return Color.black;
+			else return super.buildingColor(b);
 		}
 	},
 	Happiness(ResourceManager.TEXTURE_DATAVIEWBUTTONHAPPINESS){
@@ -74,8 +80,9 @@ public enum DataView {
 				}else{
 					return new Color(255- (int) (255*((b.getHappiness()-50)/50f)),255,0);
 				}
-			}else return Color.white;
-				
+			}
+			if(b.getBuildingType()==Buildings.BUILDINGTYPE_STREET)return Color.black;
+			else return super.buildingColor(b);
 		}
 	};
 	

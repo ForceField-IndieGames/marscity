@@ -9,7 +9,6 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -82,34 +81,48 @@ public class ResourceManager {
 	public static final String shaderpath = "/res/shader/";
 	
 	//The objects (Actually loads and pares a file and generates displaylists for each LOD model)
-	public final static int[] OBJECT_HOUSE = addObject("house");
-	public final static int[] OBJECT_TERRAIN = addObject("terrain");
-	public final static int[] OBJECT_SKYBOX = addObject("skybox");
-	public final static int[] OBJECT_BIGHOUSE = addObject("bighouse");
-	public final static int[] OBJECT_STREET = addObject("streetsegment");
-	public final static int[] OBJECT_GRIDCELL = addObject("gridcell");
-	public final static int[] OBJECT_PLACEHOLDER = addObject("placeholder");
-	public final static int[] OBJECT_CITYCENTER = addObject("citycenter");
-	public final static int[] OBJECT_RESEARCHSTATION = addObject("researchstation");
-	public final static int[] OBJECT_HANGAR = addObject("hangar");
-	public final static int[] OBJECT_BANK = addObject("bank");
-	public final static int[] OBJECT_MEDICALCENTER = addObject("medicalcenter");
-	public final static int[] OBJECT_SERVERCENTER = addObject("servercenter");
-	public final static int[] OBJECT_GARBAGEYARD = addObject("garbageyard");
-	public final static int[] OBJECT_POLICE = addObject("police");
-	public final static int[] OBJECT_SOLARPOWER = addObject("solarpower");
-	public final static int[] OBJECT_FUSIONPOWER = addObject("fusionpower");
+	public final static int[] OBJECT_HOUSE                 = addObject("house");
+	public final static int[] OBJECT_TERRAIN               = addObject("terrain");
+	public final static int[] OBJECT_SKYBOX                = addObject("skybox");
+	public final static int[] OBJECT_BIGHOUSE              = addObject("bighouse");
+	public final static int[] OBJECT_STREET                = addObject("streetsegment");
+	public final static int[] OBJECT_GRIDCELL              = addObject("gridcell");
+	public final static int[] OBJECT_PLACEHOLDER           = addObject("placeholder");
+	public final static int[] OBJECT_CITYCENTER            = addObject("citycenter");
+	public final static int[] OBJECT_RESEARCHSTATION       = addObject("researchstation");
+	public final static int[] OBJECT_HANGAR                = addObject("hangar");
+	public final static int[] OBJECT_BANK                  = addObject("bank");
+	public final static int[] OBJECT_MEDICALCENTER         = addObject("medicalcenter");
+	public final static int[] OBJECT_SERVERCENTER          = addObject("servercenter");
+	public final static int[] OBJECT_GARBAGEYARD           = addObject("garbageyard");
+	public final static int[] OBJECT_POLICE                = addObject("police");
+	public final static int[] OBJECT_SOLARPOWER            = addObject("solarpower");
+	public final static int[] OBJECT_FUSIONPOWER           = addObject("fusionpower");
+	public final static int[] OBJECT_SHIELD                = addObject("shield");
+	public final static int[] OBJECT_MEDICALCENTERROOMS    = addObject("medicalcenterrooms");
+	public final static int[] OBJECT_MEDICALCENTERVEHICLES = addObject("medicalcentervehicles");
+	public final static int[] OBJECT_SERVERCENTERSERVERS   = addObject("servercenterservers");
+	public final static int[] OBJECT_SOLARPOWERPANELS      = addObject("solarpowerpanels");
+	public final static int[] OBJECT_GARBAGEYARDBURNER     = addObject("garbageyardburner");
+	public final static int[] OBJECT_GARBAGEYARDVEHICLES   = addObject("garbageyardvehicles");
+	public final static int[] OBJECT_POLICEVEHICLES        = addObject("policevehicles");
 	
 	//The audio files
-	public final static Audio SOUND_DROP = addSound("WAV", "drop.wav");
+	public final static Audio SOUND_DROP    = addSound("WAV", "drop.wav");
 	public final static Audio SOUND_DESTROY = addSound("WAV", "destroy.wav");
-	public final static Audio SOUND_SELECT = addSound("WAV", "select.wav");
+	public final static Audio SOUND_SELECT  = addSound("WAV", "select.wav");
 	public final static Audio SOUND_AMBIENT = addSound("WAV", "ambient.wav");
+	public final static Audio SOUND_UPGRADE = addSound("WAV", "upgrade.wav");
 	
 	//Loads the textures
 	public final static EntityTexture TEXTURE_SKYBOX            = addEntityTexture("skybox");
 	public final static EntityTexture TEXTURE_TERRAIN           = addEntityTexture("terrain");
-	public final static EntityTexture TEXTURE_STREET            = addEntityTexture("street");
+	public final static EntityTexture TEXTURE_STREETDEFAULT     = addEntityTexture("streetdefault");
+	public final static EntityTexture TEXTURE_STREETSTRAIGHT    = addEntityTexture("streetstraight");
+	public final static EntityTexture TEXTURE_STREETTCROSSING   = addEntityTexture("streettcrossing");
+	public final static EntityTexture TEXTURE_STREETCROSSING    = addEntityTexture("streetcrossing");
+	public final static EntityTexture TEXTURE_STREETCURVE       = addEntityTexture("streetcurve");
+	public final static EntityTexture TEXTURE_STREETEND         = addEntityTexture("streetend");
 	public final static EntityTexture TEXTURE_HOUSE             = addEntityTexture("house");
 	public final static EntityTexture TEXTURE_BIGHOUSE          = addEntityTexture("bighouse");
 	public final static EntityTexture TEXTURE_CITYCENTER        = addEntityTexture("citycenter");
@@ -123,6 +136,31 @@ public class ResourceManager {
 	public final static EntityTexture TEXTURE_POLICE            = addEntityTexture("police");
 	public final static EntityTexture TEXTURE_SOLARPOWER        = addEntityTexture("solarpower");
 	public final static EntityTexture TEXTURE_FUSIONPOWER       = addEntityTexture("fusionpower");
+	public final static EntityTexture TEXTURE_SHIELD            = addEntityTexture("shield");
+	public final static EntityTexture TEXTURE_MEDICALCENTERROOMS= addEntityTexture("medicalcenterrooms");
+	public final static EntityTexture TEXTURE_UPGRADEVEHICLES   = addEntityTexture("upgradevehicles");
+	
+	public final static Texture TEXTURE_GUITHUMBSTREET               = addTexture("gui/thumbstreet.png");
+	public final static Texture TEXTURE_GUITHUMBHOUSE                = addTexture("gui/thumbhouse.png");
+	public final static Texture TEXTURE_GUITHUMBBIGHOUSE             = addTexture("gui/thumbbighouse.png");
+	public final static Texture TEXTURE_GUITHUMBMEDICALCENTER        = addTexture("gui/thumbmedicalcenter.png");
+	public final static Texture TEXTURE_GUITHUMBSERVERCENTER         = addTexture("gui/thumbservercenter.png");
+	public final static Texture TEXTURE_GUITHUMBGARBAGEYARD          = addTexture("gui/thumbgarbageyard.png");
+	public final static Texture TEXTURE_GUITHUMBBANK                 = addTexture("gui/thumbbank.png");
+	public final static Texture TEXTURE_GUITHUMBRESEARCHSTATION      = addTexture("gui/thumbresearchstation.png");
+	public final static Texture TEXTURE_GUITHUMBSOLARPOWER           = addTexture("gui/thumbsolarpower.png");
+	public final static Texture TEXTURE_GUITHUMBFUSIONPOWER          = addTexture("gui/thumbfusionpower.png");
+	public final static Texture TEXTURE_GUITHUMBHANGAR               = addTexture("gui/thumbhangar.png");
+	public final static Texture TEXTURE_GUITHUMBMEDICALCENTERROOMS   = addTexture("gui/thumbmedicalcenterrooms.png");
+	public final static Texture TEXTURE_GUITHUMBUPGRADEVEHICLES      = addTexture("gui/thumbupgradevehicles.png");
+	public final static Texture TEXTURE_GUITHUMBSERVERCENTERSERVERS  = addTexture("gui/thumbservercenterservers.png");
+	public final static Texture TEXTURE_GUITHUMBCITYCENTERSHIELD     = addTexture("gui/thumbcitycentershield.png");
+	public final static Texture TEXTURE_GUITHUMBSOLARPOWERPANELS     = addTexture("gui/thumbsolarpowerpanels.png");
+	public final static Texture TEXTURE_GUITHUMBSOLARPOWERCOATING    = addTexture("gui/thumbsolarpowercoating.png");
+	public final static Texture TEXTURE_GUITHUMBGARBAGEYARDBURNER    = addTexture("gui/thumbgarbageyardburner.png");
+	public final static Texture TEXTURE_GUITHUMBPOLICE               = addTexture("gui/thumbpolice.png");
+	public final static Texture TEXTURE_GUITHUMBPOLICESTAFF          = addTexture("gui/thumbpolicestaff.png");
+	
 	public final static Texture TEXTURE_ICON16                  = addTexture("gui/icon16.png");
 	public final static Texture TEXTURE_ICON32                  = addTexture("gui/icon32.png");
 	public final static Texture TEXTURE_ICON256                 = addTexture("gui/icon256.png");
@@ -151,17 +189,6 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUICAMERAROTATE         = addTexture("gui/camerarotate.png");
 	public final static Texture TEXTURE_GUIBUILDINGSPANEL       = addTexture("gui/buildingspanel.png");
 	public final static Texture TEXTURE_GUIBUILDINGSPANELL      = addTexture("gui/buildingspanell.png");
-	public final static Texture TEXTURE_GUITHUMBSTREET          = addTexture("gui/thumbstreet.png");
-	public final static Texture TEXTURE_GUITHUMBHOUSE           = addTexture("gui/thumbhouse.png");
-	public final static Texture TEXTURE_GUITHUMBBIGHOUSE        = addTexture("gui/thumbbighouse.png");
-	public final static Texture TEXTURE_GUITHUMBMEDICALCENTER   = addTexture("gui/thumbmedicalcenter.png");
-	public final static Texture TEXTURE_GUITHUMBSERVERCENTER    = addTexture("gui/thumbservercenter.png");
-	public final static Texture TEXTURE_GUITHUMBGARBAGEYARD     = addTexture("gui/thumbgarbageyard.png");
-	public final static Texture TEXTURE_GUITHUMBBANK            = addTexture("gui/thumbbank.png");
-	public final static Texture TEXTURE_GUITHUMBRESEARCHSTATION = addTexture("gui/thumbresearchstation.png");
-	public final static Texture TEXTURE_GUITHUMBSOLARPOWER      = addTexture("gui/thumbsolarpower.png");
-	public final static Texture TEXTURE_GUITHUMBFUSIONPOWER     = addTexture("gui/thumbfusionpower.png");
-	public final static Texture TEXTURE_GUITHUMBHANGAR          = addTexture("gui/thumbhangar.png");
 	public final static Texture TEXTURE_GUITEXTFIELD            = addTexture("gui/guitextfield.png");
 	public final static Texture TEXTURE_GUITEXTFIELDL           = addTexture("gui/guitextfieldl.png");
 	public final static Texture TEXTURE_GUITEXTFIELDR           = addTexture("gui/guitextfieldr.png");
@@ -194,7 +221,14 @@ public class ResourceManager {
 	public final static Texture TEXTURE_GUISCROLLBARIM          = addTexture("gui/scrollbar_im.png");
 	public final static Texture TEXTURE_GUISCROLLBARIB          = addTexture("gui/scrollbar_ib.png");
 	public final static Texture TEXTURE_GUIDVBACKGROUND         = addTexture("gui/DVbackground.png");
+	public final static Texture TEXTURE_GUIDVBACKGROUNDT        = addTexture("gui/DVbackgroundt.png");
+	public final static Texture TEXTURE_GUIDVBACKGROUNDB        = addTexture("gui/DVbackgroundb.png");
 	public final static Texture TEXTURE_HAPPINESSEFFECT         = addTexture("happinesseffect.png");
+	public final static Texture TEXTURE_GUIUPGRADEBACKGROUND    = addTexture("gui/upgradebackground.png");
+	public final static Texture TEXTURE_GUIUPGRADEBUTTON        = addTexture("gui/upgradebutton.png");
+	public final static Texture TEXTURE_SUPPLYRADIUS            = addTexture("supplyradius.png");
+	public final static Texture TEXTURE_GUIUPGRADED             = addTexture("gui/upgraded.png");
+	public final static Texture TEXTURE_GUILOCKED               = addTexture("gui/locked.png");
 	
 	/**
 	 * Initializes the Resources that need to be initialized
@@ -203,8 +237,8 @@ public class ResourceManager {
 	{
 		
 		//Set up the shader
-		Main.splashscreen.setInfo("Loading shader...");
-		setupShader("shader.v","shader.f");
+		//Main.splashscreen.setInfo("Loading shader...");
+		//setupShader("shader.v","shader.f");
 		
 		//Load and parse the Language file
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -220,13 +254,11 @@ public class ResourceManager {
 		Main.splashscreen.setInfo("Creating folders...");
 		if(!(new File("res")).exists()||Main.debugMode){
 			(new File("res")).mkdir();
-			(new File("res/lang")).mkdir();
 			
 			(new File("res/settings")).mkdir();
 			(new File("res/cities")).mkdir();
 			Main.log("Created necessary folders.");
 			try {
-				(new File("res/lang/DE.lang")).createNewFile();
 				(new File(FILE_SETTINGS)).createNewFile();
 				
 				//settings.xml
@@ -234,16 +266,6 @@ public class ResourceManager {
 				BufferedWriter output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("res/settings/settings.xml"))));
 			
 				String line;
-				while((line=input.readLine())!=null){
-					output.write(line+System.lineSeparator());
-				}
-				input.close();
-				output.close();
-				
-				//DE.lang
-				input = new BufferedReader(new InputStreamReader(ResourceManager.class.getResourceAsStream("/res/lang/DE.lang")));
-				output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(new File("res/lang/DE.lang"))));
-			
 				while((line=input.readLine())!=null){
 					output.write(line+System.lineSeparator());
 				}
@@ -258,7 +280,7 @@ public class ResourceManager {
 		Main.splashscreen.setInfo("Loading xml files...");
 		settingsFile = addXML("res/settings/settings.xml");
 		try {
-			strings = addLangFile("res/lang/DE.lang");
+			strings = addLangFile("/res/lang/"+getSetting("lang")+".lang");
 		} catch (IOException e) {}
 	}
 
@@ -301,10 +323,12 @@ public class ResourceManager {
  	public static HashMap<String,String> addLangFile(String path) throws IOException
  	{
  		Main.splashscreen.setInfo("Loading language file: "+path);
+ 		Main.log("Loading language file: "+path);
  		HashMap<String,String> hm = new HashMap<String,String>();
  		BufferedReader reader=null;
  		try {
-			reader = new BufferedReader(new FileReader(new File(path)));
+ 			reader = new BufferedReader(new InputStreamReader(ResourceManager.class.getResourceAsStream(path)));
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			Game.exit();
@@ -317,14 +341,13 @@ public class ResourceManager {
  			int pos = line.indexOf("|");
  			if(pos!=-1){
  				try {
-					hm.put(line.substring(0,pos), line.substring(pos+1));
+					hm.put(line.substring(0,pos), new String(line.substring(pos+1).getBytes(),"UTF-8"));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
  			}
  		}
- 		
- 		reader.close();
+ 		reader.close(); 		
  		return hm;
  	}
  	
@@ -433,7 +456,7 @@ public class ResourceManager {
 	 */
 	public static EntityTexture addEntityTexture(String path)
 	{
-		path = texturespath + "/objects/"+ path + "/" + path;
+		path = texturespath + "objects/"+ path + "/" + path;
 		Main.log("Loading texture: "+path);
 		Main.splashscreen.setInfo("Loading texture: "+path);
 		EntityTexture tex = new EntityTexture();
@@ -454,23 +477,42 @@ public class ResourceManager {
 	/**
 	 * Returns a the localized String from the language file
 	 * @param input
-	 * @return The localized strong or the input, if not found
+	 * @return The localized string or the input, if not found
 	 */
 	public static String getString(String input)
 	{
 		String output =  null;
-//		if(langFile==null)return "Unable to load language file for "+getSetting("lang");
-//		try {
-//			output =  langFile.getElementsByTagName(input).item(0).getTextContent();
-//		} catch (Exception e) {
-//		}
-//		
-//		if(output==null){
-//			System.err.println("String not found: "+input);
-//			return input;
-//		}
 		output = strings.get(input);
 		if(output==null)output=input;
+		return output;
+	}
+	
+	/**
+	 * Return a localized String from the language file and replaces placeholders
+	 * %1%, %2%, %3%, ...
+	 * @param input
+	 * @param replace String to fill in the placeholders
+	 * @return The localized string with replacements or the input, if not found
+	 */
+	public static String getString(String input, String...replace)
+	{
+		String output = getString(input);
+		return replacePlaceholders(output, replace);
+	}
+	
+	/**
+	 * Replaces placeholders in the input String
+	 * @param input
+	 * @param replace Strings to replace the placeholders %1%,%2%... with
+	 * @return
+	 */
+	public static String replacePlaceholders(String input, String...replace)
+	{
+		String output=input;
+		for(int i=0;i<replace.length;i++)
+		{
+			output = output.replaceAll("%"+(i+1)+"%", replace[i]);
+		}
 		return output;
 	}
 	
@@ -575,7 +617,7 @@ public class ResourceManager {
 	 */
 	public static Building getObject(int index)
 	{
-		if(index==-1)return new Building(-1);
+		if(index==-1)return new Building(-1,0,0,0,0);
 		return Buildings.buildings.get(index);
 	}
 	

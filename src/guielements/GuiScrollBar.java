@@ -59,7 +59,7 @@ public class GuiScrollBar extends GuiPanel {
 			@Override
 			public void run(GuiEventType eventtype, GuiElement element) {
 				switch (eventtype) {
-				case Mouseover:
+				case Mousein:
 					AnimationManager.animateValue((Animatable)element, AnimationValue.OPACITY, 0.8f,100);
 					break;
 				case Mouseout:

@@ -8,6 +8,7 @@ import org.lwjgl.opengl.Display;
 
 import animation.AnimationManager;
 import animation.AnimationValue;
+import animation.FinishedAction;
 
 import game.Game;
 import game.Main;
@@ -60,10 +61,10 @@ public class LoadingScreen extends GuiPanel {
 				case Click:
 						Main.gui.blur.setVisible(false);
 						Game.Resume();
-						AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.OPACITY, 0, 0.005f, AnimationManager.ACTION_HIDE);
+						AnimationManager.animateValue(Main.gui.pauseMenu, AnimationValue.OPACITY, 0, 0.005f, FinishedAction.HIDE);
 						Main.gui.loadingscreen.setVisible(false);
 						break;
-				case Mouseover:
+				case Mousein:
 						break;
 				default:break;}}});
 		add(abort);

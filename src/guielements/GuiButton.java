@@ -23,8 +23,8 @@ public class GuiButton extends GuiLabel {
 		try {
 				switch (eventtype) {
 				case Click:
-						ResourceManager.playSound(ResourceManager.SOUND_SELECT);
-				case Mouseover:
+						ResourceManager.playSoundRandom(ResourceManager.SOUND_SELECT);
+				case Mousein:
 						if(getColor().equals(Color.white))setColor(new Color(235,235,235));
 						break;
 				case Mouseout:

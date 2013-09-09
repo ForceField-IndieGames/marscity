@@ -11,10 +11,10 @@ import animation.Animatable;
 
 public class Camera implements Animatable {
 	
-	private float x=0,y=0,z=0;
-	private float rotX=-45,rotY=0,rotZ=0;
+	private float x,y,z;
+	private float rotX,rotY,rotZ;
 	private float lastrotx=0, lastroty=0;
-	private float zoom = 50;
+	private float zoom;
 	private boolean animate = false;
 	private float cx,cy,cz;
 	
@@ -47,11 +47,15 @@ public class Camera implements Animatable {
 
 	public void applyTransform()
 	{
-		cx = getX() + dsin(getRotY()) * dcos(getRotX()) * zoom;
-		cy = getY() - dsin(getRotX()) * zoom;
-		cz = getZ() + dcos(getRotX()) * dcos(getRotY()) * zoom;
+		float rx = getRotX();
+		if(rx<-89)rx=-89;
+		if(rx>-1)rx=-1;
 		
-		gluLookAt(cx, cy, cz,getX(), getY(), getZ(), 0, 1, 0);
+		cx = getX() + dsin(getRotY()) * dcos(rx) * zoom;
+		cy = getY() - dsin(rx) * zoom;
+		cz = getZ() + dcos(rx) * dcos(getRotY()) * zoom;
+		
+		gluLookAt(cx, cy, cz,getX(), getY()+((getRotX()>0)?getRotX()/10:0), getZ(), 0, 1, 0);
 	}
 	
 	public float getZoom() {

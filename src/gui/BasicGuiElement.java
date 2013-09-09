@@ -116,7 +116,7 @@ public class BasicGuiElement implements GuiElement, Animatable {
 		if(getTooltip()!="")
 		{
 			switch(eventtype){
-			case Mouseover:
+			case Mousein:
 				Main.gui.showToolTip(getTooltip());
 				break;
 			case Mouseout:

@@ -9,9 +9,9 @@ import objects.Building;
 
 public class Street extends Building {
 
-	public Street(int bt, float x, float y, float z)
+	public Street(int bt, float x, float y, float z, float rY)
 	{
-		super(bt,x,y,z);
+		super(bt,x,y,z,rY);
 	}
 	
 	@Override

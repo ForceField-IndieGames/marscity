@@ -4,15 +4,18 @@ import java.awt.Color;
 
 import objects.Building;
 import objects.Buildings;
+import objects.Upgrade;
 
 import org.lwjgl.opengl.Display;
 
 import buildings.BigHouse;
+import buildings.CityCenter;
 import buildings.House;
-
 import animation.AnimationManager;
 import animation.AnimationValue;
+import animation.FinishedAction;
 
+import game.Main;
 import game.ResourceManager;
 import game.Supply;
 import guielements.GuiLabel;
@@ -30,9 +33,10 @@ public class BuildingInfo extends GuiPanel {
 	private GuiLabel title;
 	private GuiLabel supplyneed;
 	private GuiLabel description;
+	private GuiLabel description2;
 	private GuiLabel monthlycost;
 	private Building building;
-	private String text="";
+	private String text ="";
 	
  	public BuildingInfo()
 	{
@@ -53,14 +57,18 @@ public class BuildingInfo extends GuiPanel {
 		supplyneed.setText("supplyneed");
 		supplyneed.setTextColor(Color.red);
 		add(supplyneed);
-		description = new GuiLabel(10,10,232,174,(Color)null);
-		description.setCentered(true);
+		description = new GuiLabel(10,114,232,74,(Color)null);
 		description.setText("Description");
 		add(description);
+		description2 = new GuiLabel(10,10,232,104,(Color)null);
+		description2.setCentered(true);
+		description2.setText("Description 2");
+		add(description2);
 		monthlycost = new GuiLabel(126,10,100,30,(Color)null);
 		monthlycost.setRightaligned(true);
 		monthlycost.setTextColor(Color.red);
-		monthlycost.setText("-0$");
+		monthlycost.setText("-0$$");
+		monthlycost.setTooltip(ResourceManager.getString("TOOLTIP_BUILDINGINFOCOST"));
 		add(monthlycost);
 	}
 	
@@ -68,7 +76,21 @@ public class BuildingInfo extends GuiPanel {
 	{
 		this.building = building;
 		setVisible(true);
-		AnimationManager.animateValue(this, AnimationValue.OPACITY, 1, 200);
+		int count=0;
+		if(building.hasUpgrades()){
+			Main.gui.buildingupgrades.show();
+			for(Upgrade u:Upgrade.values())
+			{
+				if(u.getBt()==building.getBuildingType())
+				{
+					Main.gui.buildingupgrades.add(new GuiUpgrade(0, count*128, u, building));
+					count++;
+				}
+			}
+		}
+		AnimationManager.animateValue(this, AnimationValue.OPACITY, 0.9f, 200);
+		setX(Display.getWidth()/2-336);
+		AnimationManager.animateValue(this, AnimationValue.X, Display.getWidth()/2-286, 200);
 		title.setText(Buildings.getBuildingTypeName(building.getBuildingType()));
 		String sneed = "";
 		for(Supply s:Supply.values())
@@ -77,29 +99,54 @@ public class BuildingInfo extends GuiPanel {
 		}
 		if(sneed==""){
 			sneed = ResourceManager.getString("SUPPLYNEED_NONE");
-			supplyneed.setTextColor(Color.green);
+			supplyneed.setTextColor(Color.black);
 		}else supplyneed.setTextColor(Color.red);
 		supplyneed.setText(sneed);
 		supplyneed.wrapText();
-		text = ResourceManager.getBtDescription(building.getBuildingType())+System.lineSeparator()+System.lineSeparator()+
-				ResourceManager.getBtDescription2(building.getBuildingType());
-		description.setText(text);
+		description.setText(ResourceManager.getBtDescription(building.getBuildingType()));
 		description.wrapText();
-		text = description.getText();
-		monthlycost.setText("-"+Buildings.getBuildingType(building.getBuildingType()).getMonthlycost()+"$");
+		text = ResourceManager.getBtDescription2(building.getBuildingType());
+		description2.setText(text);
+		description2.wrapText();
+		text = description2.getText();
+		if(building.hasUpgrades())
+		{
+			monthlycost.setText("-"+building.getMonthlycost()+"$$ ("+"-"+(building.getMonthlycost()-Buildings.getBuildingType(building).getMonthlycost())+"$$"+")");
+		}else monthlycost.setText("-"+building.getMonthlycost()+"$$");
+		
 	}
 	
 	public void update()
 	{
 		if(isVisible())
 		{
-			description.setText(text);
 			switch(building.getBuildingType()){
 			case Buildings.BUILDINGTYPE_HOUSE:
-				description.setText(description.getText().replaceFirst(ResourceManager.PLACEHOLDER1, ""+((House)building).getCitizens()).replaceFirst(ResourceManager.PLACEHOLDER2, ""+House.getCitizensmax()));
+				description2.setText(ResourceManager.replacePlaceholders(text, ""+((House) building).getCitizens(),""+House.getCitizensmax()));
 				break;
 			case Buildings.BUILDINGTYPE_BIGHOUSE:
-				description.setText(description.getText().replaceFirst(ResourceManager.PLACEHOLDER1, ""+((BigHouse)building).getCitizens()).replaceFirst(ResourceManager.PLACEHOLDER2, ""+BigHouse.getCitizensmax()));
+				description2.setText(ResourceManager.replacePlaceholders(text, ""+((BigHouse)building).getCitizens(),""+BigHouse.getCitizensmax()));
+				break;
+			case Buildings.BUILDINGTYPE_MEDICALCENTER:
+				description2.setText(ResourceManager.replacePlaceholders(text, ""+building.getProducedSupplyAmount(),""+building.getProducedSupplyRadius()));
+				break;
+			case Buildings.BUILDINGTYPE_SERVERCENTER:
+				description2.setText(ResourceManager.replacePlaceholders(text, ""+building.getProducedSupplyAmount()));
+				break;
+			case Buildings.BUILDINGTYPE_GARBAGEYARD:
+				description2.setText(ResourceManager.replacePlaceholders(text, ""+building.getProducedSupplyAmount(),""+building.getProducedSupplyRadius()));
+				break;
+			case Buildings.BUILDINGTYPE_POLICE:
+				description2.setText(ResourceManager.replacePlaceholders(text, ""+building.getProducedSupplyAmount(),""+building.getProducedSupplyRadius()));
+				break;
+			case Buildings.BUILDINGTYPE_SOLARPOWER:
+				description2.setText(ResourceManager.replacePlaceholders(text, ""+building.getProducedSupplyAmount()));
+				break;
+			case Buildings.BUILDINGTYPE_FUSIONPOWER:
+				description2.setText(ResourceManager.replacePlaceholders(text, ""+building.getProducedSupplyAmount()));
+				break;
+			case Buildings.BUILDINGTYPE_CITYCENTER:
+				description2.setText(ResourceManager.replacePlaceholders(text, ""+((CityCenter)building).getBuildRadius()));
 				break;
 			default: break;
 			}
@@ -108,7 +155,8 @@ public class BuildingInfo extends GuiPanel {
 	
 	public void hide()
 	{
-		AnimationManager.animateValue(this, AnimationValue.OPACITY, 0, 200,AnimationManager.ACTION_HIDE);
+		AnimationManager.animateValue(this, AnimationValue.OPACITY, 0, 200,FinishedAction.HIDE);
+		Main.gui.buildingupgrades.hide();
 	}
 	
 }

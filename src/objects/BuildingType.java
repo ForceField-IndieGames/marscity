@@ -2,8 +2,10 @@ package objects;
 
 import java.awt.Color;
 
+import game.BooleanCallback;
 import game.EntityTexture;
 import game.Supply;
+import game.TransactionCategory;
 
 import org.newdawn.slick.opengl.Texture;
 
@@ -28,9 +30,13 @@ public class BuildingType {
 	private int happinessEffect;
 	private int happinessRadius;
 	private Texture thumb;
+	private Supply producedSupply;
 	private int producedSupplyAmount;
+	private int producedSupplyRadius;
+	private TransactionCategory transactioncategory;
 	private int[] neededSupplies;
 	private Color gridColor;
+	private BooleanCallback locked;
 
 	/**
 	 * Creates a new BuildingType
@@ -51,14 +57,16 @@ public class BuildingType {
 	 *            The buildings height
 	 */
 	public BuildingType(String name, int[] displaylist, EntityTexture texture,
-			Texture thumb, Color gridColor, int buidlingcost, int monthlycost, int width,
-			int depth, float height, int happinessEffect, int happinessRadius, int producedSupplyAmount,
-			int... neededSupplies) {
+			Texture thumb, Color gridColor, BooleanCallback locked, int buidlingcost, int monthlycost, int width,
+			int depth, float height, int happinessEffect, int happinessRadius, TransactionCategory transactioncategory, Supply producedSupply,
+			int producedSupplyAmount,int producedSupplyRadius, int... neededSupplies) {
 		this.name = name;
 		this.displaylist = displaylist;
 		this.texture = texture;
 		this.setThumb(thumb);
 		this.gridColor = gridColor;
+		if(locked==null)this.locked=new BooleanCallback();
+		else this.locked = locked;
 		this.buidlingcost = buidlingcost;
 		this.monthlycost = monthlycost;
 		this.width = width;
@@ -66,7 +74,10 @@ public class BuildingType {
 		this.height = height;
 		this.happinessEffect = happinessEffect;
 		this.happinessRadius = happinessRadius;
+		this.transactioncategory = transactioncategory;
+		this.setProducedSupply(producedSupply);
 		this.producedSupplyAmount = producedSupplyAmount;
+		this.producedSupplyRadius = producedSupplyRadius;
 		this.neededSupplies = neededSupplies;
 	}
 
@@ -128,6 +139,43 @@ public class BuildingType {
 
 	public int getMonthlycost() {
 		return monthlycost;
+	}
+
+	public int getProducedSupplyRadius() {
+		return producedSupplyRadius;
+	}
+
+	public void setProducedSupplyRadius(int producedSupplyRadius) {
+		this.producedSupplyRadius = producedSupplyRadius;
+	}
+
+	public Supply getProducedSupply() {
+		return producedSupply;
+	}
+
+	public void setProducedSupply(Supply producedSupply) {
+		this.producedSupply = producedSupply;
+	}
+
+	public TransactionCategory getTransactioncategory() {
+		return transactioncategory;
+	}
+
+	public void setTransactioncategory(TransactionCategory transactioncategory) {
+		this.transactioncategory = transactioncategory;
+	}
+
+	public BooleanCallback getLocked() {
+		return locked;
+	}
+
+	public void setLocked(BooleanCallback locked) {
+		this.locked = locked;
+	}
+	
+	public boolean isLocked()
+	{
+		return locked.run();
 	}
 
 }

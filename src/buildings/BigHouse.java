@@ -2,6 +2,7 @@ package buildings;
 
 import game.Main;
 import game.MonthlyActions;
+import game.Statistics;
 import game.TransactionCategory;
 
 import java.io.IOException;
@@ -21,8 +22,8 @@ public class BigHouse extends Building {
 	
 	private static final int CITIZENSPERMONTH = 20;
 
-	public BigHouse(int bt, float x, float y, float z) {
-		super(bt,x,y,z);
+	public BigHouse(int bt, float x, float y, float z, float rY) {
+		super(bt,x,y,z,rY);
 		setHasHappiness(true);
 	}
 	
@@ -33,41 +34,50 @@ public class BigHouse extends Building {
 	@Override
 	public void monthlyAction() {
 		super.monthlyAction();
-		MonthlyActions.addTransaction((int) (citizens*((float)Main.taxes/100)), TransactionCategory.Taxes);
 		if(getCitizens()<getCitizensmax()*(getHappiness()/100f)){
 			if(getCitizens()+CITIZENSPERMONTH<=getCitizensmax()*(getHappiness()/100f)){
 				setCitizens(getCitizens()+CITIZENSPERMONTH);
-				Main.citizens += CITIZENSPERMONTH;
+				Statistics.citizens += CITIZENSPERMONTH;
+				Statistics.CitizensBighouseMax += CITIZENSPERMONTH;
+				Statistics.CitizensBighouseCurrent += CITIZENSPERMONTH;
 			}
 			else {
-				Main.citizens += (getCitizensmax()*(getHappiness()/100f))-getCitizens();
+				Statistics.citizens += (getCitizensmax()*(getHappiness()/100f))-getCitizens();
+				Statistics.CitizensBighouseMax += (getCitizensmax()*(getHappiness()/100f))-getCitizens();
+				Statistics.CitizensBighouseCurrent += (getCitizensmax()*(getHappiness()/100f))-getCitizens();
 				setCitizens((int) (getCitizensmax()*(getHappiness()/100f)));
 			}
 		}else if(getCitizens()>getCitizensmax()*(getHappiness()/100f)){
 			if(getCitizens()-CITIZENSPERMONTH>=0){
 				setCitizens(getCitizens()-CITIZENSPERMONTH);
-				Main.citizens -= CITIZENSPERMONTH;
+				Statistics.citizens -= CITIZENSPERMONTH;
+				Statistics.CitizensBighouseCurrent -= CITIZENSPERMONTH;
 			}
 			else {
-				Main.citizens -= getCitizens();
+				Statistics.citizens -= getCitizens();
+				Statistics.CitizensBighouseCurrent -= getCitizens();
 				setCitizens(0);
 			}
 		}
+		MonthlyActions.addTransaction((int) (citizens*((float)Main.taxes/100)), TransactionCategory.Taxes);
 	}
 	
 	@Override
 	public void saveToStream(ObjectOutputStream o) throws IOException {
+		super.saveToStream(o);
 		o.writeByte(citizens);
 	}
 	
 	@Override
 	public void loadFromStream(ObjectInputStream i) throws IOException {
+		super.loadFromStream(i);
 		citizens = i.readByte();
 	}
 	
 	@Override
 	public void delete() {
-		Main.citizens-=getCitizens();
+		Statistics.citizens-=getCitizens();
+		Statistics.CitizensBighouseCurrent-=getCitizens();
 		super.delete();
 	}
 
