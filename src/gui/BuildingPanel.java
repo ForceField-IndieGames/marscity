@@ -1,5 +1,6 @@
 package gui;
 
+import game.Main;
 import guielements.GuiPanel;
 
 import objects.Buildings;
@@ -33,7 +34,7 @@ public class BuildingPanel extends GuiPanel {
 	public void show() {
 		super.show();
 		for(int i=0;i<=getElements().size();i++){
-			if(Buildings.getBuildingType(((BuildingButton)getElements().get(i)).getBt()).isLocked())((BuildingButton)getElements().get(i)).lock();
+			if(Buildings.getBuildingType(((BuildingButton)getElements().get(i)).getBt()).isLocked()&&!Main.unlockall)((BuildingButton)getElements().get(i)).lock();
 			else ((BuildingButton)getElements().get(i)).unlock();
 		}
 	}

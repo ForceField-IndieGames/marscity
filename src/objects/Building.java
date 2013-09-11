@@ -46,6 +46,11 @@ public class Building extends Entity {
 	private int monthlycost;
 	private HashMap<Upgrade,Boolean> upgrades = new HashMap<Upgrade,Boolean>();
 
+	public Building()
+	{
+		
+	}
+	
 	public Building(int bt, float x, float y, float z, float rY)
 	{
 		super(Buildings.getBuildingType(bt).getDisplaylist(), Buildings.getBuildingType(bt).getTexture(),x,y,z);

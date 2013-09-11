@@ -195,38 +195,38 @@ public class Streets {
 				int z = (int) b.getZ();
 				int bts = Buildings.BUILDINGTYPE_STREET;
 				//Check for patterns and update the textures
-				if(Grid.getCellBT(x-1, z)==bts&&Grid.getCellBT(x+1, z)!=bts
+				if(Grid.getCellBT(x-1, z)==bts&&Grid.getCellBT(x+1, z)==-1
 						&&Grid.getCellBT(x, z-1)!=bts&&Grid.getCellBT(x, z+1)!=bts)
 				{
 					//End right
 					b.setRotY(0);
 					b.setTexture(ResourceManager.TEXTURE_STREETEND);
-				}else if(Grid.getCellBT(x-1, z)!=bts&&Grid.getCellBT(x+1, z)==bts
+				}else if(Grid.getCellBT(x-1, z)==-1&&Grid.getCellBT(x+1, z)==bts
 						&&Grid.getCellBT(x, z-1)!=bts&&Grid.getCellBT(x, z+1)!=bts)
 				{
 					//End left
 					b.setRotY(180);
 					b.setTexture(ResourceManager.TEXTURE_STREETEND);
 				}else if(Grid.getCellBT(x+1, z)!=bts&&Grid.getCellBT(x-1, z)!=bts
-						&&Grid.getCellBT(x, z-1)==bts&&Grid.getCellBT(x, z+1)!=bts)
+						&&Grid.getCellBT(x, z-1)==bts&&Grid.getCellBT(x, z+1)==-1)
 				{
 					//End front
 					b.setRotY(270);
 					b.setTexture(ResourceManager.TEXTURE_STREETEND);
 				}else if(Grid.getCellBT(x+1, z)!=bts&&Grid.getCellBT(x-1, z)!=bts
-						&&Grid.getCellBT(x, z-1)!=bts&&Grid.getCellBT(x, z+1)==bts)
+						&&Grid.getCellBT(x, z-1)==-1&&Grid.getCellBT(x, z+1)==bts)
 				{
 					//End back
 					b.setRotY(90);
 					b.setTexture(ResourceManager.TEXTURE_STREETEND);
-				}else if(Grid.getCellBT(x+1, z)==bts&&Grid.getCellBT(x-1, z)==bts
+				}else if((Grid.getCellBT(x+1, z)==bts||Grid.getCellBT(x-1, z)==bts)
 						&&Grid.getCellBT(x, z-1)!=bts&&Grid.getCellBT(x, z+1)!=bts)
 				{
 					//Straight left-right
 					b.setRotY(0);
 					b.setTexture(ResourceManager.TEXTURE_STREETSTRAIGHT);
 				}else if(Grid.getCellBT(x+1, z)!=bts&&Grid.getCellBT(x-1, z)!=bts
-						&&Grid.getCellBT(x, z-1)==bts&&Grid.getCellBT(x, z+1)==bts)
+						&&(Grid.getCellBT(x, z-1)==bts||Grid.getCellBT(x, z+1)==bts))
 				{
 					//Straight front-back
 					b.setRotY(90);

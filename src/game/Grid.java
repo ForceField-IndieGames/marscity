@@ -49,34 +49,41 @@ public class Grid {
 	
 	public static void setBuilding(int x, int y, Building building, float rY)
 	{
-		int width;
-		int depth;
+		setBuilding(x, y, Buildings.getBuildingType(building.getBuildingType())
+				.getWidth(),Buildings.getBuildingType(building.getBuildingType()).getDepth(), 
+				building, rY);
+	}
+	
+	public static void setBuilding(int x, int y, int width, int depth, Building building, float rY)
+	{
+		int w;
+		int d;
 		//Take rotation into account
 		if(rY!=0&&rY!=180){
-			width = Buildings.getBuildingType(building.getBuildingType()).getDepth();
-			depth = Buildings.getBuildingType(building.getBuildingType()).getWidth();
+			w = depth;
+			d = width;
 		}else{
-			width = Buildings.getBuildingType(building.getBuildingType()).getWidth();
-			depth = Buildings.getBuildingType(building.getBuildingType()).getDepth();
+			w = width;
+			d = depth;
 		}
 		
 		int x1;
 		int y1;
 		int x2;
 		int y2;
-		if(width==1){
+		if(w==1){
 			x1 = x;
 			x2 = x;
 		}else{
-			x1 = x - (int) Math.ceil(width/2-1);
-			x2 = x + (int) Math.floor(width/2);
+			x1 = x - (int) Math.ceil(w/2-1);
+			x2 = x + (int) Math.floor(w/2);
 		}
-		if(depth==1){
+		if(d==1){
 			y1 = y;
 			y2 = y;
 		}else{
-			y1 = y -(int) Math.ceil(depth/2-1);
-			y2 = y +(int) Math.floor(depth/2);
+			y1 = y -(int) Math.ceil(d/2-1);
+			y2 = y +(int) Math.floor(d/2);
 		}
 		for(int i=y1+cellsY/2;i<=y2+cellsY/2;i++){
 			for(int j=x1+cellsX/2;j<=x2+cellsX/2;j++){

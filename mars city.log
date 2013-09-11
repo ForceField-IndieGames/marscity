@@ -23,6 +23,7 @@ Loading object: solarpowerpanels
 Loading object: garbageyardburner
 Loading object: garbageyardvehicles
 Loading object: policevehicles
+Loading object: obstacle1
 Loading sound: /res/sounds/drop.wav
 Loading sound: /res/sounds/destroy.wav
 Loading sound: /res/sounds/select.wav
@@ -52,6 +53,7 @@ Loading texture: /res/textures/objects/fusionpower/fusionpower
 Loading texture: /res/textures/objects/shield/shield
 Loading texture: /res/textures/objects/medicalcenterrooms/medicalcenterrooms
 Loading texture: /res/textures/objects/upgradevehicles/upgradevehicles
+Loading texture: /res/textures/objects/obstacle1/obstacle1
 Loading texture: /res/textures/gui/thumbstreet.png
 Loading texture: /res/textures/gui/thumbhouse.png
 Loading texture: /res/textures/gui/thumbbighouse.png

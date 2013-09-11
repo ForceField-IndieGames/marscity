@@ -43,7 +43,7 @@ public class BuildingButton extends GuiPanel {
 			public void run(GuiEventType eventtype, GuiElement e) {
 				switch (eventtype) {
 				case Click:
-					if(Buildings.getBuildingType(getBt()).isLocked())break;
+					if(Buildings.getBuildingType(getBt()).isLocked()&&!Main.unlockall)break;
 					Main.selectedTool = Main.TOOL_ADD;
 					Main.gui.buildingPanels.hide();
 					Main.currentBT = getBt();

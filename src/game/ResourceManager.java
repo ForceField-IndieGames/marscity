@@ -106,6 +106,7 @@ public class ResourceManager {
 	public final static int[] OBJECT_GARBAGEYARDBURNER     = addObject("garbageyardburner");
 	public final static int[] OBJECT_GARBAGEYARDVEHICLES   = addObject("garbageyardvehicles");
 	public final static int[] OBJECT_POLICEVEHICLES        = addObject("policevehicles");
+	public final static int[] OBJECT_OBSTACLE1             = addObject("obstacle1");
 	
 	//The audio files
 	public final static Audio SOUND_DROP    = addSound("WAV", "drop.wav");
@@ -139,6 +140,7 @@ public class ResourceManager {
 	public final static EntityTexture TEXTURE_SHIELD            = addEntityTexture("shield");
 	public final static EntityTexture TEXTURE_MEDICALCENTERROOMS= addEntityTexture("medicalcenterrooms");
 	public final static EntityTexture TEXTURE_UPGRADEVEHICLES   = addEntityTexture("upgradevehicles");
+	public final static EntityTexture TEXTURE_OBSTACLE1         = addEntityTexture("obstacle1");
 	
 	public final static Texture TEXTURE_GUITHUMBSTREET               = addTexture("gui/thumbstreet.png");
 	public final static Texture TEXTURE_GUITHUMBHOUSE                = addTexture("gui/thumbhouse.png");

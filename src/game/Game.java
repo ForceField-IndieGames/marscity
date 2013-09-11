@@ -19,6 +19,7 @@ import javax.imageio.ImageIO;
 
 import objects.Building;
 import objects.Buildings;
+import objects.Obstacles;
 import objects.Streets;
 
 import org.lwjgl.openal.AL;
@@ -62,6 +63,7 @@ public class Game {
 			o.writeByte((byte) Main.camera.getRotX());
 			o.writeShort((short) Main.camera.getRotY());
 			Statistics.saveToStream(o);
+			Obstacles.saveToStream(o);
 			o.writeInt(Buildings.buildings.size());
 			for(Building b:Buildings.buildings){
 				o.writeShort((short) b.getX());
@@ -109,6 +111,7 @@ public class Game {
 					Main.camera.setRotX(i.readByte());
 					Main.camera.setRotY(i.readShort());
 					Statistics.loadFromStream(i);
+					Obstacles.loadFromStream(i);
 					int count = i.readInt();
 					for(int j=0;j<count;j++){
 						(Buildings.buildBuilding(i.readShort(), 0, i.readShort(), i.readShort(), i.readShort())).loadFromStream(i);
@@ -147,6 +150,7 @@ public class Game {
 		Main.currentBT = -1;
 		Main.buildpreview.setVisible(false);
 		Main.selectedTool=Main.TOOL_SELECT;
+		Obstacles.generate();
 		Main.gui = null;
 		Main.gui = new GUI();
 		Main.camera.setX(0);

@@ -98,7 +98,7 @@ class splashScreen extends JFrame implements Runnable{
 
 	public void setInfo(String text)
 	{
-		int percent = Math.round(loadeditems/149f*100);
+		int percent = Math.round(loadeditems/151f*100);
 		if(percent>100)percent=100;
 		label2.setText(percent+"% "+text);
 		progress.setValue(percent);
@@ -165,14 +165,15 @@ public class Main {
 	public static Timer    MonthlyTimer  = new Timer();                      //A timer for sheduling monthly acitons
 	public static DataView currentDataView = null;                           //The currently displayed DataView
 	public static float    buildRotation = 0;                                //The rotation of new buildings
+	public static boolean  unlockall = false;                                //All buildings unlocked? (debugmode)
 	
 	//Some more objects
 	public static Camera       camera       = new Camera();
-	       static Entity       terrain; 
-	       static Entity       skybox;
+	public static Entity       terrain; 
+	public static Entity       skybox;
 	public static GUI          gui;
 	public static BuildPreview buildpreview;
-	       static splashScreen splashscreen;
+	public static splashScreen splashscreen;
 	public static Entity       shield;
 	public static CityCenter   BuildingCitycenter;
 	
@@ -494,14 +495,13 @@ public class Main {
 							gui.debugInfo.setVisible(true);
 						}
 					}
-					//Switch Fullscreen/Window with F4 in debug mode
-					if(Keyboard.getEventKey()==Keyboard.KEY_F4&&Keyboard.getEventKeyState()&&debugMode){
-						if(Display.isFullscreen())try {Display.setFullscreen(false);Display.setDisplayMode(Display.getDesktopDisplayMode());} catch (LWJGLException e) {e.printStackTrace();}
-						else try {Display.setFullscreen(true);} catch (LWJGLException e) {e.printStackTrace();}
-					}
+					
 					//Get money with F1 in debug mode
 					if(Keyboard.getEventKey()==Keyboard.KEY_F1&&Keyboard.getEventKeyState()&&debugMode){
 						Statistics.money += 50000;
+					}
+					if(Keyboard.getEventKey()==Keyboard.KEY_F2&&Keyboard.getEventKeyState()&&debugMode){
+						Main.unlockall = !Main.unlockall;
 					}
 				}
 	}
@@ -692,6 +692,7 @@ public class Main {
 						AnimationManager.animateValue(b, AnimationValue.Y, Math.round(mousepos3d[1]), 0.05f);
 						buildpreview.waveEffect();
 						Buildings.refreshSupply();
+						Streets.updateSegments();
 						break;
 						
 					case(TOOL_DELETE): // Delete the hovered Building
@@ -706,6 +707,7 @@ public class Main {
 							ParticleEffects.dustEffect(ResourceManager.getObject(hoveredEntity).getX(),ResourceManager.getObject(hoveredEntity).getY(),ResourceManager.getObject(hoveredEntity).getZ());
 							ResourceManager.getObject(hoveredEntity).delete();
 						} catch (Exception e) {e.printStackTrace();}
+						Streets.updateSegments();
 						break;
 				}
 			}
